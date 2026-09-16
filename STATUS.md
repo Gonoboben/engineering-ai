@@ -21,8 +21,9 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `005 — Local model interface and measured runtime selection`
 - Issue: `#9`
+- PR: `#10`
 - Branch: `gate-005-local-model-interface`
-- State: `INTERFACE_IMPLEMENTED_PENDING_CI_AND_LOCAL_RUNTIME_BENCHMARK`
+- State: `INTERFACE_AND_RUNTIME_BASELINE_PASS_PENDING_MODEL_BENCHMARK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -35,15 +36,15 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Arbitrary shell execution: `NOT_IMPLEMENTED_PROHIBITED`
 - Filesystem writes/deletes: `NOT_IMPLEMENTED`
 - Git mutation operations: `NOT_IMPLEMENTED`
-- Replaceable model request/response interface: `IMPLEMENTED_PENDING_VALIDATION`
-- Provider-neutral benchmark harness: `IMPLEMENTED_PENDING_VALIDATION`
-- Loopback-only Ollama provider: `IMPLEMENTED_PENDING_VALIDATION`
+- Replaceable model request/response interface: `IMPLEMENTED_VALIDATED`
+- Provider-neutral benchmark harness: `IMPLEMENTED_VALIDATED`
+- Loopback-only Ollama provider: `IMPLEMENTED_VALIDATED_INTERFACE`
 - Model-proposed tool execution inside provider: `NOT_IMPLEMENTED_PROHIBITED`
-- Initial runtime selection: `OLLAMA_PROVISIONAL_PENDING_LOCAL_INSTALL_VALIDATION`
+- Initial runtime selection: `OLLAMA_PROVISIONAL_VALIDATED_ON_WORKSTATION`
 - Initial model selection: `PENDING_MEASURED_BENCHMARK`
-- Candidate A: `gpt-oss:20b`
-- Candidate B: `qwen3.6:27b`
-- Stretch candidate: `qwen3.6:35b` only if measured memory margin justifies it
+- Candidate A: `gpt-oss:20b` (~14 GB current Ollama package)
+- Candidate B: `qwen3.6:27b-q4_K_M` (~17 GB current Ollama package)
+- Stretch candidate: `qwen3.6:35b` (~23 GB current Ollama package) only if measured memory margin justifies it
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Multi-agent routing: `DEFERRED`
 - Vision/image/CAD workers: `DEFERRED`
@@ -68,18 +69,28 @@ Historical CI note:
 - strict branch-head validation is performed by `.github/workflows/validate-exact-head.yml`, added in Gate 004.
 
 ## Gate 005 validation state
-- stable request/response type tests: `NOT_RUN`
-- loopback-only provider boundary tests: `NOT_RUN`
-- Ollama request/response translation tests: `NOT_RUN`
-- malformed tool-call rejection test: `NOT_RUN`
-- benchmark harness tests: `NOT_RUN`
-- Gate 002–004 regression suite: `NOT_RUN_ON_GATE_005_HEAD`
-- strict exact-head CI: `PENDING`
-- local Windows/Python 3.12 interface suite: `PENDING`
-- Ollama installation on primary workstation: `PENDING`
-- `gpt-oss:20b` local benchmark: `PENDING`
-- `qwen3.6:27b` local benchmark: `PENDING`
+- strict exact-head CI on implementation head `19d136a0b2a1b82385f31125d6d530d6d53fb3bc`: `34/34 PASS`
+- stable request/response type tests: `PASS`
+- loopback-only provider boundary tests: `PASS`
+- Ollama request/response translation tests: `PASS`
+- malformed tool-call rejection test: `PASS`
+- benchmark harness tests: `PASS`
+- Gate 002–004 regression suite: `PASS`
+- local Windows/Python 3.12 interface suite on `19d136a0b2a1b82385f31125d6d530d6d53fb3bc`: `34/34 PASS`
+- local Git working tree after validation: `CLEAN`
+- Ollama version on primary workstation: `0.34.1`
+- Ollama API `/api/version`: `0.34.1`, `PASS`
+- Ollama process list before model load: empty, expected
+- local service host: `127.0.0.1:11434`, `PASS`
+- model directory: `C:\workspace\models\ollama`, `PASS`
+- `OLLAMA_NUM_PARALLEL=1`: `PASS`
+- `OLLAMA_MAX_LOADED_MODELS=1`: `PASS`
+- benchmark context baseline `OLLAMA_CONTEXT_LENGTH=8192`: `PASS`
+- cloud disabled `OLLAMA_NO_CLOUD=1`: `PASS`
+- NVIDIA GPU visible: `GeForce RTX 3060 Ti, 8192 MiB`, `PASS`
+- measured candidate benchmark: `PENDING`
 - selected initial engineering model: `PENDING`
+- final strict exact-head CI after benchmark evidence: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -93,7 +104,7 @@ Historical CI note:
 - NVIDIA driver: `591.86`
 - repository checkout: `C:\workspace\repos\engineering-ai`
 - local `.venv`: present and ignored by Git
-- Ollama: `NOT_INSTALLED_OR_NOT_YET_VALIDATED`
+- Ollama: `0.34.1`, locally reachable on loopback
 
 Security constraint for local model services:
 - loopback/local-only exposure is mandatory in Gate 005;
@@ -116,6 +127,6 @@ Security constraint for local model services:
 - single-agent core precedes multi-agent expansion.
 
 ## Next admissible action
-Validate Gate 005 interface/provider code in strict exact-head CI, then install/configure Ollama loopback-only on the primary workstation and execute the recorded local candidate benchmarks before selecting the initial engineering model.
+Run the first measured local candidate benchmark (`gpt-oss:20b`) on the primary workstation, record CPU/GPU split, memory/resource data, throughput and machine-scored engineering results, then benchmark `qwen3.6:27b-q4_K_M` under the same settings before selecting the initial model.
 
 Gate 006 — Planner / Executor / Reviewer loop — is not admissible until Gate 005 is reviewed and merged.
