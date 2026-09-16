@@ -1,7 +1,29 @@
 # Engineering AI
 
-Local-first autonomous engineering AI supervisor and agent platform.
+Local-first autonomous/semi-autonomous engineering AI supervisor and agent platform.
 
-This repository is the control plane for project governance, orchestration, tool adapters, engineering memory, validation, and audit. Project repositories such as PlataVM and BuoyCalc remain independent sources of project artifacts and are connected through project profiles/adapters.
+## Purpose
+Engineering AI is the control plane for safe long-running engineering work. It coordinates replaceable AI models with deterministic tools, project-specific policy, persistent state, evidence, validation, and audit.
 
-Initial architecture baseline is intentionally not defined on `main` yet; it will be introduced through Gate 001 via Issue -> branch -> PR.
+The first real integration targets are existing engineering projects such as PlataVM and BuoyCalc. Those projects remain independent repositories; Engineering AI connects to them through controlled project profiles/adapters.
+
+## Core design
+- repository/project state is authoritative, not model/chat memory;
+- offline-first operation;
+- replaceable local/external model interfaces;
+- deterministic non-LLM Supervisor for permissions and state transitions;
+- deterministic engineering validators outrank model claims;
+- explicit separation of simulation and physical validation;
+- evidence/provenance and audit for material actions;
+- single-agent reliability before multi-agent specialization.
+
+## Current state
+The project is in its architecture/governance bootstrap phase. See:
+- `AGENTS.md` — global governance and stop conditions;
+- `ARCHITECTURE.md` — system architecture;
+- `ROADMAP.md` — staged implementation plan;
+- `STATUS.md` — current state;
+- `DECISIONS.md` — architectural decisions;
+- `CHRONOLOGY.md` — project chronology.
+
+No production local model/runtime or connected-project modification is part of Gate 001.
