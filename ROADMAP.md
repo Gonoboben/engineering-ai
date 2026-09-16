@@ -52,7 +52,7 @@ Validation note:
 Gate 003 local Windows/Python 3.12 validation ran on the stated branch head and passed `18/18`. The historical PR workflow used GitHub's default pull-request merge-ref checkout; strict CI branch-head verification was added during Gate 004.
 
 ### Gate 004 — Tool adapter foundation
-Status: `IMPLEMENTED_PENDING_LOCAL_VALIDATION`
+Status: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
 
 Implemented:
 - root-bounded read-only filesystem inspection;
@@ -69,7 +69,8 @@ Current evidence:
 - new tool adapter suite — `PASS`;
 - Linux CI tests — `28/28 PASS`;
 - exact-head checkout/verification on `73c025b5d8676c464beeb059cb5cbc3b0980488e` — `PASS`;
-- local Windows/Python 3.12 validation on current Gate head — `PENDING`;
+- exact-head checkout/verification on documentation head `aea2921caad82b6792e3d6adb3eb7518f2b89afd` — `PASS`;
+- local Windows/Python 3.12 validation on `aea2921caad82b6792e3d6adb3eb7518f2b89afd` — `28/28 PASS`, working tree clean;
 - final exact-head CI after local-validation evidence — `PENDING`.
 
 No project-specific writes or project access.
