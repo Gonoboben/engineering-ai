@@ -15,15 +15,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 003 merge commit: `bb073ea212676ecc17d50131beee41842bd2eed2`
 - Gate 004: `ACCEPTED_MERGED`
 - Gate 004 merge commit: `bc950ded14487b0de90e9209589486fe6bfd83f2`
+- Gate 005: `ACCEPTED_MERGED`
+- Gate 005 merge commit: `ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`
 - Control-plane architecture: `ACCEPTED_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `005 — Local model interface and measured runtime selection`
-- Issue: `#9`
-- PR: `#10`
-- Branch: `gate-005-local-model-interface`
-- State: `MODEL_SELECTED_PENDING_FINAL_VALIDATION`
+- Gate: `006 — Planner / Executor / Reviewer loop`
+- Issue: `#11`
+- PR: `PENDING_DRAFT`
+- Branch: `gate-006-planner-executor-reviewer`
+- State: `OPEN_IMPLEMENTATION_NOT_STARTED`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -41,7 +43,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Loopback-only Ollama provider: `IMPLEMENTED_VALIDATED_INTERFACE`
 - Model-proposed tool execution inside provider: `NOT_IMPLEMENTED_PROHIBITED`
 - Initial runtime selection: `OLLAMA_VALIDATED_ON_WORKSTATION`
-- Initial model selection: `GPT_OSS_20B_MEDIUM_SELECTED_PENDING_FINAL_VALIDATION`
+- Initial model selection: `GPT_OSS_20B_MEDIUM_ACCEPTED`
 - Selected model: `gpt-oss:20b`
 - Selected baseline reasoning level: `medium`
 - Baseline context: `8192`
@@ -49,6 +51,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate A: `gpt-oss:20b` — `4/4 PASS` at `medium`; `high` reproducibly truncates two structured-output cases and is not the default
 - Candidate B: `qwen3.6:27b-q4_K_M` — `3 PASS / 1 INCONCLUSIVE_TRUNCATED`; memory-stable but ~2.45–2.55 eval tok/s and ~37.7 min aggregate benchmark time on this workstation
 - Stretch candidate: `qwen3.6:35b` — `DEFERRED_NOT_JUSTIFIED_ON_CURRENT_WORKSTATION` after measured 27B CPU-heavy performance
+- Planner / Executor / Reviewer loop: `GATE_006_NOT_IMPLEMENTED`
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Multi-agent routing: `DEFERRED`
 - Vision/image/CAD workers: `DEFERRED`
@@ -58,7 +61,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM: `NOT_CONNECTED`
 - BuoyCalc: `NOT_CONNECTED`
 
-Gate 005 does not access or modify either engineering project.
+Gate 006 does not access or modify either engineering project.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -73,7 +76,6 @@ Historical CI note:
 - strict branch-head validation is performed by `.github/workflows/validate-exact-head.yml`, added in Gate 004.
 
 ## Gate 005 validation state
-- strict exact-head CI on implementation head `19d136a0b2a1b82385f31125d6d530d6d53fb3bc`: `34/34 PASS`
 - stable request/response type tests: `PASS`
 - loopback-only provider boundary tests: `PASS`
 - Ollama request/response translation tests: `PASS`
@@ -84,7 +86,6 @@ Historical CI note:
 - truncation classified as `INCONCLUSIVE`, not deterministic FAIL: `PASS`
 - provider timeout preserved as benchmark evidence instead of aborting the whole run: `IMPLEMENTED_VALIDATED`
 - Gate 002–004 regression suite: `PASS`
-- local Windows/Python 3.12 interface suite on implementation baseline: `34/34 PASS`
 - Ollama version on primary workstation: `0.34.1`
 - local service host: `127.0.0.1:11434`, `PASS`
 - model directory: `C:\workspace\models\ollama`, `PASS`
@@ -101,8 +102,26 @@ Historical CI note:
 - Candidate B throughput: ~`2.45–2.55 eval tokens/s`; aggregate four-case wall time ~`37.7 min`
 - selected initial engineering model: `gpt-oss:20b`
 - selected baseline reasoning: `medium`
-- final strict exact-head CI after selection/evidence commit: `PENDING`
-- final local Windows regression on final Gate 005 head: `PENDING`
+- final Gate 005 branch head: `9d6677290ee5bbaf0253234c7b8d479c6a3f948e`
+- final local Windows regression on final head: `39/39 PASS`
+- final generic CI on final head: `PASS`
+- final strict exact-head CI on final head: `PASS`
+- human squash-merge approval: `PASS`
+- squash merge commit: `ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`
+- Gate 005 state: `ACCEPTED_MERGED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 006 validation state
+- Issue #11: `OPEN`
+- branch from Gate 005 merge commit: `PASS`
+- Planner role implementation: `NOT_RUN`
+- Executor role implementation: `NOT_RUN`
+- Reviewer role implementation: `NOT_RUN`
+- deterministic transition tests: `NOT_RUN`
+- bounded revision/retry tests: `NOT_RUN`
+- audit/evidence tests: `NOT_RUN`
+- local `gpt-oss:20b` role-loop smoke test: `NOT_RUN`
+- final strict exact-head CI: `NOT_RUN`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -119,8 +138,8 @@ Historical CI note:
 - Ollama: `0.34.1`, locally reachable on loopback
 
 Security constraint for local model services:
-- loopback/local-only exposure is mandatory in Gate 005;
-- no cloud model execution is used for Gate 005 acceptance evidence.
+- loopback/local-only exposure remains mandatory;
+- no cloud model execution is used for Gate 006 acceptance evidence.
 
 ## Global invariants
 - repository/project state is authoritative, not chat/model memory;
@@ -139,6 +158,4 @@ Security constraint for local model services:
 - single-agent core precedes multi-agent expansion.
 
 ## Next admissible action
-Run the final local Windows regression suite on the final Gate 005 branch head and confirm strict exact-head CI on the same head. If both pass, review PR #10 and request explicit human squash-merge approval for the exact final head SHA.
-
-Gate 006 — Planner / Executor / Reviewer loop — is not admissible until Gate 005 is reviewed and merged.
+Implement Gate 006 Planner / Executor / Reviewer role separation and deterministic Supervisor-controlled transitions using the already accepted `gpt-oss:20b / medium / 8192` model baseline. Keep project adapters, multi-model routing, and abliterated model integration out of Gate 006 scope.
