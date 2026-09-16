@@ -2,7 +2,7 @@
 
 Usage:
     python scripts/benchmark_local_model.py --model gpt-oss:20b --reasoning high
-    python scripts/benchmark_local_model.py --model qwen3.6:27b
+    python scripts/benchmark_local_model.py --model qwen3.6:27b-q4_K_M --reasoning high
 
 The script prints JSON evidence to stdout. Output is ASCII-safe JSON so it is
 reliable on Windows consoles that still use legacy encodings such as CP1251.
@@ -69,7 +69,12 @@ def _tool_scorer(response):
     return ok, "expected inert read_repository(path=STATUS.md) proposal"
 
 
-def build_cases(model: str, context_tokens: int, reasoning_effort: str | None):
+def build_cases(
+    model: str,
+    context_tokens: int,
+    reasoning_effort: str | None,
+    max_output_tokens: int,
+):
     numeric_schema = {
         "type": "object",
         "properties": {
@@ -101,7 +106,7 @@ def build_cases(model: str, context_tokens: int, reasoning_effort: str | None):
         temperature=0.0,
         seed=42,
         context_tokens=context_tokens,
-        max_output_tokens=512,
+        max_output_tokens=max_output_tokens,
         reasoning_effort=reasoning_effort,
         keep_alive="10m",
     )
@@ -196,19 +201,30 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
     parser.add_argument("--context", type=int, default=8192)
+    parser.add_argument("--max-output", type=int, default=2048)
     parser.add_argument("--timeout", type=float, default=600.0)
     parser.add_argument(
         "--reasoning", choices=("none", "low", "medium", "high"), default=None
     )
     args = parser.parse_args()
+    if args.context <= 0:
+        parser.error("--context must be positive")
+    if args.max_output <= 0:
+        parser.error("--max-output must be positive")
 
     provider = OllamaProvider()
-    cases = build_cases(args.model, args.context, args.reasoning)
+    cases = build_cases(
+        args.model,
+        args.context,
+        args.reasoning,
+        args.max_output,
+    )
     records = run_benchmark(provider, cases, timeout_seconds=args.timeout)
     payload = {
         "benchmark": "gate-005-synthetic-v1",
         "model": args.model,
         "context_tokens": args.context,
+        "max_output_tokens": args.max_output,
         "reasoning_effort": args.reasoning,
         "cases": [record.as_dict() for record in records],
         "passed": sum(record.passed is True for record in records),
