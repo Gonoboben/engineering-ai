@@ -52,9 +52,12 @@ Validation note:
 Gate 003 local Windows/Python 3.12 validation ran on the stated branch head and passed `18/18`. The historical PR workflow used GitHub's default pull-request merge-ref checkout; strict CI branch-head verification was added during Gate 004.
 
 ### Gate 004 — Tool adapter foundation
-Status: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
+Status: `ACCEPTED_MERGED`
 
-Implemented:
+Accepted merge commit:
+`bc950ded14487b0de90e9209589486fe6bfd83f2`
+
+Delivered:
 - root-bounded read-only filesystem inspection;
 - fixed read-only Git status/branch/head/log/diff operations;
 - allow-listed fixed-profile local process execution;
@@ -62,25 +65,46 @@ Implemented:
 - timeouts;
 - bounded stdout/stderr capture;
 - root-bounded working directories;
-- exact-PR-head CI workflow with explicit SHA verification.
+- strict exact-PR-head CI workflow with explicit SHA verification.
 
-Current evidence:
-- Gate 002/003 regression suite — `PASS`;
-- new tool adapter suite — `PASS`;
-- Linux CI tests — `28/28 PASS`;
-- exact-head checkout/verification on `73c025b5d8676c464beeb059cb5cbc3b0980488e` — `PASS`;
-- exact-head checkout/verification on documentation head `aea2921caad82b6792e3d6adb3eb7518f2b89afd` — `PASS`;
-- local Windows/Python 3.12 validation on `aea2921caad82b6792e3d6adb3eb7518f2b89afd` — `28/28 PASS`, working tree clean;
-- final exact-head CI after local-validation evidence — `PENDING`.
+Validation:
+- Linux/CI suite — `28/28 PASS`;
+- local Windows/Python 3.12 — `28/28 PASS`;
+- strict exact-head final PR validation — `PASS`.
 
 No project-specific writes or project access.
 
 ### Gate 005 — Local model interface
-Status: `NOT_STARTED`
+Status: `INTERFACE_IMPLEMENTED_PENDING_CI_AND_LOCAL_RUNTIME_BENCHMARK`
 
-Add one replaceable local model provider through a stable interface.
+Implement:
+- provider-neutral request/response/message/tool-call types;
+- replaceable `ModelProvider` protocol;
+- one local provider implementation behind that interface;
+- loopback-only runtime boundary;
+- structured-output transport;
+- tool-call proposal transport without tool execution;
+- runtime metrics/resource diagnostics;
+- reproducible benchmark harness and candidate-selection evidence.
 
-Model/runtime selection is made here using measured quality, compatibility and resource constraints on the existing workstation. Do not hard-code model semantics into the Supervisor.
+Provisional runtime:
+- Ollama, pending actual Windows workstation installation/compatibility validation.
+
+Initial candidates:
+- `gpt-oss:20b`;
+- `qwen3.6:27b`;
+- `qwen3.6:35b` only as a stretch candidate after measured memory-margin review.
+
+Acceptance evidence still required:
+- Gate 002–004 regression suite `PASS` on Gate 005 head;
+- provider/interface unit tests `PASS`;
+- strict exact-head CI `PASS`;
+- local Windows/Python 3.12 interface tests `PASS`;
+- local Ollama runtime validation on loopback;
+- measured benchmark results for initial candidates;
+- explicit initial model selection recorded from local evidence.
+
+Do not hard-code model-family semantics into Supervisor behavior.
 
 ### Gate 006 — Planner / Executor / Reviewer loop
 Status: `NOT_STARTED`
