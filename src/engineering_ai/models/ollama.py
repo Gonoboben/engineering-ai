@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 import socket
-from typing import Any
+from typing import Any, Mapping
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
@@ -55,6 +55,18 @@ class OllamaProvider:
             raise ModelProviderProtocolError("Ollama version response contains non-string version")
         self._version_cache = version
         return version
+
+    def runtime_diagnostics(self) -> Mapping[str, Any]:
+        """Return a read-only runtime/resource snapshot for benchmark evidence."""
+        payload = self._request_json("GET", "/api/ps", None, timeout_seconds=10.0)
+        models = payload.get("models", [])
+        if not isinstance(models, list):
+            raise ModelProviderProtocolError("Ollama /api/ps models must be a list")
+        return {
+            "provider": self.provider_name,
+            "runtime_version": self.runtime_version(),
+            "running_models": models,
+        }
 
     def chat(self, request: ModelRequest, *, timeout_seconds: float = 300.0) -> ModelResponse:
         if timeout_seconds <= 0:
