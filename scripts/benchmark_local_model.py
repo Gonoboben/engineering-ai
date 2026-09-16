@@ -4,7 +4,9 @@ Usage:
     python scripts/benchmark_local_model.py --model gpt-oss:20b --reasoning high
     python scripts/benchmark_local_model.py --model qwen3.6:27b
 
-The script prints JSON evidence to stdout. It does not execute model-proposed tools.
+The script prints JSON evidence to stdout. Output is ASCII-safe JSON so it is
+reliable on Windows consoles that still use legacy encodings such as CP1251.
+It does not execute model-proposed tools.
 """
 
 from __future__ import annotations
@@ -185,6 +187,11 @@ def build_cases(model: str, context_tokens: int, reasoning_effort: str | None):
     )
 
 
+def _render_payload(payload: dict[str, Any]) -> str:
+    """Render benchmark evidence without depending on the terminal code page."""
+    return json.dumps(payload, ensure_ascii=True, indent=2)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
@@ -208,7 +215,7 @@ def main() -> int:
         "failed": sum(record.passed is False for record in records),
         "unscored": sum(record.passed is None for record in records),
     }
-    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    print(_render_payload(payload))
     return 0 if payload["failed"] == 0 else 2
 
 
