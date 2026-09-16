@@ -21,7 +21,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Issue: `#7`
 - PR: `#8`
 - Branch: `gate-004-tool-adapter-foundation`
-- State: `IMPLEMENTED_PENDING_LOCAL_VALIDATION`
+- State: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -29,9 +29,9 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Deterministic policy engine: `IMPLEMENTED_VALIDATED`
 - Supervisor state machine: `IMPLEMENTED_VALIDATED`
 - Approval/forbidden/retry/audit enforcement: `IMPLEMENTED_VALIDATED`
-- Root-bounded read-only filesystem adapter: `IMPLEMENTED_PENDING_LOCAL_VALIDATION`
-- Read-only Git adapter: `IMPLEMENTED_PENDING_LOCAL_VALIDATION`
-- Allow-listed fixed-profile process runner: `IMPLEMENTED_PENDING_LOCAL_VALIDATION`
+- Root-bounded read-only filesystem adapter: `IMPLEMENTED_VALIDATED`
+- Read-only Git adapter: `IMPLEMENTED_VALIDATED`
+- Allow-listed fixed-profile process runner: `IMPLEMENTED_VALIDATED`
 - Arbitrary shell execution: `NOT_IMPLEMENTED_PROHIBITED`
 - Filesystem writes/deletes: `NOT_IMPLEMENTED`
 - Git mutation operations: `NOT_IMPLEMENTED`
@@ -75,8 +75,10 @@ Historical CI note:
 - Linux CI tests run: `28`; result: `OK`
 - exact-head workflow added: `PASS`
 - exact-head revision verification on `73c025b5d8676c464beeb059cb5cbc3b0980488e`: `PASS`
-- local Windows/Python 3.12 validation on current Gate 004 head: `PENDING`
-- final exact-head CI after local-validation evidence: `PENDING`
+- exact-head revision verification on documentation head `aea2921caad82b6792e3d6adb3eb7518f2b89afd`: `PASS`
+- local Windows/Python 3.12 validation on `aea2921caad82b6792e3d6adb3eb7518f2b89afd`: `PASS`
+- local tests run: `28`; failures: `0`; errors: `0`; result: `OK`; working tree: `CLEAN`
+- final exact-head CI after this validation-record commit: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -107,6 +109,6 @@ default to loopback/local-only exposure until an explicit network-security decis
 - single-agent core precedes multi-agent expansion.
 
 ## Next admissible action
-Run the complete deterministic suite locally on the primary Windows/Python 3.12 workstation at the current Gate 004 head, then record the local evidence and require final exact-head CI before human merge approval.
+Confirm final exact-head GitHub Actions PASS for the head containing this local-validation record, complete PR #8 consistency review, and mark PR #8 ready for human merge approval.
 
 Gate 005 — Local model interface — is not admissible until Gate 004 is reviewed and merged.
