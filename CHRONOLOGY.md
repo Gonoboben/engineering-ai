@@ -185,7 +185,44 @@ Validated behavior includes:
 - audit events validate against the Gate 002 audit schema;
 - identical inputs with fixed clock/ID sources produce identical results.
 
-Current Gate state:
-`IMPLEMENTED_PENDING_LOCAL_VALIDATION`
+---
 
-A local Windows/Python 3.12 run and a final exact-head CI after this evidence/status update are still required before Gate 003 can be review-ready.
+## 2026-09-16 — Gate 003 documentation-head CI
+
+Head:
+`ad95a1ed0e1ac0346247955da2a5063669a6df29`
+
+GitHub Actions result:
+`PASS`
+
+This confirmed that the implementation and status/roadmap/chronology state remained green together before local workstation validation.
+
+---
+
+## 2026-09-16 — Gate 003 local workstation validation
+
+Primary workstation:
+- Windows 11 Pro build `10.0.22000`;
+- Python `3.12.10` in project `.venv`;
+- branch `gate-003-deterministic-supervisor`;
+- exact head `ad95a1ed0e1ac0346247955da2a5063669a6df29`.
+
+Commands:
+- `python -m pip install -e .`
+- `python -m unittest discover -s tests -v`
+- `git status`
+
+Result:
+- editable package install: `PASS`;
+- tests run: `18`;
+- failures: `0`;
+- errors: `0`;
+- final result: `OK`;
+- Git working tree: `CLEAN`.
+
+This local run independently reproduced the Gate 003 Supervisor behavior already validated in GitHub Actions.
+
+Gate state after recording this evidence:
+`VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
+
+A final GitHub Actions run is required on the head containing this evidence record. Its result is recorded in the PR/Issue discussion rather than by another status-only commit, avoiding an infinite validation-record commit loop.
