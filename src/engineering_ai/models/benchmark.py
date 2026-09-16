@@ -11,7 +11,7 @@ from dataclasses import asdict, dataclass
 from time import perf_counter
 from typing import Any, Callable, Mapping, Sequence
 
-from engineering_ai.models.protocol import ModelProvider
+from engineering_ai.models.protocol import ModelProvider, ModelProviderError
 from engineering_ai.models.types import ModelRequest, ModelResponse
 
 
@@ -54,12 +54,39 @@ def run_benchmark(
 
     A response stopped by an output-token limit is recorded as inconclusive rather
     than as a domain failure, because the deterministic scorer never received a
-    complete model answer.
+    complete model answer. Provider failures/timeouts are also recorded as
+    inconclusive observations instead of aborting the whole evidence package.
     """
     records: list[BenchmarkRecord] = []
     for case in cases:
         started = perf_counter()
-        response = provider.chat(case.request, timeout_seconds=timeout_seconds)
+        try:
+            response = provider.chat(case.request, timeout_seconds=timeout_seconds)
+        except ModelProviderError as exc:
+            elapsed = perf_counter() - started
+            records.append(
+                BenchmarkRecord(
+                    case_id=case.case_id,
+                    description=case.description,
+                    provider=provider.provider_name,
+                    runtime_version=None,
+                    model=case.request.model,
+                    elapsed_seconds=elapsed,
+                    passed=None,
+                    score_note=(
+                        "INCONCLUSIVE: provider request failed or timed out: "
+                        f"{type(exc).__name__}: {exc}"
+                    ),
+                    content="",
+                    thinking="",
+                    done_reason="provider_error",
+                    tool_calls=(),
+                    metrics={},
+                    runtime_diagnostics={},
+                )
+            )
+            continue
+
         elapsed = perf_counter() - started
         if response.done_reason == "length":
             passed: bool | None = None
