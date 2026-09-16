@@ -70,14 +70,14 @@ Confirmed environment:
 - Git `2.55.0.windows.3`;
 - GitHub CLI `2.101.0`, authenticated as `Gonoboben`;
 - Python `3.12.10`;
-- local checkout `C:\workspace\repos\engineering-ai` synchronized to Gate 001 baseline.
+- local checkout `C:\workspace\repos\engineering-ai`.
 
 Known platform risk:
-Windows build 22000 is an unsupported host OS baseline and cannot currently be updated in the user's environment. This is tracked as a security/platform risk rather than a Gate 002 blocker. Future local network services must default to local-only exposure until explicitly reviewed.
+Windows build 22000 is an unsupported host OS baseline and cannot currently be updated in the user's environment. This is tracked as a security/platform risk rather than a current development blocker. Future local network services must default to local-only exposure until explicitly reviewed.
 
 ---
 
-## 2026-09-16 — Gate 002 opened and implemented for validation
+## 2026-09-16 — Gate 002 opened and implemented
 
 Issue:
 `#3 — Gate 002 — Repository skeleton and machine-readable schemas`
@@ -99,7 +99,64 @@ Implemented scope:
 - GitHub Actions validation workflow;
 - schema documentation.
 
+Independent local validation on Windows/Python 3.12:
+- `8` tests run;
+- result `OK`;
+- working tree clean.
+
+Final exact-head CI on:
+`33155965b374d9150b55ad528bb801f49043480d`
+
+Result:
+`PASS`
+
+---
+
+## 2026-09-16 — Gate 002 accepted and merged
+
+Human approval was given for squash-merge of PR #4 at exact head:
+`33155965b374d9150b55ad528bb801f49043480d`
+
+Squash merge result on `main`:
+`90df86ceebfb3ee6166a959fcf84172e989c646a`
+
+Gate 002 state became:
+`ACCEPTED_MERGED`
+
+No model runtime and no connected engineering project access were introduced.
+
+---
+
+## 2026-09-16 — Gate 003 opened
+
+Issue:
+`#5 — Gate 003 — Deterministic Supervisor core`
+
+PR:
+`#6 — Gate 003: deterministic Supervisor core`
+
+Branch:
+`gate-003-deterministic-supervisor`
+
+Purpose:
+Implement the first executable non-LLM Supervisor that owns policy decisions, state transitions, bounded retries and audit emission before any local AI model is connected.
+
+Implemented scope:
+- deterministic policy engine with `ALLOW`, `DENY`, `NEEDS_HUMAN_APPROVAL` outcomes;
+- rule that effective runtime state may tighten but not relax project policy;
+- Supervisor job/state lifecycle;
+- explicit approval blocking and named-approver requirement;
+- forbidden and undeclared action rejection before tool invocation;
+- bounded retry handling with terminal failure after exhaustion;
+- schema-validated policy, tool and state-transition audit events;
+- defensive copies preventing advisory callers from directly mutating authoritative Supervisor state;
+- deterministic stub tool interface;
+- regression and Supervisor unit tests.
+
 Model/runtime integration:
+`NOT_STARTED`
+
+Real tool adapters:
 `NOT_STARTED`
 
 Connected project access:
@@ -107,41 +164,28 @@ Connected project access:
 
 ---
 
-## 2026-09-16 — Gate 002 validation evidence
+## 2026-09-16 — Gate 003 implementation-head CI
 
-GitHub Actions validation on implementation head:
-`6e9c3d09ac7e690ba514ec9b878cd8dddfc3ac89`
+Implementation head:
+`52c32a385bb3772ba3f431eba6d5105624f867ce`
 
-Result:
+GitHub Actions result:
 `PASS`
 
-Validated CI steps:
-- checkout;
-- Python 3.12 setup;
-- package installation;
-- deterministic test suite.
+Validated behavior includes:
+- all Gate 002 schema tests remain green;
+- autonomous actions execute through the Supervisor;
+- forbidden actions never invoke the stub tool;
+- approval-required actions wait for named human approval;
+- actions not declared by the job are denied;
+- retry exhaustion terminates instead of looping indefinitely;
+- effective state cannot relax policy-forbidden actions;
+- job retry limits cannot exceed project policy;
+- external state snapshots cannot mutate authoritative Supervisor state;
+- audit events validate against the Gate 002 audit schema;
+- identical inputs with fixed clock/ID sources produce identical results.
 
-Independent local validation was performed on the primary Windows workstation using Python `3.12.10` in the project `.venv`.
+Current Gate state:
+`IMPLEMENTED_PENDING_LOCAL_VALIDATION`
 
-Command:
-`python -m unittest discover -s tests -v`
-
-Result:
-- `8` tests run;
-- all tests passed;
-- final result `OK`;
-- Git working tree clean after validation.
-
-Validated properties included:
-- all schema documents conform to JSON Schema Draft 2020-12;
-- positive fixtures are accepted;
-- invalid architecture/physics autonomous permissions are rejected;
-- simulation cannot claim `PHYSICAL_PASS`;
-- secret-bearing audit records are rejected;
-- retry counters cannot exceed configured limits;
-- package import smoke test passes.
-
-Gate state after this evidence record:
-`VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
-
-A final GitHub Actions run is required on the head containing this validation record. The result will be recorded in PR/Issue discussion without another status-only commit.
+A local Windows/Python 3.12 run and a final exact-head CI after this evidence/status update are still required before Gate 003 can be review-ready.
