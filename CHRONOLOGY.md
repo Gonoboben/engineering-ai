@@ -156,10 +156,9 @@ Gate 004 state became:
 
 ---
 
-## 2026-09-16 — Gate 005 opened
+## 2026-09-16 — Gate 005 opened and interface implemented
 
-Issue:
-`#9 — Gate 005 — Local model interface and measured runtime selection`
+Issue #9 / draft PR #10.
 
 Branch:
 `gate-005-local-model-interface`
@@ -167,7 +166,7 @@ Branch:
 Purpose:
 Add one replaceable local model provider behind a stable interface and select the first local engineering model using measured workstation evidence rather than public benchmark claims alone.
 
-Implemented for validation:
+Implemented:
 - provider-neutral model message/request/response/metrics/tool-call types;
 - replaceable `ModelProvider` protocol;
 - loopback-only Ollama provider using `localhost`, `127.0.0.1`, or `::1` only;
@@ -177,23 +176,46 @@ Implemented for validation:
 - provider-neutral benchmark harness;
 - reproducible synthetic benchmark command;
 - machine-scored electrical, validation-semantics, and tool-proposal cases;
-- deterministic provider/harness tests;
-- Gate 005 benchmark plan and candidate-selection policy.
+- deterministic provider/harness tests.
 
-Current runtime decision:
-- Ollama is the provisional first runtime because it supports native Windows local inference, local APIs, structured outputs, tools, metrics, and GPU acceleration;
-- Ollama remains replaceable and is not embedded in Supervisor semantics.
+Implementation exact head:
+`19d136a0b2a1b82385f31125d6d530d6d53fb3bc`
 
-Initial benchmark candidates discovered from current runtime registries/documentation:
-- `gpt-oss:20b` — approximately 14 GB current Ollama package;
-- `qwen3.6:27b` — approximately 18 GB current Ollama package;
-- `qwen3.6:35b` — approximately 23 GB, deferred as a stretch candidate until memory margin is measured.
+Strict exact-head GitHub Actions result:
+- expected SHA equals actual checkout SHA: `PASS`;
+- total deterministic tests: `34`;
+- failures: `0`;
+- errors: `0`;
+- result: `OK`.
 
-First benchmark context is fixed at `8192` tokens to establish a stable local baseline before attempting larger context windows.
+---
 
-Pending before Gate 005 can be accepted:
-- deterministic CI on Gate 005 implementation;
-- local Windows interface tests;
-- Ollama installation/configuration on the primary workstation;
-- local benchmark of initial candidate models;
-- explicit initial model selection from recorded local evidence.
+## 2026-09-16 — Gate 005 primary workstation interface/runtime baseline
+
+Local branch head:
+`19d136a0b2a1b82385f31125d6d530d6d53fb3bc`
+
+Local Windows/Python 3.12 result:
+- editable package installation: `PASS`;
+- deterministic tests: `34/34 PASS`;
+- Git working tree: `CLEAN`.
+
+Ollama runtime baseline:
+- Ollama version: `0.34.1`;
+- local API `/api/version`: `0.34.1`, `PASS`;
+- host: `127.0.0.1:11434`;
+- model storage: `C:\workspace\models\ollama`;
+- parallel requests: `1`;
+- max loaded models: `1`;
+- context baseline: `8192` tokens;
+- cloud functions disabled: `OLLAMA_NO_CLOUD=1`;
+- model process list before download/load: empty, expected;
+- NVIDIA GeForce RTX 3060 Ti visible with `8192 MiB` VRAM.
+
+Current candidate plan, rechecked against current Ollama registry:
+- Candidate A: `gpt-oss:20b`, ~14 GB;
+- Candidate B: `qwen3.6:27b-q4_K_M`, ~17 GB;
+- stretch candidate: `qwen3.6:35b`, ~23 GB, deferred pending measured memory margin.
+
+Next step:
+Download and benchmark Candidate A first. Record local CPU/GPU split, memory/resource state, latency/throughput, structured-output behavior, tool-call proposal behavior and machine-scored engineering results before Candidate B is tested under identical settings.
