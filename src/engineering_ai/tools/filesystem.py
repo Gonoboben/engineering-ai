@@ -63,7 +63,11 @@ class ReadOnlyFilesystemAdapter:
 
     def exists(self, relative_path: str | Path) -> bool:
         candidate = self._resolve_candidate(relative_path)
-        return candidate.exists()
+        if not candidate.exists():
+            return False
+        resolved = candidate.resolve(strict=True)
+        self._assert_within_root(resolved)
+        return True
 
     def _resolve_existing(self, relative_path: str | Path) -> Path:
         candidate = self._resolve_candidate(relative_path)
