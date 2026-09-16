@@ -75,7 +75,7 @@ Validation:
 No project-specific writes or project access.
 
 ### Gate 005 — Local model interface
-Status: `INTERFACE_AND_RUNTIME_BASELINE_PASS_PENDING_MODEL_BENCHMARK`
+Status: `MODEL_SELECTED_PENDING_FINAL_VALIDATION`
 
 Implemented:
 - provider-neutral request/response/message/tool-call types;
@@ -84,7 +84,11 @@ Implemented:
 - structured-output transport;
 - tool-call proposal transport without tool execution;
 - runtime metrics/resource diagnostics;
-- reproducible benchmark harness and candidate-selection evidence format.
+- reproducible benchmark harness and candidate-selection evidence format;
+- ASCII-safe JSON evidence output for Windows legacy code pages;
+- explicit generation-budget and `done_reason` evidence;
+- truncation represented as `INCONCLUSIVE` rather than deterministic failure;
+- provider timeout preserved as evidence instead of aborting the entire benchmark package.
 
 Validated baseline:
 - strict exact-head CI on implementation head — `34/34 PASS`;
@@ -97,16 +101,22 @@ Validated baseline:
 - RTX 3060 Ti 8 GB visible to the runtime environment.
 
 Measured benchmark candidates:
-- Candidate A: `gpt-oss:20b` (~14 GB current Ollama package);
-- Candidate B: `qwen3.6:27b-q4_K_M` (~17 GB current Ollama package);
-- Stretch: `qwen3.6:35b` (~23 GB), deferred until memory margin is measured.
+- Candidate A: `gpt-oss:20b`, MXFP4, ~14 GB package — `4/4 PASS` at `reasoning=medium`; processor split `57% CPU / 43% GPU`; active free RAM ~`16.3 GB`;
+- Candidate A diagnostic: `reasoning=high` reproduced `2 PASS + 2 INCONCLUSIVE_TRUNCATED` in two independent runs, so `high` is not the default baseline;
+- Candidate B: `qwen3.6:27b-q4_K_M`, 27.8B Q4_K_M, ~17 GB — `3 PASS + 1 INCONCLUSIVE_TRUNCATED`, no deterministic FAIL; processor split `69% CPU / 31% GPU`; ~`2.45–2.55 eval tokens/s`; ~`37.7 min` aggregate benchmark time;
+- Stretch: `qwen3.6:35b` — deferred/not justified on the current workstation after the measured 27B CPU-heavy performance.
+
+Initial model selection:
+- selected model: `gpt-oss:20b`;
+- selected baseline reasoning: `medium`;
+- baseline context: `8192`;
+- selection evidence: `docs/evidence/gate005/model-selection.md`.
 
 Remaining acceptance evidence:
-- local benchmark of Candidate A under fixed settings;
-- local benchmark of Candidate B under the same settings;
-- recorded CPU/GPU split, memory/resource state, latency/throughput and machine-scored results;
-- explicit initial engineering-model selection from local evidence;
-- final strict exact-head CI after benchmark evidence is committed.
+- final local Windows regression suite on the final Gate 005 head;
+- final strict exact-head CI on the same head;
+- PR #10 review;
+- explicit exact-SHA human squash-merge approval.
 
 Do not hard-code model-family semantics into Supervisor behavior.
 
