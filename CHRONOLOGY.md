@@ -157,5 +157,38 @@ Result:
 - package install: `PASS`;
 - deterministic tests: `PASS`.
 
-Current Gate state:
-`IMPLEMENTED_PENDING_LOCAL_VALIDATION`
+Documentation head before local validation:
+`aea2921caad82b6792e3d6adb3eb7518f2b89afd`
+
+Strict exact-head CI result on that head:
+`PASS`.
+
+---
+
+## 2026-09-16 — Gate 004 local workstation validation
+
+Primary workstation:
+- Windows 11 Pro build `10.0.22000`;
+- Python `3.12.10` in project `.venv`;
+- branch `gate-004-tool-adapter-foundation`;
+- exact branch head `aea2921caad82b6792e3d6adb3eb7518f2b89afd`.
+
+Commands:
+- `python -m pip install -e .`;
+- `python -m unittest discover -s tests -v`;
+- `git status`.
+
+Result:
+- editable package install: `PASS`;
+- tests run: `28`;
+- failures: `0`;
+- errors: `0`;
+- final result: `OK`;
+- Git working tree: `CLEAN`.
+
+The Windows run independently reproduced the filesystem, Git-read-only, process-runner, Supervisor, schema, and regression checks already validated in Linux CI.
+
+Gate state after recording this evidence:
+`VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`.
+
+A final strict exact-head workflow run is required on the head containing this evidence record before PR #8 can be marked review-ready.
