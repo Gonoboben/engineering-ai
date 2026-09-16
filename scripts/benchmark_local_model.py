@@ -197,6 +197,19 @@ def _render_payload(payload: dict[str, Any]) -> str:
     return json.dumps(payload, ensure_ascii=True, indent=2)
 
 
+def _result_exit_code(payload: dict[str, Any]) -> int:
+    """Return 0 only for a complete all-pass benchmark.
+
+    2 means at least one completed machine-scored case failed.
+    3 means no completed case failed, but at least one case is inconclusive/unscored.
+    """
+    if int(payload.get("failed", 0)) > 0:
+        return 2
+    if int(payload.get("unscored", 0)) > 0:
+        return 3
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
@@ -232,7 +245,7 @@ def main() -> int:
         "unscored": sum(record.passed is None for record in records),
     }
     print(_render_payload(payload))
-    return 0 if payload["failed"] == 0 else 2
+    return _result_exit_code(payload)
 
 
 if __name__ == "__main__":
