@@ -112,18 +112,11 @@ This correction strengthens validation and does not weaken any prior invariant.
 
 ---
 
-## 2026-09-16 — Gate 004 opened and implemented for validation
+## 2026-09-16 — Gate 004 implemented and validated
 
-Issue:
-`#7 — Gate 004 — Tool adapter foundation`
+Issue #7 / PR #8.
 
-PR:
-`#8 — Gate 004: tool adapter foundation`
-
-Branch:
-`gate-004-tool-adapter-foundation`
-
-Implemented scope:
+Delivered:
 - typed adapter result/error primitives;
 - root-bounded read-only filesystem adapter;
 - read-size limits;
@@ -134,61 +127,140 @@ Implemented scope:
 - `shell=False` process launch;
 - root-bounded process working directory;
 - timeout handling;
-- stdout/stderr capture through temporary files with bounded returned output;
-- cross-platform deterministic tests.
+- bounded stdout/stderr capture;
+- strict exact-PR-head CI workflow.
 
-Explicitly not implemented:
-- filesystem writes/deletes;
-- Git commit/push/merge/checkout mutation operations;
-- arbitrary shell commands;
-- project-specific access;
-- LLM/runtime integration.
-
-Implementation CI on Linux:
-- `28` tests run;
-- result `OK`.
-
-Strict exact-head validation workflow on head:
-`73c025b5d8676c464beeb059cb5cbc3b0980488e`
-
-Result:
-- checkout exact PR head: `PASS`;
-- explicit revision equality check: `PASS`;
-- package install: `PASS`;
-- deterministic tests: `PASS`.
-
-Documentation head before local validation:
+Local Windows/Python 3.12 validation on branch head:
 `aea2921caad82b6792e3d6adb3eb7518f2b89afd`
 
-Strict exact-head CI result on that head:
+Result:
+- `28` tests;
+- failures `0`;
+- errors `0`;
+- `OK`;
+- working tree `CLEAN`.
+
+Final strict exact-head CI on approved PR head:
+`0fa74070764587e3959a15afa0148491fb6a944e`
+
+Result:
 `PASS`.
+
+Human approval was given for squash-merge of PR #8 at the same exact head.
+
+Squash merge on `main`:
+`bc950ded14487b0de90e9209589486fe6bfd83f2`
+
+Gate 004 state became:
+`ACCEPTED_MERGED`.
 
 ---
 
-## 2026-09-16 — Gate 004 local workstation validation
+## 2026-09-16 — Gate 005 opened and interface implemented
 
-Primary workstation:
-- Windows 11 Pro build `10.0.22000`;
-- Python `3.12.10` in project `.venv`;
-- branch `gate-004-tool-adapter-foundation`;
-- exact branch head `aea2921caad82b6792e3d6adb3eb7518f2b89afd`.
+Issue #9 / draft PR #10.
 
-Commands:
-- `python -m pip install -e .`;
-- `python -m unittest discover -s tests -v`;
-- `git status`.
+Branch:
+`gate-005-local-model-interface`
 
-Result:
-- editable package install: `PASS`;
-- tests run: `28`;
+Purpose:
+Add one replaceable local model provider behind a stable interface and select the first local engineering model using measured workstation evidence rather than public benchmark claims alone.
+
+Implemented:
+- provider-neutral model message/request/response/metrics/tool-call types;
+- replaceable `ModelProvider` protocol;
+- loopback-only Ollama provider using `localhost`, `127.0.0.1`, or `::1` only;
+- structured-output transport;
+- tool-call proposal transport without tool execution;
+- Ollama runtime version/resource diagnostics;
+- provider-neutral benchmark harness;
+- reproducible synthetic benchmark command;
+- machine-scored electrical, validation-semantics, and tool-proposal cases;
+- deterministic provider/harness tests.
+
+Implementation exact head:
+`19d136a0b2a1b82385f31125d6d530d6d53fb3bc`
+
+Strict exact-head GitHub Actions result:
+- expected SHA equals actual checkout SHA: `PASS`;
+- total deterministic tests: `34`;
 - failures: `0`;
 - errors: `0`;
-- final result: `OK`;
+- result: `OK`.
+
+---
+
+## 2026-09-16 — Gate 005 primary workstation interface/runtime baseline
+
+Local branch head:
+`19d136a0b2a1b82385f31125d6d530d6d53fb3bc`
+
+Local Windows/Python 3.12 result:
+- editable package installation: `PASS`;
+- deterministic tests: `34/34 PASS`;
 - Git working tree: `CLEAN`.
 
-The Windows run independently reproduced the filesystem, Git-read-only, process-runner, Supervisor, schema, and regression checks already validated in Linux CI.
+Ollama runtime baseline:
+- Ollama version: `0.34.1`;
+- local API `/api/version`: `0.34.1`, `PASS`;
+- host: `127.0.0.1:11434`;
+- model storage: `C:\workspace\models\ollama`;
+- parallel requests: `1`;
+- max loaded models: `1`;
+- context baseline: `8192` tokens;
+- cloud functions disabled: `OLLAMA_NO_CLOUD=1`;
+- model process list before download/load: empty, expected;
+- NVIDIA GeForce RTX 3060 Ti visible with `8192 MiB` VRAM.
 
-Gate state after recording this evidence:
-`VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`.
+Current candidate plan, rechecked against current Ollama registry:
+- Candidate A: `gpt-oss:20b`, ~14 GB;
+- Candidate B: `qwen3.6:27b-q4_K_M`, ~17 GB;
+- stretch candidate: `qwen3.6:35b`, ~23 GB, deferred pending measured memory margin.
 
-A final strict exact-head workflow run is required on the head containing this evidence record before PR #8 can be marked review-ready.
+Next step:
+Download and benchmark Candidate A first. Record local CPU/GPU split, memory/resource state, latency/throughput, structured-output behavior, tool-call proposal behavior and machine-scored engineering results before Candidate B is tested under identical settings.
+
+---
+
+## 2026-09-17 — Gate 005 measured model selection
+
+Candidate A measurement:
+- model: `gpt-oss:20b`, MXFP4;
+- baseline: context `8192`, max output `2048`, reasoning `medium`;
+- result: `4/4 PASS`;
+- processor split: `57% CPU / 43% GPU`;
+- active VRAM observed: ~`7.38 GB`;
+- free system RAM during run: ~`16.3 GB`;
+- aggregate benchmark wall time: ~`49.9 s`.
+
+Candidate A `high` diagnostic:
+- repeated twice independently;
+- each run produced `2 PASS + 2 INCONCLUSIVE_TRUNCATED`;
+- both affected structured-output cases exhausted exactly `2048` generation tokens;
+- `high` is therefore not accepted as the default baseline for this model.
+
+Candidate B measurement:
+- model: `qwen3.6:27b-q4_K_M`, 27.8B Q4_K_M;
+- baseline: context `8192`, max output `2048`, reasoning `medium`;
+- result: `3 PASS + 1 INCONCLUSIVE_TRUNCATED`, deterministic FAIL `0`;
+- processor split: `69% CPU / 31% GPU`;
+- active VRAM observed: ~`7.62 GB`;
+- free system RAM during run: ~`12.8–13.4 GB`;
+- throughput: ~`2.45–2.55 eval tokens/s`;
+- aggregate benchmark wall time: ~`37.7 min`;
+- model remained memory-stable but was operationally too slow for the primary interactive role on the current workstation.
+
+Selection:
+- initial local engineering model: `gpt-oss:20b`;
+- baseline reasoning level: `medium`;
+- runtime: Ollama `0.34.1`;
+- context baseline: `8192`;
+- benchmark-equivalent max output: `2048`.
+
+Selection rationale and raw evidence are recorded under `docs/evidence/gate005/`.
+
+Gate 005 state became:
+`MODEL_SELECTED_PENDING_FINAL_VALIDATION`.
+
+Next step:
+Run the final local Windows regression suite on the final Gate 005 head and confirm strict exact-head CI on the same head before requesting explicit exact-SHA squash-merge approval for PR #10.

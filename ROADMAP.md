@@ -52,9 +52,12 @@ Validation note:
 Gate 003 local Windows/Python 3.12 validation ran on the stated branch head and passed `18/18`. The historical PR workflow used GitHub's default pull-request merge-ref checkout; strict CI branch-head verification was added during Gate 004.
 
 ### Gate 004 — Tool adapter foundation
-Status: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
+Status: `ACCEPTED_MERGED`
 
-Implemented:
+Accepted merge commit:
+`bc950ded14487b0de90e9209589486fe6bfd83f2`
+
+Delivered:
 - root-bounded read-only filesystem inspection;
 - fixed read-only Git status/branch/head/log/diff operations;
 - allow-listed fixed-profile local process execution;
@@ -62,25 +65,60 @@ Implemented:
 - timeouts;
 - bounded stdout/stderr capture;
 - root-bounded working directories;
-- exact-PR-head CI workflow with explicit SHA verification.
+- strict exact-PR-head CI workflow with explicit SHA verification.
 
-Current evidence:
-- Gate 002/003 regression suite — `PASS`;
-- new tool adapter suite — `PASS`;
-- Linux CI tests — `28/28 PASS`;
-- exact-head checkout/verification on `73c025b5d8676c464beeb059cb5cbc3b0980488e` — `PASS`;
-- exact-head checkout/verification on documentation head `aea2921caad82b6792e3d6adb3eb7518f2b89afd` — `PASS`;
-- local Windows/Python 3.12 validation on `aea2921caad82b6792e3d6adb3eb7518f2b89afd` — `28/28 PASS`, working tree clean;
-- final exact-head CI after local-validation evidence — `PENDING`.
+Validation:
+- Linux/CI suite — `28/28 PASS`;
+- local Windows/Python 3.12 — `28/28 PASS`;
+- strict exact-head final PR validation — `PASS`.
 
 No project-specific writes or project access.
 
 ### Gate 005 — Local model interface
-Status: `NOT_STARTED`
+Status: `MODEL_SELECTED_PENDING_FINAL_VALIDATION`
 
-Add one replaceable local model provider through a stable interface.
+Implemented:
+- provider-neutral request/response/message/tool-call types;
+- replaceable `ModelProvider` protocol;
+- loopback-only Ollama provider;
+- structured-output transport;
+- tool-call proposal transport without tool execution;
+- runtime metrics/resource diagnostics;
+- reproducible benchmark harness and candidate-selection evidence format;
+- ASCII-safe JSON evidence output for Windows legacy code pages;
+- explicit generation-budget and `done_reason` evidence;
+- truncation represented as `INCONCLUSIVE` rather than deterministic failure;
+- provider timeout preserved as evidence instead of aborting the entire benchmark package.
 
-Model/runtime selection is made here using measured quality, compatibility and resource constraints on the existing workstation. Do not hard-code model semantics into the Supervisor.
+Validated baseline:
+- strict exact-head CI on implementation head — `34/34 PASS`;
+- local Windows/Python 3.12 suite — `34/34 PASS`;
+- Ollama `0.34.1` installed and reachable at `127.0.0.1:11434`;
+- local model directory fixed to `C:\workspace\models\ollama`;
+- cloud disabled;
+- one loaded model / one parallel request policy fixed for baseline measurements;
+- benchmark context baseline fixed at `8192` tokens;
+- RTX 3060 Ti 8 GB visible to the runtime environment.
+
+Measured benchmark candidates:
+- Candidate A: `gpt-oss:20b`, MXFP4, ~14 GB package — `4/4 PASS` at `reasoning=medium`; processor split `57% CPU / 43% GPU`; active free RAM ~`16.3 GB`;
+- Candidate A diagnostic: `reasoning=high` reproduced `2 PASS + 2 INCONCLUSIVE_TRUNCATED` in two independent runs, so `high` is not the default baseline;
+- Candidate B: `qwen3.6:27b-q4_K_M`, 27.8B Q4_K_M, ~17 GB — `3 PASS + 1 INCONCLUSIVE_TRUNCATED`, no deterministic FAIL; processor split `69% CPU / 31% GPU`; ~`2.45–2.55 eval tokens/s`; ~`37.7 min` aggregate benchmark time;
+- Stretch: `qwen3.6:35b` — deferred/not justified on the current workstation after the measured 27B CPU-heavy performance.
+
+Initial model selection:
+- selected model: `gpt-oss:20b`;
+- selected baseline reasoning: `medium`;
+- baseline context: `8192`;
+- selection evidence: `docs/evidence/gate005/model-selection.md`.
+
+Remaining acceptance evidence:
+- final local Windows regression suite on the final Gate 005 head;
+- final strict exact-head CI on the same head;
+- PR #10 review;
+- explicit exact-SHA human squash-merge approval.
+
+Do not hard-code model-family semantics into Supervisor behavior.
 
 ### Gate 006 — Planner / Executor / Reviewer loop
 Status: `NOT_STARTED`
