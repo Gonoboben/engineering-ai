@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/evidence.schema.json",
+  "title": "Engineering AI Evidence Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "project_id",
+    "claim",
+    "evidence_type",
+    "validation_class",
+    "physical_validation_state",
+    "provenance",
+    "assumptions"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "evidence_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{3,96}$"},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "claim": {"type": "string", "minLength": 1},
+    "evidence_type": {
+      "type": "string",
+      "enum": ["model_analysis", "source_document", "calculation", "simulation", "deterministic_test", "physical_measurement"]
+    },
+    "validation_class": {
+      "type": "string",
+      "enum": ["ADVISORY", "SOURCE", "CALCULATION", "SIMULATION", "DETERMINISTIC_TEST", "PHYSICAL"]
+    },
+    "physical_validation_state": {
+      "type": "string",
+      "enum": ["PHYSICAL_NOT_EXECUTED", "PHYSICAL_PASS", "PHYSICAL_FAIL", "NOT_APPLICABLE"]
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "assumptions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "revision": {"type": ["string", "null"]},
+    "inputs_hash": {"type": ["string", "null"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"evidence_type": {"const": "model_analysis"}}},
+      "then": {"properties": {"validation_class": {"const": "ADVISORY"}, "physical_validation_state": {"enum": ["PHYSICAL_NOT_EXECUTED", "NOT_APPLICABLE"]}}}
+    },
+    {
+      "if": {"properties": {"evidence_type": {"const": "source_document"}}},
+      "then": {"properties": {"validation_class": {"const": "SOURCE"}, "physical_validation_state": {"enum": ["PHYSICAL_NOT_EXECUTED", "NOT_APPLICABLE"]}}}
+    },
+    {
+      "if": {"properties": {"evidence_type": {"const": "calculation"}}},
+      "then": {"properties": {"validation_class": {"const": "CALCULATION"}, "physical_validation_state": {"enum": ["PHYSICAL_NOT_EXECUTED", "NOT_APPLICABLE"]}}}
+    },
+    {
+      "if": {"properties": {"evidence_type": {"const": "simulation"}}},
+      "then": {"properties": {"validation_class": {"const": "SIMULATION"}, "physical_validation_state": {"enum": ["PHYSICAL_NOT_EXECUTED", "NOT_APPLICABLE"]}}}
+    },
+    {
+      "if": {"properties": {"evidence_type": {"const": "deterministic_test"}}},
+      "then": {"properties": {"validation_class": {"const": "DETERMINISTIC_TEST"}, "physical_validation_state": {"enum": ["PHYSICAL_NOT_EXECUTED", "NOT_APPLICABLE"]}}}
+    },
+    {
+      "if": {"properties": {"evidence_type": {"const": "physical_measurement"}}},
+      "then": {"properties": {"validation_class": {"const": "PHYSICAL"}, "physical_validation_state": {"enum": ["PHYSICAL_PASS", "PHYSICAL_FAIL"]}}}
+    }
+  ]
+}
