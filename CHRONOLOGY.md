@@ -82,13 +82,16 @@ Windows build 22000 is an unsupported host OS baseline and cannot currently be u
 Issue:
 `#3 — Gate 002 — Repository skeleton and machine-readable schemas`
 
+PR:
+`#4 — Gate 002: repository skeleton and machine-readable schemas`
+
 Branch:
 `gate-002-repository-skeleton-schemas`
 
 Implemented scope:
 - Python package skeleton for Supervisor, model interfaces, tools, project adapters, memory, evidence and audit;
 - non-secret configuration boundary;
-- `.gitignore` for local virtual environments and runtime artifacts;
+- `.gitignore` for local virtual environments, `*.egg-info/` and runtime artifacts;
 - JSON Schema Draft 2020-12 definitions for project profile, project policy, job, project state, evidence and audit event;
 - deterministic semantic validation for permission separation, mandatory approval boundaries and retry limits;
 - positive and negative fixtures;
@@ -102,5 +105,43 @@ Model/runtime integration:
 Connected project access:
 `NOT_STARTED`
 
-Current Gate state:
-`IMPLEMENTED_PENDING_VALIDATION`
+---
+
+## 2026-09-16 — Gate 002 validation evidence
+
+GitHub Actions validation on implementation head:
+`6e9c3d09ac7e690ba514ec9b878cd8dddfc3ac89`
+
+Result:
+`PASS`
+
+Validated CI steps:
+- checkout;
+- Python 3.12 setup;
+- package installation;
+- deterministic test suite.
+
+Independent local validation was performed on the primary Windows workstation using Python `3.12.10` in the project `.venv`.
+
+Command:
+`python -m unittest discover -s tests -v`
+
+Result:
+- `8` tests run;
+- all tests passed;
+- final result `OK`;
+- Git working tree clean after validation.
+
+Validated properties included:
+- all schema documents conform to JSON Schema Draft 2020-12;
+- positive fixtures are accepted;
+- invalid architecture/physics autonomous permissions are rejected;
+- simulation cannot claim `PHYSICAL_PASS`;
+- secret-bearing audit records are rejected;
+- retry counters cannot exceed configured limits;
+- package import smoke test passes.
+
+Gate state after this evidence record:
+`VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
+
+A final GitHub Actions run is required on the head containing this validation record. The result will be recorded in PR/Issue discussion without another status-only commit.
