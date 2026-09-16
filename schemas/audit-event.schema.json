@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/audit-event.schema.json",
+  "title": "Engineering AI Audit Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "timestamp",
+    "actor",
+    "project_id",
+    "event_type",
+    "action",
+    "result",
+    "before_ref",
+    "after_ref",
+    "evidence_refs",
+    "approval",
+    "contains_secrets"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{3,96}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {"type": "string", "enum": ["human", "supervisor", "model", "tool"]},
+        "id": {"type": "string", "minLength": 1},
+        "runtime": {"type": ["string", "null"]}
+      }
+    },
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "gate_id": {"type": ["string", "null"]},
+    "job_id": {"type": ["string", "null"]},
+    "event_type": {
+      "type": "string",
+      "enum": ["TASK_CREATED", "POLICY_CHECK", "TOOL_CALL", "MODEL_CALL", "STATE_TRANSITION", "FILE_CHANGE", "GIT_OPERATION", "VALIDATION", "APPROVAL", "ERROR"]
+    },
+    "action": {"type": "string", "minLength": 1},
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "summary"],
+      "properties": {
+        "status": {"type": "string", "enum": ["PASS", "FAIL", "BLOCKED", "NEEDS_HUMAN_APPROVAL", "NOT_APPLICABLE"]},
+        "summary": {"type": "string", "minLength": 1}
+      }
+    },
+    "before_ref": {"type": ["string", "null"]},
+    "after_ref": {"type": ["string", "null"]},
+    "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "obtained", "approver"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "obtained": {"type": "boolean"},
+        "approver": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"obtained": {"const": true}}},
+          "then": {"properties": {"approver": {"type": "string", "minLength": 1}}}
+        }
+      ]
+    },
+    "contains_secrets": {"const": false}
+  }
+}
