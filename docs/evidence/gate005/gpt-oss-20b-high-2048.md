@@ -25,7 +25,7 @@ This record is benchmark evidence only. It is not physical validation and does n
 - one loaded model / one request at a time
 - provider endpoint: loopback-only Ollama
 
-## Machine-scored observations
+## Run 1 observations
 
 ### `dc-load`
 - result: `PASS`
@@ -45,8 +45,6 @@ This record is benchmark evidence only. It is not physical validation and does n
 - eval tokens: exactly `2048`
 - deterministic scorer did not receive a complete answer
 
-This is not classified as an engineering calculation failure. The model exhausted the generation budget while repeatedly reasoning about output formatting/schema.
-
 ### `validation-semantics`
 - result: `INCONCLUSIVE_TRUNCATED`
 - elapsed: `83.14 s`
@@ -55,8 +53,6 @@ This is not classified as an engineering calculation failure. The model exhauste
 - done reason: `length`
 - eval tokens: exactly `2048`
 - deterministic scorer did not receive a complete answer
-
-This is not classified as a validation-semantics failure because no complete final answer reached the scorer.
 
 ### `tool-proposal`
 - result: `PASS`
@@ -67,25 +63,82 @@ This is not classified as a validation-semantics failure because no complete fin
 - eval tokens: `45`
 - provider did not execute the tool; proposal remained advisory/inert
 
-## Aggregate classification
+Aggregate run-1 classification:
 - complete PASS cases: `2`
 - completed deterministic FAIL cases: `0`
 - inconclusive/truncated cases: `2`
 - overall benchmark state: `INCONCLUSIVE`
 
-The original harness version reported the truncated cases as ordinary failures. Gate 005 was corrected so `done_reason=length` is represented as `passed=null` / `INCONCLUSIVE`, with a distinct non-zero exit code.
+## Run 2 reproducibility check
+The identical benchmark envelope was repeated without changing prompts or deterministic scoring criteria.
 
-## Workstation resource observation while model was loaded
+### `dc-load`
+- result: `PASS`
+- elapsed: `31.28 s`
+- returned content: `{ "current_a": 4, "power_w": 192 }`
+- done reason: `stop`
+- eval tokens: `510`
+
+### `divider`
+- result: `INCONCLUSIVE_TRUNCATED`
+- elapsed: `82.76 s`
+- reasoning again computed `8 V` but did not emit final structured content
+- final content: empty
+- done reason: `length`
+- eval tokens: exactly `2048`
+
+### `validation-semantics`
+- result: `INCONCLUSIVE_TRUNCATED`
+- elapsed: `83.72 s`
+- reasoning again recognized the absence of a physical test but did not emit final structured content
+- final content: empty
+- done reason: `length`
+- eval tokens: exactly `2048`
+
+### `tool-proposal`
+- result: `PASS`
+- elapsed: `2.02 s`
+- proposed tool: `read_repository`
+- arguments: `{"path": "STATUS.md"}`
+- done reason: `stop`
+- eval tokens: `45`
+
+Aggregate run-2 classification:
+- complete PASS cases: `2`
+- completed deterministic FAIL cases: `0`
+- inconclusive/truncated cases: `2`
+- benchmark exit code: `3`
+- overall benchmark state: `INCONCLUSIVE`
+
+## Reproducibility conclusion
+The same two structured-output cases truncated at exactly the 2048-token ceiling in both independent `high` runs, while `dc-load` and `tool-proposal` completed successfully in both runs. This makes the behavior reproducible under the recorded envelope rather than a one-off runtime anomaly.
+
+The truncated cases are not classified as engineering correctness failures because their final answers never reached the deterministic scorer. They are, however, a clear operating-quality failure for `reasoning=high` on this candidate because simple structured-output tasks repeatedly consume the full generation budget without producing final content.
+
+## Workstation resource observations
+Model placement remained stable:
 - `ollama ps`: `57% CPU / 43% GPU`
 - context: `8192`
 - GPU: NVIDIA GeForce RTX 3060 Ti, `8192 MiB`
-- measured GPU memory used: approximately `7401 MiB`
-- measured total RAM: `31.9 GB`
-- measured free RAM: `15.89 GB`
+- runtime-reported model VRAM allocation: `6,071,517,183` bytes
 
-Resource conclusion: the candidate is operationally loadable on the primary workstation at the 8K baseline without exhausting system RAM. VRAM is substantially occupied, so larger candidates are expected to use a greater CPU/RAM fraction.
+Repeat-run active-generation samples:
+- sample A: `7391 MiB` VRAM used, GPU utilization `39%`, GPU memory utilization `34%`, free RAM `16.19 GB`
+- sample B: `7386 MiB` VRAM used, GPU utilization `35%`, GPU memory utilization `27%`, free RAM `16.21 GB`
 
-## Interpretation
-The `high` reasoning setting is not accepted as the Gate 005 operating setting for `gpt-oss:20b` based on this run. Two simple structured-output tasks consumed the full 2048-token output budget without reaching final content.
+Repeat-run post-run sample:
+- `7388 MiB` VRAM used, GPU utilization `0%`, GPU memory utilization `17%`, free RAM `16.14 GB`
 
-Next diagnostic step: run the unchanged benchmark cases at `reasoning=medium`, context `8192`, max output `2048`. Do not change the questions or deterministic scoring criteria.
+Measured total RAM: `31.9 GB`.
+
+Resource conclusion: `high` does not create a materially different memory-placement problem versus `medium`; the problem is repeated overlong reasoning on particular structured-output tasks, not memory exhaustion.
+
+## Final Gate 005 interpretation for this setting
+`gpt-oss:20b` with `reasoning=high`, context `8192`, max output `2048` is **not accepted as the default Gate 005 operating setting**.
+
+Reason:
+- two independent runs reproduced the same `2 PASS + 2 INCONCLUSIVE_TRUNCATED` pattern;
+- both truncated tasks hit exactly `2048` output tokens;
+- the corresponding `medium` run completed all four machine-scored cases and passed `4/4` under the same context/output envelope.
+
+No further `high` repetition is required unless a later runtime/model version materially changes behavior. Candidate evaluation proceeds using the successful `medium` baseline and comparison against Candidate B.
