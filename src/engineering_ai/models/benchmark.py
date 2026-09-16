@@ -50,15 +50,23 @@ def run_benchmark(
     *,
     timeout_seconds: float = 300.0,
 ) -> tuple[BenchmarkRecord, ...]:
-    """Run cases sequentially and return immutable benchmark observations."""
+    """Run cases sequentially and return immutable benchmark observations.
+
+    A response stopped by an output-token limit is recorded as inconclusive rather
+    than as a domain failure, because the deterministic scorer never received a
+    complete model answer.
+    """
     records: list[BenchmarkRecord] = []
     for case in cases:
         started = perf_counter()
         response = provider.chat(case.request, timeout_seconds=timeout_seconds)
         elapsed = perf_counter() - started
-        if case.scorer is None:
+        if response.done_reason == "length":
             passed: bool | None = None
-            note: str | None = None
+            note: str | None = "INCONCLUSIVE: generation stopped at output-token limit"
+        elif case.scorer is None:
+            passed = None
+            note = None
         else:
             passed, note = case.scorer(response)
         diagnostics = provider.runtime_diagnostics()
