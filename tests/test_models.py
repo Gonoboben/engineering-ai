@@ -115,6 +115,7 @@ class OllamaProviderTests(unittest.TestCase):
         self.assertEqual(response.runtime_version, "9.9.9-test")
         self.assertEqual(response.content, '{"answer":42}')
         self.assertEqual(response.thinking, "synthetic reasoning")
+        self.assertEqual(response.done_reason, "stop")
         self.assertEqual(
             response.tool_calls,
             (ModelToolCall("read_repository", {"path": "README.md"}),),
@@ -196,6 +197,7 @@ class FakeProvider:
             runtime_version="fake-1",
             model=request.model,
             content="42",
+            done_reason="stop",
             metrics=ModelMetrics(eval_count=2, eval_duration_ns=1_000_000_000),
         )
 
@@ -215,6 +217,7 @@ class BenchmarkHarnessTests(unittest.TestCase):
         self.assertEqual(len(records), 1)
         self.assertTrue(records[0].passed)
         self.assertEqual(records[0].score_note, "exact answer")
+        self.assertEqual(records[0].done_reason, "stop")
         self.assertEqual(records[0].metrics["eval_count"], 2)
         self.assertEqual(records[0].runtime_diagnostics["provider"], "fake")
 
