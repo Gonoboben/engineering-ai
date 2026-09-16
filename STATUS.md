@@ -19,20 +19,20 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Issue: `#5`
 - PR: `#6`
 - Branch: `gate-003-deterministic-supervisor`
-- State: `IMPLEMENTED_PENDING_LOCAL_VALIDATION`
+- State: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
 - Gate 002 schemas/semantic validation: `IMPLEMENTED_VALIDATED`
-- Deterministic policy engine: `IMPLEMENTED_PENDING_FINAL_VALIDATION`
-- Supervisor state machine: `IMPLEMENTED_PENDING_FINAL_VALIDATION`
-- Explicit policy outcomes (`ALLOW`, `DENY`, `NEEDS_HUMAN_APPROVAL`): `IMPLEMENTED_PENDING_FINAL_VALIDATION`
-- Approval boundary enforcement: `IMPLEMENTED_PENDING_FINAL_VALIDATION`
-- Forbidden-action enforcement: `IMPLEMENTED_PENDING_FINAL_VALIDATION`
-- Bounded retry handling: `IMPLEMENTED_PENDING_FINAL_VALIDATION`
-- Structured audit emission: `IMPLEMENTED_PENDING_FINAL_VALIDATION`
-- Fake/stub tool interface: `IMPLEMENTED_PENDING_FINAL_VALIDATION`
-- Defensive authoritative-state snapshots: `IMPLEMENTED_PENDING_FINAL_VALIDATION`
+- Deterministic policy engine: `IMPLEMENTED_VALIDATED`
+- Supervisor state machine: `IMPLEMENTED_VALIDATED`
+- Explicit policy outcomes (`ALLOW`, `DENY`, `NEEDS_HUMAN_APPROVAL`): `IMPLEMENTED_VALIDATED`
+- Approval boundary enforcement: `IMPLEMENTED_VALIDATED`
+- Forbidden-action enforcement: `IMPLEMENTED_VALIDATED`
+- Bounded retry handling: `IMPLEMENTED_VALIDATED`
+- Structured audit emission: `IMPLEMENTED_VALIDATED`
+- Fake/stub tool interface: `IMPLEMENTED_VALIDATED`
+- Defensive authoritative-state snapshots: `IMPLEMENTED_VALIDATED`
 - Real filesystem/Git/process tool adapters: `NOT_IMPLEMENTED` (Gate 004)
 - Model interface runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Local model runtime: `NOT_SELECTED`
@@ -67,8 +67,10 @@ Gate 003 does not access or modify either engineering project.
 - deterministic repeatability test: `PASS`
 - authoritative-state mutation protection test: `PASS`
 - GitHub Actions on implementation head `52c32a385bb3772ba3f431eba6d5105624f867ce`: `PASS`
-- local Windows/Python 3.12 validation on current Gate 003 head: `PENDING`
-- final exact-head CI after this documentation update: `PENDING`
+- GitHub Actions on documentation head `ad95a1ed0e1ac0346247955da2a5063669a6df29`: `PASS`
+- local Windows/Python 3.12 validation on `ad95a1ed0e1ac0346247955da2a5063669a6df29`: `PASS`
+- local tests run: `18`; result: `OK`; working tree: `CLEAN`
+- final exact-head CI after this validation-record commit: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -99,6 +101,6 @@ default to loopback/local-only exposure until an explicit network-security decis
 - single-agent core precedes multi-agent expansion.
 
 ## Next admissible action
-Run the complete deterministic suite locally on the primary Windows/Python 3.12 workstation at the current Gate 003 head, then confirm final exact-head GitHub Actions PASS and complete review of PR #6.
+Confirm final exact-head GitHub Actions PASS for the head containing this local-validation record, complete PR #6 consistency review, and mark PR #6 ready for human merge approval.
 
 Gate 004 — Tool adapter foundation — is not admissible until Gate 003 is reviewed and merged.
