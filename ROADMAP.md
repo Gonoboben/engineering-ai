@@ -8,18 +8,14 @@ The project advances through small auditable Gates. A later Gate must not silent
 ### Gate 001 — Architecture baseline and governance
 Status: `ACCEPTED_MERGED`
 
-Deliverables:
+Accepted merge commit:
+`e10f949a6e860deed2104af770909bae1d043a53`
+
+Delivered:
 - governance and authority rules;
 - control-plane architecture;
 - roadmap;
 - status/decision/chronology conventions.
-
-Accepted merge commit:
-`e10f949a6e860deed2104af770909bae1d043a53`
-
-No runtime/model/tool implementation.
-
-## Phase 1 — Minimal local engineering core
 
 ### Gate 002 — Repository skeleton and schemas
 Status: `ACCEPTED_MERGED`
@@ -34,10 +30,15 @@ Delivered:
 - positive/negative fixtures;
 - local and CI validation independent of any LLM.
 
-### Gate 003 — Deterministic Supervisor core
-Status: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
+## Phase 1 — Minimal local engineering core
 
-Implement a local Supervisor state machine with:
+### Gate 003 — Deterministic Supervisor core
+Status: `ACCEPTED_MERGED`
+
+Accepted merge commit:
+`bb073ea212676ecc17d50131beee41842bd2eed2`
+
+Delivered:
 - deterministic policy checks;
 - `ALLOW`, `DENY`, `NEEDS_HUMAN_APPROVAL` outcomes;
 - stop/approval transitions;
@@ -47,22 +48,32 @@ Implement a local Supervisor state machine with:
 - defensive authoritative-state snapshots;
 - fake/stub tools only.
 
-Current evidence:
-- implementation-head CI at `52c32a385bb3772ba3f431eba6d5105624f867ce` — `PASS`;
-- documentation-head CI at `ad95a1ed0e1ac0346247955da2a5063669a6df29` — `PASS`;
-- policy/state/approval/forbidden/retry/audit/determinism tests — `PASS`;
-- local Windows/Python 3.12 run at `ad95a1ed0e1ac0346247955da2a5063669a6df29` — `18/18 PASS`, working tree clean;
-- final exact-head CI after local-validation evidence documentation — `PENDING`.
+Validation note:
+Gate 003 local Windows/Python 3.12 validation ran on the stated branch head and passed `18/18`. The historical PR workflow used GitHub's default pull-request merge-ref checkout; strict CI branch-head verification was added during Gate 004.
 
 ### Gate 004 — Tool adapter foundation
-Status: `NOT_STARTED`
+Status: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
 
-Implement narrow typed adapters for:
-- filesystem/read-only project inspection;
-- Git read/status/diff;
-- controlled local process execution.
+Implemented:
+- root-bounded read-only filesystem inspection;
+- fixed read-only Git status/branch/head/log/diff operations;
+- allow-listed fixed-profile local process execution;
+- `shell=False` process execution;
+- timeouts;
+- bounded stdout/stderr capture;
+- root-bounded working directories;
+- exact-PR-head CI workflow with explicit SHA verification.
 
-No project-specific writes yet.
+Current evidence:
+- Gate 002/003 regression suite — `PASS`;
+- new tool adapter suite — `PASS`;
+- Linux CI tests — `28/28 PASS`;
+- exact-head checkout/verification on `73c025b5d8676c464beeb059cb5cbc3b0980488e` — `PASS`;
+- exact-head checkout/verification on documentation head `aea2921caad82b6792e3d6adb3eb7518f2b89afd` — `PASS`;
+- local Windows/Python 3.12 validation on `aea2921caad82b6792e3d6adb3eb7518f2b89afd` — `28/28 PASS`, working tree clean;
+- final exact-head CI after local-validation evidence — `PENDING`.
+
+No project-specific writes or project access.
 
 ### Gate 005 — Local model interface
 Status: `NOT_STARTED`

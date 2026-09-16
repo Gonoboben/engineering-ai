@@ -11,14 +11,16 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 001 merge commit: `e10f949a6e860deed2104af770909bae1d043a53`
 - Gate 002: `ACCEPTED_MERGED`
 - Gate 002 merge commit: `90df86ceebfb3ee6166a959fcf84172e989c646a`
+- Gate 003: `ACCEPTED_MERGED`
+- Gate 003 merge commit: `bb073ea212676ecc17d50131beee41842bd2eed2`
 - Control-plane architecture: `ACCEPTED_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `003 — Deterministic Supervisor core`
-- Issue: `#5`
-- PR: `#6`
-- Branch: `gate-003-deterministic-supervisor`
+- Gate: `004 — Tool adapter foundation`
+- Issue: `#7`
+- PR: `#8`
+- Branch: `gate-004-tool-adapter-foundation`
 - State: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
 
 ## Architecture / implementation state
@@ -26,14 +28,14 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 002 schemas/semantic validation: `IMPLEMENTED_VALIDATED`
 - Deterministic policy engine: `IMPLEMENTED_VALIDATED`
 - Supervisor state machine: `IMPLEMENTED_VALIDATED`
-- Explicit policy outcomes (`ALLOW`, `DENY`, `NEEDS_HUMAN_APPROVAL`): `IMPLEMENTED_VALIDATED`
-- Approval boundary enforcement: `IMPLEMENTED_VALIDATED`
-- Forbidden-action enforcement: `IMPLEMENTED_VALIDATED`
-- Bounded retry handling: `IMPLEMENTED_VALIDATED`
-- Structured audit emission: `IMPLEMENTED_VALIDATED`
-- Fake/stub tool interface: `IMPLEMENTED_VALIDATED`
-- Defensive authoritative-state snapshots: `IMPLEMENTED_VALIDATED`
-- Real filesystem/Git/process tool adapters: `NOT_IMPLEMENTED` (Gate 004)
+- Approval/forbidden/retry/audit enforcement: `IMPLEMENTED_VALIDATED`
+- Root-bounded read-only filesystem adapter: `IMPLEMENTED_VALIDATED`
+- Read-only Git adapter: `IMPLEMENTED_VALIDATED`
+- Allow-listed fixed-profile process runner: `IMPLEMENTED_VALIDATED`
+- Arbitrary shell execution: `NOT_IMPLEMENTED_PROHIBITED`
+- Filesystem writes/deletes: `NOT_IMPLEMENTED`
+- Git mutation operations: `NOT_IMPLEMENTED`
+- Project-specific adapters: `NOT_IMPLEMENTED`
 - Model interface runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Local model runtime: `NOT_SELECTED`
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
@@ -45,31 +47,37 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM: `NOT_CONNECTED`
 - BuoyCalc: `NOT_CONNECTED`
 
-Gate 003 does not access or modify either engineering project.
+Gate 004 does not access or modify either engineering project.
 
-## Gate 002 validation state
-- schema syntax: `PASS`
-- positive fixtures: `PASS`
-- negative fixture rejection: `PASS`
-- package/import smoke: `PASS`
-- local Windows/Python 3.12 validation: `PASS`
-- final exact-head GitHub Actions on `33155965b374d9150b55ad528bb801f49043480d`: `PASS`
+## Gate 003 validation state
+- Gate 002 regression tests: `PASS`
+- Supervisor tests: `PASS`
+- local Windows/Python 3.12 exact-branch-head validation: `18/18 PASS`
 - human merge approval: `PASS`
 - squash merge: `PASS`
 
-## Gate 003 validation state
-- existing Gate 002 schema suite regression: `PASS`
-- Supervisor policy/state tests on implementation head `52c32a385bb3772ba3f431eba6d5105624f867ce`: `PASS`
-- approval-boundary tests: `PASS`
-- forbidden-action tests: `PASS`
-- retry-exhaustion tests: `PASS`
-- audit schema validation: `PASS`
-- deterministic repeatability test: `PASS`
-- authoritative-state mutation protection test: `PASS`
-- GitHub Actions on implementation head `52c32a385bb3772ba3f431eba6d5105624f867ce`: `PASS`
-- GitHub Actions on documentation head `ad95a1ed0e1ac0346247955da2a5063669a6df29`: `PASS`
-- local Windows/Python 3.12 validation on `ad95a1ed0e1ac0346247955da2a5063669a6df29`: `PASS`
-- local tests run: `18`; result: `OK`; working tree: `CLEAN`
+Historical CI note:
+- the original `pull_request` workflow used the default GitHub PR merge-ref checkout;
+- prior Gate 002/003 GitHub Actions results were therefore merge-ref validation, not strict branch-head validation;
+- this terminology was corrected during Gate 004;
+- local Gate 002/003 Windows validations were executed on the stated branch heads and remain valid evidence.
+
+## Gate 004 validation state
+- Gate 002/003 regression suite: `PASS`
+- filesystem root-boundary/read-limit tests: `PASS`
+- symlink/root escape test on Linux CI: `PASS`
+- process allow-list test: `PASS`
+- process timeout test: `PASS`
+- bounded stdout/stderr test: `PASS`
+- root-bounded process cwd test: `PASS`
+- Git read-only status/branch/head/log/diff tests: `PASS`
+- generic Git command API absence test: `PASS`
+- Linux CI tests run: `28`; result: `OK`
+- exact-head workflow added: `PASS`
+- exact-head revision verification on `73c025b5d8676c464beeb059cb5cbc3b0980488e`: `PASS`
+- exact-head revision verification on documentation head `aea2921caad82b6792e3d6adb3eb7518f2b89afd`: `PASS`
+- local Windows/Python 3.12 validation on `aea2921caad82b6792e3d6adb3eb7518f2b89afd`: `PASS`
+- local tests run: `28`; failures: `0`; errors: `0`; result: `OK`; working tree: `CLEAN`
 - final exact-head CI after this validation-record commit: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -81,7 +89,6 @@ Gate 003 does not access or modify either engineering project.
 - NVIDIA GPU: `GeForce RTX 3060 Ti, 8192 MiB`
 - repository checkout: `C:\workspace\repos\engineering-ai`
 - local `.venv`: present and ignored by Git
-- editable-install metadata `*.egg-info/`: ignored by Git
 
 Security constraint for future local services:
 default to loopback/local-only exposure until an explicit network-security decision permits broader access.
@@ -93,6 +100,7 @@ default to loopback/local-only exposure until an explicit network-security decis
 - deterministic validators outrank model claims;
 - non-LLM Supervisor controls policy and state transitions;
 - runtime state may tighten project policy but may not relax it;
+- tool adapters expose narrow typed operations rather than arbitrary command execution;
 - project repositories remain independent;
 - validator weakening for PASS is prohibited;
 - simulation does not imply physical validation;
@@ -101,6 +109,6 @@ default to loopback/local-only exposure until an explicit network-security decis
 - single-agent core precedes multi-agent expansion.
 
 ## Next admissible action
-Confirm final exact-head GitHub Actions PASS for the head containing this local-validation record, complete PR #6 consistency review, and mark PR #6 ready for human merge approval.
+Confirm final exact-head GitHub Actions PASS for the head containing this local-validation record, complete PR #8 consistency review, and mark PR #8 ready for human merge approval.
 
-Gate 004 — Tool adapter foundation — is not admissible until Gate 003 is reviewed and merged.
+Gate 005 — Local model interface — is not admissible until Gate 004 is reviewed and merged.
