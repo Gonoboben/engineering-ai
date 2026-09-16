@@ -219,3 +219,48 @@ Current candidate plan, rechecked against current Ollama registry:
 
 Next step:
 Download and benchmark Candidate A first. Record local CPU/GPU split, memory/resource state, latency/throughput, structured-output behavior, tool-call proposal behavior and machine-scored engineering results before Candidate B is tested under identical settings.
+
+---
+
+## 2026-09-17 — Gate 005 measured model selection
+
+Candidate A measurement:
+- model: `gpt-oss:20b`, MXFP4;
+- baseline: context `8192`, max output `2048`, reasoning `medium`;
+- result: `4/4 PASS`;
+- processor split: `57% CPU / 43% GPU`;
+- active VRAM observed: ~`7.38 GB`;
+- free system RAM during run: ~`16.3 GB`;
+- aggregate benchmark wall time: ~`49.9 s`.
+
+Candidate A `high` diagnostic:
+- repeated twice independently;
+- each run produced `2 PASS + 2 INCONCLUSIVE_TRUNCATED`;
+- both affected structured-output cases exhausted exactly `2048` generation tokens;
+- `high` is therefore not accepted as the default baseline for this model.
+
+Candidate B measurement:
+- model: `qwen3.6:27b-q4_K_M`, 27.8B Q4_K_M;
+- baseline: context `8192`, max output `2048`, reasoning `medium`;
+- result: `3 PASS + 1 INCONCLUSIVE_TRUNCATED`, deterministic FAIL `0`;
+- processor split: `69% CPU / 31% GPU`;
+- active VRAM observed: ~`7.62 GB`;
+- free system RAM during run: ~`12.8–13.4 GB`;
+- throughput: ~`2.45–2.55 eval tokens/s`;
+- aggregate benchmark wall time: ~`37.7 min`;
+- model remained memory-stable but was operationally too slow for the primary interactive role on the current workstation.
+
+Selection:
+- initial local engineering model: `gpt-oss:20b`;
+- baseline reasoning level: `medium`;
+- runtime: Ollama `0.34.1`;
+- context baseline: `8192`;
+- benchmark-equivalent max output: `2048`.
+
+Selection rationale and raw evidence are recorded under `docs/evidence/gate005/`.
+
+Gate 005 state became:
+`MODEL_SELECTED_PENDING_FINAL_VALIDATION`.
+
+Next step:
+Run the final local Windows regression suite on the final Gate 005 head and confirm strict exact-head CI on the same head before requesting explicit exact-SHA squash-merge approval for PR #10.
