@@ -75,34 +75,38 @@ Validation:
 No project-specific writes or project access.
 
 ### Gate 005 — Local model interface
-Status: `INTERFACE_IMPLEMENTED_PENDING_CI_AND_LOCAL_RUNTIME_BENCHMARK`
+Status: `INTERFACE_AND_RUNTIME_BASELINE_PASS_PENDING_MODEL_BENCHMARK`
 
-Implement:
+Implemented:
 - provider-neutral request/response/message/tool-call types;
 - replaceable `ModelProvider` protocol;
-- one local provider implementation behind that interface;
-- loopback-only runtime boundary;
+- loopback-only Ollama provider;
 - structured-output transport;
 - tool-call proposal transport without tool execution;
 - runtime metrics/resource diagnostics;
-- reproducible benchmark harness and candidate-selection evidence.
+- reproducible benchmark harness and candidate-selection evidence format.
 
-Provisional runtime:
-- Ollama, pending actual Windows workstation installation/compatibility validation.
+Validated baseline:
+- strict exact-head CI on implementation head — `34/34 PASS`;
+- local Windows/Python 3.12 suite — `34/34 PASS`;
+- Ollama `0.34.1` installed and reachable at `127.0.0.1:11434`;
+- local model directory fixed to `C:\workspace\models\ollama`;
+- cloud disabled;
+- one loaded model / one parallel request policy fixed for baseline measurements;
+- benchmark context baseline fixed at `8192` tokens;
+- RTX 3060 Ti 8 GB visible to the runtime environment.
 
-Initial candidates:
-- `gpt-oss:20b`;
-- `qwen3.6:27b`;
-- `qwen3.6:35b` only as a stretch candidate after measured memory-margin review.
+Measured benchmark candidates:
+- Candidate A: `gpt-oss:20b` (~14 GB current Ollama package);
+- Candidate B: `qwen3.6:27b-q4_K_M` (~17 GB current Ollama package);
+- Stretch: `qwen3.6:35b` (~23 GB), deferred until memory margin is measured.
 
-Acceptance evidence still required:
-- Gate 002–004 regression suite `PASS` on Gate 005 head;
-- provider/interface unit tests `PASS`;
-- strict exact-head CI `PASS`;
-- local Windows/Python 3.12 interface tests `PASS`;
-- local Ollama runtime validation on loopback;
-- measured benchmark results for initial candidates;
-- explicit initial model selection recorded from local evidence.
+Remaining acceptance evidence:
+- local benchmark of Candidate A under fixed settings;
+- local benchmark of Candidate B under the same settings;
+- recorded CPU/GPU split, memory/resource state, latency/throughput and machine-scored results;
+- explicit initial engineering-model selection from local evidence;
+- final strict exact-head CI after benchmark evidence is committed.
 
 Do not hard-code model-family semantics into Supervisor behavior.
 
