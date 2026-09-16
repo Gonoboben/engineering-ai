@@ -35,7 +35,7 @@ Delivered:
 - local and CI validation independent of any LLM.
 
 ### Gate 003 — Deterministic Supervisor core
-Status: `IMPLEMENTED_PENDING_LOCAL_VALIDATION`
+Status: `VALIDATION_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_REVIEW`
 
 Implement a local Supervisor state machine with:
 - deterministic policy checks;
@@ -49,9 +49,10 @@ Implement a local Supervisor state machine with:
 
 Current evidence:
 - implementation-head CI at `52c32a385bb3772ba3f431eba6d5105624f867ce` — `PASS`;
-- policy/state/approval/forbidden/retry/audit/determinism tests — `PASS` in CI;
-- local Windows/Python 3.12 run on current Gate head — `PENDING`;
-- final exact-head CI after validation/status documentation — `PENDING`.
+- documentation-head CI at `ad95a1ed0e1ac0346247955da2a5063669a6df29` — `PASS`;
+- policy/state/approval/forbidden/retry/audit/determinism tests — `PASS`;
+- local Windows/Python 3.12 run at `ad95a1ed0e1ac0346247955da2a5063669a6df29` — `18/18 PASS`, working tree clean;
+- final exact-head CI after local-validation evidence documentation — `PENDING`.
 
 ### Gate 004 — Tool adapter foundation
 Status: `NOT_STARTED`
