@@ -110,9 +110,11 @@ class SupervisorTests(unittest.TestCase):
         self.assertEqual(len(result.audit_events), 2)
 
     def test_approval_required_action_waits_then_executes_with_named_approval(self) -> None:
+        state = make_state()
+        state["blockers"] = ["external project blocker"]
         tool = StubTool(ToolOutcome(True, "approved architecture action executed"))
         supervisor = Supervisor(
-            policy=make_policy(), state=make_state(), audit_emitter=make_audit_emitter()
+            policy=make_policy(), state=state, audit_emitter=make_audit_emitter()
         )
         job = make_job("architecture_change")
 
@@ -121,6 +123,12 @@ class SupervisorTests(unittest.TestCase):
         self.assertEqual(waiting.job["status"], "WAITING_FOR_APPROVAL")
         self.assertFalse(waiting.tool_called)
         self.assertEqual(tool.calls, [])
+        self.assertTrue(
+            any(
+                blocker.startswith("human approval required")
+                for blocker in waiting.state["blockers"]
+            )
+        )
 
         approved = supervisor.execute(
             job=waiting.job,
@@ -132,6 +140,13 @@ class SupervisorTests(unittest.TestCase):
         self.assertEqual(approved.decision.decision, Decision.ALLOW)
         self.assertEqual(approved.job["status"], "PASS")
         self.assertEqual(tool.calls, ["architecture_change"])
+        self.assertIn("external project blocker", approved.state["blockers"])
+        self.assertFalse(
+            any(
+                blocker.startswith("human approval required")
+                for blocker in approved.state["blockers"]
+            )
+        )
 
     def test_asserted_approval_without_approver_identity_does_not_execute(self) -> None:
         tool = StubTool(ToolOutcome(True, "must not execute"))
