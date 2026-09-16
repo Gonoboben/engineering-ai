@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "job_id": "gate-002-invalid-retry",
+  "project_id": "engineering-ai",
+  "gate_id": "002",
+  "objective": "Demonstrate retry-bound rejection",
+  "scope": ["retry semantics"],
+  "out_of_scope": [],
+  "requested_actions": ["run_validator"],
+  "required_validators": ["schema-suite"],
+  "retry_limit": 2,
+  "attempts": 3,
+  "status": "RUNNING",
+  "blocker": null
+}
