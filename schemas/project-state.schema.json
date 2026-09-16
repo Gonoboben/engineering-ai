@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/project-state.schema.json",
+  "title": "Engineering AI Project State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "state_revision",
+    "project_id",
+    "current_gate",
+    "repository_ref",
+    "architecture_baseline",
+    "effective_permissions",
+    "pending_checks",
+    "blockers",
+    "validation_states",
+    "next_admissible_action"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "state_revision": {"type": "integer", "minimum": 0},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "current_gate": {"type": ["string", "null"]},
+    "active_job_id": {"type": ["string", "null"]},
+    "repository_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["branch", "head_sha"],
+      "properties": {
+        "branch": {"type": "string", "minLength": 1},
+        "head_sha": {
+          "oneOf": [
+            {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "architecture_baseline": {"type": ["string", "null"]},
+    "effective_permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["autonomous", "approval_required", "forbidden"],
+      "properties": {
+        "autonomous": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "approval_required": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "forbidden": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "pending_checks": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "blockers": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "validation_states": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "validation_class", "state", "evidence_refs"],
+        "properties": {
+          "check_id": {"type": "string", "minLength": 1},
+          "validation_class": {
+            "type": "string",
+            "enum": ["ADVISORY", "SOURCE", "CALCULATION", "SIMULATION", "DETERMINISTIC_TEST", "PHYSICAL"]
+          },
+          "state": {
+            "type": "string",
+            "enum": ["PASS", "FAIL", "NOT_RUN", "NOT_APPLICABLE", "PHYSICAL_NOT_EXECUTED", "NEEDS_HUMAN_APPROVAL"]
+          },
+          "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "next_admissible_action": {"type": ["string", "null"]}
+  }
+}
