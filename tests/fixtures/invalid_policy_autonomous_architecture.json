@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "policy_version": "1.0",
+  "project_id": "engineering-ai",
+  "autonomous_actions": ["read_repository", "architecture_change"],
+  "approval_required_actions": [
+    "physics_change",
+    "destructive_action",
+    "fabrication_authorization",
+    "release_authorization",
+    "external_disclosure",
+    "scope_expansion"
+  ],
+  "forbidden_actions": ["validator_weakening"],
+  "mandatory_validators": ["schema-suite"],
+  "stop_conditions": ["approval boundary reached"],
+  "retry_limit": 3
+}
