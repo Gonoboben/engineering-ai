@@ -39,6 +39,12 @@ class Supervisor:
     """
 
     TERMINAL_JOB_STATES = {"PASS", "FAIL", "CANCELLED"}
+    TRANSIENT_BLOCKER_PREFIXES = (
+        "human approval required for action:",
+        "policy denied action:",
+        "tool failure; retry available:",
+        "retry limit exhausted after tool failure:",
+    )
 
     def __init__(
         self,
@@ -156,11 +162,8 @@ class Supervisor:
         if outcome.ok:
             working_job["status"] = "PASS"
             working_job["blocker"] = None
-            self._clear_job_blockers(working_job["job_id"])
-            self._advance_state(
-                active_job_id=None,
-                next_action=None,
-            )
+            self._clear_transient_supervisor_blockers()
+            self._advance_state(active_job_id=None, next_action=None)
             self._record_transition(
                 job=working_job,
                 action=action,
@@ -252,11 +255,11 @@ class Supervisor:
             self._state["blockers"].append(blocker)
         self._advance_state(active_job_id=job["job_id"], next_action=next_action)
 
-    def _clear_job_blockers(self, job_id: str) -> None:
+    def _clear_transient_supervisor_blockers(self) -> None:
         self._state["blockers"] = [
             blocker
             for blocker in self._state["blockers"]
-            if job_id not in blocker and "tool failure" not in blocker and "policy denied" not in blocker
+            if not blocker.startswith(self.TRANSIENT_BLOCKER_PREFIXES)
         ]
 
     def _advance_state(
