@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "event_id": "audit-gate002-001",
+  "timestamp": "2026-09-16T19:00:00Z",
+  "actor": {
+    "kind": "supervisor",
+    "id": "schema-validator",
+    "runtime": "python-3.12"
+  },
+  "project_id": "engineering-ai",
+  "gate_id": "002",
+  "job_id": "gate-002-schema-validation",
+  "event_type": "VALIDATION",
+  "action": "validate project schemas",
+  "result": {
+    "status": "PASS",
+    "summary": "All positive fixtures validated and negative fixtures were rejected"
+  },
+  "before_ref": "e10f949a6e860deed2104af770909bae1d043a53",
+  "after_ref": null,
+  "evidence_refs": ["schema-suite"],
+  "approval": {
+    "required": false,
+    "obtained": false,
+    "approver": null
+  },
+  "contains_secrets": false
+}
