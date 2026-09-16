@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/job.schema.json",
+  "title": "Engineering AI Job",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "project_id",
+    "objective",
+    "scope",
+    "out_of_scope",
+    "requested_actions",
+    "required_validators",
+    "retry_limit",
+    "attempts",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "job_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{3,96}$"},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "gate_id": {"type": ["string", "null"]},
+    "objective": {"type": "string", "minLength": 1},
+    "scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "out_of_scope": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "requested_actions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "required_validators": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "retry_limit": {"type": "integer", "minimum": 0, "maximum": 20},
+    "attempts": {"type": "integer", "minimum": 0},
+    "status": {
+      "type": "string",
+      "enum": ["QUEUED", "RUNNING", "BLOCKED", "WAITING_FOR_APPROVAL", "PASS", "FAIL", "CANCELLED"]
+    },
+    "blocker": {"type": ["string", "null"]}
+  }
+}

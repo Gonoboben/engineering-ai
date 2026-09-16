@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "state_revision": 1,
+  "project_id": "engineering-ai",
+  "current_gate": "002",
+  "active_job_id": "gate-002-schema-validation",
+  "repository_ref": {
+    "branch": "gate-002-repository-skeleton-schemas",
+    "head_sha": "e10f949a6e860deed2104af770909bae1d043a53"
+  },
+  "architecture_baseline": "Gate 001",
+  "effective_permissions": {
+    "autonomous": ["read_repository", "run_validator"],
+    "approval_required": [
+      "architecture_change",
+      "physics_change",
+      "destructive_action",
+      "fabrication_authorization",
+      "release_authorization",
+      "external_disclosure",
+      "scope_expansion"
+    ],
+    "forbidden": ["validator_weakening"]
+  },
+  "pending_checks": ["schema-suite"],
+  "blockers": [],
+  "validation_states": [
+    {
+      "check_id": "schema-suite",
+      "validation_class": "DETERMINISTIC_TEST",
+      "state": "NOT_RUN",
+      "evidence_refs": []
+    },
+    {
+      "check_id": "physical-validation",
+      "validation_class": "PHYSICAL",
+      "state": "PHYSICAL_NOT_EXECUTED",
+      "evidence_refs": []
+    }
+  ],
+  "next_admissible_action": "run schema-suite"
+}

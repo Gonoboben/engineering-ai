@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "state_revision": 2,
+  "project_id": "engineering-ai",
+  "current_gate": "002",
+  "active_job_id": null,
+  "repository_ref": {
+    "branch": "gate-002-repository-skeleton-schemas",
+    "head_sha": "e10f949a6e860deed2104af770909bae1d043a53"
+  },
+  "architecture_baseline": "Gate 001",
+  "effective_permissions": {
+    "autonomous": ["read_repository", "physics_change"],
+    "approval_required": ["architecture_change"],
+    "forbidden": ["validator_weakening"]
+  },
+  "pending_checks": [],
+  "blockers": [],
+  "validation_states": [],
+  "next_admissible_action": "change physics automatically"
+}

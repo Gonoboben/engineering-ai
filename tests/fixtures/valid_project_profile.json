@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "project_id": "engineering-ai",
+  "display_name": "Engineering AI",
+  "repository": {
+    "local_path": "C:\\workspace\\repos\\engineering-ai",
+    "remote": "Gonoboben/engineering-ai",
+    "default_branch": "main"
+  },
+  "authoritative_files": ["AGENTS.md", "ARCHITECTURE.md", "ROADMAP.md", "STATUS.md"],
+  "policy_ref": "config/project-policy.json",
+  "architecture_baseline": "Gate 001",
+  "tool_profiles": []
+}

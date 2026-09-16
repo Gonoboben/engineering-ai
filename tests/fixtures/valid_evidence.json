@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "evidence_id": "evidence-sim-001",
+  "project_id": "engineering-ai",
+  "claim": "Schema validation behavior was exercised by a deterministic test fixture",
+  "evidence_type": "simulation",
+  "validation_class": "SIMULATION",
+  "physical_validation_state": "PHYSICAL_NOT_EXECUTED",
+  "provenance": ["tests/fixtures/valid_evidence.json"],
+  "assumptions": ["fixture is synthetic and not a physical measurement"],
+  "revision": "gate-002",
+  "inputs_hash": null
+}

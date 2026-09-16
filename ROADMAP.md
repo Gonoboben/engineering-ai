@@ -6,7 +6,7 @@ The project advances through small auditable Gates. A later Gate must not silent
 ## Phase 0 — Governance and control-plane baseline
 
 ### Gate 001 — Architecture baseline and governance
-Status: `IN_REVIEW`
+Status: `ACCEPTED_MERGED`
 
 Deliverables:
 - governance and authority rules;
@@ -14,11 +14,16 @@ Deliverables:
 - roadmap;
 - status/decision/chronology conventions.
 
+Accepted merge commit:
+`e10f949a6e860deed2104af770909bae1d043a53`
+
 No runtime/model/tool implementation.
 
 ## Phase 1 — Minimal local engineering core
 
 ### Gate 002 — Repository skeleton and schemas
+Status: `VALIDATION_PASS_PENDING_REVIEW`
+
 Define the executable package layout and machine-readable schemas for:
 - project profile;
 - policy;
@@ -29,7 +34,18 @@ Define the executable package layout and machine-readable schemas for:
 
 Acceptance focus: schemas validate independently of any LLM.
 
+Required Gate 002 evidence:
+- JSON Schema Draft 2020-12 syntax validation — `PASS`;
+- positive fixture PASS — `PASS`;
+- negative permission/state/evidence/audit fixture rejection — `PASS`;
+- package/import smoke PASS — `PASS`;
+- local Windows/Python 3.12 validation — `PASS`;
+- CI confirmation on implementation head `6e9c3d09ac7e690ba514ec9b878cd8dddfc3ac89` — `PASS`;
+- final exact-head CI after validation-record documentation — `PENDING`.
+
 ### Gate 003 — Deterministic Supervisor core
+Status: `NOT_STARTED`
+
 Implement a local Supervisor state machine with:
 - policy checks;
 - stop/approval transitions;
