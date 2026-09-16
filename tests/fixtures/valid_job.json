@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "job_id": "gate-002-schema-validation",
+  "project_id": "engineering-ai",
+  "gate_id": "002",
+  "objective": "Validate repository schemas without an LLM",
+  "scope": ["schema syntax", "positive fixtures", "negative fixtures"],
+  "out_of_scope": ["model integration", "project adapters"],
+  "requested_actions": ["read_repository", "run_validator"],
+  "required_validators": ["schema-suite"],
+  "retry_limit": 3,
+  "attempts": 0,
+  "status": "QUEUED",
+  "blocker": null
+}
