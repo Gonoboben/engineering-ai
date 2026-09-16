@@ -24,6 +24,16 @@ class BenchmarkScriptOutputTests(unittest.TestCase):
         self.assertTrue(rendered.isascii())
         self.assertEqual(json.loads(rendered), payload)
 
+    def test_build_cases_uses_explicit_output_token_budget(self) -> None:
+        cases = self._module.build_cases(
+            "candidate",
+            context_tokens=8192,
+            reasoning_effort="high",
+            max_output_tokens=2048,
+        )
+        self.assertEqual(len(cases), 4)
+        self.assertTrue(all(case.request.max_output_tokens == 2048 for case in cases))
+
 
 if __name__ == "__main__":
     unittest.main()
