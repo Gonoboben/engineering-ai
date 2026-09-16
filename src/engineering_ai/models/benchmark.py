@@ -35,6 +35,7 @@ class BenchmarkRecord:
     score_note: str | None
     content: str
     thinking: str
+    done_reason: str | None
     tool_calls: tuple[Mapping[str, Any], ...]
     metrics: Mapping[str, Any]
     runtime_diagnostics: Mapping[str, Any]
@@ -73,6 +74,7 @@ def run_benchmark(
                 score_note=note,
                 content=response.content,
                 thinking=response.thinking,
+                done_reason=response.done_reason,
                 tool_calls=tuple(
                     {"name": call.name, "arguments": dict(call.arguments)}
                     for call in response.tool_calls
