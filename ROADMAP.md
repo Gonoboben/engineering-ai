@@ -22,7 +22,7 @@ No runtime/model/tool implementation.
 ## Phase 1 — Minimal local engineering core
 
 ### Gate 002 — Repository skeleton and schemas
-Status: `IMPLEMENTED_PENDING_VALIDATION`
+Status: `VALIDATION_PASS_PENDING_REVIEW`
 
 Define the executable package layout and machine-readable schemas for:
 - project profile;
@@ -35,11 +35,13 @@ Define the executable package layout and machine-readable schemas for:
 Acceptance focus: schemas validate independently of any LLM.
 
 Required Gate 002 evidence:
-- JSON Schema Draft 2020-12 syntax validation;
-- positive fixture PASS;
-- negative permission/state/evidence/audit fixture rejection;
-- package/import smoke PASS;
-- CI confirmation on the exact PR head.
+- JSON Schema Draft 2020-12 syntax validation — `PASS`;
+- positive fixture PASS — `PASS`;
+- negative permission/state/evidence/audit fixture rejection — `PASS`;
+- package/import smoke PASS — `PASS`;
+- local Windows/Python 3.12 validation — `PASS`;
+- CI confirmation on implementation head `6e9c3d09ac7e690ba514ec9b878cd8dddfc3ac89` — `PASS`;
+- final exact-head CI after validation-record documentation — `PENDING`.
 
 ### Gate 003 — Deterministic Supervisor core
 Status: `NOT_STARTED`
