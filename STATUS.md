@@ -34,12 +34,15 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 No existing project is modified by Gate 001.
 
 ## Validation state
-- Architecture document consistency review: `PENDING`
+- Architecture document consistency review: `SELF_REVIEW_PASS`
+- Human architecture approval: `PENDING`
 - Runtime tests: `NOT_APPLICABLE`
 - Model benchmark: `NOT_RUN`
 - Supervisor tests: `NOT_RUN`
 - Project adapter tests: `NOT_RUN`
 - Physical validation: `PHYSICAL_NOT_EXECUTED`
+
+The Gate 001 self-review checked that governance, architecture, roadmap, decisions, status and chronology use the same authority model: repository-backed truth, deterministic Supervisor, replaceable models, deterministic validation, evidence/audit, project isolation and explicit human approval boundaries. No contradictory ownership or validation path was identified. This does not substitute for human architecture approval.
 
 ## Global invariants currently proposed
 - repository/project state is authoritative, not chat/model memory;
