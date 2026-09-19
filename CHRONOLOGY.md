@@ -802,3 +802,75 @@ Qualification state:
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
 One final exact-head CI run is required after this acceptance-state synchronization before explicit human squash-merge approval for PR #16.
+
+
+---
+
+## 2026-09-19 — Gate 008 accepted and merged
+
+Final approved PR head:
+`30ccc9c54e519885678d10c4eee72f428b17b079`.
+
+Final validation:
+- deterministic tests: `56/56 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`d797ac476cc6653932b683932d025de747f3e918`.
+
+Issue #15 closed.
+
+Accepted role qualifications:
+- `qwen3.5:9b`: `QUALIFIED_GENERAL_PLANNER`;
+- `qwen2.5-coder:7b-instruct`: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`;
+- Coder limitation: `NO_NATIVE_TOOL_PROPOSALS_UNDER_CURRENT_OLLAMA_CONTRACT`;
+- `gpt-oss:20b / medium` remains accepted baseline;
+- Electronics/PCB/KiCad/ERC/DRC/SPICE remains `NOT_RUN_OUT_OF_SCOPE_GATE_008`.
+
+Gate 008 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 009 model capability registry and deterministic router opened
+
+Issue:
+`#17 — Gate 009 — Model capability registry and deterministic router`.
+
+Branch:
+`gate-009-model-capability-registry-router`.
+
+Base:
+Gate 008 squash merge `d797ac476cc6653932b683932d025de747f3e918`.
+
+Draft PR:
+`#18`.
+
+Implemented scope:
+- immutable evidence-backed model capability registry;
+- explicit typed task classes;
+- deterministic model Router;
+- context/output/native-tool hard requirement matching;
+- explicit `NO_ROUTE` when no qualified model satisfies requirements;
+- Supervisor-owned `route_model()` selection boundary;
+- evidence references on model capability records;
+- no provider/model/tool execution in Router.
+
+Initial route classes:
+- `GENERAL_PLANNING -> qwen3.5:9b`;
+- `CODE_REPOSITORY -> qwen2.5-coder:7b-instruct` when native model tool proposals are not required;
+- `CODE_REPOSITORY + native tool proposal required -> NO_ROUTE`;
+- `BASELINE_REASONING -> gpt-oss:20b / medium`.
+
+Explicitly absent:
+- free-text/LLM route classification;
+- Electronics/PCB/KiCad/Vision routes;
+- Task Blackboard;
+- model hand-offs;
+- project adapters;
+- new model qualification.
+
+Next step:
+complete deterministic tests and generic/strict exact-head CI before requesting exact-SHA human merge approval.
