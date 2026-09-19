@@ -780,3 +780,25 @@ Electronics/PCB/KiCad/ERC/DRC/SPICE remains:
 
 Next step:
 final regression and exact-head CI, then human exact-SHA Gate 008 merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 008 qualification evidence head validated
+
+Qualification evidence head:
+`d57c79dbeea54be42512146958e67526d1ad13af`.
+
+Validation:
+- deterministic tests: `56/56 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Qualification state:
+- `qwen3.5:9b`: `QUALIFIED_GENERAL_PLANNER`;
+- `qwen2.5-coder:7b-instruct`: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`;
+- Coder limitation: `NO_NATIVE_TOOL_PROPOSALS_UNDER_CURRENT_OLLAMA_CONTRACT`;
+- Electronics/PCB/KiCad/ERC/DRC/SPICE: `NOT_RUN_OUT_OF_SCOPE_GATE_008`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+One final exact-head CI run is required after this acceptance-state synchronization before explicit human squash-merge approval for PR #16.
