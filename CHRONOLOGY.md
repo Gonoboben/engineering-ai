@@ -1990,3 +1990,32 @@ Gate 016 state:
 Remaining:
 stable pre-smoke exact-head CI and one primary-workstation persistent/reopen
 memory smoke.
+
+
+---
+
+## 2026-09-19 — Gate 016 local persistent/reopen smoke passed
+
+Primary-workstation smoke ran at Engineering AI head:
+`e240f82176a18f21a81bae9318b7d4b714ffa023`.
+
+Result:
+- `PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`;
+- database created and reopened;
+- integrity records: 3 initial / 3 reopened / 4 final;
+- stored record hash preserved;
+- exact supersession chain revision 1 -> 2;
+- deterministic search returned expected records;
+- model truth promotion: false;
+- automatic context injection: false;
+- vector search: false;
+- temporary database removed on exit;
+- physical validation remained `PHYSICAL_NOT_EXECUTED`;
+- exit 0.
+
+Gate 016 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+Next:
+final acceptance-state generic + strict exact-head CI, scope review, and exact-SHA
+human squash-merge approval for PR #32.
