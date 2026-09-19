@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import sys
 import subprocess
 import tempfile
 import unittest
@@ -24,6 +25,29 @@ from engineering_ai.validation import validate_instance
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+class Gate014SmokeHarnessTests(unittest.TestCase):
+    def test_missing_repository_is_structured_nonzero_state(self) -> None:
+        missing = ROOT / "definitely-missing-buoycalc-checkout"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts/gate014_buoycalc_readonly_smoke.py"),
+                "--repository",
+                str(missing),
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 2)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["snapshot_state"], "LOCAL_REPOSITORY_NOT_FOUND")
+        self.assertEqual(payload["release_state"], "NOT_AUTHORIZED")
+        self.assertEqual(payload["physical_validation"], "PHYSICAL_NOT_EXECUTED")
+        self.assertEqual(result.stderr, "")
 
 
 @unittest.skipIf(shutil.which("git") is None, "git executable is required")
