@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 import sys
@@ -15,6 +16,7 @@ from engineering_ai.projects.platavm import (
     classify_ci_conclusion,
 )
 from engineering_ai.tools import ToolExecutionError
+from engineering_ai.validation import validate_instance
 
 
 @unittest.skipIf(shutil.which("git") is None, "git executable is required")
@@ -222,6 +224,29 @@ class PlataVMReadOnlyAdapterTests(unittest.TestCase):
             "run",
         }
         self.assertTrue(all(not hasattr(adapter, name) for name in forbidden))
+
+    def test_committed_profile_and_policy_validate(self) -> None:
+        repository_root = Path(__file__).resolve().parents[1]
+        profile = json.loads(
+            (repository_root / "profiles/platavm-readonly.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        policy = json.loads(
+            (repository_root / "profiles/platavm-readonly-policy.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        validate_instance("project-profile.schema.json", profile)
+        validate_instance("project-policy.schema.json", policy)
+        self.assertEqual(profile["architecture_baseline"], "V1.9")
+        self.assertEqual(
+            policy["autonomous_actions"],
+            ["read_repository", "run_validator"],
+        )
+        self.assertIn("write_worktree", policy["forbidden_actions"])
+        self.assertIn("push_remote", policy["forbidden_actions"])
+        self.assertIn("merge_pr", policy["forbidden_actions"])
 
     def test_kicad_inventory_scan_is_bounded(self) -> None:
         with self.assertRaises(ToolExecutionError):
