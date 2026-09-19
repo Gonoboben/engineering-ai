@@ -269,3 +269,71 @@ Correction:
 
 A final local smoke on the corrected exact head is still required before Gate
 012 merge approval.
+
+
+## Primary-workstation final corrected-head smoke
+
+Final local smoke after the chronology-selection correction completed
+successfully on the primary Windows workstation.
+
+Engineering AI corrected Gate 012 head at smoke start:
+`4ba5d7890f86648dfdcbc0ecab23508c4e0ebf3e`.
+
+Observed PlataVM repository state:
+- path: `C:\workspace\repos\plataVM`;
+- branch: `main`;
+- HEAD: `dcba77466d4800c0e7a336a2771684e066f845db`;
+- `origin/main`: `dcba77466d4800c0e7a336a2771684e066f845db`;
+- dirty: `false`;
+- post-smoke status remained `## main...origin/main`;
+- post-smoke HEAD remained unchanged.
+
+Governance:
+- all eight mandatory governance documents resolved and SHA-256 recorded;
+- latest chronology resolved correctly to the dated entry
+  `Docs/chronology/2026-09-11-post-pr96-status-roadmap-checkpoint-v1-9.md`;
+- the prior README-selection defect is therefore closed on the real checkout.
+
+KiCad inventory:
+- 62 bounded assets under `Hardware/KiCad`.
+
+Governance/Git source conflict:
+- `PROJECT_STATUS` declared main
+  `c9703c58486eb5efe6a1d1d3e1bbf37815cd2a65`;
+- actual `origin/main`
+  `dcba77466d4800c0e7a336a2771684e066f845db`;
+- adapter correctly returned `SOURCE_CONFLICT`;
+- conflict was surfaced rather than silently reconciled.
+
+Fixed validator results:
+- `platavm.repository_integrity`: `PASS`;
+  365 tracked paths;
+  35 validated JSON files;
+  foreign-project/generated-evidence path checks PASS;
+- `platavm.semantic_gates`: `PASS`;
+  Python syntax PASS for 52 files;
+  registered semantic Gates `47/47 PASS`.
+
+The semantic-gate output preserved all engineering barriers, including:
+- physical campaigns `NOT_EXECUTED`;
+- prototype fabrication `NOT_GRANTED`;
+- series production `NOT_GRANTED`;
+- population/release states not promoted by synthetic/software PASS.
+
+Smoke process exit:
+`0`.
+
+Final local-smoke classification:
+`PASS_READ_ONLY_WITH_EXPECTED_SOURCE_CONFLICT`.
+
+Gate 012 local-smoke acceptance criteria are satisfied:
+- real local checkout used;
+- mandatory governance resolved;
+- corrected dated chronology resolved;
+- KiCad assets inventoried;
+- stale governance conflict detected;
+- both fixed validators PASS;
+- Git-visible PlataVM state unchanged;
+- no GitHub Actions rerun;
+- no PR #100 mutation;
+- no physical evidence claim.
