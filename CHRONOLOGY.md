@@ -633,3 +633,48 @@ No Electronics/PCB/KiCad/ERC/DRC/SPICE capability was tested.
 
 Next step:
 run only the Qwen3.5-9B general/Planner benchmark before starting any Qwen2.5-Coder benchmark.
+
+
+---
+
+## 2026-09-19 — Gate 008 Qwen3.5-9B general/Planner qualification passed
+
+Tested model:
+`qwen3.5:9b`, local ID `6488c96fa5fa`, Q4_K_M, 9.7B.
+
+Runtime:
+- Ollama `0.34.2`;
+- context `8192`;
+- max output `2048`;
+- reasoning `none`.
+
+Result:
+- general suite: `4/4 PASS`;
+- failed: `0`;
+- unscored: `0`;
+- structured JSON: `PASS`;
+- bounded Planner contract: `PASS`;
+- validation semantics: `PASS`;
+- inert tool proposal: `PASS`;
+- truncation/timeouts/provider errors: `0`.
+
+Performance/resource observations:
+- aggregate wall time ~`31.446 s`;
+- first cold case ~`29.394 s`;
+- warm cases ~`0.849 s`, `0.586 s`, `0.617 s`;
+- eval throughput by case ~`57.72`, `49.55`, `46.02`, `67.02 tok/s`;
+- Ollama placement: `100% GPU`;
+- model VRAM allocation ~`5.37 GiB`;
+- total post-run GPU memory used `7487 MiB`, free `538 MiB`;
+- post-run free physical RAM ~`21.47 GiB`.
+
+Qualification:
+`QUALIFIED_GENERAL_PLANNER`.
+
+The speed result is not treated as a direct replacement comparison with historical Gate 005 gpt-oss because the benchmark matrix and Ollama runtime version differ.
+
+Electronics/PCB/KiCad/ERC/DRC/SPICE capability remains:
+`NOT_RUN_OUT_OF_SCOPE_GATE_008`.
+
+Next step:
+run only the Qwen2.5-Coder-7B-Instruct code/repository suite.
