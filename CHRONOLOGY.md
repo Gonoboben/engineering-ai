@@ -2019,3 +2019,75 @@ Gate 016 state:
 Next:
 final acceptance-state generic + strict exact-head CI, scope review, and exact-SHA
 human squash-merge approval for PR #32.
+
+
+---
+
+## 2026-09-19 — Gate 016 accepted and merged
+
+Final approved PR head:
+`2f503df7750eafb4e19fed796dc2a6642d509616`.
+
+Final validation:
+- deterministic tests: `161/161 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- primary-workstation persistent/reopen memory smoke: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`a71c084078ae7c12361555eaed2f3d7c887d61d6`.
+
+Issue #31 closed.
+
+Accepted capability:
+- local append-only SQLite decision/evidence memory;
+- immutable exact supersession revisions;
+- canonical SHA-256 integrity;
+- project isolation;
+- deterministic bounded search;
+- model memory remains advisory;
+- accepted ADRs remain human-only;
+- physical validation class preserved.
+
+ADR-0015 is accepted through Gate 016 merge.
+
+Gate 016 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 017 retrieval layer opened
+
+Issue:
+`#33 — Gate 017 — Retrieval layer`.
+
+Branch:
+`gate-017-retrieval-layer`.
+
+Base:
+Gate 016 squash merge
+`a71c084078ae7c12361555eaed2f3d7c887d61d6`.
+
+Implemented initial scope:
+- typed project-scoped RetrievalRequest/ContextPackage;
+- latest revision by default;
+- MODEL/ADVISORY default exclusion;
+- proposed ADR default exclusion;
+- explicit advisory/proposed/history opt-in with labels preserved;
+- deterministic lexical relevance ranking;
+- bounded candidate/result/context budgets;
+- no record truncation;
+- provenance/evidence/source refs and integrity SHA preserved;
+- memory integrity failures fail closed;
+- no automatic Blackboard/model prompt injection;
+- retrieval context JSON Schema;
+- deterministic recall@3 benchmark against Gate 016 exact-substring search;
+- semantic/vector backend remains
+  `DEFERRED_NOT_JUSTIFIED`.
+
+ADR-0016 added as `PROPOSED_GATE_017`.
+
+Next:
+open draft PR and validate retrieval implementation + benchmark before any
+consideration of semantic/vector retrieval.
