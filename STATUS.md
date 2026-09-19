@@ -45,10 +45,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `017 — Retrieval layer`
 - Issue: `#33`
-- PR: `PENDING_DRAFT`
+- PR: `#34 (DRAFT)`
 - Branch: `gate-017-retrieval-layer`
 - Base: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
-- State: `IMPLEMENTED_PENDING_VALIDATION`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_BENCHMARK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -490,13 +490,14 @@ Historical CI note:
 - memory integrity failure behavior: `FAIL_CLOSED`
 - automatic Blackboard/model context injection: `NOT_IMPLEMENTED_PROHIBITED_GATE_017`
 - semantic/vector backend: `DEFERRED_NOT_JUSTIFIED_PENDING_BENCHMARK`
-- retrieval benchmark: `IMPLEMENTED_PENDING_VALIDATION`
+- retrieval benchmark: `IMPLEMENTED_CI_VALIDATED`
 - retrieval context JSON Schema: `IMPLEMENTED`
+- Supervisor-owned retrieval boundary: `IMPLEMENTED`; request project_id must match Supervisor state, no Blackboard/model injection
 - external dependency addition: `NONE`
-- deterministic regression: `PENDING`
-- generic CI: `PENDING`
-- strict exact-head CI: `PENDING`
+- implementation head `9e5874ec19b15b7d429f3fcb6752f73b3e8e7a28`: deterministic regression `178/178 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - local retrieval benchmark/smoke: `PENDING`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation semantics: `UNCHANGED`
 
 ## Primary workstation status
@@ -535,4 +536,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Open Gate 017 draft PR and run deterministic/generic/strict exact-head validation of the lexical retrieval layer and benchmark. Add no embeddings/vector backend unless the benchmark evidence separately justifies it. After CI, run one local retrieval benchmark/smoke on the primary workstation.
+Run generic and strict exact-head CI on the stable Gate 017 evidence/status head, then run one local retrieval benchmark/smoke on the primary workstation. Add no embeddings/vector backend unless separate benchmark evidence demonstrates material recall improvement while preserving provenance and resource bounds.
