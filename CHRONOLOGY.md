@@ -1809,3 +1809,30 @@ Regression:
 Next:
 recover only the exact stale worktree/branch. Full BuoyCalc validation does not
 need repetition solely for this cleanup defect.
+
+
+---
+
+## 2026-09-19 — Gate 015 stale recovery attempt found worktree already deregistered
+
+Guarded stale-worktree recovery returned:
+`REFUSED: worktree is not registered by Git`.
+
+Primary BuoyCalc remained:
+`main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`, clean.
+
+`git worktree list` showed only the primary checkout, proving the prior
+cleanup attempt had already removed Git worktree registration.
+
+The recovery harness was corrected for this exact Windows partial-cleanup state
+while tightening identity checks to the exact Gate 015 smoke branch and
+worktree names derived from base SHA.
+
+Corrected head:
+`d8405894bfb9152256e28ca49678f27ed8a2471d`.
+
+Regression:
+`147/147 PASS`; generic CI PASS; strict exact-head CI PASS.
+
+Next:
+repeat cleanup only; do not repeat the full BuoyCalc validator suite.
