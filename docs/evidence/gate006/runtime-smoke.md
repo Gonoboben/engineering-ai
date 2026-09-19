@@ -66,3 +66,58 @@ required. Do not promote this Gate to accepted based only on CI.
 
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+## Attempt 2 — Reviewer structured-output failure
+
+Date: 2026-09-19
+
+Repository head:
+`7e20a4beaf617dfd118e4f7d1cb1c6ecc3e96942`
+
+Observed result:
+`FAIL_RUNTIME_CONTRACT`
+
+The corrected Executor path advanced successfully through:
+- Planner;
+- Executor tool proposal;
+- deterministic Supervisor evaluation;
+- root-bounded read of `STATUS.md`;
+- deterministic evidence collection.
+
+The failure occurred only at Reviewer structured output. The local
+`gpt-oss:20b / medium / 8192 / 2048` Reviewer response could not be parsed as
+the required JSON object and raised:
+
+`SemanticValidationError: REVIEWER returned invalid JSON`
+
+This demonstrated a second orchestration robustness gap: malformed advisory model
+output could escape the role loop as an uncaught Python exception.
+
+### Correction
+
+Gate 006 now treats structured role-output protocol failures as bounded,
+non-authoritative failures:
+
+- Planner and Reviewer structured responses receive at most one protocol-retry;
+- the retry uses the same model and reasoning configuration and explicitly asks
+  for exactly one JSON object matching the existing schema;
+- schemas are not weakened;
+- no alternate model is substituted;
+- no model output can promote itself to PASS;
+- retry exhaustion becomes deterministic terminal `FAIL`, not an uncaught
+  traceback;
+- malformed Executor structured output likewise becomes terminal `FAIL`;
+- model audit summaries now record `done_reason`, response content length, and
+  tool-call count for future diagnosis.
+
+Corrected implementation head:
+`0cb1756ebb8eb50ee4f45d883b42a0c14b1d2cca`
+
+Validation on corrected head:
+- deterministic suite: `50/50 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+A further local workstation smoke is required. Physical validation remains
+`PHYSICAL_NOT_EXECUTED`.
