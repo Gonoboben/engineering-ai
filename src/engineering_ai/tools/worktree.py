@@ -6,6 +6,8 @@ import hashlib
 import os
 import re
 import shutil
+import stat
+import time
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -230,6 +232,118 @@ class ControlledWorktreeAdapter:
                 f"controlled branch delete failed: {delete.stderr.strip() or delete.stdout.strip()}"
             )
         self._sessions.pop(str(worktree), None)
+
+    def cleanup_disposable_generated(self, session: WorktreeSession) -> None:
+        """Remove an adapter-owned disposable worktree with generated untracked files.
+
+        This is permitted only when HEAD remains exactly at the original base SHA
+        and both tracked worktree/cached diffs are empty. It may discard generated
+        untracked build artifacts, but never tracked project changes or commits.
+        """
+
+        worktree = self._require_session(session)
+        git = GitReadOnlyAdapter(worktree)
+        head = git.head_sha()
+        diff = git.diff_worktree()
+        cached = git.diff_cached()
+        if not head.ok or head.stdout.strip() != session.base_sha:
+            raise ToolAccessError(
+                "refusing disposable cleanup: worktree HEAD differs from base SHA"
+            )
+        if not diff.ok or not cached.ok:
+            raise ToolExecutionError(
+                "unable to verify tracked state before disposable cleanup"
+            )
+        if diff.stdout or cached.stdout:
+            raise ToolAccessError(
+                "refusing disposable cleanup: tracked worktree state is not clean"
+            )
+
+        remove_error = self._remove_disposable_worktree_with_retry(worktree)
+        if remove_error is not None:
+            self._remove_disposable_worktree_fallback(worktree, remove_error)
+
+        branch_sha = self._primary_git.ref_sha(session.branch)
+        if not branch_sha.ok or branch_sha.stdout.strip() != session.base_sha:
+            raise ToolAccessError(
+                "refusing disposable branch cleanup: branch moved"
+            )
+        delete = self._run_git(
+            ["branch", "-D", session.branch],
+            operation="git.branch_delete_disposable_controlled",
+        )
+        if delete.returncode != 0:
+            raise ToolExecutionError(
+                "disposable controlled branch delete failed: "
+                + (delete.stderr.strip() or delete.stdout.strip())
+            )
+        self._sessions.pop(str(worktree), None)
+
+    def _remove_disposable_worktree_with_retry(
+        self,
+        worktree: Path,
+        *,
+        attempts: int = 3,
+    ) -> str | None:
+        last_error = ""
+        for index in range(attempts):
+            result = self._run_git(
+                ["worktree", "remove", "--force", str(worktree)],
+                operation="git.worktree_remove_disposable",
+            )
+            if result.returncode == 0:
+                return None
+            last_error = result.stderr.strip() or result.stdout.strip()
+            if index + 1 < attempts:
+                time.sleep(0.25 * (index + 1))
+        return last_error or "git worktree remove failed"
+
+    def _remove_disposable_worktree_fallback(
+        self,
+        worktree: Path,
+        remove_error: str,
+    ) -> None:
+        """Windows-safe fallback for an already verified disposable worktree.
+
+        The caller has already proved HEAD==base and both tracked diffs empty.
+        This fallback may remove only the adapter-owned worktree directory,
+        then prunes stale Git worktree metadata. It never touches the primary
+        checkout or a worktree with tracked changes.
+        """
+
+        if worktree.exists():
+            def _clear_readonly_and_retry(function, path, exc_info):
+                try:
+                    os.chmod(path, stat.S_IWRITE)
+                    function(path)
+                except OSError:
+                    raise exc_info[1]
+
+            try:
+                shutil.rmtree(
+                    worktree,
+                    onerror=_clear_readonly_and_retry,
+                )
+            except OSError as exc:
+                raise ToolExecutionError(
+                    "disposable worktree cleanup failed after git remove error "
+                    f"{remove_error!r}: {exc}"
+                ) from exc
+
+        prune = self._run_git(
+            ["worktree", "prune", "--expire", "now"],
+            operation="git.worktree_prune_disposable",
+        )
+        if prune.returncode != 0:
+            raise ToolExecutionError(
+                "git worktree prune failed after guarded filesystem cleanup: "
+                + (prune.stderr.strip() or prune.stdout.strip())
+            )
+
+        if worktree.exists():
+            raise ToolExecutionError(
+                "disposable worktree path still exists after guarded cleanup"
+            )
 
     def _require_primary_clean(self) -> None:
         result = self._primary_git.status()

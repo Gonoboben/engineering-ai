@@ -1586,3 +1586,290 @@ occurred.
 Next:
 final acceptance-state CI, scope review, and exact-SHA human squash-merge
 approval for PR #28.
+
+
+---
+
+## 2026-09-19 — Gate 014 accepted and merged
+
+Final approved PR head:
+`681707e85b87332e36c7de9b9516e2f998d5a9d0`.
+
+Final validation:
+- deterministic tests: `128/128 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- real BuoyCalc read-only smoke: `PASS_STRICT_READ_ONLY_BASELINE`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`0f7ec3c01829f9c193e5730ec5144eee77c00b52`.
+
+Issue #27 closed.
+
+Accepted BuoyCalc connection:
+- strict read-only governance/Git/invariant/source-boundary inspection;
+- release remains unauthorized;
+- no project write/calculation/release authority.
+
+Gate 014 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 015 BuoyCalc controlled engineering loop opened
+
+Issue:
+`#29 — Gate 015 — BuoyCalc controlled engineering loop`.
+
+Branch:
+`gate-015-buoycalc-controlled-engineering-loop`.
+
+Base:
+Gate 014 squash merge `0f7ec3c01829f9c193e5730ec5144eee77c00b52`.
+
+Implemented scope:
+- isolated adapter-owned Git worktrees;
+- `engineering-ai/buoycalc/` branch prefix;
+- primary main/clean/HEAD==origin-main prerequisite;
+- explicit target allow-list;
+- exact before-content SHA-256 binding;
+- governance writes blocked;
+- calculation-core/physics-candidate writes blocked;
+- fixed validator profiles derived from accepted BuoyCalc workflow commands;
+- no arbitrary shell;
+- tracked-state mutation guard around validators;
+- structured bounded stdout/stderr SHA-256 evidence;
+- successful software state limited to `READY_FOR_HUMAN_APPROVAL`;
+- guarded disposable cleanup for generated bin/obj/artifacts only when HEAD remains
+  at base and both tracked diffs are empty.
+
+Project policy:
+- autonomous: read_repository / run_validator / propose_patch;
+- human approval required: write_worktree;
+- forbidden: calculation/simulation as free actions, commit/push/PR/merge,
+  physics/architecture change, validator weakening, fabrication/release,
+  destructive/scope-expansion/external-disclosure actions.
+
+Release remains:
+`NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+Engineering AI regression/CI, then one explicitly approved real BuoyCalc
+disposable-worktree validation smoke.
+
+
+---
+
+## 2026-09-19 — Gate 015 controlled BuoyCalc implementation validated
+
+Validated implementation head:
+`b40baea3294474fafa26936e06b0fa5c7d69ea86`.
+
+Validated control boundaries:
+- primary main/clean/HEAD==origin-main prerequisite;
+- `engineering-ai/buoycalc/` controlled branch prefix;
+- exact target allow-list and before-content SHA-256 binding;
+- governance and calculation-core/solver target rejection;
+- fixed shell-free validator profiles from accepted BuoyCalc workflows;
+- validator tracked-state mutation detection;
+- structured SOFTWARE_DETERMINISTIC evidence hashes;
+- successful suite bounded to `READY_FOR_HUMAN_APPROVAL`;
+- release remains unauthorized;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`;
+- guarded disposable generated-artifact cleanup;
+- explicit CLI human approval required for real worktree smoke;
+- no remote/release mutation API.
+
+Validation:
+- deterministic tests: `143/143 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 015 state:
+`IMPLEMENTED_CI_VALIDATED_PENDING_REAL_SMOKE`.
+
+Remaining:
+stable-head CI and one explicit primary-workstation disposable-worktree
+validation smoke on the real BuoyCalc checkout.
+
+
+---
+
+## 2026-09-19 — Gate 015 real smoke attempt 1 blocked by local runtime prerequisite
+
+Real primary-workstation controlled validation smoke started from clean aligned
+BuoyCalc `main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`.
+
+Validation did not start because the allow-listed local process runner could not
+resolve `dotnet`.
+
+Observed:
+- `VALIDATION_EXECUTION_ERROR`;
+- exact error: `allow-listed executable not found: dotnet`;
+- no validation profile executed;
+- disposable worktree removed;
+- disposable branch removed;
+- primary BuoyCalc before/after state identical;
+- release remained unauthorized;
+- physical remained `PHYSICAL_NOT_EXECUTED`.
+
+Classification:
+`INFRASTRUCTURE_PREREQUISITE_BLOCK`, not engineering validation FAIL.
+
+Correction:
+- runtime preflight now occurs before worktree creation;
+- standard Windows dotnet/pwsh locations are supported when PATH is missing;
+- fixed `dotnet --list-sdks` requires .NET 8 SDK;
+- missing prerequisite returns `BLOCKED_RUNTIME_PREREQUISITE`.
+
+Corrected head:
+`b6a490377f98cbe5d063e2a7460a977309507fe1`.
+
+Regression:
+`144/144 PASS`; generic CI PASS; strict exact-head CI PASS.
+
+Next:
+stable corrected-head CI and real smoke attempt 2.
+
+
+---
+
+## 2026-09-19 — Gate 015 smoke attempt 2 confirmed missing .NET 8 and PowerShell 7
+
+Corrected runtime-preflight smoke ran on the real primary workstation.
+
+Result:
+- `BLOCKED_RUNTIME_PREREQUISITE`;
+- `dotnet_executable=null`;
+- `pwsh_executable=null`;
+- `.NET 8 SDK unavailable`;
+- no worktree created;
+- no validation profile executed;
+- primary BuoyCalc main/head/status unchanged;
+- release remained unauthorized;
+- physical remained `PHYSICAL_NOT_EXECUTED`;
+- exit `4`.
+
+Classification:
+`RUNTIME_PREREQUISITE_MISSING`.
+
+Required before attempt 3:
+Microsoft .NET 8 SDK and PowerShell 7.
+
+
+---
+
+## 2026-09-19 — Gate 015 smoke attempt 3 passed software validation; cleanup blocked
+
+Real primary-workstation smoke executed after local .NET 8 SDK and PowerShell 7
+became available.
+
+BuoyCalc baseline before/after:
+`main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`, clean and unchanged.
+
+All fixed profiles passed:
+- `buoycalc.dotnet_build`;
+- `buoycalc.selected_shape_consumer_scan`;
+- `buoycalc.report_store_consumer_scan`;
+- `buoycalc.validation_601`.
+
+All steps completed with exit 0, no timeout and no truncation.
+Tracked state remained unchanged.
+
+Software terminal state:
+`READY_FOR_HUMAN_APPROVAL`.
+
+Release remained:
+`NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`.
+
+Physical remained:
+`PHYSICAL_NOT_EXECUTED`.
+
+The only failure was disposable Windows worktree removal:
+`Permission denied`.
+
+The temporary branch/worktree remained and process exited 1.
+
+Classification:
+`PASS_SOFTWARE_VALIDATION_WITH_CLEANUP_INFRASTRUCTURE_BLOCK`.
+
+Cleanup was hardened with retry plus a guarded Windows filesystem fallback and
+Git worktree prune. A dedicated stale-worktree recovery harness was added.
+
+Cleanup-hardening head:
+`87354398cd745856d8ff89798b5527e51477641c`.
+
+Regression:
+`145/145 PASS`; generic CI PASS; strict exact-head CI PASS.
+
+Next:
+recover only the exact stale worktree/branch. Full BuoyCalc validation does not
+need repetition solely for this cleanup defect.
+
+
+---
+
+## 2026-09-19 — Gate 015 stale recovery attempt found worktree already deregistered
+
+Guarded stale-worktree recovery returned:
+`REFUSED: worktree is not registered by Git`.
+
+Primary BuoyCalc remained:
+`main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`, clean.
+
+`git worktree list` showed only the primary checkout, proving the prior
+cleanup attempt had already removed Git worktree registration.
+
+The recovery harness was corrected for this exact Windows partial-cleanup state
+while tightening identity checks to the exact Gate 015 smoke branch and
+worktree names derived from base SHA.
+
+Corrected head:
+`d8405894bfb9152256e28ca49678f27ed8a2471d`.
+
+Regression:
+`147/147 PASS`; generic CI PASS; strict exact-head CI PASS.
+
+Next:
+repeat cleanup only; do not repeat the full BuoyCalc validator suite.
+
+
+---
+
+## 2026-09-19 — Gate 015 final controlled cleanup passed
+
+The exact stale disposable worktree/branch from smoke attempt 3 was recovered
+successfully.
+
+Result:
+- `STALE_DISPOSABLE_WORKTREE_CLEANED`;
+- worktree_removed: true;
+- branch_removed: true;
+- registered_before_cleanup: false;
+- fallback_used: true;
+- git_remove_errors: none;
+- primary BuoyCalc before/after state identical;
+- exit: 0;
+- physical validation remained `PHYSICAL_NOT_EXECUTED`.
+
+Post-cleanup `git worktree list` contains only the primary BuoyCalc checkout.
+
+Combined Gate 015 real-project evidence:
+- all four fixed validation profiles PASS;
+- all validator steps exit 0 with no timeout/truncation;
+- tracked state unchanged;
+- primary checkout unchanged;
+- release remains unauthorized;
+- physical remains not executed;
+- disposable worktree and controlled branch removed.
+
+Classification:
+`PASS_CONTROLLED_BUOYCALC_VALIDATION_AND_CLEANUP`.
+
+Next:
+final acceptance-state generic + strict exact-head CI, final scope review, and
+exact-SHA human squash-merge approval for PR #30.

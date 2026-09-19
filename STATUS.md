@@ -33,15 +33,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 012 merge commit: `6df110df27458e221fb2713439b5e778da1da57f`
 - Gate 013: `ACCEPTED_MERGED`
 - Gate 013 merge commit: `2a8cdf6594d8eb6b29e2efb200683af95167bb20`
+- Gate 014: `ACCEPTED_MERGED`
+- Gate 014 merge commit: `0f7ec3c01829f9c193e5730ec5144eee77c00b52`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `014 — BuoyCalc read-only adapter`
-- Issue: `#27`
-- PR: `#28 (DRAFT)`
-- Branch: `gate-014-buoycalc-readonly-adapter`
-- Base: `2a8cdf6594d8eb6b29e2efb200683af95167bb20`
+- Gate: `015 — BuoyCalc controlled engineering loop`
+- Issue: `#29`
+- PR: `#30 (DRAFT)`
+- Branch: `gate-015-buoycalc-controlled-engineering-loop`
+- Base: `0f7ec3c01829f9c193e5730ec5144eee77c00b52`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -80,14 +82,15 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
-- BuoyCalc strict read-only adapter: `IMPLEMENTED_PENDING_VALIDATION`
+- BuoyCalc strict read-only adapter: `IMPLEMENTED_VALIDATED_GATE_014`
+- BuoyCalc controlled engineering loop: `IMPLEMENTED_PENDING_VALIDATION`
 - External controlled review bridge: `DESIGNED_NOT_IMPLEMENTED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
-- BuoyCalc: `READ_ONLY_GATE014_IN_PROGRESS`
+- BuoyCalc: `CONTROLLED_GATE015_IN_PROGRESS`
 
-Gate 014 accesses BuoyCalc strictly read-only. It preserves calculation-core physics authority, selected X/Z semantics, exact signed/release invariants and physical-validation class. It cannot modify BuoyCalc, run release packaging, authorize v1.0.0, or treat UI/PDF/2D/report paths as physics sources.
+Gate 015 adds isolated-worktree modification and fixed build/test/validation execution for BuoyCalc while keeping governance/calculation-core writes, commit/push/PR/merge and release authorization blocked. Successful software validation may reach only `READY_FOR_HUMAN_APPROVAL`; physical validation remains `PHYSICAL_NOT_EXECUTED`.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -361,7 +364,7 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 014 validation state
-- Issue #27: `OPEN`
+- Issue #27: `CLOSED`
 - branch base equals Gate 013 squash merge `2a8cdf6594d8eb6b29e2efb200683af95167bb20`: `PASS`
 - BuoyCalc adapter mode: `STRICT_READ_ONLY`
 - mandatory governance: `AGENTS.md / docs/OPTIMIZATION_PLAN.md / RELEASE.md`
@@ -381,6 +384,47 @@ Historical CI note:
 - current main workflow-run evidence query: `EMPTY -> NO RELEASE PASS INFERRED`
 - implementation head `facc9d8b4a514120ce5be3a886fc77c8eda87dcc`: deterministic regression `128/128 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - local primary-workstation smoke: `PASS_STRICT_READ_ONLY_BASELINE`; main/head/origin-main unchanged at `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`, dirty=false, all invariant checks PASS, 471 tracked source entries, presentation_physics_violation=false, release NOT_AUTHORIZED, physical NOT_EXECUTED, EXIT=0
+- final PR head: `681707e85b87332e36c7de9b9516e2f998d5a9d0`
+- final deterministic regression: `128/128 PASS`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `0f7ec3c01829f9c193e5730ec5144eee77c00b52`
+- Gate 014 state: `ACCEPTED_MERGED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 015 validation state
+- Issue #29: `OPEN`
+- branch base equals Gate 014 squash merge `0f7ec3c01829f9c193e5730ec5144eee77c00b52`: `PASS`
+- mode: `CONTROLLED_ISOLATED_WORKTREE`
+- primary BuoyCalc prerequisite: `main / clean / HEAD==origin/main`
+- fixed branch prefix: `engineering-ai/buoycalc/`
+- explicit path allow-list: `ENFORCED`
+- exact before-content SHA-256: `ENFORCED`
+- governance writes: `BLOCKED`
+- calculation-core/physics-candidate writes: `BLOCKED`
+- ordinary non-core controlled patch: `IMPLEMENTED`
+- validator profiles: `buoycalc.dotnet_build / selected_shape_consumer_scan / report_store_consumer_scan / validation_601`
+- arbitrary shell: `PROHIBITED`
+- validator tracked-state mutation guard: `IMPLEMENTED`
+- structured stdout/stderr SHA-256 evidence: `IMPLEMENTED`
+- validator evidence class: `SOFTWARE_DETERMINISTIC`
+- successful software terminal state: `READY_FOR_HUMAN_APPROVAL`
+- release state: `NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`
+- commit / push / open_pr / merge_pr / tag / release API: `ABSENT`
+- disposable generated-artifact cleanup: `TRACKED_DIFF_AND_HEAD_GUARDED`
+- implementation head `b40baea3294474fafa26936e06b0fa5c7d69ea86`: deterministic regression `143/143 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- real primary-workstation controlled validation smoke attempt 1: `INFRASTRUCTURE_PREREQUISITE_BLOCK`; dotnet unresolved, no validator profile executed, disposable worktree/branch removed, primary BuoyCalc unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED
+- runtime prerequisite preflight: `IMPLEMENTED`; dotnet PATH/common-Windows-path resolution + .NET 8 SDK check + pwsh resolution before worktree creation
+- corrected runtime-preflight head `b6a490377f98cbe5d063e2a7460a977309507fe1`: deterministic regression `144/144 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- real primary-workstation controlled validation smoke attempt 2: `RUNTIME_PREREQUISITE_MISSING`; dotnet=null, pwsh=null, .NET 8 SDK unavailable, worktree not created, primary BuoyCalc unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED, EXIT=4
+- runtime prerequisites installed before attempt 3: `Microsoft .NET 8 SDK + PowerShell 7`
+- real primary-workstation controlled validation smoke attempt 3: `PASS_SOFTWARE_VALIDATION_WITH_CLEANUP_INFRASTRUCTURE_BLOCK`; all 4 profiles PASS, tracked_state_unchanged=true, primary repository unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED; stale disposable worktree/branch recovery pending
+- Windows disposable cleanup hardening head `87354398cd745856d8ff89798b5527e51477641c`: deterministic regression `145/145 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- stale-worktree recovery attempt 1: `REFUSED_ALREADY_DEREGISTERED`; `git worktree list` shows only primary main checkout
+- corrected exact-identity deregistered-residue recovery head `d8405894bfb9152256e28ca49678f27ed8a2471d`: deterministic regression `147/147 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final stale-worktree recovery: `PASS`; worktree_removed=true, branch_removed=true, registered_before_cleanup=false, fallback_used=true, repository_unchanged=true, EXIT=0
+- Gate 015 real-project result: `PASS_CONTROLLED_BUOYCALC_VALIDATION_AND_CLEANUP`
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -421,4 +465,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 014 acceptance-state head. If green, perform final scope review, mark PR #28 ready for review, and request explicit human exact-SHA squash-merge approval. Do not run calculation/solver changes, release packaging, RC branch mutation, tag/release actions, or any BuoyCalc write.
+Run final generic and strict exact-head CI on the Gate 015 acceptance-state head. If green, perform final scope review, mark PR #30 ready for review, and request explicit human exact-SHA squash-merge approval.

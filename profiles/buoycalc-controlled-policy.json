@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "policy_version": "gate015-buoycalc-controlled-v1",
+  "project_id": "buoycalc",
+  "autonomous_actions": [
+    "read_repository",
+    "run_validator",
+    "propose_patch"
+  ],
+  "approval_required_actions": [
+    "write_worktree"
+  ],
+  "forbidden_actions": [
+    "search_documents",
+    "run_calculation",
+    "run_simulation",
+    "local_commit",
+    "push_remote",
+    "open_pr",
+    "merge_pr",
+    "release_authorization",
+    "fabrication_authorization",
+    "architecture_change",
+    "physics_change",
+    "validator_weakening",
+    "external_disclosure",
+    "destructive_action",
+    "scope_expansion"
+  ],
+  "mandatory_validators": [
+    "buoycalc.dotnet_build",
+    "buoycalc.selected_shape_consumer_scan",
+    "buoycalc.report_store_consumer_scan",
+    "buoycalc.validation_601"
+  ],
+  "stop_conditions": [
+    "primary repository is not main",
+    "primary HEAD does not equal origin/main",
+    "primary repository is dirty",
+    "mandatory invariant marker is missing or changed",
+    "patch target is governance",
+    "patch target is calculation-core/physics candidate",
+    "patch target is outside explicit allow-list",
+    "expected_sha256 does not match current content",
+    "validator changes tracked Git state",
+    "validator fails or times out",
+    "release or physical state would be promoted",
+    "requested action is outside Gate 015 controlled scope"
+  ],
+  "retry_limit": 1
+}
