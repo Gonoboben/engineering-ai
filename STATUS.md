@@ -34,7 +34,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#20 (DRAFT)`
 - Branch: `gate-010-task-blackboard-handoffs`
 - Base: `711d23fb9739e7d9069e5d2569f00231988ef176`
-- State: `IMPLEMENTED_PENDING_VALIDATION`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -248,9 +248,9 @@ Historical CI note:
 - independent disagreement review: `NOT_IMPLEMENTED_GATE011`
 - Electronics/PCB/KiCad/Vision roles: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE010`
 - project adapters/write authority: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
-- deterministic regression: `PENDING`
-- generic CI: `PENDING`
-- strict exact-head CI: `PENDING`
+- implementation head `2445de8c163e553bb2735ce21e6c0a5068aa912e`: deterministic regression `87/87 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -289,4 +289,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run full Gate 010 regression plus generic and strict exact-head CI on the Blackboard/handoff implementation. Correct implementation defects without weakening policy, then synchronize acceptance evidence and request explicit human exact-SHA squash-merge approval for PR #20. Do not implement Gate 011 disagreement review or Electronics/PCB/KiCad roles.
+Run generic and strict exact-head CI on the final Gate 010 acceptance-state head. If green, request explicit human exact-SHA squash-merge approval for PR #20. Do not implement Gate 011 disagreement review or Electronics/PCB/KiCad roles.
