@@ -33,10 +33,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `011 — Independent review and disagreement escalation`
 - Issue: `#21`
-- PR: `PENDING_DRAFT`
+- PR: `#22 (DRAFT)`
 - Branch: `gate-011-independent-review-escalation`
 - Base: `34d18a85b5a00510331b4c75501a0672bc607093`
-- State: `IMPLEMENTED_PENDING_VALIDATION`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -274,9 +274,9 @@ Historical CI note:
 - majority voting / confidence aggregation: `NOT_IMPLEMENTED_PROHIBITED`
 - new reviewer model qualification: `NOT_RUN_OUT_OF_SCOPE_GATE011`
 - Electronics/PCB/KiCad/Vision roles: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE011`
-- deterministic regression: `PENDING`
-- generic CI: `PENDING`
-- strict exact-head CI: `PENDING`
+- implementation head `117ee434e1b55faf06580bd8ae9474e5f1085107`: deterministic regression `99/99 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -315,4 +315,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Open Gate 011 draft PR, run deterministic regression plus generic/strict exact-head CI, correct only Gate 011 implementation defects, then synchronize acceptance evidence. Do not add a new reviewer model or Electronics/PCB/KiCad roles.
+Run generic and strict exact-head CI on the final Gate 011 acceptance-state head. If green, request explicit human exact-SHA squash-merge approval for PR #22. Do not add a new reviewer model or Electronics/PCB/KiCad roles.
