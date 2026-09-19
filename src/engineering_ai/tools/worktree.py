@@ -231,6 +231,58 @@ class ControlledWorktreeAdapter:
             )
         self._sessions.pop(str(worktree), None)
 
+    def cleanup_disposable_generated(self, session: WorktreeSession) -> None:
+        """Remove an adapter-owned disposable worktree with generated untracked files.
+
+        This is permitted only when HEAD remains exactly at the original base SHA
+        and both tracked worktree/cached diffs are empty. It may discard generated
+        untracked build artifacts, but never tracked project changes or commits.
+        """
+
+        worktree = self._require_session(session)
+        git = GitReadOnlyAdapter(worktree)
+        head = git.head_sha()
+        diff = git.diff_worktree()
+        cached = git.diff_cached()
+        if not head.ok or head.stdout.strip() != session.base_sha:
+            raise ToolAccessError(
+                "refusing disposable cleanup: worktree HEAD differs from base SHA"
+            )
+        if not diff.ok or not cached.ok:
+            raise ToolExecutionError(
+                "unable to verify tracked state before disposable cleanup"
+            )
+        if diff.stdout or cached.stdout:
+            raise ToolAccessError(
+                "refusing disposable cleanup: tracked worktree state is not clean"
+            )
+
+        result = self._run_git(
+            ["worktree", "remove", "--force", str(worktree)],
+            operation="git.worktree_remove_disposable",
+        )
+        if result.returncode != 0:
+            raise ToolExecutionError(
+                "git disposable worktree remove failed: "
+                + (result.stderr.strip() or result.stdout.strip())
+            )
+
+        branch_sha = self._primary_git.ref_sha(session.branch)
+        if not branch_sha.ok or branch_sha.stdout.strip() != session.base_sha:
+            raise ToolAccessError(
+                "refusing disposable branch cleanup: branch moved"
+            )
+        delete = self._run_git(
+            ["branch", "-D", session.branch],
+            operation="git.branch_delete_disposable_controlled",
+        )
+        if delete.returncode != 0:
+            raise ToolExecutionError(
+                "disposable controlled branch delete failed: "
+                + (delete.stderr.strip() or delete.stdout.strip())
+            )
+        self._sessions.pop(str(worktree), None)
+
     def _require_primary_clean(self) -> None:
         result = self._primary_git.status()
         if not result.ok:
