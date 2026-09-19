@@ -127,8 +127,11 @@ def main() -> int:
 
     def read_repository(arguments: Mapping[str, Any]) -> ToolOutcome:
         path = arguments.get("path")
-        if not isinstance(path, str) or not path.strip():
-            return ToolOutcome(False, "read_repository requires a non-empty path")
+        if path != "STATUS.md":
+            return ToolOutcome(
+                False,
+                "Gate 006 smoke permits only read_repository(path=STATUS.md)",
+            )
         try:
             text = filesystem.read_text(path)
         except Exception as exc:
