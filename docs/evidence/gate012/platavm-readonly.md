@@ -200,7 +200,7 @@ the known `Hardware/KiCad` subtree.
 Local smoke on the actual primary-workstation checkout
 `C:\workspace\repos\plataVM` is still `NOT_RUN`.
 
-The smoke must:
+The smoke harness now reports `LOCAL_REPOSITORY_NOT_FOUND` as a structured state with exit code 2 instead of raising an unhandled Python traceback. After a local clone exists, the smoke must:
 - capture the actual local branch/HEAD/origin-main;
 - resolve mandatory governance and latest chronology;
 - inventory KiCad assets;
