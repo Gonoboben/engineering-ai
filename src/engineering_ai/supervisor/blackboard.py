@@ -19,6 +19,22 @@ from engineering_ai.models.routing import (
 )
 
 
+
+
+class ContextResolutionMode(str, Enum):
+    CONTEXT_READY = "CONTEXT_READY"
+    DETERMINISTIC_ACQUISITION = "DETERMINISTIC_ACQUISITION"
+    TOOL_PLANNER = "TOOL_PLANNER"
+    DEEP_ESCALATION = "DEEP_ESCALATION"
+
+
+@dataclass(frozen=True)
+class ContextResolutionDecision:
+    mode: ContextResolutionMode
+    missing_context_keys: tuple[str, ...]
+    route: RouteDecision | None = None
+
+
 class BlackboardRecordKind(str, Enum):
     TASK_ASSIGNMENT = "TASK_ASSIGNMENT"
     CONTEXT_REQUIREMENT = "CONTEXT_REQUIREMENT"
@@ -300,3 +316,54 @@ def build_handoff(
         },
     )
     return HandoffDecision(route=route, handoff_record=record, visible_view=visible)
+
+
+def resolve_context(
+    *,
+    blackboard: TaskBlackboard,
+    router,
+    task_id: str,
+    required_context_keys: tuple[str, ...],
+    requirements_are_explicit: bool,
+    ambiguous_tool_choice: bool = False,
+    context_tokens: int = 8192,
+    max_output_tokens: int = 2048,
+) -> ContextResolutionDecision:
+    """Choose the deterministic acquisition/planning path without executing it."""
+
+    available = blackboard.context_keys(task_id)
+    missing = tuple(key for key in required_context_keys if key not in available)
+    if not missing:
+        return ContextResolutionDecision(
+            mode=ContextResolutionMode.CONTEXT_READY,
+            missing_context_keys=(),
+        )
+
+    if requirements_are_explicit:
+        return ContextResolutionDecision(
+            mode=ContextResolutionMode.DETERMINISTIC_ACQUISITION,
+            missing_context_keys=missing,
+        )
+
+    task_class = (
+        ModelTaskClass.BASELINE_REASONING
+        if ambiguous_tool_choice
+        else ModelTaskClass.GENERAL_PLANNING
+    )
+    route = router.route(
+        RouteRequest(
+            task_class=task_class,
+            context_tokens=context_tokens,
+            max_output_tokens=max_output_tokens,
+            requires_native_tool_proposals=True,
+        )
+    )
+    return ContextResolutionDecision(
+        mode=(
+            ContextResolutionMode.DEEP_ESCALATION
+            if ambiguous_tool_choice
+            else ContextResolutionMode.TOOL_PLANNER
+        ),
+        missing_context_keys=missing,
+        route=route,
+    )
