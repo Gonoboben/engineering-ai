@@ -1216,3 +1216,31 @@ fixed validators and proof that Git-visible state is unchanged.
 PlataVM barriers remain:
 `PACKAGE_SET_NOT_READY / fabrication NOT_GRANTED / physical NOT_EXECUTED /
 PROTOTYPE_BASIS_ONLY_NOT_RELEASED / UNDECIDED / series NOT_GRANTED`.
+
+
+---
+
+## 2026-09-19 — Gate 012 local smoke blocked by missing checkout
+
+The first primary-workstation smoke attempt did not reach adapter validation.
+
+Observed:
+- Engineering AI Gate 012 checkout was correct at `0e675792d61a9b450cf9565380761d46b1a5c004`;
+- `C:\workspace\repos\plataVM` did not exist;
+- Git commands against that path failed with repository-path-not-found;
+- the smoke script failed during strict Path resolution;
+- no PlataVM repository content existed locally to read or modify;
+- no validator executed against PlataVM;
+- no PlataVM Git-visible state changed.
+
+Classification:
+`BLOCKED_LOCAL_REPOSITORY_NOT_FOUND`, not Gate failure.
+
+The smoke harness was tightened to emit structured
+`LOCAL_REPOSITORY_NOT_FOUND` with exit code 2 instead of an unhandled
+traceback.
+
+Next admissible step:
+create a normal local clone at the profile path, then repeat the same strict
+read-only smoke. No PlataVM GitHub Actions rerun or PR #100 mutation is
+authorized by Gate 012.
