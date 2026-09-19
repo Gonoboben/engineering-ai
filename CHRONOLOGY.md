@@ -986,3 +986,37 @@ Explicitly out of scope:
 
 Next step:
 run deterministic regression and exact-head CI for the Gate 010 implementation.
+
+
+---
+
+## 2026-09-19 — Gate 010 Blackboard implementation validated
+
+Implementation validation head:
+`2445de8c163e553bb2735ce21e6c0a5068aa912e`.
+
+Validated:
+- typed bounded append-only Task Blackboard;
+- immutable/read-only worker-visible records;
+- Supervisor-only control/evidence/handoff write boundary;
+- model claims remain `ADVISORY`;
+- model tool proposals remain `ADVISORY` and unexecuted;
+- deterministic evidence requires deterministic-tool authority plus evidence references;
+- explicit record-ID visibility on handoffs;
+- hidden and cross-task evidence cannot satisfy required context;
+- deterministic acquisition is selected when missing context is explicit;
+- Qwen3.5-9B is selected for bounded missing-context tool planning;
+- gpt-oss:20b / medium is selected for explicit ambiguous tool-planning escalation;
+- Qwen2.5-Coder handoff requires complete visible deterministic context;
+- Qwen2.5-Coder native-tool-required handoff remains `NO_ROUTE`;
+- no Electronics/PCB/KiCad/Vision task class exists.
+
+Validation:
+- deterministic tests: `87/87 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 010 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+One final exact-head CI run is required after acceptance-state synchronization.
