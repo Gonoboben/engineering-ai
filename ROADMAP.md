@@ -288,7 +288,7 @@ Enable controlled modifications, build/test/validation runs and structured evide
 ## Phase 4 — Persistent engineering memory
 
 ### Gate 016 — Decision/evidence memory
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
 Add structured storage/search for:
 - ADRs;
@@ -300,7 +300,7 @@ Add structured storage/search for:
 Start with simple local storage (repository files/SQLite/search).
 
 ### Gate 017 — Retrieval layer
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Add semantic/vector retrieval only if benchmarked against repository/search approaches and shown to improve relevant engineering recall without hiding provenance.
 

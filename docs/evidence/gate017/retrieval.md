@@ -1,0 +1,289 @@
+# Gate 017 — Retrieval Layer Evidence
+
+## Scope
+
+Gate 017 adds a policy-controlled retrieval layer over the accepted Gate 016
+decision/evidence memory.
+
+The initial backend is deterministic lexical retrieval.
+
+Semantic/vector retrieval is not implemented unless a separately qualified
+backend is benchmarked against simpler repository/search approaches and shown
+to improve relevant engineering recall without hiding provenance.
+
+Current semantic/vector state:
+`DEFERRED_NOT_JUSTIFIED`.
+
+## Accepted base
+
+Engineering AI base:
+Gate 016 squash merge
+`a71c084078ae7c12361555eaed2f3d7c887d61d6`.
+
+Gate 016 ADR:
+`ADR-0015 — Use append-only local SQLite decision/evidence memory`
+is accepted through Gate 016 merge.
+
+## Retrieval contract
+
+Implementation:
+`src/engineering_ai/memory/retrieval.py`.
+
+A RetrievalRequest requires:
+- project_id;
+- non-empty lexical query;
+- bounded candidate limit 1..100;
+- bounded result count;
+- bounded context character budget.
+
+Optional exact filters:
+- memory kind;
+- authority;
+- validation class.
+
+Default safety policy:
+- latest revisions only;
+- MODEL authority excluded;
+- ADVISORY validation class excluded;
+- PROPOSED ADRs excluded.
+
+Explicit opt-in exists for:
+- advisory memory;
+- proposed ADRs;
+- historical/superseded revisions.
+
+Opt-in does not change labels or authority.
+
+## Relevance semantics
+
+Ranking is deterministic lexical relevance only.
+
+Fields used:
+- title;
+- summary;
+- structured content.
+
+Scoring includes:
+- exact phrase matches with field-specific weights;
+- token matches with field-specific weights;
+- all-query-token bonus.
+
+Stable tie-break:
+1. descending relevance score;
+2. memory_id;
+3. descending revision;
+4. record_id.
+
+Retrieval rank is not evidence strength.
+
+## Context package
+
+Each returned item preserves:
+- record_id;
+- memory_id;
+- revision;
+- kind;
+- authority;
+- validation class;
+- ADR decision status;
+- physical validation state;
+- title/summary/content;
+- provenance;
+- evidence refs;
+- source refs;
+- canonical content SHA-256;
+- relevance score/matched terms;
+- current-vs-historical revision flag.
+
+Individual records are never truncated to fit the context budget.
+A whole record is omitted if it would exceed the remaining budget.
+
+The package explicitly records:
+- candidate count;
+- relevant count;
+- result-limit omissions;
+- context-budget omissions;
+- total serialized characters;
+- advisory/proposed/history opt-in flags;
+- semantic/vector backend status;
+- `automatic_context_injection=false`.
+
+## Trust boundaries
+
+Default retrieval cannot silently expose model/advisory memory.
+
+Proposed ADRs cannot appear in default context.
+
+Historical superseded revisions cannot appear in default context.
+
+Project_id is mandatory; cross-project memory cannot satisfy retrieval.
+
+A memory integrity/hash failure propagates as a hard failure; corrupted memory
+is not returned.
+
+The Supervisor exposes retrieval through a narrow read-only
+`retrieve_memory_context()` boundary. The request project_id must equal the
+Supervisor's current project state. Retrieval returns the typed package only
+and does not create Blackboard records or model handoffs.
+
+The retriever exposes no:
+- append/update/delete;
+- generic SQL;
+- Blackboard write;
+- evidence promotion;
+- automatic context injection;
+- semantic search;
+- vector search.
+
+## JSON Schema
+
+`schemas/retrieval-context.schema.json`
+fixes the typed context package contract.
+
+It currently requires:
+- `semantic_vector_backend=DEFERRED_NOT_JUSTIFIED`;
+- `automatic_context_injection=false`.
+
+## Deterministic benchmark
+
+Benchmark implementation:
+- `src/engineering_ai/memory/benchmark.py`;
+- `scripts/gate017_retrieval_benchmark.py`.
+
+Baseline:
+Gate 016 exact-substring memory search under the same default safety filters.
+
+Gate 017 candidate:
+deterministic lexical ranked retrieval.
+
+Metric:
+recall@3 over fixed engineering-memory queries.
+
+Fixture includes:
+- non-contiguous/reordered append-only SQLite memory query;
+- reordered Windows worktree cleanup query;
+- selected-shape validation query with an intervening term;
+- contiguous buoy-engineering source query where baseline should already work;
+- advisory model-memory safety query;
+- proposed-ADR safety query.
+
+Acceptance benchmark requires:
+- safety PASS;
+- Gate 017 not worse on every relevant case;
+- at least one improved relevant case;
+- aggregate mean recall@3 greater than baseline.
+
+No semantic/vector result may be inferred from this lexical benchmark.
+
+## Proposed architecture decision
+
+`ADR-0016 — Use deterministic provenance-preserving retrieval as the baseline`
+
+Status:
+`PROPOSED_GATE_017`.
+
+It becomes accepted only after explicit human exact-SHA approval and Gate 017
+squash merge.
+
+## Physical validation
+
+Retrieval never changes validation class.
+
+Project physical validation remains whatever the source record states.
+
+Gate 017 itself:
+`PHYSICAL_NOT_EXECUTED`.
+
+## Deterministic implementation validation
+
+Validated implementation head:
+`9e5874ec19b15b7d429f3fcb6752f73b3e8e7a28`.
+
+Result:
+- deterministic tests: `178/178 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+Validated boundaries include:
+- default MODEL/ADVISORY exclusion;
+- explicit advisory opt-in with labels preserved;
+- default proposed-ADR exclusion;
+- explicit proposed-ADR opt-in;
+- latest-only default and explicit history retrieval;
+- stable lexical ranking and tie-break;
+- bounded result/context budgets;
+- whole-record omission rather than record truncation;
+- provenance/evidence/source refs and content hash preservation;
+- project isolation;
+- memory integrity failure propagation;
+- retrieval context JSON Schema;
+- read-only retrieval API;
+- benchmark smoke returns PASS under CI;
+- Supervisor-owned same-project retrieval boundary;
+- cross-project Supervisor retrieval rejection;
+- Supervisor retrieval does not create Blackboard/handoff context.
+
+## Stable pre-smoke and primary-workstation benchmark
+
+Stable pre-smoke head:
+`c5c2c5648efa7b12447ad5bffed9451c7b4c2868`.
+
+GitHub validation on that exact PR head:
+- generic workflow run `35463811833`: `PASS`;
+- strict exact-head workflow run `35463811817`: `PASS`;
+- deterministic regression: `178/178 PASS`;
+- exact revision verification: `PASS`.
+
+Primary-workstation benchmark command:
+`.\.venv\Scripts\python.exe scripts\gate017_retrieval_benchmark.py`.
+
+Observed result:
+- state: `PASS_DETERMINISTIC_RETRIEVAL_BENCHMARK`;
+- exit code: `0`;
+- k: `3`;
+- baseline mean recall@3: `0.25`;
+- Gate 017 retrieval mean recall@3: `1.0`;
+- improved relevant cases: `3`;
+- safety: `PASS`;
+- retrieval not worse on every relevant case: `PASS`;
+- semantic/vector backend: `DEFERRED_NOT_JUSTIFIED`;
+- automatic context injection: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- temporary benchmark database removed on exit: `true`.
+
+Per-case result:
+- `append-memory-noncontiguous`: baseline `0.0`, retrieval `1.0`, improved;
+- `windows-cleanup-reordered`: baseline `0.0`, retrieval `1.0`, improved;
+- `shape-validation-gap`: baseline `0.0`, retrieval `1.0`, improved;
+- `source-contiguous-baseline`: baseline `1.0`, retrieval `1.0`, not worse;
+- `advisory-safety`: excluded as required, safety PASS;
+- `proposed-adr-safety`: excluded as required, safety PASS.
+
+The lexical baseline therefore satisfies Gate 017 acceptance. No embedding or vector
+database is justified by this benchmark.
+
+## Final acceptance checkpoint
+
+Post-benchmark evidence head:
+`578510beed676a1d6b71c8842e0ebace27564301`.
+
+Validation:
+- generic workflow run `35464308651`: `PASS`;
+- strict exact-head workflow run `35464308598`: `PASS`;
+- deterministic regression: `178/178 PASS`;
+- exact revision verification: `PASS`.
+
+Final scope review:
+`PASS`.
+
+Reviewed scope contains only Gate 017 retrieval, benchmark, schema, Supervisor read-only
+boundary, tests, architecture/evidence/status documentation. No vector/embedding backend,
+automatic RAG/model injection, memory write path, evidence promotion, unrestricted shell,
+permission/state ownership transfer, or Gate 018 lifecycle implementation is present.
+
+## Remaining acceptance
+
+1. final documentation-head generic + strict exact-head recheck;
+2. mark PR #34 ready for review;
+3. exact-SHA human squash-merge approval.

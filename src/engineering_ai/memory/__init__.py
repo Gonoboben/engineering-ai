@@ -1,5 +1,13 @@
 """Decision/evidence memory primitives."""
 
+from engineering_ai.memory.retrieval import (
+    PolicyControlledMemoryRetriever,
+    RetrievalContextPackage,
+    RetrievalPolicyError,
+    RetrievalRequest,
+    RetrievalStatus,
+    RetrievedMemoryItem,
+)
 from engineering_ai.memory.store import (
     DecisionEvidenceMemory,
     DecisionStatus,
@@ -19,6 +27,12 @@ from engineering_ai.memory.store import (
 )
 
 __all__ = [
+    "PolicyControlledMemoryRetriever",
+    "RetrievalContextPackage",
+    "RetrievalPolicyError",
+    "RetrievalRequest",
+    "RetrievalStatus",
+    "RetrievedMemoryItem",
     "DecisionEvidenceMemory",
     "DecisionStatus",
     "MemoryAuthority",

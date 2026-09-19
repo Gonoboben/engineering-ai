@@ -2019,3 +2019,208 @@ Gate 016 state:
 Next:
 final acceptance-state generic + strict exact-head CI, scope review, and exact-SHA
 human squash-merge approval for PR #32.
+
+
+---
+
+## 2026-09-19 — Gate 016 accepted and merged
+
+Final approved PR head:
+`2f503df7750eafb4e19fed796dc2a6642d509616`.
+
+Final validation:
+- deterministic tests: `161/161 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- primary-workstation persistent/reopen memory smoke: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`a71c084078ae7c12361555eaed2f3d7c887d61d6`.
+
+Issue #31 closed.
+
+Accepted capability:
+- local append-only SQLite decision/evidence memory;
+- immutable exact supersession revisions;
+- canonical SHA-256 integrity;
+- project isolation;
+- deterministic bounded search;
+- model memory remains advisory;
+- accepted ADRs remain human-only;
+- physical validation class preserved.
+
+ADR-0015 is accepted through Gate 016 merge.
+
+Gate 016 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 017 retrieval layer opened
+
+Issue:
+`#33 — Gate 017 — Retrieval layer`.
+
+Branch:
+`gate-017-retrieval-layer`.
+
+Base:
+Gate 016 squash merge
+`a71c084078ae7c12361555eaed2f3d7c887d61d6`.
+
+Implemented initial scope:
+- typed project-scoped RetrievalRequest/ContextPackage;
+- latest revision by default;
+- MODEL/ADVISORY default exclusion;
+- proposed ADR default exclusion;
+- explicit advisory/proposed/history opt-in with labels preserved;
+- deterministic lexical relevance ranking;
+- bounded candidate/result/context budgets;
+- no record truncation;
+- provenance/evidence/source refs and integrity SHA preserved;
+- memory integrity failures fail closed;
+- no automatic Blackboard/model prompt injection;
+- retrieval context JSON Schema;
+- deterministic recall@3 benchmark against Gate 016 exact-substring search;
+- semantic/vector backend remains
+  `DEFERRED_NOT_JUSTIFIED`.
+
+ADR-0016 added as `PROPOSED_GATE_017`.
+
+Next:
+open draft PR and validate retrieval implementation + benchmark before any
+consideration of semantic/vector retrieval.
+
+
+---
+
+## 2026-09-19 — Gate 017 retrieval implementation validated
+
+Validated implementation head:
+`9e5874ec19b15b7d429f3fcb6752f73b3e8e7a28`.
+
+Validated:
+- deterministic provenance-preserving lexical retrieval;
+- latest-only default;
+- MODEL/ADVISORY default exclusion;
+- PROPOSED ADR default exclusion;
+- explicit advisory/proposed/history opt-in with labels preserved;
+- stable lexical relevance ranking;
+- bounded candidate/result/context budgets;
+- no per-record truncation;
+- provenance/evidence/source refs and integrity SHA preserved;
+- project isolation;
+- memory integrity failure fail-closed;
+- retrieval context JSON Schema;
+- no write/vector/context-injection API;
+- deterministic recall benchmark smoke under CI;
+- Supervisor-owned same-project retrieval boundary;
+- cross-project Supervisor retrieval rejection;
+- no automatic Blackboard/handoff creation.
+
+Validation:
+- deterministic tests: `178/178 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Semantic/vector backend remains:
+`DEFERRED_NOT_JUSTIFIED`.
+
+Gate 017 state:
+`IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_BENCHMARK`.
+
+Remaining:
+stable pre-smoke exact-head CI and one primary-workstation retrieval
+benchmark/smoke with metrics captured.
+
+
+---
+
+## 2026-09-19 — Gate 017 primary-workstation retrieval benchmark passed
+
+Stable pre-smoke PR head:
+`c5c2c5648efa7b12447ad5bffed9451c7b4c2868`.
+
+Pre-smoke validation:
+- generic workflow run `35463811833`: `PASS`;
+- strict exact-head workflow run `35463811817`: `PASS`;
+- deterministic regression: `178/178 PASS`;
+- exact revision verification: `PASS`.
+
+Primary-workstation benchmark:
+- script: `scripts/gate017_retrieval_benchmark.py`;
+- state: `PASS_DETERMINISTIC_RETRIEVAL_BENCHMARK`;
+- exit code: `0`;
+- k: `3`;
+- baseline mean recall@3: `0.25`;
+- retrieval mean recall@3: `1.0`;
+- improved relevant cases: `3`;
+- safety: `PASS`;
+- retrieval not worse on every relevant case: `PASS`;
+- automatic context injection: `false`;
+- temporary database removed on exit: `true`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Relevant benchmark cases:
+- append-memory-noncontiguous: `0.0 -> 1.0`;
+- windows-cleanup-reordered: `0.0 -> 1.0`;
+- shape-validation-gap: `0.0 -> 1.0`;
+- source-contiguous-baseline: `1.0 -> 1.0`.
+
+Safety-only cases:
+- advisory-safety: excluded as required;
+- proposed-adr-safety: excluded as required.
+
+Conclusion:
+the deterministic lexical retrieval baseline materially improves measured recall while
+preserving provenance and safety. Semantic/vector retrieval remains
+`DEFERRED_NOT_JUSTIFIED`; no embeddings/vector database are added in Gate 017.
+
+Gate 017 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+run final generic and strict exact-head CI on the post-benchmark evidence/status head,
+perform final scope review, mark PR #34 ready for review, then request explicit human
+exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 017 final acceptance checkpoint passed
+
+Post-benchmark evidence head:
+`578510beed676a1d6b71c8842e0ebace27564301`.
+
+Final acceptance validation:
+- generic workflow run `35464308651`: `PASS`;
+- strict exact-head workflow run `35464308598`: `PASS`;
+- deterministic regression: `178/178 PASS`;
+- exact revision verification: `PASS`.
+
+Final scope review:
+`PASS`.
+
+Confirmed absent from Gate 017:
+- embeddings/vector database or semantic backend;
+- automatic RAG/model prompt injection;
+- memory write/update/delete through retrieval;
+- evidence promotion through retrieval;
+- unrestricted shell;
+- model ownership of policy, permissions, state or tools;
+- Gate 018 knowledge-lifecycle implementation.
+
+Semantic/vector backend remains:
+`DEFERRED_NOT_JUSTIFIED`.
+
+Gate 017 state prepared for final documentation-head recheck:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0016 remains:
+`PROPOSED_GATE_017`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run generic and strict exact-head CI on the final documentation-only head. If green,
+mark PR #34 ready for review and request exact-SHA squash-merge approval.
