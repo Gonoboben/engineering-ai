@@ -1125,3 +1125,94 @@ Gate 011 state:
 `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
 
 One final exact-head CI run is required after acceptance-state synchronization.
+
+
+---
+
+## 2026-09-19 — Gate 011 accepted and merged
+
+Final approved PR head:
+`242d4bdf41d6fa6c31c1c23e56ceae5981a0ffbb`.
+
+Final validation:
+- deterministic tests: `99/99 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`da23f2c60a604f022ee91d6b129afc4ed2523a18`.
+
+Issue #21 closed.
+
+Accepted disagreement semantics:
+- deterministic evidence first;
+- independent gpt-oss review for Qwen-originated unresolved claims;
+- no self-review;
+- one bounded revision maximum;
+- unresolved cases escalate human;
+- model agreement remains advisory.
+
+Gate 011 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 012 PlataVM read-only adapter opened
+
+Issue:
+`#23 — Gate 012 — PlataVM read-only adapter`.
+
+Branch:
+`gate-012-platavm-readonly-adapter`.
+
+Base:
+Gate 011 squash merge `da23f2c60a604f022ee91d6b129afc4ed2523a18`.
+
+Draft PR:
+`#24`.
+
+PlataVM mandatory governance was read in the order required by `AGENTS.md`.
+The dynamic `Docs/PROJECT_STATUS.md` was observed to lag current GitHub state,
+so Gate 012 treats governance/Git mismatch as explicit source conflict rather
+than silently reconciling it.
+
+Remote PlataVM state observed at Gate opening:
+- PR #100: OPEN / DRAFT;
+- base: `main@dcba77466d4800c0e7a336a2771684e066f845db`;
+- head: `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+- repository workflow run `35105701408`: `completed/cancelled`;
+- KiCad workflow run `35105701440`: `completed/cancelled`;
+- exact-head PASS is therefore not claimed.
+
+Implemented:
+- strict PlataVM read-only profile/policy;
+- mandatory governance and latest chronology resolution;
+- safe Git branch/HEAD/origin-main/status snapshot;
+- stale governance conflict detection;
+- bounded `Hardware/KiCad` inventory;
+- fixed read-only repository-integrity and semantic-gate validator profiles;
+- post-validator Git-visible mutation detection;
+- explicit CI state mapping preserving `CANCELLED` as non-PASS;
+- local smoke harness.
+
+The first Gate 012 CI attempt exposed a new-adapter inventory defect caused by
+attempting to enumerate repository root through the generic filesystem
+adapter's strict child-boundary rule. The generic security boundary was not
+weakened. Inventory was narrowed to `Hardware/KiCad`.
+
+Corrected implementation head:
+`53d54fe8a27fa88f0381590fcca4a80b43b276f3`.
+
+Corrected validation:
+- deterministic tests: `108/108 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Remaining acceptance item:
+local read-only smoke on `C:\workspace\repos\plataVM`, including the two
+fixed validators and proof that Git-visible state is unchanged.
+
+PlataVM barriers remain:
+`PACKAGE_SET_NOT_READY / fabrication NOT_GRANTED / physical NOT_EXECUTED /
+PROTOTYPE_BASIS_ONLY_NOT_RELEASED / UNDECIDED / series NOT_GRANTED`.
