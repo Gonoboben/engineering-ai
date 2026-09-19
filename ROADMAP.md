@@ -288,7 +288,7 @@ Enable controlled modifications, build/test/validation runs and structured evide
 ## Phase 4 — Persistent engineering memory
 
 ### Gate 016 — Decision/evidence memory
-Status: `IMPLEMENTED_PENDING_VALIDATION`
+Status: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 Add structured storage/search for:
 - ADRs;
