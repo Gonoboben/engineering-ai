@@ -28,7 +28,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#14 (DRAFT)`
 - Branch: `gate-007-supervised-multi-model-architecture`
 - Base: `24b1fbc009920c1dee8317c784ef42711044be87`
-- State: `ARCHITECTURE_BASELINE_IN_PROGRESS`
+- State: `ARCHITECTURE_DOCUMENTED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -157,7 +157,7 @@ Historical CI note:
 - Issue #13: `OPEN`
 - draft PR #14: `OPEN`
 - branch base equals Gate 006 squash merge `24b1fbc009920c1dee8317c784ef42711044be87`: `PASS`
-- architecture scope only: `IN_PROGRESS`
+- architecture scope only: `DOCUMENTED_REVIEWED`
 - Supervisor remains sole permission/state/tool authority: `REQUIRED`
 - unrestricted peer-to-peer swarm: `PROHIBITED`
 - model agreement/majority vote as evidence: `PROHIBITED`
@@ -167,7 +167,8 @@ Historical CI note:
 - external ChatGPT/OpenAI control boundary: `DOCUMENTED_PENDING_REVIEW`
 - Qwen3.5-9B/Qwen2.5-Coder local qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_007`
 - implementation changes: `NONE_EXPECTED`
-- final exact-head CI: `PENDING`
+- architecture-prep head `a8128d8f28815e2c100f8f9b71940b61b830491c`: generic CI `PASS`, strict exact-head CI `PASS`, deterministic tests `50/50 PASS`
+- final exact-head CI after status/chronology synchronization: `PENDING`
 - explicit exact-SHA architecture approval before merge: `REQUIRED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -207,4 +208,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Complete Gate 007 architecture/documentation consistency review, run generic and strict exact-head CI on PR #14, and stop for explicit human exact-SHA architecture approval before squash merge. Do not download or qualify new models until Gate 007 is accepted.
+Run generic and strict exact-head CI on the final Gate 007 status/chronology head. If green, stop for explicit human exact-SHA architecture approval before squash merge. Do not download or qualify new models until Gate 007 is accepted.
