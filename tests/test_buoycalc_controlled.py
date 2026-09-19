@@ -15,9 +15,18 @@ from engineering_ai.projects import (
     BuoyCalcControlledState,
 )
 from engineering_ai.projects.buoycalc import RELEASE_STATE
-from engineering_ai.projects.buoycalc_controlled import _VALIDATOR_PROFILES, _VALIDATOR_SPECS
+from engineering_ai.projects.buoycalc_controlled import (
+    RuntimePrerequisiteStatus,
+    _VALIDATOR_PROFILES,
+    _VALIDATOR_SPECS,
+)
 from engineering_ai.supervisor.policy import Decision, PolicyEngine
-from engineering_ai.tools import PatchProposal, ToolAccessError, ToolResult
+from engineering_ai.tools import (
+    PatchProposal,
+    ToolAccessError,
+    ToolExecutionError,
+    ToolResult,
+)
 from engineering_ai.validation import validate_instance
 
 
@@ -26,6 +35,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def satisfied_runtime() -> RuntimePrerequisiteStatus:
+    return RuntimePrerequisiteStatus(
+        dotnet_executable=sys.executable,
+        pwsh_executable=sys.executable,
+        dotnet_sdk8_available=True,
+        dotnet_sdks=("8.0.999 [synthetic]",),
+        blockers=(),
+    )
 
 
 class _FakeRunner:
@@ -232,7 +251,11 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
             "before\n",
         )
 
-        with patch(
+        with patch.object(
+            loop,
+            "runtime_prerequisites",
+            return_value=satisfied_runtime(),
+        ), patch(
             "engineering_ai.projects.buoycalc_controlled.AllowListedProcessRunner",
             _FakeRunner,
         ):
@@ -375,7 +398,11 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         )
         assert prep.session is not None
         _FakeRunner.fail_step = "buoycalc.build_release"
-        with patch(
+        with patch.object(
+            loop,
+            "runtime_prerequisites",
+            return_value=satisfied_runtime(),
+        ), patch(
             "engineering_ai.projects.buoycalc_controlled.AllowListedProcessRunner",
             _FakeRunner,
         ):
@@ -394,7 +421,11 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         assert prep.session is not None
         worktree_note = Path(prep.session.worktree_root) / "docs/note.md"
         _FakeRunner.mutate_path = "docs/note.md"
-        with patch(
+        with patch.object(
+            loop,
+            "runtime_prerequisites",
+            return_value=satisfied_runtime(),
+        ), patch(
             "engineering_ai.projects.buoycalc_controlled.AllowListedProcessRunner",
             _FakeRunner,
         ):
@@ -408,6 +439,32 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         worktree_note.write_text("before\n", encoding="utf-8")
         loop.cleanup(prep.session)
 
+    def test_missing_runtime_prerequisite_blocks_validation_before_runner(self) -> None:
+        loop = self.loop()
+        prep = loop.prepare(
+            worktree_name="runtime-block",
+            branch="engineering-ai/buoycalc/runtime-block",
+        )
+        assert prep.session is not None
+        missing = RuntimePrerequisiteStatus(
+            dotnet_executable=None,
+            pwsh_executable=sys.executable,
+            dotnet_sdk8_available=False,
+            dotnet_sdks=(),
+            blockers=("dotnet executable not found",),
+        )
+        with patch.object(
+            loop,
+            "runtime_prerequisites",
+            return_value=missing,
+        ), patch(
+            "engineering_ai.projects.buoycalc_controlled.AllowListedProcessRunner"
+        ) as runner_cls:
+            with self.assertRaises(ToolExecutionError):
+                loop.validate(session=prep.session)
+            runner_cls.assert_not_called()
+        loop.cleanup(prep.session)
+
     def test_unknown_validator_profile_is_rejected(self) -> None:
         loop = self.loop()
         prep = loop.prepare(
@@ -415,8 +472,13 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
             branch="engineering-ai/buoycalc/unknown-profile",
         )
         assert prep.session is not None
-        with self.assertRaises(ToolAccessError):
-            loop.validate(session=prep.session, profiles=("arbitrary.shell",))
+        with patch.object(
+            loop,
+            "runtime_prerequisites",
+            return_value=satisfied_runtime(),
+        ):
+            with self.assertRaises(ToolAccessError):
+                loop.validate(session=prep.session, profiles=("arbitrary.shell",))
         loop.cleanup(prep.session)
 
     def test_disposable_cleanup_allows_generated_untracked_files_only(self) -> None:
