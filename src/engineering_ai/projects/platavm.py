@@ -204,12 +204,21 @@ class PlataVMReadOnlyAdapter:
         entries = tuple(
             entry
             for entry in self._filesystem.list_directory(directory)
-            if not entry.is_dir
+            if (
+                not entry.is_dir
+                and re.fullmatch(
+                    r"\d{4}-\d{2}-\d{2}.*\.md",
+                    Path(entry.relative_path).name,
+                    flags=re.IGNORECASE,
+                )
+            )
         )
         if not entries:
-            raise ToolExecutionError("Docs/chronology contains no chronology entries")
+            raise ToolExecutionError(
+                "Docs/chronology contains no dated YYYY-MM-DD*.md entries"
+            )
 
-        latest = max(entries, key=lambda item: item.relative_path.casefold())
+        latest = max(entries, key=lambda item: Path(item.relative_path).name.casefold())
         return self._read_governance(latest.relative_path)
 
     def git_snapshot(self) -> GitSnapshot:
