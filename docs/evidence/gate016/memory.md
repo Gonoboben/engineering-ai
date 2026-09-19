@@ -148,20 +148,41 @@ Status:
 It must not be considered accepted until Gate 016 receives explicit exact-SHA
 human approval and is merged.
 
-## Validation
+## Deterministic implementation validation
 
-Pending:
-- deterministic regression;
-- generic CI;
-- strict exact-head CI;
-- local persistent/reopen memory smoke.
+Validated implementation head:
+`436e040fdf2198f10c56061855a2c4437d4786fe`.
+
+Result:
+- deterministic tests: `161/161 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+Validated boundaries include:
+- idempotent schema initialization;
+- append/reopen persistence;
+- JSON Schema validation;
+- exact latest supersession and stale-fork rejection;
+- model records remain ADVISORY;
+- accepted ADR requires HUMAN + CONTROL;
+- deterministic/physical evidence guards;
+- SOURCE_REFERENCE semantics;
+- project isolation;
+- case-insensitive bounded filter/keyword search;
+- candidate scan bound;
+- SQLite UPDATE/DELETE trigger enforcement;
+- tamper/hash mismatch detection;
+- unsupported schema-version rejection;
+- absence of update/delete/generic-SQL/vector/context-injection API;
+- Gate 016 persistent/reopen smoke harness itself returns PASS under CI.
+
+Local primary-workstation smoke remains required before acceptance.
 
 ## Remaining acceptance
 
-1. open Gate 016 draft PR;
-2. deterministic regression PASS;
-3. generic + strict exact-head CI PASS;
-4. local persistent/reopen smoke PASS;
-5. final acceptance-state CI;
-6. final scope review;
-7. exact-SHA human squash-merge approval.
+1. stable pre-smoke generic + strict exact-head CI;
+2. local persistent/reopen smoke PASS on primary workstation;
+3. final acceptance-state CI;
+4. final scope review;
+5. exact-SHA human squash-merge approval.
