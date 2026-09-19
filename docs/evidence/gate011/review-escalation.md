@@ -94,4 +94,26 @@ Not implemented:
 
 ## Validation
 
-Pending Gate 011 deterministic regression and exact-head CI.
+Implementation validation head:
+`117ee434e1b55faf06580bd8ae9474e5f1085107`
+
+Result:
+- deterministic tests: `99/99 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+Validated boundaries:
+- deterministic evidence resolves support/contradiction before model review;
+- Qwen-originated unresolved claims route to gpt-oss / medium;
+- gpt-oss-originated unresolved claims cannot self-review and escalate human;
+- review records remain ADVISORY with no evidence promotion;
+- same-model review application is rejected;
+- first revision request is bounded to one;
+- second revision request escalates human;
+- inconclusive review escalates human;
+- non-evidence Blackboard records cannot be declared deterministic evidence;
+- no Electronics/PCB/KiCad/Vision task class exists.
+
+Final acceptance-state exact-head CI remains required after status/evidence
+synchronization.
