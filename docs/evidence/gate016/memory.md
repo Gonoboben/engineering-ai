@@ -186,3 +186,48 @@ Local primary-workstation smoke remains required before acceptance.
 3. final acceptance-state CI;
 4. final scope review;
 5. exact-SHA human squash-merge approval.
+
+
+## Primary-workstation persistent/reopen smoke PASS
+
+The Gate 016 memory smoke completed successfully on the primary Windows
+workstation at Engineering AI head:
+
+`e240f82176a18f21a81bae9318b7d4b714ffa023`.
+
+Observed:
+- state: `PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`;
+- database_created: true;
+- database_reopened: true;
+- initial_records_checked: 3;
+- reopen_records_checked: 3;
+- final_records_checked: 4;
+- loaded_record_hash_preserved: true;
+- supersession memory_id:
+  `gate016-lesson-append-only`;
+- supersession revision: 2;
+- supersedes_record_id:
+  `memrec-gate016-0003`;
+- history_revisions: `[1, 2]`;
+- deterministic search result IDs:
+  `memrec-gate016-0004`, `memrec-gate016-0002`;
+- model_truth_promotion: false;
+- automatic_context_injection: false;
+- vector_search: false;
+- physical_validation:
+  `PHYSICAL_NOT_EXECUTED`;
+- temporary_database_removed_on_exit: true;
+- process exit: 0.
+
+Repository after smoke:
+- branch:
+  `gate-016-decision-evidence-memory`;
+- HEAD:
+  `e240f82176a18f21a81bae9318b7d4b714ffa023`;
+- tracking:
+  `origin/gate-016-decision-evidence-memory`.
+
+Classification:
+`PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`.
+
+Gate 016 real-workstation persistence evidence is complete.
