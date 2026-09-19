@@ -1873,3 +1873,149 @@ Classification:
 Next:
 final acceptance-state generic + strict exact-head CI, final scope review, and
 exact-SHA human squash-merge approval for PR #30.
+
+
+---
+
+## 2026-09-19 — Gate 015 accepted and merged
+
+Final approved PR head:
+`14b6f43d44785839972ca9bc0ee564e72d82af9b`.
+
+Final validation:
+- deterministic tests: `147/147 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- real BuoyCalc controlled validation: `PASS`;
+- stale disposable worktree recovery: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`496896ebb368618cbd9f3c6f26e31fae4acb8922`.
+
+Issue #29 closed.
+
+Accepted capability:
+- isolated controlled BuoyCalc worktrees;
+- non-core bounded patching;
+- fixed build/test/validation profiles;
+- structured validator evidence;
+- runtime prerequisite preflight;
+- Windows-safe disposable cleanup/recovery;
+- successful software terminal state limited to
+  `READY_FOR_HUMAN_APPROVAL`;
+- no commit/push/PR/merge/release authority.
+
+Gate 015 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 016 decision/evidence memory opened
+
+Issue:
+`#31 — Gate 016 — Decision/evidence memory`.
+
+Branch:
+`gate-016-decision-evidence-memory`.
+
+Base:
+Gate 015 squash merge
+`496896ebb368618cbd9f3c6f26e31fae4acb8922`.
+
+Implemented initial scope:
+- local SQLite standard-library store;
+- append-only immutable memory records;
+- SQLite UPDATE/DELETE prohibition triggers;
+- stable `memory_id` + monotonic revision;
+- exact supersession chain;
+- canonical SHA-256 integrity hash;
+- project isolation;
+- typed ADR/calculation/test/failure/source records;
+- explicit authority and validation classes;
+- model-authored memory restricted to `ADVISORY`;
+- human-only accepted ADRs;
+- explicit deterministic/physical evidence guards;
+- bounded deterministic filter/keyword search;
+- database reopen/integrity verification;
+- local persistent/reopen smoke harness.
+
+Explicitly deferred:
+- semantic/vector retrieval;
+- automatic context injection/RAG;
+- model-managed truth;
+- external/cloud memory;
+- online fine-tuning;
+- destructive migration/compaction.
+
+ADR-0015 added as `PROPOSED_GATE_016`.
+
+Next:
+open draft PR and run deterministic/generic/strict exact-head validation before
+the local persistent/reopen smoke.
+
+
+---
+
+## 2026-09-19 — Gate 016 decision/evidence memory implementation validated
+
+Validated implementation head:
+`436e040fdf2198f10c56061855a2c4437d4786fe`.
+
+Validated:
+- local SQLite standard-library store;
+- append-only immutable revisions;
+- SQLite UPDATE/DELETE protection;
+- exact latest-record supersession;
+- schema-version binding;
+- canonical SHA-256 integrity;
+- reopen persistence;
+- project isolation;
+- deterministic bounded filter/keyword search;
+- model memory remains ADVISORY;
+- accepted ADR requires HUMAN authority;
+- deterministic/physical evidence promotion guards;
+- tamper/hash mismatch detection;
+- absence of generic SQL/update/delete/vector/context-injection API;
+- persistent/reopen smoke harness regression.
+
+Validation:
+- deterministic tests: `161/161 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 016 state:
+`IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`.
+
+Remaining:
+stable pre-smoke exact-head CI and one primary-workstation persistent/reopen
+memory smoke.
+
+
+---
+
+## 2026-09-19 — Gate 016 local persistent/reopen smoke passed
+
+Primary-workstation smoke ran at Engineering AI head:
+`e240f82176a18f21a81bae9318b7d4b714ffa023`.
+
+Result:
+- `PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`;
+- database created and reopened;
+- integrity records: 3 initial / 3 reopened / 4 final;
+- stored record hash preserved;
+- exact supersession chain revision 1 -> 2;
+- deterministic search returned expected records;
+- model truth promotion: false;
+- automatic context injection: false;
+- vector search: false;
+- temporary database removed on exit;
+- physical validation remained `PHYSICAL_NOT_EXECUTED`;
+- exit 0.
+
+Gate 016 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+Next:
+final acceptance-state generic + strict exact-head CI, scope review, and exact-SHA
+human squash-merge approval for PR #32.

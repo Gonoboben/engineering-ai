@@ -234,3 +234,46 @@ A stronger external model can provide useful architecture/review assistance whil
 - the local system remains functional when the external bridge is unavailable;
 - external model output remains advisory;
 - external control cannot bypass human approval or deterministic validation.
+
+
+---
+
+## ADR-0015 — Use append-only local SQLite decision/evidence memory
+Status: `PROPOSED_GATE_016`
+
+### Decision
+Engineering AI decision/evidence memory uses a local append-only SQLite store
+with immutable revisions, explicit provenance/evidence/source references,
+canonical SHA-256 integrity hashes, project isolation, deterministic bounded
+filter/keyword search and exact supersession links.
+
+Memory records are typed as ADR, calculation, test result, failure lesson or
+source reference.
+
+Model-authored records remain `ADVISORY`. An accepted ADR requires human
+authority. Deterministic/physical validation classes require explicit evidence
+references and cannot be promoted from model claims. Physical PASS/FAIL remains
+a distinct explicit class.
+
+Gate 016 does not automatically inject memory into model context and does not
+implement semantic/vector retrieval.
+
+### Rationale
+The control plane needs durable engineering context across jobs/chats without
+making transient model context authoritative. SQLite is local, offline,
+transactional and available in the Python standard library, which keeps the
+first memory implementation simple and auditable.
+
+Append-only revisions preserve historical reasoning and prevent later memory
+updates from silently rewriting the evidence that supported an earlier
+decision.
+
+### Consequence
+- historical memory records are not UPDATEd or DELETEd;
+- correction occurs through exact supersession by a new revision;
+- reading a record verifies its integrity hash;
+- project-specific search cannot leak another project's memory;
+- model output can be remembered as advisory but not promoted to truth;
+- Gate 017 may later retrieve memory into bounded model context only through
+  separate policy-controlled retrieval semantics;
+- vector databases/embeddings remain deferred.

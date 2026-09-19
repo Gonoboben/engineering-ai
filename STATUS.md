@@ -35,15 +35,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 013 merge commit: `2a8cdf6594d8eb6b29e2efb200683af95167bb20`
 - Gate 014: `ACCEPTED_MERGED`
 - Gate 014 merge commit: `0f7ec3c01829f9c193e5730ec5144eee77c00b52`
+- Gate 015: `ACCEPTED_MERGED`
+- Gate 015 merge commit: `496896ebb368618cbd9f3c6f26e31fae4acb8922`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `015 — BuoyCalc controlled engineering loop`
-- Issue: `#29`
-- PR: `#30 (DRAFT)`
-- Branch: `gate-015-buoycalc-controlled-engineering-loop`
-- Base: `0f7ec3c01829f9c193e5730ec5144eee77c00b52`
+- Gate: `016 — Decision/evidence memory`
+- Issue: `#31`
+- PR: `#32 (DRAFT)`
+- Branch: `gate-016-decision-evidence-memory`
+- Base: `496896ebb368618cbd9f3c6f26e31fae4acb8922`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -71,7 +73,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate B: `qwen3.6:27b-q4_K_M` — `3 PASS / 1 INCONCLUSIVE_TRUNCATED`; memory-stable but ~2.45–2.55 eval tok/s and ~37.7 min aggregate benchmark time on this workstation
 - Stretch candidate: `qwen3.6:35b` — `DEFERRED_NOT_JUSTIFIED_ON_CURRENT_WORKSTATION` after measured 27B CPU-heavy performance
 - Planner / Executor / Reviewer loop: `IMPLEMENTED_RUNTIME_VALIDATED`
-- Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
+- Engineering memory runtime: `IMPLEMENTED_PENDING_VALIDATION_GATE_016`
 - Supervised multi-model architecture: `ACCEPTED_GATE_007`
 - Model capability registry/router runtime: `IMPLEMENTED_VALIDATED_GATE_009`
 - Task Blackboard/runtime hand-offs: `IMPLEMENTED_VALIDATED_GATE_010`
@@ -83,14 +85,14 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
 - BuoyCalc strict read-only adapter: `IMPLEMENTED_VALIDATED_GATE_014`
-- BuoyCalc controlled engineering loop: `IMPLEMENTED_PENDING_VALIDATION`
+- BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
 - External controlled review bridge: `DESIGNED_NOT_IMPLEMENTED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
-- BuoyCalc: `CONTROLLED_GATE015_IN_PROGRESS`
+- BuoyCalc: `CONTROLLED_GATE015_ACCEPTED`
 
-Gate 015 adds isolated-worktree modification and fixed build/test/validation execution for BuoyCalc while keeping governance/calculation-core writes, commit/push/PR/merge and release authorization blocked. Successful software validation may reach only `READY_FOR_HUMAN_APPROVAL`; physical validation remains `PHYSICAL_NOT_EXECUTED`.
+Gate 015 controlled BuoyCalc integration is accepted. Gate 016 adds local append-only decision/evidence memory only; it does not inject memory into model context. Model-authored memory remains advisory, accepted ADRs remain human-only, and physical evidence retains its explicit validation class.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -394,7 +396,7 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 015 validation state
-- Issue #29: `OPEN`
+- Issue #29: `CLOSED`
 - branch base equals Gate 014 squash merge `0f7ec3c01829f9c193e5730ec5144eee77c00b52`: `PASS`
 - mode: `CONTROLLED_ISOLATED_WORKTREE`
 - primary BuoyCalc prerequisite: `main / clean / HEAD==origin/main`
@@ -425,6 +427,33 @@ Historical CI note:
 - corrected exact-identity deregistered-residue recovery head `d8405894bfb9152256e28ca49678f27ed8a2471d`: deterministic regression `147/147 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - final stale-worktree recovery: `PASS`; worktree_removed=true, branch_removed=true, registered_before_cleanup=false, fallback_used=true, repository_unchanged=true, EXIT=0
 - Gate 015 real-project result: `PASS_CONTROLLED_BUOYCALC_VALIDATION_AND_CLEANUP`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 016 validation state
+- Issue #31: `OPEN`
+- branch base equals Gate 015 squash merge `496896ebb368618cbd9f3c6f26e31fae4acb8922`: `PASS`
+- storage: `LOCAL_SQLITE_STANDARD_LIBRARY`
+- schema version: `1.0`
+- record kinds: `ADR / CALCULATION / TEST_RESULT / FAILURE_LESSON / SOURCE_REFERENCE`
+- append-only API: `IMPLEMENTED`
+- SQLite UPDATE/DELETE triggers: `IMPLEMENTED`
+- stable memory_id + revision: `IMPLEMENTED`
+- exact supersession chain: `IMPLEMENTED`
+- canonical SHA-256 integrity: `IMPLEMENTED`
+- project isolation: `IMPLEMENTED`
+- deterministic filter/keyword search: `IMPLEMENTED`
+- vector/semantic search: `NOT_IMPLEMENTED_GATE_017+`
+- automatic model-context injection: `NOT_IMPLEMENTED_GATE_017`
+- model-authored memory: `ADVISORY_ONLY`
+- accepted ADR authority: `HUMAN_ONLY`
+- deterministic/physical evidence promotion guards: `IMPLEMENTED`
+- physical PASS/FAIL synthesis from software/model records: `PROHIBITED`
+- no generic SQL/update/delete API: `ENFORCED`
+- memory record JSON Schema: `IMPLEMENTED`
+- implementation head `436e040fdf2198f10c56061855a2c4437d4786fe`: deterministic regression `161/161 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- local persistent/reopen smoke: `PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`; 3 initial / 3 reopened / 4 final records, hash preserved, exact supersession revision 2 over revision 1, deterministic search PASS, temp DB removed, model truth promotion=false, automatic context injection=false, vector search=false, physical NOT_EXECUTED, EXIT=0
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -465,4 +494,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final generic and strict exact-head CI on the Gate 015 acceptance-state head. If green, perform final scope review, mark PR #30 ready for review, and request explicit human exact-SHA squash-merge approval.
+Run final generic and strict exact-head CI on the Gate 016 acceptance-state head. If green, perform final scope review, mark PR #32 ready for review, and request explicit human exact-SHA squash-merge approval. Do not add vector search, RAG/context injection, external/cloud memory, model-managed truth, autonomous accepted ADRs or destructive migrations.

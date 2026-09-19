@@ -1,0 +1,233 @@
+# Gate 016 — Decision/Evidence Memory Evidence
+
+## Scope
+
+Gate 016 implements local persistent engineering memory for:
+- ADRs / engineering decisions;
+- calculations;
+- deterministic/software test results;
+- failure lessons;
+- source references.
+
+The implementation uses SQLite from the Python standard library.
+
+Gate 016 does not implement semantic/vector retrieval, RAG, automatic model
+context injection, cloud memory or model-managed truth.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`
+unless an individual memory record represents genuine physical evidence with
+its own explicit provenance/evidence reference and PHYSICAL validation class.
+
+## Accepted base
+
+Engineering AI base:
+Gate 015 squash merge
+`496896ebb368618cbd9f3c6f26e31fae4acb8922`.
+
+## Storage model
+
+Implementation:
+`src/engineering_ai/memory/store.py`.
+
+Database schema version:
+`1.0`.
+
+SQLite tables:
+- `memory_meta`;
+- `memory_records`.
+
+Historical records are append-only.
+
+SQLite triggers reject:
+- `UPDATE memory_records`;
+- `DELETE FROM memory_records`.
+
+The public memory adapter intentionally exposes no generic SQL, update or
+delete API.
+
+## Record identity and revision
+
+Each record carries:
+- unique `record_id`;
+- project-scoped stable `memory_id`;
+- positive revision;
+- exact optional `supersedes_record_id`.
+
+When a memory_id already exists, a new revision must reference the exact latest
+record. Stale/forked supersession is rejected.
+
+This preserves a single deterministic revision chain rather than silently
+branching or rewriting history.
+
+## Integrity
+
+Every record stores SHA-256 over canonical JSON containing:
+- schema version;
+- record identity/project/memory/revision;
+- kind/authority/validation class;
+- title/summary/content;
+- provenance/evidence/source refs;
+- decision/physical state;
+- supersession link;
+- UTC timestamp.
+
+Every record read recomputes and compares this hash.
+
+Malformed JSON/enum state or a hash mismatch raises a deterministic integrity
+error. Corrupted records are never silently returned.
+
+## Memory kinds
+
+- `ADR`;
+- `CALCULATION`;
+- `TEST_RESULT`;
+- `FAILURE_LESSON`;
+- `SOURCE_REFERENCE`.
+
+## Authority classes
+
+- `HUMAN`;
+- `SUPERVISOR`;
+- `MODEL`;
+- `DETERMINISTIC_TOOL`;
+- `IMPORTED_SOURCE`.
+
+## Validation classes
+
+- `CONTROL`;
+- `ADVISORY`;
+- `SOURCE`;
+- `CALCULATION`;
+- `SIMULATION`;
+- `DETERMINISTIC_TEST`;
+- `PHYSICAL`.
+
+Trust boundaries:
+- MODEL authority can only be ADVISORY;
+- ACCEPTED ADR requires HUMAN authority and CONTROL class;
+- SOURCE_REFERENCE requires SOURCE class and explicit source_refs;
+- DETERMINISTIC_TEST requires evidence_refs and non-model authority;
+- PHYSICAL requires HUMAN/DETERMINISTIC_TOOL authority, evidence_refs and
+  explicit PHYSICAL_PASS/PHYSICAL_FAIL;
+- non-PHYSICAL records cannot carry PHYSICAL_PASS/PHYSICAL_FAIL.
+
+Thus software/calculation/model records cannot synthesize physical evidence.
+
+## Search
+
+Gate 016 search is deterministic and bounded.
+
+Supported:
+- project_id;
+- exact record-kind filter;
+- exact authority filter;
+- exact validation-class filter;
+- case-insensitive keyword matching over title/summary/content;
+- latest-only or full history;
+- result limit 1..100;
+- bounded candidate scan.
+
+Project_id is mandatory for get/latest/history/search so another project's
+memory cannot satisfy the request.
+
+No embedding/vector/semantic search exists in Gate 016.
+
+## JSON Schema
+
+`schemas/memory-record.schema.json`
+mirrors the record and trust-boundary semantics.
+
+## Proposed architecture decision
+
+`ADR-0015 — Use append-only local SQLite decision/evidence memory`
+
+Status:
+`PROPOSED_GATE_016`.
+
+It must not be considered accepted until Gate 016 receives explicit exact-SHA
+human approval and is merged.
+
+## Deterministic implementation validation
+
+Validated implementation head:
+`436e040fdf2198f10c56061855a2c4437d4786fe`.
+
+Result:
+- deterministic tests: `161/161 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+Validated boundaries include:
+- idempotent schema initialization;
+- append/reopen persistence;
+- JSON Schema validation;
+- exact latest supersession and stale-fork rejection;
+- model records remain ADVISORY;
+- accepted ADR requires HUMAN + CONTROL;
+- deterministic/physical evidence guards;
+- SOURCE_REFERENCE semantics;
+- project isolation;
+- case-insensitive bounded filter/keyword search;
+- candidate scan bound;
+- SQLite UPDATE/DELETE trigger enforcement;
+- tamper/hash mismatch detection;
+- unsupported schema-version rejection;
+- absence of update/delete/generic-SQL/vector/context-injection API;
+- Gate 016 persistent/reopen smoke harness itself returns PASS under CI.
+
+Local primary-workstation smoke remains required before acceptance.
+
+## Remaining acceptance
+
+1. stable pre-smoke generic + strict exact-head CI;
+2. local persistent/reopen smoke PASS on primary workstation;
+3. final acceptance-state CI;
+4. final scope review;
+5. exact-SHA human squash-merge approval.
+
+
+## Primary-workstation persistent/reopen smoke PASS
+
+The Gate 016 memory smoke completed successfully on the primary Windows
+workstation at Engineering AI head:
+
+`e240f82176a18f21a81bae9318b7d4b714ffa023`.
+
+Observed:
+- state: `PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`;
+- database_created: true;
+- database_reopened: true;
+- initial_records_checked: 3;
+- reopen_records_checked: 3;
+- final_records_checked: 4;
+- loaded_record_hash_preserved: true;
+- supersession memory_id:
+  `gate016-lesson-append-only`;
+- supersession revision: 2;
+- supersedes_record_id:
+  `memrec-gate016-0003`;
+- history_revisions: `[1, 2]`;
+- deterministic search result IDs:
+  `memrec-gate016-0004`, `memrec-gate016-0002`;
+- model_truth_promotion: false;
+- automatic_context_injection: false;
+- vector_search: false;
+- physical_validation:
+  `PHYSICAL_NOT_EXECUTED`;
+- temporary_database_removed_on_exit: true;
+- process exit: 0.
+
+Repository after smoke:
+- branch:
+  `gate-016-decision-evidence-memory`;
+- HEAD:
+  `e240f82176a18f21a81bae9318b7d4b714ffa023`;
+- tracking:
+  `origin/gate-016-decision-evidence-memory`.
+
+Classification:
+`PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`.
+
+Gate 016 real-workstation persistence evidence is complete.

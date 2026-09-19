@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/memory-record.schema.json",
+  "title": "Engineering AI Decision/Evidence Memory Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "project_id",
+    "memory_id",
+    "revision",
+    "kind",
+    "authority",
+    "validation_class",
+    "title",
+    "summary",
+    "content",
+    "provenance",
+    "evidence_refs",
+    "source_refs",
+    "decision_status",
+    "physical_validation_state",
+    "supersedes_record_id",
+    "created_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "record_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "memory_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "revision": {"type": "integer", "minimum": 1},
+    "kind": {
+      "type": "string",
+      "enum": ["ADR", "CALCULATION", "TEST_RESULT", "FAILURE_LESSON", "SOURCE_REFERENCE"]
+    },
+    "authority": {
+      "type": "string",
+      "enum": ["HUMAN", "SUPERVISOR", "MODEL", "DETERMINISTIC_TOOL", "IMPORTED_SOURCE"]
+    },
+    "validation_class": {
+      "type": "string",
+      "enum": ["CONTROL", "ADVISORY", "SOURCE", "CALCULATION", "SIMULATION", "DETERMINISTIC_TEST", "PHYSICAL"]
+    },
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "content": {"type": "object"},
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "decision_status": {
+      "oneOf": [
+        {"type": "string", "enum": ["PROPOSED", "ACCEPTED"]},
+        {"type": "null"}
+      ]
+    },
+    "physical_validation_state": {
+      "type": "string",
+      "enum": ["PHYSICAL_NOT_EXECUTED", "PHYSICAL_PASS", "PHYSICAL_FAIL", "NOT_APPLICABLE"]
+    },
+    "supersedes_record_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        {"type": "null"}
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"authority": {"const": "MODEL"}}},
+      "then": {
+        "properties": {
+          "validation_class": {"const": "ADVISORY"},
+          "physical_validation_state": {
+            "enum": ["PHYSICAL_NOT_EXECUTED", "NOT_APPLICABLE"]
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"kind": {"const": "ADR"}}},
+      "then": {
+        "properties": {
+          "decision_status": {"type": "string", "enum": ["PROPOSED", "ACCEPTED"]}
+        }
+      },
+      "else": {
+        "properties": {
+          "decision_status": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"decision_status": {"const": "ACCEPTED"}}},
+      "then": {
+        "properties": {
+          "authority": {"const": "HUMAN"},
+          "validation_class": {"const": "CONTROL"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"kind": {"const": "SOURCE_REFERENCE"}}},
+      "then": {
+        "properties": {
+          "validation_class": {"const": "SOURCE"},
+          "source_refs": {"type": "array", "minItems": 1}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"validation_class": {"const": "DETERMINISTIC_TEST"}}},
+      "then": {
+        "properties": {
+          "authority": {
+            "enum": ["HUMAN", "SUPERVISOR", "DETERMINISTIC_TOOL", "IMPORTED_SOURCE"]
+          },
+          "evidence_refs": {"type": "array", "minItems": 1}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"validation_class": {"const": "PHYSICAL"}}},
+      "then": {
+        "properties": {
+          "authority": {"enum": ["HUMAN", "DETERMINISTIC_TOOL"]},
+          "evidence_refs": {"type": "array", "minItems": 1},
+          "physical_validation_state": {"enum": ["PHYSICAL_PASS", "PHYSICAL_FAIL"]}
+        }
+      },
+      "else": {
+        "properties": {
+          "physical_validation_state": {
+            "enum": ["PHYSICAL_NOT_EXECUTED", "NOT_APPLICABLE"]
+          }
+        }
+      }
+    }
+  ]
+}
