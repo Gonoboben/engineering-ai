@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import sys
 import subprocess
 import tempfile
 import unittest
@@ -51,6 +52,49 @@ class _FakeRunner:
             timed_out=False,
             truncated=False,
         )
+
+
+class Gate015SmokeHarnessTests(unittest.TestCase):
+    def test_missing_repository_is_structured(self) -> None:
+        missing = ROOT / "definitely-missing-buoycalc-gate015"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts/gate015_buoycalc_controlled_smoke.py"),
+                "--repository",
+                str(missing),
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 2)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["state"], "LOCAL_REPOSITORY_NOT_FOUND")
+        self.assertEqual(payload["physical_validation"], "PHYSICAL_NOT_EXECUTED")
+        self.assertEqual(result.stderr, "")
+
+    def test_worktree_requires_explicit_cli_approval(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts/gate015_buoycalc_controlled_smoke.py"),
+                    "--repository",
+                    tmp,
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(result.returncode, 3)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["state"], "NEEDS_HUMAN_APPROVAL")
+        self.assertEqual(payload["required_action"], "write_worktree")
+        self.assertEqual(payload["physical_validation"], "PHYSICAL_NOT_EXECUTED")
+        self.assertEqual(result.stderr, "")
 
 
 @unittest.skipIf(shutil.which("git") is None, "git executable is required")
