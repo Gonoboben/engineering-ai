@@ -191,6 +191,13 @@ class MemoryRecord:
         object.__setattr__(self, "evidence_refs", tuple(self.evidence_refs))
         object.__setattr__(self, "source_refs", tuple(self.source_refs))
 
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": SCHEMA_VERSION,
+            **_record_hash_payload(self),
+            "content_sha256": self.content_sha256,
+        }
+
 
 @dataclass(frozen=True)
 class MemorySearchQuery:
@@ -294,6 +301,7 @@ def _validate_semantics(draft: MemoryRecordDraft) -> None:
 
 def _record_hash_payload(record: MemoryRecord) -> dict[str, Any]:
     return {
+        "schema_version": SCHEMA_VERSION,
         "record_id": record.record_id,
         "project_id": record.project_id,
         "memory_id": record.memory_id,
