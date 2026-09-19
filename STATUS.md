@@ -25,7 +25,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Issue: `#11`
 - PR: `PENDING_DRAFT`
 - Branch: `gate-006-planner-executor-reviewer`
-- State: `IMPLEMENTED_DETERMINISTIC_VALIDATED_PENDING_LOCAL_SMOKE`
+- State: `RUNTIME_SMOKE_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -51,7 +51,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate A: `gpt-oss:20b` — `4/4 PASS` at `medium`; `high` reproducibly truncates two structured-output cases and is not the default
 - Candidate B: `qwen3.6:27b-q4_K_M` — `3 PASS / 1 INCONCLUSIVE_TRUNCATED`; memory-stable but ~2.45–2.55 eval tok/s and ~37.7 min aggregate benchmark time on this workstation
 - Stretch candidate: `qwen3.6:35b` — `DEFERRED_NOT_JUSTIFIED_ON_CURRENT_WORKSTATION` after measured 27B CPU-heavy performance
-- Planner / Executor / Reviewer loop: `IMPLEMENTED_DETERMINISTIC_VALIDATED_PENDING_LOCAL_SMOKE`
+- Planner / Executor / Reviewer loop: `IMPLEMENTED_RUNTIME_VALIDATED`
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Multi-agent routing: `DEFERRED`
 - Vision/image/CAD workers: `DEFERRED`
@@ -137,7 +137,7 @@ Historical CI note:
 - bounded structured-role protocol recovery regression: `50/50 PASS` on `0cb1756ebb8eb50ee4f45d883b42a0c14b1d2cca`
 - corrected-head generic CI after Reviewer recovery: `PASS`
 - corrected-head strict exact-head CI after Reviewer recovery: `PASS`
-- local runtime smoke attempt 3 on final documented head: `NOT_RUN`
+- local runtime smoke attempt 3 on `f3c434e630a10bbf016e28d6c873df4f79783c28`: `PASS` — `COMPLETE / PASS`, `read_repository`, evidence `sha256:STATUS.md:ac9f1cb5c40f9793a0342df00f7926b9b95af12e9f7e70b2f27b5710097b4b45`, Reviewer `ACCEPT`
 - final strict exact-head CI after evidence/documentation updates: `NOT_RUN`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -175,4 +175,4 @@ Security constraint for local model services:
 - single-agent core precedes multi-agent expansion.
 
 ## Next admissible action
-Pull the corrected Gate 006 branch and rerun the narrow local runtime smoke harness on the primary workstation with `gpt-oss:20b / medium / 8192 / 2048`. Record the result without treating it as physical validation, then run final regression and strict exact-head CI on the final evidence head. Do not merge PR #12 without explicit human squash-merge approval for that exact head SHA.
+Run final regression and strict exact-head CI on the final Gate 006 evidence/documentation head. If green, request explicit human squash-merge approval for PR #12 at that exact head SHA. Physical validation remains `PHYSICAL_NOT_EXECUTED`.
