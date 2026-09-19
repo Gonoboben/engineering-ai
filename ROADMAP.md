@@ -162,7 +162,7 @@ Acceptance focus remains: the Supervisor, not the model, controls transitions an
 ## Phase 2 — Supervised multi-model foundation
 
 ### Gate 007 — Supervised multi-model architecture baseline
-Status: `IN_PROGRESS`
+Status: `ARCHITECTURE_DOCUMENTED_PENDING_HUMAN_APPROVAL`
 
 Issue:
 `#13`
