@@ -169,7 +169,7 @@ class ModelRoutingTests(unittest.TestCase):
             "active_job_id": None,
             "repository_ref": {
                 "branch": "gate-009-model-capability-registry-router",
-                "head_sha": "test",
+                "head_sha": "0123456789abcdef0123456789abcdef01234567",
             },
             "architecture_baseline": "Gate 007",
             "effective_permissions": {
