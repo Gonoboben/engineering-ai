@@ -79,8 +79,32 @@ def main() -> int:
             )
         )
         return 2
-    if not worktree.name.startswith("gate015-"):
-        print(json.dumps({"state": "REFUSED", "reason": "unexpected worktree name"}, indent=2))
+    expected_suffix = base_sha[:12]
+    expected_worktree_name = f"gate015-{expected_suffix}"
+    expected_branch = f"engineering-ai/buoycalc/gate015-smoke-{expected_suffix}"
+    if worktree.name != expected_worktree_name:
+        print(
+            json.dumps(
+                {
+                    "state": "REFUSED",
+                    "reason": "worktree name does not match exact smoke identity",
+                    "expected": expected_worktree_name,
+                },
+                indent=2,
+            )
+        )
+        return 2
+    if branch != expected_branch:
+        print(
+            json.dumps(
+                {
+                    "state": "REFUSED",
+                    "reason": "branch does not match exact smoke identity",
+                    "expected": expected_branch,
+                },
+                indent=2,
+            )
+        )
         return 2
 
     readonly = BuoyCalcReadOnlyAdapter(repo)
