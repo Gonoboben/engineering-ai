@@ -157,12 +157,41 @@ Forbidden:
 - destructive project action;
 - scope expansion.
 
+## Deterministic implementation validation
+
+Validated implementation head:
+`b40baea3294474fafa26936e06b0fa5c7d69ea86`.
+
+Result:
+- deterministic tests: `143/143 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+Regression coverage includes:
+- clean aligned main prerequisite;
+- branch prefix enforcement;
+- non-core controlled patch/restore/cleanup;
+- governance patch rejection;
+- calculation-core/solver patch rejection;
+- stale SHA rejection before mutation;
+- explicit target allow-list;
+- validator FAIL blocks readiness;
+- validator tracked mutation blocks readiness;
+- unknown validator profile rejection;
+- fixed profiles exclude publish/package/release commands;
+- disposable generated-untracked cleanup succeeds only with clean tracked state;
+- disposable cleanup rejects tracked changes;
+- no remote/release mutation API;
+- policy schema and write-worktree human approval boundary;
+- smoke missing-checkout structured state;
+- smoke refuses worktree creation without explicit `--approve-worktree`.
+
 ## Remaining acceptance
 
-1. deterministic Engineering AI regression;
-2. generic and strict exact-head CI;
-3. real primary-workstation smoke using explicit `--approve-worktree`;
-4. prove full fixed suite PASS or preserve exact failure evidence;
-5. prove primary BuoyCalc checkout unchanged;
-6. prove disposable worktree/branch cleanup;
-7. final exact-head CI and explicit human squash-merge approval.
+1. stable-head generic and strict exact-head CI after evidence/status synchronization;
+2. real primary-workstation smoke using explicit `--approve-worktree`;
+3. prove full fixed suite PASS or preserve exact failure evidence;
+4. prove primary BuoyCalc checkout unchanged;
+5. prove disposable worktree/branch cleanup;
+6. final acceptance-state exact-head CI and explicit human squash-merge approval.
