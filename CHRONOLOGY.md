@@ -1433,3 +1433,88 @@ conflict prevents controlled worktree creation and file mutation.
 Next:
 final acceptance-state CI, scope review, and exact-SHA human squash-merge
 approval for PR #26.
+
+
+---
+
+## 2026-09-19 — Gate 013 accepted and merged
+
+Final approved PR head:
+`5822cc1a92dc1dbbd431f8f523b61e983efbfbfc`.
+
+Final validation:
+- deterministic tests: `119/119 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- real PlataVM policy-block smoke: `PASS_POLICY_BLOCK_BEFORE_MUTATION`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`2a8cdf6594d8eb6b29e2efb200683af95167bb20`.
+
+Issue #25 closed.
+
+Accepted capability:
+- controlled isolated local worktree mechanism;
+- exact before-content SHA-256 binding;
+- explicit path allow-list;
+- fixed validator loop;
+- success bounded to `READY_FOR_HUMAN_APPROVAL`;
+- commit/push/PR/merge still forbidden;
+- real PlataVM write remains blocked by unresolved authoritative source conflict.
+
+Gate 013 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 014 BuoyCalc read-only adapter opened
+
+Issue:
+`#27 — Gate 014 — BuoyCalc read-only adapter`.
+
+Branch:
+`gate-014-buoycalc-readonly-adapter`.
+
+Base:
+Gate 013 squash merge `2a8cdf6594d8eb6b29e2efb200683af95167bb20`.
+
+Current BuoyCalc main observed:
+`0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`.
+
+Mandatory project authority read:
+- `AGENTS.md`;
+- `docs/OPTIMIZATION_PLAN.md`;
+- `RELEASE.md`.
+
+Implemented scope:
+- strict read-only BuoyCalc profile/policy;
+- governance SHA-256 provenance;
+- Git branch/HEAD/origin-main/dirty snapshot;
+- deterministic checks for frozen physics/release invariant markers;
+- tracked-file inventory through fixed read-only `git ls-files`;
+- conservative calculation-core/read-model/presentation/tooling classification;
+- explicit CI states preserving CANCELLED/PENDING/MISSING as non-PASS;
+- fixed release state
+  `NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`;
+- local read-only smoke harness.
+
+Remote evidence:
+- PR #604 exact head `149c2eae96cd20f0ccff97ce18d51c2c36cc55c7`
+  had successful .NET Build, Selected Shape Consumer Scan,
+  Report Store Consumer Scan and Validation 601 Main Gate;
+- current merge commit main returned no workflow runs;
+- no release PASS is inferred from PR-head evidence.
+
+Explicitly absent:
+- calculation execution;
+- physics/solver changes;
+- UI/PDF/2D/report changes;
+- validators in this Gate;
+- project writes;
+- RC packaging/trigger/tag/release;
+- 3D.
+
+Next:
+open draft PR and run Engineering AI regression/CI before the local BuoyCalc
+read-only smoke.
