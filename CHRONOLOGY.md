@@ -1836,3 +1836,40 @@ Regression:
 
 Next:
 repeat cleanup only; do not repeat the full BuoyCalc validator suite.
+
+
+---
+
+## 2026-09-19 — Gate 015 final controlled cleanup passed
+
+The exact stale disposable worktree/branch from smoke attempt 3 was recovered
+successfully.
+
+Result:
+- `STALE_DISPOSABLE_WORKTREE_CLEANED`;
+- worktree_removed: true;
+- branch_removed: true;
+- registered_before_cleanup: false;
+- fallback_used: true;
+- git_remove_errors: none;
+- primary BuoyCalc before/after state identical;
+- exit: 0;
+- physical validation remained `PHYSICAL_NOT_EXECUTED`.
+
+Post-cleanup `git worktree list` contains only the primary BuoyCalc checkout.
+
+Combined Gate 015 real-project evidence:
+- all four fixed validation profiles PASS;
+- all validator steps exit 0 with no timeout/truncation;
+- tracked state unchanged;
+- primary checkout unchanged;
+- release remains unauthorized;
+- physical remains not executed;
+- disposable worktree and controlled branch removed.
+
+Classification:
+`PASS_CONTROLLED_BUOYCALC_VALIDATION_AND_CLEANUP`.
+
+Next:
+final acceptance-state generic + strict exact-head CI, final scope review, and
+exact-SHA human squash-merge approval for PR #30.
