@@ -68,6 +68,12 @@ class GitReadOnlyAdapter:
             operation="git.ref_sha",
         )
 
+    def tracked_files(self) -> ToolResult:
+        return self._run_raw(
+            ["ls-files"],
+            operation="git.tracked_files",
+        )
+
     def log(self, *, max_count: int = 20) -> ToolResult:
         if not 1 <= max_count <= 100:
             raise ValueError("max_count must be between 1 and 100")
