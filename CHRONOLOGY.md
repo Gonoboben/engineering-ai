@@ -264,3 +264,75 @@ Gate 005 state became:
 
 Next step:
 Run the final local Windows regression suite on the final Gate 005 head and confirm strict exact-head CI on the same head before requesting explicit exact-SHA squash-merge approval for PR #10.
+
+
+---
+
+## 2026-09-19 — Gate 005 acceptance synchronized
+
+Gate 005 final accepted branch head:
+`9d6677290ee5bbaf0253234c7b8d479c6a3f948e`
+
+Final validation:
+- local Windows/Python 3.12 regression: `39/39 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`
+
+Gate 005 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 006 deterministic role loop implemented
+
+Issue #11 / draft PR #12.
+
+Branch:
+`gate-006-planner-executor-reviewer`
+
+Baseline:
+- Gate 005 merge `ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`;
+- model `gpt-oss:20b`;
+- reasoning `medium`;
+- context `8192`;
+- benchmark-equivalent max output `2048`.
+
+Implemented:
+- explicit `PLANNER / EXECUTOR / REVIEWER` roles and typed results;
+- deterministic role-loop state machine with illegal-transition rejection;
+- separate role prompts and contexts while using one replaceable provider;
+- Planner cannot execute tools;
+- Executor receives only the approved plan and declared tool surface;
+- model tool calls remain inert proposals;
+- existing deterministic Supervisor evaluates proposal policy and invokes a narrow registered tool only after `ALLOW`;
+- deterministic evidence is required before review/completion;
+- Reviewer outcomes: `ACCEPT / REVISE / REJECT / NEEDS_HUMAN_APPROVAL`;
+- bounded revision behavior and terminal failure;
+- reviewer rejection and approval boundaries;
+- `MODEL_CALL` audit records with role/model/provider/runtime identity;
+- narrow read-only local smoke harness in `scripts/gate006_role_smoke.py`.
+
+A first deterministic test attempt correctly exposed an invalid test-only policy fixture; the production validator was not weakened. The fixture was corrected to retain all global approval boundaries.
+
+A later refactor routed model tool proposals through the existing Supervisor rather than a parallel policy authority. A simple initialization-order defect was then found by CI and corrected without changing policy or validator semantics.
+
+Deterministic implementation validation head:
+`61f8bc469e3ab827749d7a94a6a393e5715a237a`
+
+Result:
+- deterministic suite: `46/46 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Local runtime smoke:
+- harness: `IMPLEMENTED`;
+- target: `gpt-oss:20b / medium / 8192 / 2048`;
+- execution on primary Windows/Ollama workstation: `NOT_RUN`.
+
+Next step:
+Execute the narrow local role-loop smoke on the primary workstation, record its evidence, then run final regression and strict exact-head CI on the final PR head before requesting explicit exact-SHA squash-merge approval.
