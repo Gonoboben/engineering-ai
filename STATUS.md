@@ -421,6 +421,8 @@ Historical CI note:
 - runtime prerequisites installed before attempt 3: `Microsoft .NET 8 SDK + PowerShell 7`
 - real primary-workstation controlled validation smoke attempt 3: `PASS_SOFTWARE_VALIDATION_WITH_CLEANUP_INFRASTRUCTURE_BLOCK`; all 4 profiles PASS, tracked_state_unchanged=true, primary repository unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED; stale disposable worktree/branch recovery pending
 - Windows disposable cleanup hardening head `87354398cd745856d8ff89798b5527e51477641c`: deterministic regression `145/145 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- stale-worktree recovery attempt 1: `REFUSED_ALREADY_DEREGISTERED`; `git worktree list` shows only primary main checkout
+- corrected exact-identity deregistered-residue recovery head `d8405894bfb9152256e28ca49678f27ed8a2471d`: deterministic regression `147/147 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -461,4 +463,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run the guarded Gate 015 stale-worktree recovery harness for the exact remaining disposable worktree/branch from smoke attempt 3. Do not rerun the full BuoyCalc validation suite unless recovery evidence is insufficient. After cleanup PASS, run final Gate 015 acceptance-state CI and request exact-SHA squash-merge approval.
+Rerun only the guarded stale-worktree recovery harness on the corrected exact-identity recovery head. The full BuoyCalc validation suite must not be repeated solely for this cleanup state. After cleanup PASS, run final Gate 015 acceptance-state CI and request exact-SHA squash-merge approval.
