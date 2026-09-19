@@ -195,3 +195,67 @@ Regression coverage includes:
 4. prove primary BuoyCalc checkout unchanged;
 5. prove disposable worktree/branch cleanup;
 6. final acceptance-state exact-head CI and explicit human squash-merge approval.
+
+
+## Real primary-workstation smoke attempt 1 — runtime prerequisite block
+
+The first real Gate 015 smoke ran against:
+
+`C:\workspace\repos\buoycalc-windows`
+
+Observed primary repository:
+- branch: `main`;
+- HEAD: `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- `origin/main`: same SHA;
+- dirty: `false`;
+- before/after status: `## main...origin/main`;
+- repository_unchanged: `true`.
+
+The disposable worktree was created and then safely removed after validation
+startup failed because the local runtime could not resolve `dotnet`.
+
+Observed result:
+- state: `VALIDATION_EXECUTION_ERROR`;
+- execution_error:
+  `ToolExecutionError: allow-listed executable not found: dotnet`;
+- worktree_removed: `true`;
+- branch_removed: `true`;
+- cleanup_state: `PASS_AFTER_EXECUTION_ERROR`;
+- profiles: none executed;
+- release_state: `NOT_AUTHORIZED`;
+- physical_validation: `PHYSICAL_NOT_EXECUTED`;
+- process exit: `1`.
+
+Classification:
+`INFRASTRUCTURE_PREREQUISITE_BLOCK`.
+
+This is not a BuoyCalc engineering-validation failure. No build/test/validation
+profile ran, and no BuoyCalc source, tracked state, release state, or physical
+state changed.
+
+### Corrective control change
+
+Gate 015 now performs a deterministic runtime-prerequisite check before
+worktree creation.
+
+It resolves:
+- `dotnet` from PATH, with a Windows fallback to
+  `%ProgramFiles%\dotnet\dotnet.exe`;
+- `pwsh` from PATH, with a Windows fallback to
+  `%ProgramFiles%\PowerShell\7\pwsh.exe`.
+
+It also runs fixed `dotnet --list-sdks` and requires at least one .NET 8 SDK.
+
+If requirements are missing, the smoke returns:
+`BLOCKED_RUNTIME_PREREQUISITE`
+before creating a worktree.
+
+Corrected runtime-preflight head:
+`b6a490377f98cbe5d063e2a7460a977309507fe1`.
+
+Validation:
+- deterministic tests: `144/144 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+A second real smoke is required.
