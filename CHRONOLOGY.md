@@ -378,3 +378,41 @@ Evidence:
 
 Next step:
 rerun the local workstation smoke on the corrected documented branch head.
+
+
+---
+
+## 2026-09-19 — Gate 006 second local smoke exposed Reviewer structured-output failure
+
+Local workstation smoke was executed on head:
+`7e20a4beaf617dfd118e4f7d1cb1c6ecc3e96942`.
+
+Observed:
+- Planner completed;
+- Executor proposed the permitted read action;
+- deterministic Supervisor evaluated the proposal;
+- `STATUS.md` was read through the bounded read-only adapter;
+- deterministic evidence was collected;
+- Reviewer then returned content that did not satisfy the required JSON contract;
+- the role loop propagated `SemanticValidationError: REVIEWER returned invalid JSON` as an uncaught traceback.
+
+Classification:
+`FAIL_RUNTIME_CONTRACT`.
+
+Correction:
+- Planner/Reviewer structured output now has one bounded same-model/same-reasoning protocol retry;
+- retry preserves the existing schema and asks for exactly one valid JSON object;
+- retry exhaustion produces terminal `FAIL`, not an exception;
+- malformed Executor structured output also becomes terminal `FAIL`;
+- audit model events now include done reason, content length, and tool-call count.
+
+Corrected implementation head:
+`0cb1756ebb8eb50ee4f45d883b42a0c14b1d2cca`.
+
+Validation:
+- deterministic tests: `50/50 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Next step:
+rerun the local workstation smoke on the final documented branch head.
