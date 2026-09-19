@@ -65,7 +65,25 @@
 - post-run total GPU memory used: `6164 MiB`; free `1861 MiB`
 - post-run free physical RAM: `23,110,456 KiB` (~`22.04 GiB`)
 - resource evidence: `RECORDED_ATTEMPT_1`
-- qualification: `PENDING_RERUN_AFTER_SCORER_CORRECTION`
+- corrected rerun result: `3 PASS / 1 FAIL / 0 INCONCLUSIVE`
+- corrected rerun cases:
+  - `code-clamp-repair`: `PASS`
+  - `code-off-by-one-repair`: `PASS`
+  - `code-review-evidence`: `PASS`
+  - `code-tool-proposal`: `FAIL`, again emitted JSON-shaped tool intent in `content` with empty native `tool_calls`
+- corrected rerun aggregate wall time: ~`1.680 s`
+- corrected rerun wall times: ~`0.639 s`, `0.308 s`, `0.476 s`, `0.255 s`
+- corrected rerun eval throughput by case: ~`42.63`, `62.06`, `56.42`, `76.96 tok/s`
+- corrected rerun truncation/timeouts/provider errors: `0`
+- corrected rerun runtime placement: `100% GPU`
+- corrected rerun model VRAM allocation: `5,133,943,438 bytes` (~`4.78 GiB`)
+- corrected rerun post-run total GPU memory used: `6079 MiB`; free `1946 MiB`
+- corrected rerun post-run free physical RAM: `23,154,172 KiB` (~`22.08 GiB`)
+- native tool transport failure reproduced in both attempt 1 and corrected rerun: `CONFIRMED_LIMITATION`
+- qualification: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`
+- qualification limitation: `NO_NATIVE_TOOL_PROPOSALS_UNDER_CURRENT_OLLAMA_CONTRACT`
+- admissible use: code/repository analysis, repair, review, and generation when required repository/tool context is supplied by Supervisor or another deterministic step
+- inadmissible use until separately corrected/requalified: tasks requiring this model to originate native tool calls
 
 ## Runtime environment captured before benchmark
 
@@ -87,9 +105,9 @@
 
 ## Final acceptance
 
-- candidate results recorded: QWEN35_GENERAL_RECORDED; QWEN25_CODER_ATTEMPT1_RECORDED_PENDING_CORRECTED_RERUN
-- resource evidence recorded: PENDING
-- qualification states recorded: PENDING
+- candidate results recorded: QWEN35_GENERAL_4_OF_4_PASS; QWEN25_CODER_3_OF_4_WITH_CONFIRMED_TOOL_TRANSPORT_LIMITATION
+- resource evidence recorded: COMPLETE
+- qualification states recorded: COMPLETE
 - final generic CI: PENDING
 - final strict exact-head CI: PENDING
 - exact-SHA human merge approval: PENDING
