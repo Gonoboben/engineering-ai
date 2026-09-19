@@ -224,7 +224,7 @@ Implement:
 The model cannot grant itself a role, choose a broader tool surface, or bypass policy.
 
 ### Gate 010 — Task Blackboard and supervised model hand-offs
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
 Implement typed, bounded inter-worker exchange for:
 - task assignment;
@@ -241,7 +241,7 @@ No unrestricted peer-to-peer model messaging.
 Writing a model claim to the Blackboard does not promote it to evidence.
 
 ### Gate 011 — Independent review and disagreement escalation
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Add controlled second-model review and explicit disagreement handling.
 

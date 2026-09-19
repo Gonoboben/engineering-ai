@@ -41,6 +41,10 @@ class BlackboardRecordKind(str, Enum):
     MODEL_CLAIM = "MODEL_CLAIM"
     TOOL_PROPOSAL = "TOOL_PROPOSAL"
     DETERMINISTIC_EVIDENCE = "DETERMINISTIC_EVIDENCE"
+    DISAGREEMENT = "DISAGREEMENT"
+    REVIEW_FINDING = "REVIEW_FINDING"
+    REVISION_REQUEST = "REVISION_REQUEST"
+    HUMAN_ESCALATION = "HUMAN_ESCALATION"
     HANDOFF = "HANDOFF"
     TERMINAL_STATE = "TERMINAL_STATE"
 
@@ -225,6 +229,7 @@ class TaskBlackboard:
         if kind in {
             BlackboardRecordKind.MODEL_CLAIM,
             BlackboardRecordKind.TOOL_PROPOSAL,
+            BlackboardRecordKind.REVIEW_FINDING,
             BlackboardRecordKind.DETERMINISTIC_EVIDENCE,
         }:
             raise ValueError("invalid control record kind")
@@ -248,6 +253,7 @@ class TaskBlackboard:
         if kind not in {
             BlackboardRecordKind.MODEL_CLAIM,
             BlackboardRecordKind.TOOL_PROPOSAL,
+            BlackboardRecordKind.REVIEW_FINDING,
         }:
             raise ValueError("invalid model record kind")
         return self._append(

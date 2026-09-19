@@ -22,6 +22,13 @@ from engineering_ai.supervisor.blackboard import (
     build_handoff,
     resolve_context,
 )
+from engineering_ai.supervisor.review import (
+    DisagreementDecision,
+    DisagreementRequest,
+    ReviewApplication,
+    apply_independent_review,
+    plan_disagreement,
+)
 from engineering_ai.supervisor.audit import AuditEmitter
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
 from engineering_ai.validation import SemanticValidationError, validate_instance
@@ -233,6 +240,27 @@ class Supervisor:
             blackboard=self._require_blackboard(),
             route=route,
             request=request,
+        )
+
+    def plan_disagreement_review(
+        self,
+        request: DisagreementRequest,
+    ) -> DisagreementDecision:
+        if self._model_router is None:
+            raise RuntimeError("Supervisor has no model router configured")
+        return plan_disagreement(
+            blackboard=self._require_blackboard(),
+            router=self._model_router,
+            request=request,
+        )
+
+    def apply_disagreement_review(
+        self,
+        application: ReviewApplication,
+    ) -> DisagreementDecision:
+        return apply_independent_review(
+            blackboard=self._require_blackboard(),
+            application=application,
         )
 
     def _require_blackboard(self) -> TaskBlackboard:
