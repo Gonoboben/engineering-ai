@@ -268,6 +268,22 @@ class RoleLoopTests(unittest.TestCase):
         self.assertEqual(result.state, LoopState.FAIL)
         self.assertIn("outside approved plan", result.blocker)
 
+    def test_reviewer_reject_is_terminal_fail(self):
+        provider = FakeProvider(
+            [
+                {"content": {"steps": ["inspect"], "allowed_actions": ["read_repository"]}},
+                {
+                    "content": {"summary": "inspection complete"},
+                    "tool_calls": [ModelToolCall("read_repository", {"path": "STATUS.md"})],
+                },
+                {"content": {"decision": "REJECT", "summary": "evidence disproves result"}},
+            ]
+        )
+        result = make_loop(provider).run(job=job(), user_task="Reject on evidence")
+        self.assertEqual(result.state, LoopState.FAIL)
+        self.assertEqual(result.review.decision, ReviewDecision.REJECT)
+        self.assertIn("reviewer rejected", result.blocker)
+
     def test_illegal_transition_is_rejected(self):
         machine = RoleStateMachine()
         with self.assertRaises(SemanticValidationError):
