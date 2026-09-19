@@ -41,10 +41,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `015 — BuoyCalc controlled engineering loop`
 - Issue: `#29`
-- PR: `PENDING_DRAFT`
+- PR: `#30 (DRAFT)`
 - Branch: `gate-015-buoycalc-controlled-engineering-loop`
 - Base: `0f7ec3c01829f9c193e5730ec5144eee77c00b52`
-- State: `IMPLEMENTED_PENDING_VALIDATION`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_REAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -413,10 +413,10 @@ Historical CI note:
 - release state: `NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`
 - commit / push / open_pr / merge_pr / tag / release API: `ABSENT`
 - disposable generated-artifact cleanup: `TRACKED_DIFF_AND_HEAD_GUARDED`
-- deterministic regression: `PENDING`
-- generic CI: `PENDING`
-- strict exact-head CI: `PENDING`
+- implementation head `b40baea3294474fafa26936e06b0fa5c7d69ea86`: deterministic regression `143/143 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - real primary-workstation controlled validation smoke: `PENDING`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -455,4 +455,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Open Gate 015 draft PR and run deterministic/generic/strict exact-head validation. Then run one explicitly approved disposable-worktree BuoyCalc validation smoke against `C:\\workspace\\repos\\buoycalc-windows`. Do not modify calculation-core/governance, commit/push/open PR/merge BuoyCalc, or perform RC/tag/release actions.
+Run generic and strict exact-head CI on the stable Gate 015 evidence/status head, then run one explicitly approved disposable-worktree BuoyCalc validation smoke against `C:\\workspace\\repos\\buoycalc-windows`. Do not modify calculation-core/governance, commit/push/open PR/merge BuoyCalc, or perform RC/tag/release actions.
