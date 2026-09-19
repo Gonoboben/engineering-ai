@@ -31,6 +31,14 @@ class ExecutionResult:
     tool_called: bool
 
 
+@dataclass(frozen=True)
+class ProposalExecutionResult:
+    decision: PolicyDecision
+    outcome: ToolOutcome | None
+    audit_events: tuple[dict[str, Any], ...]
+    tool_called: bool
+
+
 class Supervisor:
     """Control authority for deterministic policy/state transitions.
 
@@ -66,6 +74,83 @@ class Supervisor:
     @property
     def audit_events(self) -> tuple[dict[str, Any], ...]:
         return tuple(deepcopy(self._audit_events))
+
+    def evaluate_tool_proposal(
+        self,
+        *,
+        job: dict[str, Any],
+        action: str,
+        tool: ToolCallable,
+        approval_obtained: bool = False,
+        approver: str | None = None,
+    ) -> ProposalExecutionResult:
+        """Evaluate one inert model tool proposal without promoting job state.
+
+        This is the Gate 006 path for role-loop proposals: the existing Supervisor
+        remains the sole policy gate and the tool is called only after ALLOW.
+        """
+        working_job = deepcopy(job)
+        validate_instance("job.schema.json", working_job)
+        self._validate_job_context(working_job)
+        if working_job["status"] in self.TERMINAL_JOB_STATES:
+            raise SemanticValidationError(
+                f"terminal job cannot evaluate proposal: {working_job['status']}"
+            )
+
+        start_index = len(self._audit_events)
+        before_ref = self._repository_ref()
+        decision = self._decision_for_request(
+            job=working_job,
+            action=action,
+            approval_obtained=approval_obtained,
+            approver=approver,
+        )
+        self._record(
+            self._audit.policy_event(
+                project_id=working_job["project_id"],
+                gate_id=working_job.get("gate_id"),
+                job_id=working_job["job_id"],
+                decision=decision,
+                before_ref=before_ref,
+                after_ref=before_ref,
+            )
+        )
+
+        if decision.decision is not Decision.ALLOW:
+            return ProposalExecutionResult(
+                decision=decision,
+                outcome=None,
+                audit_events=tuple(
+                    deepcopy(self._audit_events[start_index:])
+                ),
+                tool_called=False,
+            )
+
+        outcome = tool(action)
+        if not isinstance(outcome, ToolOutcome):
+            raise TypeError("tool must return ToolOutcome")
+        self._record(
+            self._audit.tool_event(
+                project_id=working_job["project_id"],
+                gate_id=working_job.get("gate_id"),
+                job_id=working_job["job_id"],
+                action=action,
+                ok=outcome.ok,
+                summary=outcome.summary,
+                before_ref=before_ref,
+                after_ref=self._repository_ref(),
+                evidence_refs=list(outcome.evidence_refs),
+                approval_required=decision.approval_required,
+                approval_obtained=decision.approval_obtained,
+                approver=decision.approver,
+            )
+        )
+        return ProposalExecutionResult(
+            decision=decision,
+            outcome=outcome,
+            audit_events=tuple(deepcopy(self._audit_events[start_index:])),
+            tool_called=True,
+        )
 
     def execute(
         self,

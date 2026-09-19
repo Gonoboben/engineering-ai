@@ -105,6 +105,46 @@ class AuditEmitter:
         validate_instance("audit-event.schema.json", event)
         return event
 
+    def model_event(
+        self,
+        *,
+        project_id: str,
+        gate_id: str | None,
+        job_id: str,
+        role: str,
+        provider: str,
+        runtime_version: str | None,
+        model: str,
+        ok: bool,
+        summary: str,
+        before_ref: str | None,
+        after_ref: str | None,
+        evidence_refs: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Record an advisory model call with explicit role/runtime identity."""
+        event = self._base_event(
+            project_id=project_id,
+            gate_id=gate_id,
+            job_id=job_id,
+            event_type="MODEL_CALL",
+            action=f"model_role:{role}",
+            status="PASS" if ok else "FAIL",
+            summary=summary,
+            before_ref=before_ref,
+            after_ref=after_ref,
+            evidence_refs=evidence_refs or [],
+            approval_required=False,
+            approval_obtained=False,
+            approver=None,
+        )
+        event["actor"] = {
+            "kind": "model",
+            "id": f"{role}:{model}",
+            "runtime": f"{provider}/{runtime_version or 'unknown'}",
+        }
+        validate_instance("audit-event.schema.json", event)
+        return event
+
     def state_event(
         self,
         *,

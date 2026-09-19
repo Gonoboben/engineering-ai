@@ -264,3 +264,192 @@ Gate 005 state became:
 
 Next step:
 Run the final local Windows regression suite on the final Gate 005 head and confirm strict exact-head CI on the same head before requesting explicit exact-SHA squash-merge approval for PR #10.
+
+
+---
+
+## 2026-09-19 — Gate 005 acceptance synchronized
+
+Gate 005 final accepted branch head:
+`9d6677290ee5bbaf0253234c7b8d479c6a3f948e`
+
+Final validation:
+- local Windows/Python 3.12 regression: `39/39 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`
+
+Gate 005 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 006 deterministic role loop implemented
+
+Issue #11 / draft PR #12.
+
+Branch:
+`gate-006-planner-executor-reviewer`
+
+Baseline:
+- Gate 005 merge `ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`;
+- model `gpt-oss:20b`;
+- reasoning `medium`;
+- context `8192`;
+- benchmark-equivalent max output `2048`.
+
+Implemented:
+- explicit `PLANNER / EXECUTOR / REVIEWER` roles and typed results;
+- deterministic role-loop state machine with illegal-transition rejection;
+- separate role prompts and contexts while using one replaceable provider;
+- Planner cannot execute tools;
+- Executor receives only the approved plan and declared tool surface;
+- model tool calls remain inert proposals;
+- existing deterministic Supervisor evaluates proposal policy and invokes a narrow registered tool only after `ALLOW`;
+- deterministic evidence is required before review/completion;
+- Reviewer outcomes: `ACCEPT / REVISE / REJECT / NEEDS_HUMAN_APPROVAL`;
+- bounded revision behavior and terminal failure;
+- reviewer rejection and approval boundaries;
+- `MODEL_CALL` audit records with role/model/provider/runtime identity;
+- narrow read-only local smoke harness in `scripts/gate006_role_smoke.py`.
+
+A first deterministic test attempt correctly exposed an invalid test-only policy fixture; the production validator was not weakened. The fixture was corrected to retain all global approval boundaries.
+
+A later refactor routed model tool proposals through the existing Supervisor rather than a parallel policy authority. A simple initialization-order defect was then found by CI and corrected without changing policy or validator semantics.
+
+Deterministic implementation validation head:
+`61f8bc469e3ab827749d7a94a6a393e5715a237a`
+
+Result:
+- deterministic suite: `46/46 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Local runtime smoke:
+- harness: `IMPLEMENTED`;
+- target: `gpt-oss:20b / medium / 8192 / 2048`;
+- execution on primary Windows/Ollama workstation: `NOT_RUN`.
+
+Next step:
+Execute the narrow local role-loop smoke on the primary workstation, record its evidence, then run final regression and strict exact-head CI on the final PR head before requesting explicit exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 006 local smoke exposed tool-only Executor response
+
+Local workstation smoke was executed on head:
+`30ade24c9128a0c44cd81a7e90f0740237d1711c`.
+
+Observed:
+- Planner advanced into Executor;
+- local `gpt-oss:20b / medium / 8192 / 2048` returned a tool proposal with empty response `content`;
+- Gate 006 attempted to parse the empty Executor content as JSON and terminated with
+  `SemanticValidationError: EXECUTOR returned invalid JSON`.
+
+Classification:
+`FAIL_RUNTIME_CONTRACT`.
+
+This was not classified as an engineering-domain failure, evidence PASS, or physical validation.
+
+Review against accepted Gate 005 semantics showed that the tool-proposal benchmark intentionally scores `response.tool_calls` and does not require JSON content alongside a tool proposal.
+
+Correction:
+- Executor now accepts empty content only when a tool proposal is present;
+- a neutral summary is created deterministically by orchestration;
+- tool proposals remain inert and still pass through the existing deterministic Supervisor;
+- empty content without tool proposals remains invalid;
+- a dedicated regression test covers the observed local runtime shape.
+
+Corrected implementation head:
+`00b17d498f90e3970352f6264584f8b1fdb60d53`.
+
+Corrected validation:
+- deterministic tests: `47/47 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Evidence:
+`docs/evidence/gate006/runtime-smoke.md`.
+
+Next step:
+rerun the local workstation smoke on the corrected documented branch head.
+
+
+---
+
+## 2026-09-19 — Gate 006 second local smoke exposed Reviewer structured-output failure
+
+Local workstation smoke was executed on head:
+`7e20a4beaf617dfd118e4f7d1cb1c6ecc3e96942`.
+
+Observed:
+- Planner completed;
+- Executor proposed the permitted read action;
+- deterministic Supervisor evaluated the proposal;
+- `STATUS.md` was read through the bounded read-only adapter;
+- deterministic evidence was collected;
+- Reviewer then returned content that did not satisfy the required JSON contract;
+- the role loop propagated `SemanticValidationError: REVIEWER returned invalid JSON` as an uncaught traceback.
+
+Classification:
+`FAIL_RUNTIME_CONTRACT`.
+
+Correction:
+- Planner/Reviewer structured output now has one bounded same-model/same-reasoning protocol retry;
+- retry preserves the existing schema and asks for exactly one valid JSON object;
+- retry exhaustion produces terminal `FAIL`, not an exception;
+- malformed Executor structured output also becomes terminal `FAIL`;
+- audit model events now include done reason, content length, and tool-call count.
+
+Corrected implementation head:
+`0cb1756ebb8eb50ee4f45d883b42a0c14b1d2cca`.
+
+Validation:
+- deterministic tests: `50/50 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Next step:
+rerun the local workstation smoke on the final documented branch head.
+
+
+---
+
+## 2026-09-19 — Gate 006 local runtime smoke passed end-to-end
+
+Local workstation smoke was executed on head:
+`f3c434e630a10bbf016e28d6c873df4f79783c28`.
+
+Runtime:
+- Windows 11 Pro;
+- Ollama `0.34.1`, loopback-only;
+- model `gpt-oss:20b`;
+- reasoning `medium`;
+- context `8192`;
+- max output `2048`.
+
+Observed result:
+- state: `COMPLETE`;
+- job status: `PASS`;
+- blocker: none;
+- executed action: `read_repository`;
+- deterministic evidence:
+  `sha256:STATUS.md:ac9f1cb5c40f9793a0342df00f7926b9b95af12e9f7e70b2f27b5710097b4b45`;
+- Reviewer decision: `ACCEPT`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Interpretation:
+the complete Planner -> Executor -> deterministic Supervisor -> bounded tool ->
+deterministic evidence -> Reviewer -> Supervisor terminal path executed
+successfully on the primary workstation without granting additional authority.
+
+Gate 006 local runtime acceptance criterion is satisfied.
+
+Next step:
+final regression and strict exact-head CI on the final documentation/evidence
+head, followed by explicit human exact-SHA squash-merge approval for PR #12.

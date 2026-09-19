@@ -75,7 +75,7 @@ Validation:
 No project-specific writes or project access.
 
 ### Gate 005 — Local model interface
-Status: `MODEL_SELECTED_PENDING_FINAL_VALIDATION`
+Status: `ACCEPTED_MERGED`
 
 Implemented:
 - provider-neutral request/response/message/tool-call types;
@@ -112,20 +112,48 @@ Initial model selection:
 - baseline context: `8192`;
 - selection evidence: `docs/evidence/gate005/model-selection.md`.
 
-Remaining acceptance evidence:
-- final local Windows regression suite on the final Gate 005 head;
-- final strict exact-head CI on the same head;
-- PR #10 review;
-- explicit exact-SHA human squash-merge approval.
+Final acceptance:
+- final Gate 005 head: `9d6677290ee5bbaf0253234c7b8d479c6a3f948e`;
+- local Windows regression: `39/39 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA human approval: `PASS`;
+- squash merge commit: `ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`.
 
 Do not hard-code model-family semantics into Supervisor behavior.
 
 ### Gate 006 — Planner / Executor / Reviewer loop
-Status: `NOT_STARTED`
+Status: `RUNTIME_SMOKE_PASS_PENDING_FINAL_ACCEPTANCE`
 
-Run one model in separated roles/contexts and require evidence-based completion states.
+Implemented:
+- typed Planner / Executor / Reviewer roles and results;
+- explicit deterministic role-loop state machine;
+- separate role prompts/contexts using one replaceable model provider;
+- approved-plan-only Executor context;
+- inert model tool proposals routed through the existing deterministic Supervisor;
+- deterministic evidence requirement before review/completion;
+- Reviewer outcomes `ACCEPT / REVISE / REJECT / NEEDS_HUMAN_APPROVAL`;
+- bounded revision behavior;
+- explicit terminal failure and human-approval boundaries;
+- model role/runtime audit identity;
+- narrow read-only local smoke harness for `gpt-oss:20b / medium / 8192 / 2048`.
 
-Acceptance focus: the Supervisor, not the model, controls transitions and permissions.
+Deterministic validation:
+- Gate 002–005 regression remains `PASS`;
+- implementation head `61f8bc469e3ab827749d7a94a6a393e5715a237a`: `46/46 PASS`;
+- generic CI on that head: `PASS`;
+- strict exact-head CI on that head: `PASS`.
+
+Acceptance evidence:
+- local runtime smoke on primary workstation at head `f3c434e630a10bbf016e28d6c873df4f79783c28`: `PASS`;
+- result: `COMPLETE / PASS`, bounded `read_repository`, SHA-256 evidence for `STATUS.md`, Reviewer `ACCEPT`;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+Remaining final acceptance:
+- final regression and strict exact-head CI on the final documentation/evidence head;
+- explicit exact-SHA human squash-merge approval.
+
+Acceptance focus remains: the Supervisor, not the model, controls transitions and permissions.
 
 ## Phase 2 — Existing project integration
 
