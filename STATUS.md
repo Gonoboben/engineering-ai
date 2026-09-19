@@ -129,7 +129,11 @@ Historical CI note:
 - generic CI on implementation head `61f8bc469e3ab827749d7a94a6a393e5715a237a`: `PASS`
 - strict exact-head CI on implementation head `61f8bc469e3ab827749d7a94a6a393e5715a237a`: `PASS`
 - narrow local runtime smoke harness: `scripts/gate006_role_smoke.py`, `IMPLEMENTED`
-- local `gpt-oss:20b / medium / 8192 / 2048` role-loop smoke test: `NOT_RUN`
+- local `gpt-oss:20b / medium / 8192 / 2048` role-loop smoke attempt 1 on `30ade24c9128a0c44cd81a7e90f0740237d1711c`: `FAIL_RUNTIME_CONTRACT`, diagnosed and corrected
+- corrected Executor tool-only response contract regression: `47/47 PASS` on `00b17d498f90e3970352f6264584f8b1fdb60d53`
+- corrected-head generic CI: `PASS`
+- corrected-head strict exact-head CI: `PASS`
+- local runtime smoke rerun on corrected documented head: `NOT_RUN`
 - final strict exact-head CI after evidence/documentation updates: `NOT_RUN`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -167,4 +171,4 @@ Security constraint for local model services:
 - single-agent core precedes multi-agent expansion.
 
 ## Next admissible action
-Run the narrow local runtime smoke harness on the primary workstation with `gpt-oss:20b / medium / 8192 / 2048`, record the result without treating it as physical validation, then run final regression and strict exact-head CI on the resulting final PR head. Do not merge PR #12 without explicit human squash-merge approval for that exact head SHA.
+Pull the corrected Gate 006 branch and rerun the narrow local runtime smoke harness on the primary workstation with `gpt-oss:20b / medium / 8192 / 2048`. Record the result without treating it as physical validation, then run final regression and strict exact-head CI on the final evidence head. Do not merge PR #12 without explicit human squash-merge approval for that exact head SHA.
