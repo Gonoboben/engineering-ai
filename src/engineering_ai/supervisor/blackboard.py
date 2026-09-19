@@ -150,10 +150,18 @@ class TaskBlackboard:
         )
         return BlackboardView(task_id=task_id, records=records)
 
-    def context_keys(self, task_id: str) -> frozenset[str]:
+    def context_keys(
+        self,
+        task_id: str,
+        *,
+        visible_record_ids: Iterable[int] | None = None,
+    ) -> frozenset[str]:
+        allowed = None if visible_record_ids is None else set(visible_record_ids)
         keys: set[str] = set()
         for record in self._records:
             if record.task_id != task_id:
+                continue
+            if allowed is not None and record.record_id not in allowed:
                 continue
             if record.kind is not BlackboardRecordKind.DETERMINISTIC_EVIDENCE:
                 continue
@@ -286,7 +294,14 @@ def build_handoff(
     if route.status is RouteStatus.NO_ROUTE:
         return HandoffDecision(route=route, handoff_record=None, visible_view=None)
 
-    available = blackboard.context_keys(request.task_id)
+    visible = blackboard.view(
+        task_id=request.task_id,
+        visible_record_ids=request.visible_record_ids,
+    )
+    available = blackboard.context_keys(
+        request.task_id,
+        visible_record_ids=request.visible_record_ids,
+    )
     missing = tuple(
         key for key in request.required_context_keys if key not in available
     )
@@ -294,14 +309,10 @@ def build_handoff(
         return HandoffDecision(
             route=route,
             handoff_record=None,
-            visible_view=None,
+            visible_view=visible,
             missing_context_keys=missing,
         )
 
-    visible = blackboard.view(
-        task_id=request.task_id,
-        visible_record_ids=request.visible_record_ids or None,
-    )
     record = blackboard._append_control(
         task_id=request.task_id,
         kind=BlackboardRecordKind.HANDOFF,
