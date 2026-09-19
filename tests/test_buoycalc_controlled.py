@@ -402,11 +402,6 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
             },
         )
         flattened = " ".join(
-            (spec.executable, *spec.fixed_args)
-            for spec in _VALIDATOR_SPECS
-        )
-        # tuple join above is not valid for nested tuples; use explicit string below.
-        flattened = " ".join(
             " ".join((spec.executable, *spec.fixed_args))
             for spec in _VALIDATOR_SPECS
         ).casefold()
