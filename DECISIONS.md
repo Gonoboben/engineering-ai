@@ -1,11 +1,11 @@
 # DECISIONS.md
 
-This file records accepted/proposed architectural decisions for the Engineering AI control plane. Until Gate 001 is merged, these entries are `PROPOSED`.
+This file records accepted and proposed architectural decisions for the Engineering AI control plane. ADR-0001 through ADR-0012 were accepted with the Gate 001 architecture baseline; later ADRs retain an explicit pending/accepted Gate status.
 
 ---
 
 ## ADR-0001 — Repository-backed state is authoritative
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Authoritative project state must be stored in repositories and explicit machine-readable state/evidence records. Chat history, model context and model memory are not authoritative sources of truth.
@@ -19,7 +19,7 @@ Every material project transition must be reconstructable without relying on con
 ---
 
 ## ADR-0002 — Use a deterministic non-LLM Supervisor
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Permissions, stop conditions, retries, state transitions, approval boundaries and audit are enforced by an ordinary program outside the LLM.
@@ -33,7 +33,7 @@ The Supervisor must be testable with stub/fake agents before any production mode
 ---
 
 ## ADR-0003 — AI models are replaceable workers
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Core architecture uses a stable model interface; no project state or governance semantics may depend on one vendor/model/runtime.
@@ -47,7 +47,7 @@ Model-specific prompting/adapters live behind a narrow interface and can be repl
 ---
 
 ## ADR-0004 — Offline-first is a primary requirement
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Core project continuation, local reasoning, repository access, deterministic tools, validation, memory and audit must function without internet access once required local dependencies/models are installed.
@@ -61,7 +61,7 @@ External/OpenAI/GitHub/web capabilities are optional extensions and their absenc
 ---
 
 ## ADR-0005 — Connected projects remain independent repositories
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Engineering AI is a control plane. PlataVM, BuoyCalc and future projects remain separate repositories and are connected via project profiles/adapters.
@@ -75,7 +75,7 @@ Do not create a monorepo containing copies of connected projects.
 ---
 
 ## ADR-0006 — Deterministic validation outranks model claims
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Compiler/tests/ERC/DRC/SPICE/FEM/calculation outputs and physical evidence are authoritative for their defined scopes. A model may explain or challenge assumptions, but cannot declare a failed check to have passed.
@@ -89,7 +89,7 @@ Completion states must reference actual recorded validator/evidence results.
 ---
 
 ## ADR-0007 — Do not weaken validation to obtain PASS
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 The system must not suppress, disable or weaken validators/tests/CI/ERC/DRC solely to make work appear successful.
@@ -103,7 +103,7 @@ Any proposal to change validation semantics is an explicit human-approval bounda
 ---
 
 ## ADR-0008 — Simulation and physical validation are separate classes
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Synthetic, simulated, calculated and software-test results must never be represented as physical test results.
@@ -117,7 +117,7 @@ State/evidence schemas must carry physical-validation status explicitly.
 ---
 
 ## ADR-0009 — Evidence and provenance are first-class data
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Material engineering conclusions should be linked to sources, assumptions, calculations, simulation/test runs, revisions and validation class.
@@ -131,7 +131,7 @@ The implementation must support structured evidence references before advanced m
 ---
 
 ## ADR-0010 — Single-agent reliability precedes multi-agent specialization
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 First establish one engineering agent operating through the Supervisor. Specialist code/electronics/vision/CAD/image/reviewer agents are later extensions.
@@ -145,7 +145,7 @@ Multi-agent work remains out of scope until the core policy/tool/evidence loop i
 ---
 
 ## ADR-0011 — Multi-agent workers are Supervisor-routed, not an unrestricted swarm
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 When specialist workers are introduced, the Supervisor assigns bounded tasks and controls hand-offs. Agents do not form an unrestricted peer-to-peer decision network.
@@ -159,7 +159,7 @@ Consensus between models never substitutes for deterministic validation or human
 ---
 
 ## ADR-0012 — Continual self-training is not part of the initial architecture
-Status: `PROPOSED`
+Status: `ACCEPTED_GATE_001`
 
 ### Decision
 Project learning is initially implemented through explicit memory, evidence, decisions and lessons rather than automatic modification of model weights during operation.
@@ -169,3 +169,68 @@ Online self-training risks reinforcing model errors and reducing reproducibility
 
 ### Consequence
 Fine-tuning/LoRA may be evaluated later using curated validated datasets as a separate controlled capability.
+
+
+---
+
+## ADR-0013 — Use Supervisor-mediated multi-model specialization
+Status: `PROPOSED_PENDING_GATE_007_ACCEPTANCE`
+
+### Decision
+Engineering AI may use multiple specialized local models only as replaceable advisory workers behind the deterministic Supervisor.
+
+Model-to-model work hand-offs are mediated by the Supervisor through typed bounded task records / a Task Blackboard. Workers do not form an unrestricted peer-to-peer swarm.
+
+The Supervisor alone owns:
+- task/role assignment;
+- permissions and tool execution decisions;
+- state transitions;
+- retry/revision limits;
+- approval boundaries;
+- evidence promotion;
+- final job state.
+
+A deterministic Model Capability Registry records locally measured qualification evidence. A deterministic Model Router may select only roles/models that are accepted for the requested task class and resource envelope.
+
+### Candidate baseline
+Candidates to qualify after this architecture Gate:
+- `Qwen3.5-9B` — general/Planner candidate and possible future multimodal worker;
+- `Qwen2.5-Coder-7B` — code/repository specialist candidate;
+- `gpt-oss:20b / medium` — accepted Gate 005 baseline and deep-reasoning/escalation candidate;
+- `Huihui Qwen3 14B` — later independent critic/reviewer candidate;
+- 27B-class models — deferred on the current workstation unless new evidence justifies them.
+
+Candidate naming does not constitute production qualification.
+
+### Rationale
+The validated Gate 006 single-model Planner/Executor/Reviewer loop established the control boundary. Specialization can improve quality and speed without duplicating policy authority if all roles continue through the same Supervisor/evidence interfaces.
+
+Direct peer-to-peer agent systems can amplify shared errors, hide provenance, and blur authority.
+
+### Consequence
+- model agreement or majority vote is never evidence;
+- role assignment requires measured local qualification;
+- deterministic validators and physical evidence continue to outrank every model;
+- hand-offs and disagreements are auditable;
+- a model cannot select a more privileged model/tool route for itself;
+- later implementation must preserve the Gate 006 control loop semantics.
+
+---
+
+## ADR-0014 — External AI oversight uses a controlled bridge
+Status: `PROPOSED_PENDING_GATE_007_ACCEPTANCE`
+
+### Decision
+ChatGPT/OpenAI or another external model may later act as an optional external reviewer/architect through a policy-controlled bridge, but it receives no direct authority over local policy, state, credentials, unrestricted shell, or project repositories.
+
+External requests are submitted to the deterministic Supervisor as bounded requests. The Supervisor decides what context may leave the local system, what actions are admissible, and what evidence/state changes are permitted.
+
+### Rationale
+A stronger external model can provide useful architecture/review assistance while the local control plane remains private, offline-capable, reproducible, and safe.
+
+### Consequence
+- external consultation is optional and auditable;
+- outbound context must be explicit and policy-controlled;
+- the local system remains functional when the external bridge is unavailable;
+- external model output remains advisory;
+- external control cannot bypass human approval or deterministic validation.

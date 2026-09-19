@@ -453,3 +453,96 @@ Gate 006 local runtime acceptance criterion is satisfied.
 Next step:
 final regression and strict exact-head CI on the final documentation/evidence
 head, followed by explicit human exact-SHA squash-merge approval for PR #12.
+
+
+---
+
+## 2026-09-19 — Gate 006 accepted and merged
+
+Final approved PR head:
+`04d3f7653471b8bb8db7f90d939e55b122bfc1c1`.
+
+Final acceptance evidence:
+- deterministic tests: `50/50 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- local Windows/Ollama end-to-end role-loop smoke: `COMPLETE / PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`;
+- physical validation remained `PHYSICAL_NOT_EXECUTED`.
+
+Squash merge on `main`:
+`24b1fbc009920c1dee8317c784ef42711044be87`.
+
+Issue #11 was closed by the merged PR.
+
+Gate 006 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 007 supervised multi-model architecture opened
+
+Human direction:
+- retain the deterministic Supervisor as the sole control authority;
+- move to a supervised multi-model architecture after Gate 006;
+- use specialized local models through controlled hand-offs rather than unrestricted peer-to-peer communication;
+- qualify `Qwen3.5-9B` and `Qwen2.5-Coder-7B` before assigning production roles;
+- retain `gpt-oss:20b / medium` as the accepted baseline/deep-reasoning reference;
+- defer 27B-class downloads on the current workstation unless later evidence justifies them;
+- design a future controlled bridge so an external ChatGPT/OpenAI reviewer can supervise/advice without bypassing local policy.
+
+Issue:
+`#13 — Gate 007 — Supervised multi-model architecture baseline`.
+
+Branch:
+`gate-007-supervised-multi-model-architecture`.
+
+Base:
+Gate 006 squash merge `24b1fbc009920c1dee8317c784ef42711044be87`.
+
+Draft PR:
+`#14`.
+
+Gate 007 scope is architecture/governance only:
+- Model Capability Registry semantics;
+- deterministic Supervisor-owned Model Router;
+- Supervisor-controlled Task Blackboard;
+- evidence-based disagreement escalation;
+- external-control boundary;
+- roadmap realignment.
+
+Explicitly out of scope:
+- downloading or qualifying models;
+- implementing the router or Blackboard runtime;
+- project adapters;
+- external bridge implementation;
+- any increase in model authority.
+
+Next step:
+complete architecture-document consistency review and exact-head CI before requesting explicit exact-SHA human architecture approval.
+
+
+---
+
+## 2026-09-19 — Gate 007 architecture documentation review completed
+
+Architecture preparation head:
+`a8128d8f28815e2c100f8f9b71940b61b830491c`.
+
+Consistency review:
+- changed files limited to architecture/governance/status documentation;
+- no model/runtime download or qualification;
+- no router/Blackboard implementation;
+- no project adapter change;
+- no model authority increase;
+- no stale Gate 007 PlataVM numbering or Gate 006 pending-state conflicts detected.
+
+Validation on the architecture preparation head:
+- deterministic tests: `50/50 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 007 state:
+`ARCHITECTURE_DOCUMENTED_PENDING_HUMAN_APPROVAL`.
+
+A final exact-head CI run is required after status/chronology synchronization before requesting exact-SHA squash-merge approval.
