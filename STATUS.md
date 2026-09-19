@@ -48,7 +48,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#34 (DRAFT)`
 - Branch: `gate-017-retrieval-layer`
 - Base: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_BENCHMARK`
+- State: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -489,13 +489,14 @@ Historical CI note:
 - content SHA-256 preserved: `IMPLEMENTED`
 - memory integrity failure behavior: `FAIL_CLOSED`
 - automatic Blackboard/model context injection: `NOT_IMPLEMENTED_PROHIBITED_GATE_017`
-- semantic/vector backend: `DEFERRED_NOT_JUSTIFIED_PENDING_BENCHMARK`
+- semantic/vector backend: `DEFERRED_NOT_JUSTIFIED`
 - retrieval benchmark: `IMPLEMENTED_CI_VALIDATED`
 - retrieval context JSON Schema: `IMPLEMENTED`
 - Supervisor-owned retrieval boundary: `IMPLEMENTED`; request project_id must match Supervisor state, no Blackboard/model injection
 - external dependency addition: `NONE`
 - implementation head `9e5874ec19b15b7d429f3fcb6752f73b3e8e7a28`: deterministic regression `178/178 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- local retrieval benchmark/smoke: `PENDING`
+- stable pre-smoke head `c5c2c5648efa7b12447ad5bffed9451c7b4c2868`: deterministic regression `178/178 PASS`, generic CI run `35463811833` `PASS`, strict exact-head CI run `35463811817` `PASS`
+- local retrieval benchmark/smoke: `PASS_DETERMINISTIC_RETRIEVAL_BENCHMARK`; baseline mean recall@3 `0.25`, retrieval mean recall@3 `1.0`, improved relevant cases `3`, safety PASS, not-worse-all-relevant PASS, semantic/vector backend `DEFERRED_NOT_JUSTIFIED`, automatic context injection=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation semantics: `UNCHANGED`
@@ -536,4 +537,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the stable Gate 017 evidence/status head, then run one local retrieval benchmark/smoke on the primary workstation. Add no embeddings/vector backend unless separate benchmark evidence demonstrates material recall improvement while preserving provenance and resource bounds.
+Run final generic and strict exact-head CI on the post-benchmark Gate 017 evidence/status head. If green, perform final scope review, mark PR #34 ready for review, and request explicit human exact-SHA squash-merge approval. Do not add embeddings/vector retrieval: the accepted lexical benchmark already improved mean recall@3 from 0.25 to 1.0 with safety preserved, so semantic/vector remains DEFERRED_NOT_JUSTIFIED.

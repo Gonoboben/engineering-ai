@@ -224,10 +224,48 @@ Validated boundaries include:
 - cross-project Supervisor retrieval rejection;
 - Supervisor retrieval does not create Blackboard/handoff context.
 
+## Stable pre-smoke and primary-workstation benchmark
+
+Stable pre-smoke head:
+`c5c2c5648efa7b12447ad5bffed9451c7b4c2868`.
+
+GitHub validation on that exact PR head:
+- generic workflow run `35463811833`: `PASS`;
+- strict exact-head workflow run `35463811817`: `PASS`;
+- deterministic regression: `178/178 PASS`;
+- exact revision verification: `PASS`.
+
+Primary-workstation benchmark command:
+`.\.venv\Scripts\python.exe scripts\gate017_retrieval_benchmark.py`.
+
+Observed result:
+- state: `PASS_DETERMINISTIC_RETRIEVAL_BENCHMARK`;
+- exit code: `0`;
+- k: `3`;
+- baseline mean recall@3: `0.25`;
+- Gate 017 retrieval mean recall@3: `1.0`;
+- improved relevant cases: `3`;
+- safety: `PASS`;
+- retrieval not worse on every relevant case: `PASS`;
+- semantic/vector backend: `DEFERRED_NOT_JUSTIFIED`;
+- automatic context injection: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- temporary benchmark database removed on exit: `true`.
+
+Per-case result:
+- `append-memory-noncontiguous`: baseline `0.0`, retrieval `1.0`, improved;
+- `windows-cleanup-reordered`: baseline `0.0`, retrieval `1.0`, improved;
+- `shape-validation-gap`: baseline `0.0`, retrieval `1.0`, improved;
+- `source-contiguous-baseline`: baseline `1.0`, retrieval `1.0`, not worse;
+- `advisory-safety`: excluded as required, safety PASS;
+- `proposed-adr-safety`: excluded as required, safety PASS.
+
+The lexical baseline therefore satisfies Gate 017 acceptance. No embedding or vector
+database is justified by this benchmark.
+
 ## Remaining acceptance
 
-1. stable pre-smoke generic + strict exact-head CI;
-2. primary-workstation retrieval benchmark/smoke PASS with metrics captured;
-3. final acceptance-state CI;
-4. final scope review;
-5. exact-SHA human squash-merge approval.
+1. final acceptance-state generic + strict exact-head CI on the post-benchmark evidence head;
+2. final scope review;
+3. mark PR #34 ready for review;
+4. exact-SHA human squash-merge approval.

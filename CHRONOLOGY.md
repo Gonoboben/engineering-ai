@@ -2133,3 +2133,54 @@ Gate 017 state:
 Remaining:
 stable pre-smoke exact-head CI and one primary-workstation retrieval
 benchmark/smoke with metrics captured.
+
+
+---
+
+## 2026-09-19 — Gate 017 primary-workstation retrieval benchmark passed
+
+Stable pre-smoke PR head:
+`c5c2c5648efa7b12447ad5bffed9451c7b4c2868`.
+
+Pre-smoke validation:
+- generic workflow run `35463811833`: `PASS`;
+- strict exact-head workflow run `35463811817`: `PASS`;
+- deterministic regression: `178/178 PASS`;
+- exact revision verification: `PASS`.
+
+Primary-workstation benchmark:
+- script: `scripts/gate017_retrieval_benchmark.py`;
+- state: `PASS_DETERMINISTIC_RETRIEVAL_BENCHMARK`;
+- exit code: `0`;
+- k: `3`;
+- baseline mean recall@3: `0.25`;
+- retrieval mean recall@3: `1.0`;
+- improved relevant cases: `3`;
+- safety: `PASS`;
+- retrieval not worse on every relevant case: `PASS`;
+- automatic context injection: `false`;
+- temporary database removed on exit: `true`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Relevant benchmark cases:
+- append-memory-noncontiguous: `0.0 -> 1.0`;
+- windows-cleanup-reordered: `0.0 -> 1.0`;
+- shape-validation-gap: `0.0 -> 1.0`;
+- source-contiguous-baseline: `1.0 -> 1.0`.
+
+Safety-only cases:
+- advisory-safety: excluded as required;
+- proposed-adr-safety: excluded as required.
+
+Conclusion:
+the deterministic lexical retrieval baseline materially improves measured recall while
+preserving provenance and safety. Semantic/vector retrieval remains
+`DEFERRED_NOT_JUSTIFIED`; no embeddings/vector database are added in Gate 017.
+
+Gate 017 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+run final generic and strict exact-head CI on the post-benchmark evidence/status head,
+perform final scope review, mark PR #34 ready for review, then request explicit human
+exact-SHA squash-merge approval.
