@@ -913,3 +913,76 @@ Gate 009 state:
 `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
 
 One final exact-head CI run is required after acceptance-state synchronization.
+
+
+---
+
+## 2026-09-19 — Gate 009 accepted and merged
+
+Final approved PR head:
+`507eeb5af13e9c138d8dfc023eb2bcd032e4b5c9`.
+
+Final validation:
+- deterministic tests: `69/69 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`711d23fb9739e7d9069e5d2569f00231988ef176`.
+
+Issue #17 closed.
+
+Accepted deterministic routing:
+- `GENERAL_PLANNING -> qwen3.5:9b`;
+- `CODE_REPOSITORY -> qwen2.5-coder:7b-instruct` when native tool proposals are not required;
+- `CODE_REPOSITORY + native tool proposal required -> NO_ROUTE`;
+- `BASELINE_REASONING -> gpt-oss:20b / medium`.
+
+Gate 009 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 010 Task Blackboard and supervised hand-offs opened
+
+Issue:
+`#19 — Gate 010 — Task Blackboard and supervised model hand-offs`.
+
+Branch:
+`gate-010-task-blackboard-handoffs`.
+
+Base:
+Gate 009 squash merge `711d23fb9739e7d9069e5d2569f00231988ef176`.
+
+Draft PR:
+`#20`.
+
+Implemented scope:
+- typed bounded append-only runtime Blackboard;
+- read-only worker views;
+- Supervisor-owned task/context/model/evidence/handoff write APIs;
+- model claims and tool proposals remain `ADVISORY`;
+- deterministic evidence requires deterministic-tool authority and explicit evidence refs;
+- explicit visible record IDs on each handoff;
+- hidden or cross-task evidence cannot satisfy required context;
+- Coder handoff requires visible deterministic context completeness.
+
+Context-resolution precedence:
+1. `CONTEXT_READY` when required evidence is already present;
+2. `DETERMINISTIC_ACQUISITION` when missing context is explicitly known;
+3. `TOOL_PLANNER -> qwen3.5:9b` when missing context/tool need must be determined;
+4. `DEEP_ESCALATION -> gpt-oss:20b / medium` when tool choice is explicitly ambiguous.
+
+`qwen2.5-coder:7b-instruct` receives supplied context and is not given native-tool-proposal work.
+
+Explicitly out of scope:
+- Gate 011 independent disagreement review;
+- Electronics/PCB/KiCad/Vision roles;
+- project adapters/write authority;
+- persistent memory/RAG;
+- external bridge;
+- direct worker-to-worker communication.
+
+Next step:
+run deterministic regression and exact-head CI for the Gate 010 implementation.
