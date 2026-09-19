@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "project_id": "buoycalc",
+  "display_name": "BuoyCalc Windows strict read-only",
+  "repository": {
+    "local_path": "C:\\workspace\\repos\\buoycalc-windows",
+    "remote": "Gonoboben/buoycalc-windows",
+    "default_branch": "main"
+  },
+  "authoritative_files": [
+    "AGENTS.md",
+    "docs/OPTIMIZATION_PLAN.md",
+    "RELEASE.md"
+  ],
+  "policy_ref": "profiles/buoycalc-readonly-policy.json",
+  "architecture_baseline": "BuoyCalc v1.0.0 frozen engineering baseline",
+  "tool_profiles": []
+}
