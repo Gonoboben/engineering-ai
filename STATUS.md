@@ -133,7 +133,11 @@ Historical CI note:
 - corrected Executor tool-only response contract regression: `47/47 PASS` on `00b17d498f90e3970352f6264584f8b1fdb60d53`
 - corrected-head generic CI: `PASS`
 - corrected-head strict exact-head CI: `PASS`
-- local runtime smoke rerun on corrected documented head: `NOT_RUN`
+- local runtime smoke attempt 2 on `7e20a4beaf617dfd118e4f7d1cb1c6ecc3e96942`: `FAIL_RUNTIME_CONTRACT` at Reviewer structured JSON boundary after successful deterministic evidence collection
+- bounded structured-role protocol recovery regression: `50/50 PASS` on `0cb1756ebb8eb50ee4f45d883b42a0c14b1d2cca`
+- corrected-head generic CI after Reviewer recovery: `PASS`
+- corrected-head strict exact-head CI after Reviewer recovery: `PASS`
+- local runtime smoke attempt 3 on final documented head: `NOT_RUN`
 - final strict exact-head CI after evidence/documentation updates: `NOT_RUN`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
