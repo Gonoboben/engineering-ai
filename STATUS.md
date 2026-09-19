@@ -61,7 +61,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Supervised multi-model architecture: `ACCEPTED_GATE_007`
 - Model capability registry/router runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Task Blackboard/runtime hand-offs: `DESIGNED_NOT_IMPLEMENTED`
-- Candidate Qwen3.5-9B qualification: `NOT_RUN_GATE_008`
+- Candidate Qwen3.5-9B qualification: `QUALIFIED_GENERAL_PLANNER`
 - Candidate Qwen2.5-Coder-7B qualification: `NOT_RUN_GATE_008`
 - Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
 - Vision/image/CAD workers: `DEFERRED`
@@ -189,7 +189,7 @@ Historical CI note:
 - 27B-class downloads: `DEFERRED_OUT_OF_SCOPE`
 - preparation head `bf35c839b43aa558d007e16c86ea0e973274ecee`: deterministic regression `54/54 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - evidence template: `docs/evidence/gate008/qualification.md`
-- candidate benchmark evidence: `INSTALL_METADATA_RECORDED_PENDING_QWEN35_GENERAL_RUN`
+- candidate benchmark evidence: `QWEN35_GENERAL_4_OF_4_PASS_PENDING_QWEN25_CODER_RUN`
 - final exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -204,7 +204,7 @@ Historical CI note:
 - NVIDIA driver: `591.86`
 - repository checkout: `C:\workspace\repos\engineering-ai`
 - local `.venv`: present and ignored by Git
-- Ollama: `0.34.1`, locally reachable on loopback
+- Ollama: `0.34.2`, locally reachable on loopback (Gate 005 historical evidence remains `0.34.1`)
 
 Security constraint for local model services:
 - loopback/local-only exposure remains mandatory;
@@ -229,4 +229,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run only the `qwen3.5:9b` Gate 008 general/Planner benchmark at context `8192`, max output `2048`, reasoning `none`, then record its output and runtime/resource evidence before starting the Qwen2.5-Coder suite. Do not test Electronics/PCB/KiCad capability in Gate 008.
+Run only the `qwen2.5-coder:7b-instruct` Gate 008 code/repository benchmark at context `8192` and max output `2048`, with no reasoning argument. Record output and runtime/resource evidence. Do not test Electronics/PCB/KiCad capability in Gate 008.
