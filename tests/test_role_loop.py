@@ -117,7 +117,11 @@ class FakeProvider:
             provider="fake",
             runtime_version="fake-1",
             model=request.model,
-            content=json.dumps(item.get("content", {})),
+            content=(
+                item["raw_content"]
+                if "raw_content" in item
+                else json.dumps(item.get("content", {}))
+            ),
             tool_calls=tuple(item.get("tool_calls", ())),
             done_reason="stop",
         )
@@ -176,6 +180,24 @@ class RoleLoopTests(unittest.TestCase):
             [request.messages[0].content.split(".")[0] for request in provider.requests],
             ["You are PLANNER", "You are EXECUTOR", "You are REVIEWER"],
         )
+
+    def test_tool_only_executor_response_is_valid_and_remains_supervisor_gated(self):
+        provider = FakeProvider(
+            [
+                {"content": {"steps": ["inspect"], "allowed_actions": ["read_repository"]}},
+                {
+                    "raw_content": "",
+                    "tool_calls": [ModelToolCall("read_repository", {"path": "STATUS.md"})],
+                },
+                {"content": {"decision": "ACCEPT", "summary": "evidence is sufficient"}},
+            ]
+        )
+        result = make_loop(provider).run(job=job(), user_task="Inspect STATUS.md")
+        self.assertEqual(result.state, LoopState.COMPLETE)
+        self.assertEqual(result.job["status"], "PASS")
+        self.assertEqual(result.execution.executed_actions, ("read_repository",))
+        self.assertEqual(result.execution.evidence_refs, ("ev-read",))
+        self.assertEqual(result.execution.summary, "executor proposed 1 tool call")
 
     def test_missing_evidence_cannot_be_promoted_to_pass(self):
         provider = FakeProvider(
