@@ -2,6 +2,16 @@
 
 from engineering_ai.models.benchmark import BenchmarkCase, BenchmarkRecord, run_benchmark
 from engineering_ai.models.ollama import OllamaProvider
+from engineering_ai.models.routing import (
+    DeterministicModelRouter,
+    ModelCapability,
+    ModelCapabilityRegistry,
+    ModelTaskClass,
+    RouteDecision,
+    RouteRequest,
+    RouteStatus,
+    accepted_registry,
+)
 from engineering_ai.models.protocol import (
     ModelProvider,
     ModelProviderError,
@@ -20,6 +30,10 @@ from engineering_ai.models.types import (
 __all__ = [
     "BenchmarkCase",
     "BenchmarkRecord",
+    "DeterministicModelRouter",
+    "ModelCapability",
+    "ModelCapabilityRegistry",
+    "ModelTaskClass",
     "ModelMessage",
     "ModelMetrics",
     "ModelProvider",
@@ -30,6 +44,10 @@ __all__ = [
     "ModelResponse",
     "ModelToolCall",
     "ModelToolSpec",
+    "RouteDecision",
+    "RouteRequest",
+    "RouteStatus",
     "OllamaProvider",
+    "accepted_registry",
     "run_benchmark",
 ]
