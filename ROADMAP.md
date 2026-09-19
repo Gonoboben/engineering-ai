@@ -276,7 +276,7 @@ Add controlled branch/worktree writes and project-specific policy enforcement.
 Mandatory property: existing PlataVM architecture/governance remains authoritative; Engineering AI cannot weaken it.
 
 ### Gate 014 — BuoyCalc read-only adapter
-Status: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Connect BuoyCalc with its calculation-core/physics boundaries and validation semantics.
 
