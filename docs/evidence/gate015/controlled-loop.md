@@ -415,3 +415,44 @@ Validation:
 - strict exact-head CI: `PASS`.
 
 No full BuoyCalc validation rerun is required.
+
+
+## Final stale-worktree recovery PASS
+
+Guarded recovery completed successfully for the exact residual Gate 015
+disposable objects left after smoke attempt 3.
+
+Observed result:
+- state: `STALE_DISPOSABLE_WORKTREE_CLEANED`;
+- worktree_removed: `true`;
+- branch_removed: `true`;
+- registered_before_cleanup: `false`;
+- fallback_used: `true`;
+- git_remove_errors: empty;
+- repository_unchanged: `true`;
+- process exit: `0`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Primary BuoyCalc before/after:
+- branch: `main`;
+- HEAD:
+  `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- `origin/main`: same SHA;
+- dirty: `false`;
+- status: `## main...origin/main`.
+
+Post-recovery `git worktree list` showed only:
+`C:/workspace/repos/buoycalc-windows 0db1e7c [main]`.
+
+Gate 015 real-project acceptance evidence is therefore complete:
+1. all four fixed software validation profiles PASS;
+2. all validator steps exit 0 with no timeout/truncation;
+3. tracked state unchanged;
+4. primary checkout unchanged;
+5. release remained unauthorized;
+6. physical validation remained `PHYSICAL_NOT_EXECUTED`;
+7. disposable worktree removed;
+8. disposable controlled branch removed.
+
+Classification:
+`PASS_CONTROLLED_BUOYCALC_VALIDATION_AND_CLEANUP`.
