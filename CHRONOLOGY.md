@@ -336,3 +336,45 @@ Local runtime smoke:
 
 Next step:
 Execute the narrow local role-loop smoke on the primary workstation, record its evidence, then run final regression and strict exact-head CI on the final PR head before requesting explicit exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 006 local smoke exposed tool-only Executor response
+
+Local workstation smoke was executed on head:
+`30ade24c9128a0c44cd81a7e90f0740237d1711c`.
+
+Observed:
+- Planner advanced into Executor;
+- local `gpt-oss:20b / medium / 8192 / 2048` returned a tool proposal with empty response `content`;
+- Gate 006 attempted to parse the empty Executor content as JSON and terminated with
+  `SemanticValidationError: EXECUTOR returned invalid JSON`.
+
+Classification:
+`FAIL_RUNTIME_CONTRACT`.
+
+This was not classified as an engineering-domain failure, evidence PASS, or physical validation.
+
+Review against accepted Gate 005 semantics showed that the tool-proposal benchmark intentionally scores `response.tool_calls` and does not require JSON content alongside a tool proposal.
+
+Correction:
+- Executor now accepts empty content only when a tool proposal is present;
+- a neutral summary is created deterministically by orchestration;
+- tool proposals remain inert and still pass through the existing deterministic Supervisor;
+- empty content without tool proposals remains invalid;
+- a dedicated regression test covers the observed local runtime shape.
+
+Corrected implementation head:
+`00b17d498f90e3970352f6264584f8b1fdb60d53`.
+
+Corrected validation:
+- deterministic tests: `47/47 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Evidence:
+`docs/evidence/gate006/runtime-smoke.md`.
+
+Next step:
+rerun the local workstation smoke on the corrected documented branch head.
