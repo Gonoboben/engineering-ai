@@ -304,6 +304,51 @@ class TaskBlackboardTests(unittest.TestCase):
             (task.record_id, evidence.record_id),
         )
 
+    def test_tool_planner_handoff_is_supervisor_created_for_qwen35(self) -> None:
+        supervisor, _ = make_supervisor()
+        assignment = supervisor.blackboard_assign_task(
+            task_id="task-1",
+            objective="determine missing repository context",
+            requested_task_class=ModelTaskClass.GENERAL_PLANNING.value,
+        )
+        decision = supervisor.create_model_handoff(
+            HandoffRequest(
+                task_id="task-1",
+                target_task_class=ModelTaskClass.GENERAL_PLANNING,
+                visible_record_ids=(assignment.record_id,),
+                requires_native_tool_proposals=True,
+            )
+        )
+        self.assertTrue(decision.created)
+        self.assertEqual(decision.route.model, "qwen3.5:9b")
+        assert decision.handoff_record is not None
+        self.assertEqual(
+            decision.handoff_record.authority, BlackboardAuthority.SUPERVISOR
+        )
+        self.assertEqual(
+            decision.handoff_record.payload["model"], "qwen3.5:9b"
+        )
+        self.assertTrue(decision.handoff_record.payload["route_evidence_refs"])
+
+    def test_deep_escalation_handoff_routes_to_gpt_oss(self) -> None:
+        supervisor, _ = make_supervisor()
+        assignment = supervisor.blackboard_assign_task(
+            task_id="task-1",
+            objective="resolve ambiguous acquisition strategy",
+            requested_task_class=ModelTaskClass.BASELINE_REASONING.value,
+        )
+        decision = supervisor.create_model_handoff(
+            HandoffRequest(
+                task_id="task-1",
+                target_task_class=ModelTaskClass.BASELINE_REASONING,
+                visible_record_ids=(assignment.record_id,),
+                requires_native_tool_proposals=True,
+            )
+        )
+        self.assertTrue(decision.created)
+        self.assertEqual(decision.route.model, "gpt-oss:20b")
+        self.assertEqual(decision.route.reasoning_effort, "medium")
+
     def test_coder_native_tool_handoff_is_no_route(self) -> None:
         supervisor, _ = make_supervisor()
         decision = supervisor.create_model_handoff(
