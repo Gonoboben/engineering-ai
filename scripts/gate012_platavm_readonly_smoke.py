@@ -24,7 +24,25 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    adapter = PlataVMReadOnlyAdapter(Path(args.repository))
+    repository = Path(args.repository)
+    if not repository.exists():
+        print(
+            json.dumps(
+                {
+                    "gate": "012",
+                    "adapter": "platavm-readonly",
+                    "repository_root": str(repository),
+                    "snapshot_state": "LOCAL_REPOSITORY_NOT_FOUND",
+                    "validators": [],
+                    "physical_validation": "PHYSICAL_NOT_EXECUTED",
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 2
+
+    adapter = PlataVMReadOnlyAdapter(repository)
     snapshot = adapter.snapshot()
 
     payload = {
