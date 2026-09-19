@@ -256,7 +256,7 @@ Majority voting between models never substitutes for evidence.
 ## Phase 3 — Existing project integration
 
 ### Gate 012 — PlataVM read-only adapter
-Status: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Connect the existing PlataVM repository in read-only mode.
 
