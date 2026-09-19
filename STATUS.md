@@ -30,7 +30,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#16 (DRAFT)`
 - Branch: `gate-008-local-specialist-model-qualification`
 - Base: `3903672d44f6ac5119183eb58363847d42e25d9b`
-- State: `QUALIFICATION_COMPLETE_PENDING_FINAL_CI_AND_HUMAN_APPROVAL`
+- State: `QUALIFICATION_COMPLETE_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -190,7 +190,8 @@ Historical CI note:
 - preparation head `bf35c839b43aa558d007e16c86ea0e973274ecee`: deterministic regression `54/54 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - evidence template: `docs/evidence/gate008/qualification.md`
 - candidate benchmark evidence: `QWEN35_GENERAL_4_OF_4_PASS; QWEN25_CODE_3_OF_4_WITH_CONFIRMED_NATIVE_TOOL_TRANSPORT_LIMITATION`
-- final exact-head CI: `PENDING`
+- qualification-evidence head `d57c79dbeea54be42512146958e67526d1ad13af`: deterministic regression `56/56 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final exact-head CI after acceptance-state synchronization: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -229,4 +230,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final deterministic regression plus generic and strict exact-head CI on the final Gate 008 evidence/status head. If green, request explicit human exact-SHA squash-merge approval for PR #16. Do not expand into Electronics/PCB/KiCad capability.
+Run generic and strict exact-head CI on the final Gate 008 acceptance-state head. If green, request explicit human exact-SHA squash-merge approval for PR #16. Do not expand into Electronics/PCB/KiCad capability.
