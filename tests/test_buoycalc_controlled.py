@@ -609,6 +609,110 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         self.assertNotIn("gh release", flattened)
 
 
+@unittest.skipIf(shutil.which("git") is None, "git executable is required")
+class Gate015RecoveryHarnessTests(unittest.TestCase):
+    def test_already_deregistered_exact_smoke_residue_is_cleaned(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as origin_tmp, tempfile.TemporaryDirectory(prefix="engineering-ai-gate015-buoycalc-") as parent_tmp:
+            repo = Path(repo_tmp)
+            origin = Path(origin_tmp) / "origin.git"
+            subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True)
+            subprocess.run(["git", "init", "-b", "main"], cwd=repo, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=repo, check=True)
+            subprocess.run(["git", "config", "user.name", "Engineering AI Test"], cwd=repo, check=True)
+            subprocess.run(["git", "remote", "add", "origin", str(origin)], cwd=repo, check=True)
+            (repo / "tracked.txt").write_text("baseline\n", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=repo, check=True)
+            subprocess.run(["git", "commit", "-m", "baseline"], cwd=repo, check=True, capture_output=True)
+            subprocess.run(["git", "push", "-u", "origin", "main"], cwd=repo, check=True, capture_output=True)
+            base_sha = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=repo,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            suffix = base_sha[:12]
+            branch = f"engineering-ai/buoycalc/gate015-smoke-{suffix}"
+            subprocess.run(["git", "branch", branch, base_sha], cwd=repo, check=True)
+
+            parent = Path(parent_tmp)
+            worktree = parent / f"gate015-{suffix}"
+            worktree.mkdir()
+            (worktree / "generated.tmp").write_text("residue\n", encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts/gate015_cleanup_stale_worktree.py"),
+                    "--repository",
+                    str(repo),
+                    "--worktree",
+                    str(worktree),
+                    "--branch",
+                    branch,
+                    "--base-sha",
+                    base_sha,
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+            payload = json.loads(result.stdout)
+            self.assertEqual(payload["state"], "STALE_DISPOSABLE_WORKTREE_CLEANED")
+            self.assertFalse(payload["registered_before_cleanup"])
+            self.assertTrue(payload["worktree_removed"])
+            self.assertTrue(payload["branch_removed"])
+            self.assertTrue(payload["repository_unchanged"])
+            self.assertFalse(worktree.exists())
+
+    def test_recovery_refuses_identity_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp:
+            repo = Path(repo_tmp)
+            subprocess.run(["git", "init", "-b", "main"], cwd=repo, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=repo, check=True)
+            subprocess.run(["git", "config", "user.name", "Engineering AI Test"], cwd=repo, check=True)
+            (repo / "tracked.txt").write_text("baseline\n", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=repo, check=True)
+            subprocess.run(["git", "commit", "-m", "baseline"], cwd=repo, check=True, capture_output=True)
+            base_sha = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=repo,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            with tempfile.TemporaryDirectory(prefix="engineering-ai-gate015-buoycalc-") as parent_tmp:
+                worktree = Path(parent_tmp) / "wrong-name"
+                worktree.mkdir()
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        str(ROOT / "scripts/gate015_cleanup_stale_worktree.py"),
+                        "--repository",
+                        str(repo),
+                        "--worktree",
+                        str(worktree),
+                        "--branch",
+                        f"engineering-ai/buoycalc/gate015-smoke-{base_sha[:12]}",
+                        "--base-sha",
+                        base_sha,
+                    ],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+            self.assertEqual(result.returncode, 2)
+            payload = json.loads(result.stdout)
+            self.assertEqual(payload["state"], "REFUSED")
+            self.assertIn("exact smoke identity", payload["reason"])
+
+
 class Gate015PolicyTests(unittest.TestCase):
     def test_controlled_profile_policy_validate_and_preserve_approval_boundary(self) -> None:
         profile = json.loads(
