@@ -1586,3 +1586,77 @@ occurred.
 Next:
 final acceptance-state CI, scope review, and exact-SHA human squash-merge
 approval for PR #28.
+
+
+---
+
+## 2026-09-19 — Gate 014 accepted and merged
+
+Final approved PR head:
+`681707e85b87332e36c7de9b9516e2f998d5a9d0`.
+
+Final validation:
+- deterministic tests: `128/128 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- real BuoyCalc read-only smoke: `PASS_STRICT_READ_ONLY_BASELINE`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`0f7ec3c01829f9c193e5730ec5144eee77c00b52`.
+
+Issue #27 closed.
+
+Accepted BuoyCalc connection:
+- strict read-only governance/Git/invariant/source-boundary inspection;
+- release remains unauthorized;
+- no project write/calculation/release authority.
+
+Gate 014 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 015 BuoyCalc controlled engineering loop opened
+
+Issue:
+`#29 — Gate 015 — BuoyCalc controlled engineering loop`.
+
+Branch:
+`gate-015-buoycalc-controlled-engineering-loop`.
+
+Base:
+Gate 014 squash merge `0f7ec3c01829f9c193e5730ec5144eee77c00b52`.
+
+Implemented scope:
+- isolated adapter-owned Git worktrees;
+- `engineering-ai/buoycalc/` branch prefix;
+- primary main/clean/HEAD==origin-main prerequisite;
+- explicit target allow-list;
+- exact before-content SHA-256 binding;
+- governance writes blocked;
+- calculation-core/physics-candidate writes blocked;
+- fixed validator profiles derived from accepted BuoyCalc workflow commands;
+- no arbitrary shell;
+- tracked-state mutation guard around validators;
+- structured bounded stdout/stderr SHA-256 evidence;
+- successful software state limited to `READY_FOR_HUMAN_APPROVAL`;
+- guarded disposable cleanup for generated bin/obj/artifacts only when HEAD remains
+  at base and both tracked diffs are empty.
+
+Project policy:
+- autonomous: read_repository / run_validator / propose_patch;
+- human approval required: write_worktree;
+- forbidden: calculation/simulation as free actions, commit/push/PR/merge,
+  physics/architecture change, validator weakening, fabrication/release,
+  destructive/scope-expansion/external-disclosure actions.
+
+Release remains:
+`NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+Engineering AI regression/CI, then one explicitly approved real BuoyCalc
+disposable-worktree validation smoke.
