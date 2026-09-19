@@ -1020,3 +1020,76 @@ Gate 010 state:
 `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
 
 One final exact-head CI run is required after acceptance-state synchronization.
+
+
+---
+
+## 2026-09-19 — Gate 010 accepted and merged
+
+Final approved PR head:
+`f831c3126781ae5e63cbdadb077fb8d40f352885`.
+
+Final validation:
+- deterministic tests: `87/87 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`34d18a85b5a00510331b4c75501a0672bc607093`.
+
+Issue #19 closed.
+
+Accepted Blackboard/handoff semantics:
+- typed bounded append-only Blackboard;
+- read-only worker views;
+- explicit visible record IDs;
+- model claims/tool proposals remain advisory;
+- deterministic evidence requires tool authority and evidence refs;
+- deterministic acquisition before model tool planning;
+- Qwen3.5 tool-planning path;
+- gpt-oss deep escalation path;
+- Qwen2.5-Coder supplied-context-only handoff.
+
+Gate 010 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 011 independent review and disagreement escalation opened
+
+Issue:
+`#21 — Gate 011 — Independent review and disagreement escalation`.
+
+Branch:
+`gate-011-independent-review-escalation`.
+
+Base:
+Gate 010 squash merge `34d18a85b5a00510331b4c75501a0672bc607093`.
+
+Implemented scope:
+- evidence-first disagreement controller;
+- deterministic support/contradiction resolution;
+- gpt-oss bounded independent review for Qwen-originated claims;
+- distinct-model reviewer check;
+- one bounded revision maximum;
+- human escalation on self-review, exhausted revision, or inconclusive review;
+- Blackboard disagreement/review/revision/escalation records.
+
+Important semantics:
+- deterministic evidence outranks model review;
+- review records remain advisory;
+- RESOLVED_AFTER_REVIEW is workflow resolution only, not evidence promotion;
+- majority voting and confidence aggregation are absent;
+- gpt-oss cannot independently review a gpt-oss-originated claim;
+- no new reviewer model is qualified.
+
+Explicitly out of scope:
+- Electronics/PCB/KiCad/Vision roles;
+- project adapters/write authority;
+- external review bridge;
+- persistent memory/RAG;
+- unattended queue.
+
+Next step:
+open draft PR and run deterministic/generic/strict exact-head validation.
