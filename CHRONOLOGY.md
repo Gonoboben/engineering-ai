@@ -1312,3 +1312,90 @@ Gate 012 local-smoke state:
 Next step:
 final acceptance-state generic + strict exact-head CI, scope review, and exact-SHA
 human squash-merge approval for PR #24.
+
+
+---
+
+## 2026-09-19 — Gate 012 accepted and merged
+
+Final approved PR head:
+`cff21648524c667233daf9a765e161871ea23b7c`.
+
+Final validation:
+- deterministic tests: `110/110 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- final real local smoke: `PASS_READ_ONLY_WITH_EXPECTED_SOURCE_CONFLICT`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`6df110df27458e221fb2713439b5e778da1da57f`.
+
+Issue #23 closed.
+
+Accepted PlataVM connection:
+- strict read-only adapter;
+- mandatory governance resolution;
+- dated latest chronology resolution;
+- bounded KiCad inventory;
+- fixed validators;
+- Git/source conflict detection;
+- no project write authority.
+
+Gate 012 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 013 PlataVM controlled engineering loop opened
+
+Issue:
+`#25 — Gate 013 — PlataVM controlled engineering loop`.
+
+Branch:
+`gate-013-platavm-controlled-engineering-loop`.
+
+Base:
+Gate 012 squash merge `6df110df27458e221fb2713439b5e778da1da57f`.
+
+Draft PR:
+`#26`.
+
+Implemented controlled-write capability:
+- isolated adapter-created Git worktree;
+- `engineering-ai/` branch prefix;
+- clean-primary precondition;
+- explicit patch-path allow-list;
+- exact before-content SHA-256 precondition;
+- existing-file replacement only;
+- root/path/symlink escape rejection;
+- bounded write size;
+- post-write diff capture;
+- fixed PlataVM validator execution;
+- success state limited to `READY_FOR_HUMAN_APPROVAL`.
+
+Project policy:
+- `read_repository / run_validator / propose_patch`: autonomous;
+- `write_worktree`: explicit human approval required;
+- `local_commit / push_remote / open_pr / merge_pr`: forbidden;
+- architecture/physics/validator weakening/fabrication/release remain forbidden.
+
+Real PlataVM constraint:
+Gate 012 established an unresolved authoritative source conflict between stale
+`Docs/PROJECT_STATUS.md` and current `origin/main`. Under Engineering AI
+`AGENTS.md`, unresolved authoritative-source conflict is a stop condition.
+Therefore Gate 013 real-project write must remain blocked before mutation.
+
+Synthetic fixture validation proves the bounded write mechanism while real
+PlataVM smoke must prove `BLOCKED_SOURCE_CONFLICT`.
+
+Implementation head:
+`9574f44c37189205ba8577096ce08b9dd893642f`.
+
+Validation:
+- deterministic tests: `119/119 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Remaining acceptance:
+real primary-workstation policy-block smoke proving no worktree/project mutation.
