@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
 import re
 import sqlite3
@@ -730,7 +731,7 @@ class DecisionEvidenceMemory:
             ) from exc
 
         expected = _sha256_canonical(_record_hash_payload(record))
-        if not hashlib.compare_digest(expected, record.content_sha256):
+        if not hmac.compare_digest(expected, record.content_sha256):
             raise MemoryIntegrityError(
                 f"memory hash mismatch for record {record.record_id}"
             )
