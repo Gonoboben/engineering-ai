@@ -22,8 +22,8 @@ from engineering_ai.models import (
     ModelToolSpec,
 )
 from engineering_ai.supervisor.audit import AuditEmitter
-from engineering_ai.supervisor.core import ToolOutcome
-from engineering_ai.supervisor.policy import Decision, PolicyEngine
+from engineering_ai.supervisor.core import Supervisor, ToolOutcome
+from engineering_ai.supervisor.policy import Decision
 from engineering_ai.validation import SemanticValidationError, validate_instance
 
 
@@ -165,7 +165,9 @@ class PlannerExecutorReviewerLoop:
         self._state = deepcopy(state)
         validate_instance("project-policy.schema.json", self._policy)
         validate_instance("project-state.schema.json", self._state)
-        self._policy_engine = PolicyEngine(self._policy, self._state)
+        self._supervisor = Supervisor(
+            policy=self._policy, state=self._state, audit_emitter=self._audit
+        )
         self._provider = provider
         self._config = model_config
         self._tool_specs = dict(tool_specs)
@@ -457,17 +459,27 @@ class PlannerExecutorReviewerLoop:
                     waiting=False,
                 )
 
-            decision = self._policy_engine.evaluate(action)
-            self._record(
-                self._audit.policy_event(
-                    project_id=job["project_id"],
-                    gate_id=job.get("gate_id"),
-                    job_id=job["job_id"],
-                    decision=decision,
-                    before_ref=self._repository_ref(),
-                    after_ref=self._repository_ref(),
+            executor = self._tool_executors.get(action)
+            if executor is None:
+                return self._terminal_from_executor(
+                    job,
+                    plan,
+                    response,
+                    summary,
+                    executed,
+                    evidence,
+                    f"no deterministic executor registered for action: {action}",
+                    waiting=False,
                 )
+
+            proposal_result = self._supervisor.evaluate_tool_proposal(
+                job=job,
+                action=action,
+                tool=lambda _action, executor=executor, args=proposal.arguments: executor(args),
             )
+            for event in proposal_result.audit_events:
+                self._record(event)
+            decision = proposal_result.decision
 
             if decision.decision is Decision.NEEDS_HUMAN_APPROVAL:
                 return self._terminal_from_executor(
@@ -492,38 +504,9 @@ class PlannerExecutorReviewerLoop:
                     waiting=False,
                 )
 
-            executor = self._tool_executors.get(action)
-            if executor is None:
-                return self._terminal_from_executor(
-                    job,
-                    plan,
-                    response,
-                    summary,
-                    executed,
-                    evidence,
-                    f"no deterministic executor registered for action: {action}",
-                    waiting=False,
-                )
-            outcome = executor(proposal.arguments)
-            if not isinstance(outcome, ToolOutcome):
-                raise TypeError("tool executor must return ToolOutcome")
-
-            self._record(
-                self._audit.tool_event(
-                    project_id=job["project_id"],
-                    gate_id=job.get("gate_id"),
-                    job_id=job["job_id"],
-                    action=action,
-                    ok=outcome.ok,
-                    summary=outcome.summary,
-                    before_ref=self._repository_ref(),
-                    after_ref=self._repository_ref(),
-                    evidence_refs=list(outcome.evidence_refs),
-                    approval_required=False,
-                    approval_obtained=False,
-                    approver=None,
-                )
-            )
+            outcome = proposal_result.outcome
+            if outcome is None:
+                raise RuntimeError("Supervisor ALLOW must produce a ToolOutcome")
             if not outcome.ok:
                 return self._terminal_from_executor(
                     job,
