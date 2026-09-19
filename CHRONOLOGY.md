@@ -1695,3 +1695,42 @@ Gate 015 state:
 Remaining:
 stable-head CI and one explicit primary-workstation disposable-worktree
 validation smoke on the real BuoyCalc checkout.
+
+
+---
+
+## 2026-09-19 — Gate 015 real smoke attempt 1 blocked by local runtime prerequisite
+
+Real primary-workstation controlled validation smoke started from clean aligned
+BuoyCalc `main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`.
+
+Validation did not start because the allow-listed local process runner could not
+resolve `dotnet`.
+
+Observed:
+- `VALIDATION_EXECUTION_ERROR`;
+- exact error: `allow-listed executable not found: dotnet`;
+- no validation profile executed;
+- disposable worktree removed;
+- disposable branch removed;
+- primary BuoyCalc before/after state identical;
+- release remained unauthorized;
+- physical remained `PHYSICAL_NOT_EXECUTED`.
+
+Classification:
+`INFRASTRUCTURE_PREREQUISITE_BLOCK`, not engineering validation FAIL.
+
+Correction:
+- runtime preflight now occurs before worktree creation;
+- standard Windows dotnet/pwsh locations are supported when PATH is missing;
+- fixed `dotnet --list-sdks` requires .NET 8 SDK;
+- missing prerequisite returns `BLOCKED_RUNTIME_PREREQUISITE`.
+
+Corrected head:
+`b6a490377f98cbe5d063e2a7460a977309507fe1`.
+
+Regression:
+`144/144 PASS`; generic CI PASS; strict exact-head CI PASS.
+
+Next:
+stable corrected-head CI and real smoke attempt 2.
