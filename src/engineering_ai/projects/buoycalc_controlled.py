@@ -446,6 +446,9 @@ class BuoyCalcControlledEngineeringLoop:
     def cleanup(self, session: WorktreeSession) -> None:
         self._worktrees.cleanup(session)
 
+    def cleanup_disposable_generated(self, session: WorktreeSession) -> None:
+        self._worktrees.cleanup_disposable_generated(session)
+
     @staticmethod
     def assert_no_remote_or_release_api(instance: object) -> None:
         forbidden = (
