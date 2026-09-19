@@ -1399,3 +1399,37 @@ Validation:
 
 Remaining acceptance:
 real primary-workstation policy-block smoke proving no worktree/project mutation.
+
+
+---
+
+## 2026-09-19 — Gate 013 real PlataVM policy-block smoke passed
+
+Real local PlataVM smoke executed on the primary workstation against the
+controlled-loop implementation.
+
+Observed result:
+- state: `BLOCKED_SOURCE_CONFLICT`;
+- conflict: stale `PROJECT_STATUS` main
+  `c9703c58486eb5efe6a1d1d3e1bbf37815cd2a65`
+  vs actual `origin/main`
+  `dcba77466d4800c0e7a336a2771684e066f845db`;
+- worktree_created: `false`;
+- before/after HEAD:
+  `dcba77466d4800c0e7a336a2771684e066f845db`;
+- before/after status:
+  `## main...origin/main`;
+- repository_unchanged: `true`;
+- remote_mutation_attempted: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- process exit: `0`.
+
+Classification:
+`PASS_POLICY_BLOCK_BEFORE_MUTATION`.
+
+This proves the real-project stop boundary: unresolved authoritative governance
+conflict prevents controlled worktree creation and file mutation.
+
+Next:
+final acceptance-state CI, scope review, and exact-SHA human squash-merge
+approval for PR #26.
