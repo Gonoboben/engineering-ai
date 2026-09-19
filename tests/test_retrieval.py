@@ -23,6 +23,7 @@ from engineering_ai.memory import (
     RetrievalRequest,
     RetrievalStatus,
 )
+from engineering_ai.supervisor import Supervisor
 from engineering_ai.validation import validate_instance
 
 
@@ -429,6 +430,162 @@ class RetrievalLayerTests(unittest.TestCase):
             data["semantic_vector_backend"],
             "DEFERRED_NOT_JUSTIFIED",
         )
+
+    def test_supervisor_owned_retrieval_same_project_only(self) -> None:
+        policy = {
+            "schema_version": "1.0",
+            "policy_version": "gate017-test",
+            "project_id": "engineering-ai",
+            "autonomous_actions": ["read_repository"],
+            "approval_required_actions": [
+                "architecture_change",
+                "physics_change",
+                "destructive_action",
+                "fabrication_authorization",
+                "release_authorization",
+                "external_disclosure",
+                "scope_expansion",
+            ],
+            "forbidden_actions": ["validator_weakening"],
+            "mandatory_validators": [],
+            "stop_conditions": ["approval boundary reached"],
+            "retry_limit": 1,
+        }
+        state = {
+            "schema_version": "1.0",
+            "state_revision": 1,
+            "project_id": "engineering-ai",
+            "current_gate": "017",
+            "active_job_id": None,
+            "repository_ref": {
+                "branch": "gate-017-retrieval-layer",
+                "head_sha": "0123456789abcdef0123456789abcdef01234567",
+            },
+            "architecture_baseline": "Gate 016 accepted memory",
+            "effective_permissions": {
+                "autonomous": ["read_repository"],
+                "approval_required": [
+                    "architecture_change",
+                    "physics_change",
+                    "destructive_action",
+                    "fabrication_authorization",
+                    "release_authorization",
+                    "external_disclosure",
+                    "scope_expansion",
+                ],
+                "forbidden": ["validator_weakening"],
+            },
+            "pending_checks": [],
+            "blockers": [],
+            "validation_states": [
+                {
+                    "check_id": "physical-validation",
+                    "validation_class": "PHYSICAL",
+                    "state": "PHYSICAL_NOT_EXECUTED",
+                    "evidence_refs": [],
+                }
+            ],
+            "next_admissible_action": None,
+        }
+        self.append_source(
+            "supervisor-source",
+            "Supervisor retrieval source",
+            "Bounded same-project context.",
+        )
+        supervisor = Supervisor(
+            policy=policy,
+            state=state,
+            memory_retriever=self.retriever,
+        )
+        package = supervisor.retrieve_memory_context(
+            RetrievalRequest(
+                project_id="engineering-ai",
+                query_text="supervisor retrieval",
+            )
+        )
+        self.assertEqual(package.status, RetrievalStatus.READY)
+        self.assertEqual(
+            tuple(item.memory_id for item in package.items),
+            ("supervisor-source",),
+        )
+        self.assertEqual(supervisor.audit_events, ())
+
+        with self.assertRaises(RetrievalPolicyError):
+            supervisor.retrieve_memory_context(
+                RetrievalRequest(
+                    project_id="buoycalc",
+                    query_text="supervisor retrieval",
+                )
+            )
+
+    def test_supervisor_retrieval_does_not_create_blackboard_or_handoff(self) -> None:
+        policy = {
+            "schema_version": "1.0",
+            "policy_version": "gate017-test-no-injection",
+            "project_id": "engineering-ai",
+            "autonomous_actions": ["read_repository"],
+            "approval_required_actions": [
+                "architecture_change",
+                "physics_change",
+                "destructive_action",
+                "fabrication_authorization",
+                "release_authorization",
+                "external_disclosure",
+                "scope_expansion",
+            ],
+            "forbidden_actions": ["validator_weakening"],
+            "mandatory_validators": [],
+            "stop_conditions": ["approval boundary reached"],
+            "retry_limit": 1,
+        }
+        state = {
+            "schema_version": "1.0",
+            "state_revision": 1,
+            "project_id": "engineering-ai",
+            "current_gate": "017",
+            "active_job_id": None,
+            "repository_ref": {
+                "branch": "gate-017-retrieval-layer",
+                "head_sha": "0123456789abcdef0123456789abcdef01234567",
+            },
+            "architecture_baseline": "Gate 016 accepted memory",
+            "effective_permissions": {
+                "autonomous": ["read_repository"],
+                "approval_required": [
+                    "architecture_change",
+                    "physics_change",
+                    "destructive_action",
+                    "fabrication_authorization",
+                    "release_authorization",
+                    "external_disclosure",
+                    "scope_expansion",
+                ],
+                "forbidden": ["validator_weakening"],
+            },
+            "pending_checks": [],
+            "blockers": [],
+            "validation_states": [],
+            "next_admissible_action": None,
+        }
+        self.append_source(
+            "no-injection-source",
+            "No injection source",
+            "Retrieval remains detached from model context.",
+        )
+        supervisor = Supervisor(
+            policy=policy,
+            state=state,
+            memory_retriever=self.retriever,
+        )
+        package = supervisor.retrieve_memory_context(
+            RetrievalRequest(
+                project_id="engineering-ai",
+                query_text="no injection",
+            )
+        )
+        self.assertEqual(package.status, RetrievalStatus.READY)
+        with self.assertRaises(RuntimeError):
+            supervisor.blackboard_view(task_id="task-1")
 
     def test_read_only_surface_exposes_no_write_vector_or_injection_api(self) -> None:
         self.retriever.assert_read_only_surface(self.retriever)
