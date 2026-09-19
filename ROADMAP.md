@@ -211,7 +211,7 @@ Required measurements:
 Public benchmark/model-card claims are advisory; local measured evidence determines qualification.
 
 ### Gate 009 — Model capability registry and deterministic router
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Implement:
 - typed model/runtime identity;
