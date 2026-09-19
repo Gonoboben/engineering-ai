@@ -108,6 +108,7 @@
 - candidate results recorded: QWEN35_GENERAL_4_OF_4_PASS; QWEN25_CODER_3_OF_4_WITH_CONFIRMED_TOOL_TRANSPORT_LIMITATION
 - resource evidence recorded: COMPLETE
 - qualification states recorded: COMPLETE
-- final generic CI: PENDING
-- final strict exact-head CI: PENDING
+- qualification-evidence head `d57c79dbeea54be42512146958e67526d1ad13af`: generic CI `PASS`
+- qualification-evidence head `d57c79dbeea54be42512146958e67526d1ad13af`: strict exact-head CI `PASS`, deterministic tests `56/56 PASS`
+- final acceptance-state exact-head CI: PENDING
 - exact-SHA human merge approval: PENDING
