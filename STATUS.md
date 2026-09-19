@@ -44,7 +44,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#30 (DRAFT)`
 - Branch: `gate-015-buoycalc-controlled-engineering-loop`
 - Base: `0f7ec3c01829f9c193e5730ec5144eee77c00b52`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_REAL_SMOKE`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -423,6 +423,8 @@ Historical CI note:
 - Windows disposable cleanup hardening head `87354398cd745856d8ff89798b5527e51477641c`: deterministic regression `145/145 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - stale-worktree recovery attempt 1: `REFUSED_ALREADY_DEREGISTERED`; `git worktree list` shows only primary main checkout
 - corrected exact-identity deregistered-residue recovery head `d8405894bfb9152256e28ca49678f27ed8a2471d`: deterministic regression `147/147 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final stale-worktree recovery: `PASS`; worktree_removed=true, branch_removed=true, registered_before_cleanup=false, fallback_used=true, repository_unchanged=true, EXIT=0
+- Gate 015 real-project result: `PASS_CONTROLLED_BUOYCALC_VALIDATION_AND_CLEANUP`
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -463,4 +465,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Rerun only the guarded stale-worktree recovery harness on the corrected exact-identity recovery head. The full BuoyCalc validation suite must not be repeated solely for this cleanup state. After cleanup PASS, run final Gate 015 acceptance-state CI and request exact-SHA squash-merge approval.
+Run final generic and strict exact-head CI on the Gate 015 acceptance-state head. If green, perform final scope review, mark PR #30 ready for review, and request explicit human exact-SHA squash-merge approval.
