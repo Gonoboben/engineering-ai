@@ -269,14 +269,14 @@ Capabilities:
 No project modification.
 
 ### Gate 013 — PlataVM controlled engineering loop
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
 Add controlled branch/worktree writes and project-specific policy enforcement.
 
 Mandatory property: existing PlataVM architecture/governance remains authoritative; Engineering AI cannot weaken it.
 
 ### Gate 014 — BuoyCalc read-only adapter
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_PENDING_VALIDATION`
 
 Connect BuoyCalc with its calculation-core/physics boundaries and validation semantics.
 
