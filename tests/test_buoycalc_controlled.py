@@ -375,6 +375,51 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
             loop.validate(session=prep.session, profiles=("arbitrary.shell",))
         loop.cleanup(prep.session)
 
+    def test_disposable_cleanup_allows_generated_untracked_files_only(self) -> None:
+        loop = self.loop()
+        prep = loop.prepare(
+            worktree_name="generated-cleanup",
+            branch="engineering-ai/buoycalc/generated-cleanup",
+        )
+        assert prep.session is not None
+        worktree = Path(prep.session.worktree_root)
+        generated = worktree / "artifacts/generated.txt"
+        generated.parent.mkdir(parents=True, exist_ok=True)
+        generated.write_text("generated\n", encoding="utf-8")
+
+        loop.cleanup_disposable_generated(prep.session)
+        self.assertFalse(worktree.exists())
+        branch = subprocess.run(
+            [
+                "git",
+                "show-ref",
+                "--verify",
+                "refs/heads/engineering-ai/buoycalc/generated-cleanup",
+            ],
+            cwd=self.root,
+            check=False,
+            capture_output=True,
+        )
+        self.assertNotEqual(branch.returncode, 0)
+        self.assertEqual(self._git("rev-parse", "HEAD").strip(), self.base_sha)
+
+    def test_disposable_cleanup_rejects_tracked_diff(self) -> None:
+        loop = self.loop()
+        prep = loop.prepare(
+            worktree_name="tracked-cleanup-block",
+            branch="engineering-ai/buoycalc/tracked-cleanup-block",
+        )
+        assert prep.session is not None
+        worktree = Path(prep.session.worktree_root)
+        note = worktree / "docs/note.md"
+        note.write_text("tracked mutation\n", encoding="utf-8")
+
+        with self.assertRaises(ToolAccessError):
+            loop.cleanup_disposable_generated(prep.session)
+
+        note.write_text("before\n", encoding="utf-8")
+        loop.cleanup(prep.session)
+
     def test_controlled_loop_exposes_no_remote_or_release_api(self) -> None:
         loop = self.loop()
         loop.assert_no_remote_or_release_api(loop)
