@@ -209,3 +209,63 @@ The smoke harness now reports `LOCAL_REPOSITORY_NOT_FOUND` as a structured state
 - verify that Git-visible state is unchanged.
 
 No merge approval is admissible until that smoke evidence is recorded.
+
+
+## Primary-workstation smoke attempt 2 — real PlataVM checkout
+
+The local checkout now exists at:
+`C:\workspace\repos\plataVM`.
+
+Observed local repository state before and after the smoke:
+- branch: `main`;
+- HEAD: `dcba77466d4800c0e7a336a2771684e066f845db`;
+- `origin/main`: `dcba77466d4800c0e7a336a2771684e066f845db`;
+- dirty: `false`;
+- post-smoke porcelain output remained only `## main...origin/main`;
+- HEAD remained unchanged.
+
+Governance:
+- all eight mandatory top-level governance documents resolved and were SHA-256 recorded;
+- adapter selected `Docs/chronology/README.md` as latest chronology.
+
+That chronology result is a Gate 012 implementation defect: `README.md` is an
+index/documentation file, not the latest dated chronology entry. The smoke is
+therefore not final acceptance evidence even though the read-only and validator
+boundaries passed.
+
+KiCad inventory:
+- `62` bounded assets under `Hardware/KiCad`.
+
+Governance/Git conflict detection:
+- `SOURCE_CONFLICT`;
+- `PROJECT_STATUS` declared main
+  `c9703c58486eb5efe6a1d1d3e1bbf37815cd2a65`;
+- actual `origin/main` was
+  `dcba77466d4800c0e7a336a2771684e066f845db`.
+
+Fixed validator results:
+- `platavm.repository_integrity`: `PASS`;
+  365 tracked paths / 35 JSON / foreign/generated path checks PASS;
+- `platavm.semantic_gates`: `PASS`;
+  Python syntax 52 files / registered semantic Gates `47/47 PASS`.
+
+The semantic-gate output explicitly preserved open engineering barriers,
+including physical campaigns not executed and production/fabrication not
+granted.
+
+Smoke process exit:
+`0`.
+
+Classification:
+`READ_ONLY_BOUNDARY_PASS_WITH_CHRONOLOGY_SELECTION_DEFECT`.
+
+Correction:
+- latest chronology now accepts only direct entries matching
+  `YYYY-MM-DD*.md`;
+- non-dated files such as `README.md` are excluded;
+- absence of any dated entry is a hard adapter error;
+- regression fixture includes a README that would win naive lexicographic
+  sorting, proving the defect stays closed.
+
+A final local smoke on the corrected exact head is still required before Gate
+012 merge approval.
