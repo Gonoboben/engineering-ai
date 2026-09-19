@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "policy_version": "gate012-readonly-v1",
+  "project_id": "platavm",
+  "autonomous_actions": [
+    "read_repository",
+    "run_validator"
+  ],
+  "approval_required_actions": [],
+  "forbidden_actions": [
+    "search_documents",
+    "run_calculation",
+    "run_simulation",
+    "propose_patch",
+    "write_worktree",
+    "local_commit",
+    "push_remote",
+    "open_pr",
+    "merge_pr",
+    "release_authorization",
+    "fabrication_authorization",
+    "architecture_change",
+    "physics_change",
+    "validator_weakening",
+    "external_disclosure",
+    "destructive_action",
+    "scope_expansion"
+  ],
+  "mandatory_validators": [
+    "platavm.repository_integrity",
+    "platavm.semantic_gates"
+  ],
+  "stop_conditions": [
+    "authoritative governance files conflict with repository state",
+    "validator changes Git-visible repository state",
+    "validator fails or times out",
+    "requested action is outside Gate 012 read-only scope"
+  ],
+  "retry_limit": 1
+}

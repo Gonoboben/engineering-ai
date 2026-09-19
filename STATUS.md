@@ -27,15 +27,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 009 merge commit: `711d23fb9739e7d9069e5d2569f00231988ef176`
 - Gate 010: `ACCEPTED_MERGED`
 - Gate 010 merge commit: `34d18a85b5a00510331b4c75501a0672bc607093`
+- Gate 011: `ACCEPTED_MERGED`
+- Gate 011 merge commit: `da23f2c60a604f022ee91d6b129afc4ed2523a18`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `011 — Independent review and disagreement escalation`
-- Issue: `#21`
-- PR: `#22 (DRAFT)`
-- Branch: `gate-011-independent-review-escalation`
-- Base: `34d18a85b5a00510331b4c75501a0672bc607093`
+- Gate: `012 — PlataVM read-only adapter`
+- Issue: `#23`
+- PR: `#24 (DRAFT)`
+- Branch: `gate-012-platavm-readonly-adapter`
+- Base: `da23f2c60a604f022ee91d6b129afc4ed2523a18`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -71,13 +73,15 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate Qwen2.5-Coder-7B qualification: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`; native tool transport repeatedly fails under current Ollama contract, so role must be no-native-tool-proposal until separately requalified
 - Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
 - Vision/image/CAD workers: `DEFERRED`
+- Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
+- PlataVM read-only adapter: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 - External controlled review bridge: `DESIGNED_NOT_IMPLEMENTED`
 
 ## Connected engineering projects
-- PlataVM: `NOT_CONNECTED`
+- PlataVM: `READ_ONLY_GATE012_IN_PROGRESS`
 - BuoyCalc: `NOT_CONNECTED`
 
-Gate 011 implements disagreement review/escalation only and does not access or modify either engineering project.
+Gate 012 accesses PlataVM only through the strict read-only adapter. No PlataVM file, Git ref, PR state, CI run, architecture, fabrication/release state, or physical state may be modified.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -260,7 +264,7 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 011 validation state
-- Issue #21: `OPEN`
+- Issue #21: `CLOSED`
 - branch base equals Gate 010 squash merge `34d18a85b5a00510331b4c75501a0672bc607093`: `PASS`
 - evidence-first disagreement controller: `IMPLEMENTED`
 - deterministic evidence support/contradiction -> `RESOLVED_BY_EVIDENCE`: `IMPLEMENTED`
@@ -275,9 +279,41 @@ Historical CI note:
 - new reviewer model qualification: `NOT_RUN_OUT_OF_SCOPE_GATE011`
 - Electronics/PCB/KiCad/Vision roles: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE011`
 - implementation head `117ee434e1b55faf06580bd8ae9474e5f1085107`: deterministic regression `99/99 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- final acceptance-state generic CI: `PENDING`
-- final acceptance-state strict exact-head CI: `PENDING`
+- final PR head: `242d4bdf41d6fa6c31c1c23e56ceae5981a0ffbb`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`, `99/99`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `da23f2c60a604f022ee91d6b129afc4ed2523a18`
+- Gate 011 state: `ACCEPTED_MERGED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 012 validation state
+- Issue #23: `OPEN`
+- PR #24: `DRAFT`
+- branch base equals Gate 011 squash merge `da23f2c60a604f022ee91d6b129afc4ed2523a18`: `PASS`
+- PlataVM adapter mode: `STRICT_READ_ONLY`
+- project profile/policy: `IMPLEMENTED_SCHEMA_VALIDATED`
+- mandatory governance resolution: `IMPLEMENTED`
+- latest `Docs/chronology/*` resolution: `IMPLEMENTED`
+- Git branch/HEAD/origin-main/dirty snapshot: `IMPLEMENTED`
+- stale governance vs Git conflict detection: `IMPLEMENTED`
+- KiCad inventory root: `Hardware/KiCad`, bounded: `IMPLEMENTED`
+- fixed validator profiles: `platavm.repository_integrity / platavm.semantic_gates`
+- validator shell execution: `shell=False / fixed args only`
+- validator Git-visible mutation detection: `IMPLEMENTED`
+- public project write/delete/Git-mutation API: `ABSENT`
+- current PlataVM PR #100 head: `11e746cfea7f9200415cf817b6cde928b6a2651a`
+- PR #100 state: `OPEN / DRAFT`
+- PR #100 repository CI run `35105701408`: `CANCELLED_NON_PASS`
+- PR #100 KiCad CI run `35105701440`: `CANCELLED_NON_PASS`
+- no PR #100 CI PASS claimed: `ENFORCED`
+- Gate 012 implementation head `53d54fe8a27fa88f0381590fcca4a80b43b276f3`: deterministic regression `108/108 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final local primary-workstation smoke: `PASS_READ_ONLY_WITH_EXPECTED_SOURCE_CONFLICT`; PlataVM main/head/origin-main unchanged at `dcba77466d4800c0e7a336a2771684e066f845db`, clean before/after, dated chronology `2026-09-11-post-pr96-status-roadmap-checkpoint-v1-9.md`, 62 KiCad assets, repository integrity PASS, semantic Gates 47/47 PASS, EXIT=0
+- PlataVM package set: `PACKAGE_SET_NOT_READY`
+- fabrication: `NOT_GRANTED`
+- physical: `NOT_EXECUTED`
+- population: `PROTOTYPE_BASIS_ONLY_NOT_RELEASED / UNDECIDED`
+- series production: `NOT_GRANTED`
 
 ## Primary workstation status
 - host: Windows 11 Pro build `10.0.22000` (`KNOWN_PLATFORM_RISK`, not a current blocker)
@@ -315,4 +351,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 011 acceptance-state head. If green, request explicit human exact-SHA squash-merge approval for PR #22. Do not add a new reviewer model or Electronics/PCB/KiCad roles.
+Run generic and strict exact-head CI on the final Gate 012 acceptance-state head. If green, perform final scope review, mark PR #24 ready for review, and request explicit human exact-SHA squash-merge approval. Do not modify PlataVM PR #100 or rerun its GitHub Actions.

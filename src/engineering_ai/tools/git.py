@@ -61,6 +61,13 @@ class GitReadOnlyAdapter:
     def head_sha(self) -> ToolResult:
         return self._run_raw(["rev-parse", "--verify", "HEAD"], operation="git.head_sha")
 
+    def ref_sha(self, ref: str) -> ToolResult:
+        safe_ref = self._validate_ref(ref)
+        return self._run_raw(
+            ["rev-parse", "--verify", safe_ref],
+            operation="git.ref_sha",
+        )
+
     def log(self, *, max_count: int = 20) -> ToolResult:
         if not 1 <= max_count <= 100:
             raise ValueError("max_count must be between 1 and 100")

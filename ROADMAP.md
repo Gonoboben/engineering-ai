@@ -241,7 +241,7 @@ No unrestricted peer-to-peer model messaging.
 Writing a model claim to the Blackboard does not promote it to evidence.
 
 ### Gate 011 — Independent review and disagreement escalation
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
 Add controlled second-model review and explicit disagreement handling.
 
@@ -256,7 +256,7 @@ Majority voting between models never substitutes for evidence.
 ## Phase 3 — Existing project integration
 
 ### Gate 012 — PlataVM read-only adapter
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Connect the existing PlataVM repository in read-only mode.
 

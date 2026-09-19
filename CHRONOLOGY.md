@@ -1125,3 +1125,190 @@ Gate 011 state:
 `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
 
 One final exact-head CI run is required after acceptance-state synchronization.
+
+
+---
+
+## 2026-09-19 — Gate 011 accepted and merged
+
+Final approved PR head:
+`242d4bdf41d6fa6c31c1c23e56ceae5981a0ffbb`.
+
+Final validation:
+- deterministic tests: `99/99 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`da23f2c60a604f022ee91d6b129afc4ed2523a18`.
+
+Issue #21 closed.
+
+Accepted disagreement semantics:
+- deterministic evidence first;
+- independent gpt-oss review for Qwen-originated unresolved claims;
+- no self-review;
+- one bounded revision maximum;
+- unresolved cases escalate human;
+- model agreement remains advisory.
+
+Gate 011 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 012 PlataVM read-only adapter opened
+
+Issue:
+`#23 — Gate 012 — PlataVM read-only adapter`.
+
+Branch:
+`gate-012-platavm-readonly-adapter`.
+
+Base:
+Gate 011 squash merge `da23f2c60a604f022ee91d6b129afc4ed2523a18`.
+
+Draft PR:
+`#24`.
+
+PlataVM mandatory governance was read in the order required by `AGENTS.md`.
+The dynamic `Docs/PROJECT_STATUS.md` was observed to lag current GitHub state,
+so Gate 012 treats governance/Git mismatch as explicit source conflict rather
+than silently reconciling it.
+
+Remote PlataVM state observed at Gate opening:
+- PR #100: OPEN / DRAFT;
+- base: `main@dcba77466d4800c0e7a336a2771684e066f845db`;
+- head: `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+- repository workflow run `35105701408`: `completed/cancelled`;
+- KiCad workflow run `35105701440`: `completed/cancelled`;
+- exact-head PASS is therefore not claimed.
+
+Implemented:
+- strict PlataVM read-only profile/policy;
+- mandatory governance and latest chronology resolution;
+- safe Git branch/HEAD/origin-main/status snapshot;
+- stale governance conflict detection;
+- bounded `Hardware/KiCad` inventory;
+- fixed read-only repository-integrity and semantic-gate validator profiles;
+- post-validator Git-visible mutation detection;
+- explicit CI state mapping preserving `CANCELLED` as non-PASS;
+- local smoke harness.
+
+The first Gate 012 CI attempt exposed a new-adapter inventory defect caused by
+attempting to enumerate repository root through the generic filesystem
+adapter's strict child-boundary rule. The generic security boundary was not
+weakened. Inventory was narrowed to `Hardware/KiCad`.
+
+Corrected implementation head:
+`53d54fe8a27fa88f0381590fcca4a80b43b276f3`.
+
+Corrected validation:
+- deterministic tests: `108/108 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Remaining acceptance item:
+local read-only smoke on `C:\workspace\repos\plataVM`, including the two
+fixed validators and proof that Git-visible state is unchanged.
+
+PlataVM barriers remain:
+`PACKAGE_SET_NOT_READY / fabrication NOT_GRANTED / physical NOT_EXECUTED /
+PROTOTYPE_BASIS_ONLY_NOT_RELEASED / UNDECIDED / series NOT_GRANTED`.
+
+
+---
+
+## 2026-09-19 — Gate 012 local smoke blocked by missing checkout
+
+The first primary-workstation smoke attempt did not reach adapter validation.
+
+Observed:
+- Engineering AI Gate 012 checkout was correct at `0e675792d61a9b450cf9565380761d46b1a5c004`;
+- `C:\workspace\repos\plataVM` did not exist;
+- Git commands against that path failed with repository-path-not-found;
+- the smoke script failed during strict Path resolution;
+- no PlataVM repository content existed locally to read or modify;
+- no validator executed against PlataVM;
+- no PlataVM Git-visible state changed.
+
+Classification:
+`BLOCKED_LOCAL_REPOSITORY_NOT_FOUND`, not Gate failure.
+
+The smoke harness was tightened to emit structured
+`LOCAL_REPOSITORY_NOT_FOUND` with exit code 2 instead of an unhandled
+traceback.
+
+Next admissible step:
+create a normal local clone at the profile path, then repeat the same strict
+read-only smoke. No PlataVM GitHub Actions rerun or PR #100 mutation is
+authorized by Gate 012.
+
+
+---
+
+## 2026-09-19 — Gate 012 real smoke exposed chronology-selection defect
+
+A real local PlataVM checkout was created and the strict Gate 012 smoke ran on
+the primary workstation.
+
+Observed PlataVM state:
+- `main@dcba77466d4800c0e7a336a2771684e066f845db`;
+- `origin/main` same SHA;
+- clean before/after smoke;
+- 62 bounded KiCad assets;
+- stale `PROJECT_STATUS` main pointer correctly surfaced as `SOURCE_CONFLICT`;
+- repository integrity PASS: 365 tracked paths / 35 JSON;
+- semantic Gates PASS: 47/47;
+- process exit 0;
+- physical state remained `PHYSICAL_NOT_EXECUTED`.
+
+However, the adapter selected `Docs/chronology/README.md` as the latest
+chronology item. That violates Gate 012's requirement to resolve the latest
+dated chronology entry.
+
+Classification:
+`READ_ONLY_BOUNDARY_PASS_WITH_CHRONOLOGY_SELECTION_DEFECT`.
+
+The defect was corrected without weakening the filesystem boundary:
+- only `YYYY-MM-DD*.md` direct chronology entries are candidates;
+- README/non-dated files are excluded;
+- zero dated entries is a hard error;
+- a regression fixture proves README cannot win selection.
+
+Final corrected-head CI and one corrected-head local smoke remain required.
+
+
+---
+
+## 2026-09-19 — Gate 012 final corrected-head local smoke passed
+
+Final corrected-head local smoke executed on the primary workstation after the
+chronology-selection fix.
+
+Engineering AI head at smoke:
+`4ba5d7890f86648dfdcbc0ecab23508c4e0ebf3e`.
+
+Observed PlataVM:
+- `main@dcba77466d4800c0e7a336a2771684e066f845db`;
+- `origin/main` same SHA;
+- clean before/after smoke;
+- latest chronology correctly resolved to
+  `Docs/chronology/2026-09-11-post-pr96-status-roadmap-checkpoint-v1-9.md`;
+- 62 KiCad assets;
+- stale PROJECT_STATUS main pointer surfaced as `SOURCE_CONFLICT`;
+- repository integrity PASS;
+- semantic Gates `47/47 PASS`;
+- process exit `0`;
+- physical state remained `PHYSICAL_NOT_EXECUTED`.
+
+No PlataVM Git-visible state changed. No GitHub Actions rerun and no PR #100
+mutation occurred.
+
+Gate 012 local-smoke state:
+`PASS_READ_ONLY_WITH_EXPECTED_SOURCE_CONFLICT`.
+
+Next step:
+final acceptance-state generic + strict exact-head CI, scope review, and exact-SHA
+human squash-merge approval for PR #24.
