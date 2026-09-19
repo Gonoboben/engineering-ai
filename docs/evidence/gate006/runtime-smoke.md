@@ -121,3 +121,64 @@ Validation on corrected head:
 
 A further local workstation smoke is required. Physical validation remains
 `PHYSICAL_NOT_EXECUTED`.
+
+
+## Attempt 3 — successful end-to-end local runtime smoke
+
+Date: 2026-09-19
+
+Tested repository head:
+`f3c434e630a10bbf016e28d6c873df4f79783c28`
+
+Primary workstation/runtime:
+- Windows 11 Pro;
+- Ollama `0.34.1`, loopback-only;
+- model `gpt-oss:20b`;
+- reasoning `medium`;
+- context `8192`;
+- benchmark-equivalent max output `2048`.
+
+Observed result:
+`PASS`
+
+User-captured machine output:
+
+```json
+{
+  "state": "COMPLETE",
+  "job_status": "PASS",
+  "blocker": null,
+  "revision_count": 0,
+  "executed_actions": [
+    "read_repository"
+  ],
+  "evidence_refs": [
+    "sha256:STATUS.md:ac9f1cb5c40f9793a0342df00f7926b9b95af12e9f7e70b2f27b5710097b4b45"
+  ],
+  "review_decision": "ACCEPT",
+  "model": "gpt-oss:20b",
+  "reasoning": "medium",
+  "context_tokens": 8192,
+  "physical_validation": "PHYSICAL_NOT_EXECUTED"
+}
+```
+
+Acceptance interpretation:
+- Planner completed;
+- Executor proposed only the bounded read action;
+- deterministic Supervisor permitted the declared read;
+- the smoke harness read exactly `STATUS.md`;
+- deterministic SHA-256 evidence was produced;
+- Reviewer returned `ACCEPT`;
+- Supervisor-owned role loop reached `COMPLETE / PASS`;
+- no repository write, Git mutation, unrestricted shell, project adapter, or
+  additional authority was granted;
+- this runtime smoke is advisory/control-plane validation only and does not
+  constitute physical validation.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
+The successful smoke satisfies the local runtime acceptance criterion for
+Gate 006. Final acceptance still requires green CI on the final
+documentation/evidence head and explicit human exact-SHA squash-merge approval.
