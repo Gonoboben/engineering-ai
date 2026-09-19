@@ -1,7 +1,7 @@
 """Deterministic Supervisor package."""
 
 from engineering_ai.supervisor.audit import AuditEmitter
-from engineering_ai.supervisor.core import ExecutionResult, Supervisor, ToolOutcome
+from engineering_ai.supervisor.core import ExecutionResult, ProposalExecutionResult, Supervisor, ToolOutcome
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
 from engineering_ai.supervisor.role_loop import (
     EngineeringRole,
@@ -26,6 +26,7 @@ __all__ = [
     "PlanResult",
     "PlannerExecutorReviewerLoop",
     "PolicyDecision",
+    "ProposalExecutionResult",
     "PolicyEngine",
     "ReviewDecision",
     "ReviewResult",
