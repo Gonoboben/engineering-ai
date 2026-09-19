@@ -416,3 +416,40 @@ Validation:
 
 Next step:
 rerun the local workstation smoke on the final documented branch head.
+
+
+---
+
+## 2026-09-19 — Gate 006 local runtime smoke passed end-to-end
+
+Local workstation smoke was executed on head:
+`f3c434e630a10bbf016e28d6c873df4f79783c28`.
+
+Runtime:
+- Windows 11 Pro;
+- Ollama `0.34.1`, loopback-only;
+- model `gpt-oss:20b`;
+- reasoning `medium`;
+- context `8192`;
+- max output `2048`.
+
+Observed result:
+- state: `COMPLETE`;
+- job status: `PASS`;
+- blocker: none;
+- executed action: `read_repository`;
+- deterministic evidence:
+  `sha256:STATUS.md:ac9f1cb5c40f9793a0342df00f7926b9b95af12e9f7e70b2f27b5710097b4b45`;
+- Reviewer decision: `ACCEPT`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Interpretation:
+the complete Planner -> Executor -> deterministic Supervisor -> bounded tool ->
+deterministic evidence -> Reviewer -> Supervisor terminal path executed
+successfully on the primary workstation without granting additional authority.
+
+Gate 006 local runtime acceptance criterion is satisfied.
+
+Next step:
+final regression and strict exact-head CI on the final documentation/evidence
+head, followed by explicit human exact-SHA squash-merge approval for PR #12.
