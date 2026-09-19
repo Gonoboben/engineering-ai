@@ -11,6 +11,17 @@ from engineering_ai.models.routing import (
     RouteDecision,
     RouteRequest,
 )
+from engineering_ai.supervisor.blackboard import (
+    BlackboardRecord,
+    BlackboardRecordKind,
+    BlackboardView,
+    ContextResolutionDecision,
+    HandoffDecision,
+    HandoffRequest,
+    TaskBlackboard,
+    build_handoff,
+    resolve_context,
+)
 from engineering_ai.supervisor.audit import AuditEmitter
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
 from engineering_ai.validation import SemanticValidationError, validate_instance
@@ -66,12 +77,14 @@ class Supervisor:
         state: dict[str, Any],
         audit_emitter: AuditEmitter | None = None,
         model_router: DeterministicModelRouter | None = None,
+        blackboard: TaskBlackboard | None = None,
     ) -> None:
         self._policy = deepcopy(policy)
         self._state = deepcopy(state)
         self._policy_engine = PolicyEngine(self._policy, self._state)
         self._audit = audit_emitter or AuditEmitter()
         self._model_router = model_router
+        self._blackboard = blackboard
         self._audit_events: list[dict[str, Any]] = []
 
     @property
@@ -90,6 +103,142 @@ class Supervisor:
         if self._model_router is None:
             raise RuntimeError("Supervisor has no model router configured")
         return self._model_router.route(request)
+
+    def blackboard_view(
+        self,
+        *,
+        task_id: str,
+        visible_record_ids: tuple[int, ...] | None = None,
+    ) -> BlackboardView:
+        board = self._require_blackboard()
+        return board.view(
+            task_id=task_id,
+            visible_record_ids=visible_record_ids,
+        )
+
+    def blackboard_assign_task(
+        self,
+        *,
+        task_id: str,
+        objective: str,
+        requested_task_class: str,
+    ) -> BlackboardRecord:
+        if not objective.strip():
+            raise ValueError("objective must be non-empty")
+        return self._require_blackboard()._append_control(
+            task_id=task_id,
+            kind=BlackboardRecordKind.TASK_ASSIGNMENT,
+            payload={
+                "objective": objective,
+                "requested_task_class": requested_task_class,
+            },
+        )
+
+    def blackboard_record_context_requirement(
+        self,
+        *,
+        task_id: str,
+        required_context_keys: tuple[str, ...],
+    ) -> BlackboardRecord:
+        if not required_context_keys:
+            raise ValueError("required_context_keys must be non-empty")
+        if len(set(required_context_keys)) != len(required_context_keys):
+            raise ValueError("required_context_keys must be unique")
+        return self._require_blackboard()._append_control(
+            task_id=task_id,
+            kind=BlackboardRecordKind.CONTEXT_REQUIREMENT,
+            payload={"required_context_keys": required_context_keys},
+        )
+
+    def blackboard_record_model_claim(
+        self,
+        *,
+        task_id: str,
+        model_id: str,
+        payload: dict[str, Any],
+    ) -> BlackboardRecord:
+        return self._require_blackboard()._append_model_record(
+            task_id=task_id,
+            model_id=model_id,
+            kind=BlackboardRecordKind.MODEL_CLAIM,
+            payload=payload,
+        )
+
+    def blackboard_record_tool_proposal(
+        self,
+        *,
+        task_id: str,
+        model_id: str,
+        payload: dict[str, Any],
+    ) -> BlackboardRecord:
+        return self._require_blackboard()._append_model_record(
+            task_id=task_id,
+            model_id=model_id,
+            kind=BlackboardRecordKind.TOOL_PROPOSAL,
+            payload=payload,
+        )
+
+    def blackboard_record_evidence(
+        self,
+        *,
+        task_id: str,
+        tool_id: str,
+        context_keys: tuple[str, ...],
+        summary: str,
+        evidence_refs: tuple[str, ...],
+    ) -> BlackboardRecord:
+        return self._require_blackboard()._append_evidence(
+            task_id=task_id,
+            tool_id=tool_id,
+            context_keys=context_keys,
+            summary=summary,
+            evidence_refs=evidence_refs,
+        )
+
+    def resolve_blackboard_context(
+        self,
+        *,
+        task_id: str,
+        required_context_keys: tuple[str, ...],
+        requirements_are_explicit: bool,
+        ambiguous_tool_choice: bool = False,
+        context_tokens: int = 8192,
+        max_output_tokens: int = 2048,
+    ) -> ContextResolutionDecision:
+        if self._model_router is None:
+            raise RuntimeError("Supervisor has no model router configured")
+        return resolve_context(
+            blackboard=self._require_blackboard(),
+            router=self._model_router,
+            task_id=task_id,
+            required_context_keys=required_context_keys,
+            requirements_are_explicit=requirements_are_explicit,
+            ambiguous_tool_choice=ambiguous_tool_choice,
+            context_tokens=context_tokens,
+            max_output_tokens=max_output_tokens,
+        )
+
+    def create_model_handoff(self, request: HandoffRequest) -> HandoffDecision:
+        if self._model_router is None:
+            raise RuntimeError("Supervisor has no model router configured")
+        route = self._model_router.route(
+            RouteRequest(
+                task_class=request.target_task_class,
+                context_tokens=request.context_tokens,
+                max_output_tokens=request.max_output_tokens,
+                requires_native_tool_proposals=request.requires_native_tool_proposals,
+            )
+        )
+        return build_handoff(
+            blackboard=self._require_blackboard(),
+            route=route,
+            request=request,
+        )
+
+    def _require_blackboard(self) -> TaskBlackboard:
+        if self._blackboard is None:
+            raise RuntimeError("Supervisor has no Task Blackboard configured")
+        return self._blackboard
 
     def evaluate_tool_proposal(
         self,

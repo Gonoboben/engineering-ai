@@ -1,6 +1,18 @@
 """Deterministic Supervisor package."""
 
 from engineering_ai.supervisor.audit import AuditEmitter
+from engineering_ai.supervisor.blackboard import (
+    BlackboardAuthority,
+    BlackboardRecord,
+    BlackboardRecordKind,
+    BlackboardValidationClass,
+    BlackboardView,
+    ContextResolutionDecision,
+    ContextResolutionMode,
+    HandoffDecision,
+    HandoffRequest,
+    TaskBlackboard,
+)
 from engineering_ai.supervisor.core import ExecutionResult, ProposalExecutionResult, Supervisor, ToolOutcome
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
 from engineering_ai.supervisor.role_loop import (
@@ -19,6 +31,15 @@ from engineering_ai.supervisor.stubs import StubTool
 
 __all__ = [
     "AuditEmitter",
+    "BlackboardAuthority",
+    "BlackboardRecord",
+    "BlackboardRecordKind",
+    "BlackboardValidationClass",
+    "BlackboardView",
+    "ContextResolutionDecision",
+    "ContextResolutionMode",
+    "HandoffDecision",
+    "HandoffRequest",
     "Decision",
     "EngineeringRole",
     "ExecutionResult",
@@ -35,6 +56,7 @@ __all__ = [
     "RoleModelConfig",
     "RoleStateMachine",
     "StubTool",
+    "TaskBlackboard",
     "Supervisor",
     "ToolOutcome",
 ]
