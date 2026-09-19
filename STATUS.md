@@ -417,7 +417,8 @@ Historical CI note:
 - real primary-workstation controlled validation smoke attempt 1: `INFRASTRUCTURE_PREREQUISITE_BLOCK`; dotnet unresolved, no validator profile executed, disposable worktree/branch removed, primary BuoyCalc unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED
 - runtime prerequisite preflight: `IMPLEMENTED`; dotnet PATH/common-Windows-path resolution + .NET 8 SDK check + pwsh resolution before worktree creation
 - corrected runtime-preflight head `b6a490377f98cbe5d063e2a7460a977309507fe1`: deterministic regression `144/144 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- real primary-workstation controlled validation smoke attempt 2: `PENDING`
+- real primary-workstation controlled validation smoke attempt 2: `RUNTIME_PREREQUISITE_MISSING`; dotnet=null, pwsh=null, .NET 8 SDK unavailable, worktree not created, primary BuoyCalc unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED, EXIT=4
+- required local prerequisites before smoke attempt 3: `Microsoft .NET 8 SDK + PowerShell 7`
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -458,4 +459,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the corrected Gate 015 pre-smoke head, then rerun the explicitly approved BuoyCalc smoke. Runtime prerequisites must be satisfied before worktree creation. Do not modify calculation-core/governance, commit/push/open PR/merge BuoyCalc, or perform RC/tag/release actions.
+Install only the missing local prerequisites (`Microsoft .NET 8 SDK` and `PowerShell 7`), verify `dotnet --list-sdks` includes an 8.x SDK and `pwsh` starts, then rerun the explicitly approved BuoyCalc smoke. Do not modify calculation-core/governance, commit/push/open PR/merge BuoyCalc, or perform RC/tag/release actions.
