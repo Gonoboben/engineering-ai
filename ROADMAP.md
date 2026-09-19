@@ -182,7 +182,7 @@ Defines:
 No model download, model qualification, router code, Blackboard runtime, project adapter, or external bridge implementation belongs in this Gate.
 
 ### Gate 008 — Local specialist model qualification
-Status: `QUALIFICATION_COMPLETE_PENDING_FINAL_ACCEPTANCE`
+Status: `QUALIFICATION_COMPLETE_PENDING_HUMAN_APPROVAL`
 
 Qualify practical local candidates on the primary workstation before assigning production roles.
 
