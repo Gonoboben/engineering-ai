@@ -81,4 +81,28 @@ Not implemented:
 
 ## Deterministic validation
 
-Pending Gate 010 regression and exact-head CI.
+Implementation validation head:
+`2445de8c163e553bb2735ce21e6c0a5068aa912e`
+
+Result:
+- deterministic tests: `87/87 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+Validated boundaries include:
+- model claims cannot become deterministic evidence;
+- model tool proposals remain advisory and unexecuted;
+- deterministic evidence requires evidence refs;
+- Blackboard payloads exposed to workers are immutable;
+- Blackboard record count is bounded;
+- deterministic acquisition outranks model planning when required context is explicit;
+- Qwen3.5 is selected for missing-context tool planning;
+- gpt-oss is selected for explicit ambiguous tool-planning escalation;
+- Coder handoff is rejected until required deterministic context is explicitly visible;
+- hidden and cross-task evidence cannot satisfy a handoff;
+- Coder native-tool-required handoff remains NO_ROUTE;
+- no Electronics/PCB/KiCad/Vision task class exists.
+
+Final acceptance-state exact-head CI remains required after status/evidence
+synchronization.
