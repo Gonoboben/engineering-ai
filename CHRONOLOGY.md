@@ -546,3 +546,64 @@ Gate 007 state:
 `ARCHITECTURE_DOCUMENTED_PENDING_HUMAN_APPROVAL`.
 
 A final exact-head CI run is required after status/chronology synchronization before requesting exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 007 accepted and merged
+
+Final approved PR head:
+`c09dae76d0526a899233a9b4656affd0d4c7e631`.
+
+Final validation:
+- deterministic tests: `50/50 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA architecture approval: `PASS`.
+
+Squash merge on `main`:
+`3903672d44f6ac5119183eb58363847d42e25d9b`.
+
+Issue #13 closed.
+
+Accepted architecture:
+- Supervisor-mediated specialist models;
+- deterministic Model Capability Registry / Router authority;
+- Supervisor-controlled Task Blackboard;
+- evidence-based disagreement handling;
+- optional controlled external review bridge;
+- no unrestricted peer-to-peer swarm;
+- model agreement is not evidence.
+
+Gate 007 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 008 local specialist model qualification opened
+
+Issue:
+`#15 — Gate 008 — Local specialist model qualification`.
+
+Branch:
+`gate-008-local-specialist-model-qualification`.
+
+Base:
+Gate 007 squash merge `3903672d44f6ac5119183eb58363847d42e25d9b`.
+
+Candidates:
+- `qwen3.5:9b`;
+- `qwen2.5-coder:7b-instruct`.
+
+Reference:
+- accepted `gpt-oss:20b / medium / context 8192 / max output 2048`.
+
+Human direction:
+- do not test Electronics/PCB capability in Gate 008;
+- do not run KiCad/ERC/DRC/SPICE specialist tests;
+- prepare and qualify the basic model stack first;
+- determine engineering specialist assignments later;
+- do not download 27B-class models in this Gate.
+
+Next step:
+prepare deterministic Gate 008 benchmark/evidence harness, then install and benchmark the two fixed candidate tags on the primary workstation.
