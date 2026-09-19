@@ -112,4 +112,18 @@ Supervisor owns the routing boundary through route_model().
 
 ## Deterministic validation
 
-Pending final Gate 009 CI evidence.
+Implementation validation head:
+`6671d4e6fe9c11734f87ba23dba064e4d9a5ac50`
+
+Result:
+- deterministic tests: `69/69 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+During test development, CI correctly rejected incomplete test-only policy/state
+fixtures. Production routing/policy code was not weakened; the fixtures were
+brought into compliance with existing schemas and global approval boundaries.
+
+Final acceptance-state exact-head CI remains required after status/evidence
+synchronization.
