@@ -25,7 +25,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Issue: `#11`
 - PR: `PENDING_DRAFT`
 - Branch: `gate-006-planner-executor-reviewer`
-- State: `OPEN_IMPLEMENTATION_NOT_STARTED`
+- State: `IMPLEMENTED_DETERMINISTIC_VALIDATED_PENDING_LOCAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -51,7 +51,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate A: `gpt-oss:20b` — `4/4 PASS` at `medium`; `high` reproducibly truncates two structured-output cases and is not the default
 - Candidate B: `qwen3.6:27b-q4_K_M` — `3 PASS / 1 INCONCLUSIVE_TRUNCATED`; memory-stable but ~2.45–2.55 eval tok/s and ~37.7 min aggregate benchmark time on this workstation
 - Stretch candidate: `qwen3.6:35b` — `DEFERRED_NOT_JUSTIFIED_ON_CURRENT_WORKSTATION` after measured 27B CPU-heavy performance
-- Planner / Executor / Reviewer loop: `GATE_006_NOT_IMPLEMENTED`
+- Planner / Executor / Reviewer loop: `IMPLEMENTED_DETERMINISTIC_VALIDATED_PENDING_LOCAL_SMOKE`
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Multi-agent routing: `DEFERRED`
 - Vision/image/CAD workers: `DEFERRED`
@@ -113,15 +113,24 @@ Historical CI note:
 
 ## Gate 006 validation state
 - Issue #11: `OPEN`
+- draft PR #12: `OPEN`
 - branch from Gate 005 merge commit: `PASS`
-- Planner role implementation: `NOT_RUN`
-- Executor role implementation: `NOT_RUN`
-- Reviewer role implementation: `NOT_RUN`
-- deterministic transition tests: `NOT_RUN`
-- bounded revision/retry tests: `NOT_RUN`
-- audit/evidence tests: `NOT_RUN`
-- local `gpt-oss:20b` role-loop smoke test: `NOT_RUN`
-- final strict exact-head CI: `NOT_RUN`
+- typed Planner / Executor / Reviewer role separation: `IMPLEMENTED_VALIDATED`
+- deterministic role state machine and illegal-transition rejection: `PASS`
+- existing Supervisor remains authoritative for model-proposed tool policy/execution: `PASS`
+- executor restricted to approved-plan and declared-job actions: `PASS`
+- missing deterministic evidence cannot be promoted to completion: `PASS`
+- bounded reviewer revision/retry behavior: `PASS`
+- reviewer rejection -> terminal failure: `PASS`
+- approval-required tool proposal -> no tool call / waiting boundary: `PASS`
+- model/runtime/role audit identity: `PASS`
+- Gate 002–005 regression suite: `PASS`
+- deterministic suite on implementation head `61f8bc469e3ab827749d7a94a6a393e5715a237a`: `46/46 PASS`
+- generic CI on implementation head `61f8bc469e3ab827749d7a94a6a393e5715a237a`: `PASS`
+- strict exact-head CI on implementation head `61f8bc469e3ab827749d7a94a6a393e5715a237a`: `PASS`
+- narrow local runtime smoke harness: `scripts/gate006_role_smoke.py`, `IMPLEMENTED`
+- local `gpt-oss:20b / medium / 8192 / 2048` role-loop smoke test: `NOT_RUN`
+- final strict exact-head CI after evidence/documentation updates: `NOT_RUN`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -158,4 +167,4 @@ Security constraint for local model services:
 - single-agent core precedes multi-agent expansion.
 
 ## Next admissible action
-Implement Gate 006 Planner / Executor / Reviewer role separation and deterministic Supervisor-controlled transitions using the already accepted `gpt-oss:20b / medium / 8192` model baseline. Keep project adapters, multi-model routing, and abliterated model integration out of Gate 006 scope.
+Run the narrow local runtime smoke harness on the primary workstation with `gpt-oss:20b / medium / 8192 / 2048`, record the result without treating it as physical validation, then run final regression and strict exact-head CI on the resulting final PR head. Do not merge PR #12 without explicit human squash-merge approval for that exact head SHA.
