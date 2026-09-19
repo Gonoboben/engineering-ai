@@ -723,3 +723,60 @@ Classification:
 
 Next step:
 rerun the fixed code/repository suite on the corrected exact head before assigning any final Coder qualification state.
+
+
+---
+
+## 2026-09-19 — Gate 008 Qwen2.5-Coder corrected rerun confirmed limited qualification
+
+Corrected rerun:
+- model `qwen2.5-coder:7b-instruct`;
+- context `8192`;
+- max output `2048`;
+- reasoning argument omitted;
+- Ollama `0.34.2`.
+
+Result:
+- `3 PASS / 1 FAIL / 0 INCONCLUSIVE`;
+- clamp repair: `PASS`;
+- off-by-one repair: `PASS`;
+- evidence review: `PASS`;
+- native tool proposal: `FAIL`.
+
+The remaining failure reproduced attempt 1 exactly:
+the model emitted the correct JSON-shaped tool intent in ordinary response
+`content` but returned no native `tool_calls`.
+
+This is classified as a confirmed runtime-contract limitation, not a coding
+correctness failure.
+
+Performance/resource observations:
+- aggregate wall time ~`1.680 s`;
+- case wall times ~`0.639 s`, `0.308 s`, `0.476 s`, `0.255 s`;
+- eval throughput ~`42.63`, `62.06`, `56.42`, `76.96 tok/s`;
+- placement `100% GPU`;
+- model VRAM allocation ~`4.78 GiB`;
+- total post-run GPU memory used `6079 MiB`, free `1946 MiB`;
+- post-run free physical RAM ~`22.08 GiB`;
+- no truncation, timeout, or provider error.
+
+Final Gate 008 role qualification:
+`QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`.
+
+Restriction:
+`NO_NATIVE_TOOL_PROPOSALS_UNDER_CURRENT_OLLAMA_CONTRACT`.
+
+The model may be used for code/repository analysis, repair, review, and
+generation when required context is supplied by the deterministic Supervisor
+or another authorized acquisition step. It must not be routed to a task that
+requires it to originate native tool calls until separately corrected and
+requalified.
+
+Qwen3.5-9B remains:
+`QUALIFIED_GENERAL_PLANNER`.
+
+Electronics/PCB/KiCad/ERC/DRC/SPICE remains:
+`NOT_RUN_OUT_OF_SCOPE_GATE_008`.
+
+Next step:
+final regression and exact-head CI, then human exact-SHA Gate 008 merge approval.
