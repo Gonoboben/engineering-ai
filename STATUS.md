@@ -38,7 +38,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#24 (DRAFT)`
 - Branch: `gate-012-platavm-readonly-adapter`
 - Base: `da23f2c60a604f022ee91d6b129afc4ed2523a18`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -308,7 +308,7 @@ Historical CI note:
 - PR #100 KiCad CI run `35105701440`: `CANCELLED_NON_PASS`
 - no PR #100 CI PASS claimed: `ENFORCED`
 - Gate 012 implementation head `53d54fe8a27fa88f0381590fcca4a80b43b276f3`: deterministic regression `108/108 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- local primary-workstation smoke attempt 2: `READ_ONLY_BOUNDARY_PASS_WITH_CHRONOLOGY_SELECTION_DEFECT`; main/head/origin-main unchanged, 62 KiCad assets, repository integrity PASS, semantic Gates 47/47 PASS, SOURCE_CONFLICT correctly surfaced; chronology README selection defect corrected, final corrected-head smoke pending
+- final local primary-workstation smoke: `PASS_READ_ONLY_WITH_EXPECTED_SOURCE_CONFLICT`; PlataVM main/head/origin-main unchanged at `dcba77466d4800c0e7a336a2771684e066f845db`, clean before/after, dated chronology `2026-09-11-post-pr96-status-roadmap-checkpoint-v1-9.md`, 62 KiCad assets, repository integrity PASS, semantic Gates 47/47 PASS, EXIT=0
 - PlataVM package set: `PACKAGE_SET_NOT_READY`
 - fabrication: `NOT_GRANTED`
 - physical: `NOT_EXECUTED`
@@ -351,4 +351,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Validate the chronology-selection correction with generic and strict exact-head CI, then rerun the Gate 012 local read-only smoke on the corrected exact head. Require a dated `Docs/chronology/YYYY-MM-DD*.md` selection, unchanged PlataVM Git-visible state, repository integrity PASS and semantic Gates PASS. Do not rerun PlataVM GitHub Actions or modify PR #100.
+Run generic and strict exact-head CI on the final Gate 012 acceptance-state head. If green, perform final scope review, mark PR #24 ready for review, and request explicit human exact-SHA squash-merge approval. Do not modify PlataVM PR #100 or rerun its GitHub Actions.
