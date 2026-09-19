@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import hashlib
+import os
+import shutil
+import subprocess
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -27,6 +30,7 @@ from engineering_ai.tools import (
 
 class BuoyCalcControlledState(str, Enum):
     BLOCKED_BASELINE = "BLOCKED_BASELINE"
+    BLOCKED_RUNTIME_PREREQUISITE = "BLOCKED_RUNTIME_PREREQUISITE"
     WORKTREE_READY = "WORKTREE_READY"
     PATCH_APPLIED = "PATCH_APPLIED"
     VALIDATION_FAILED = "VALIDATION_FAILED"
@@ -38,6 +42,15 @@ class BuoyCalcWorktreePreparation:
     state: BuoyCalcControlledState
     blockers: tuple[str, ...]
     session: WorktreeSession | None = None
+
+
+@dataclass(frozen=True)
+class RuntimePrerequisiteStatus:
+    dotnet_executable: str | None
+    pwsh_executable: str | None
+    dotnet_sdk8_available: bool
+    dotnet_sdks: tuple[str, ...]
+    blockers: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -372,6 +385,11 @@ class BuoyCalcControlledEngineeringLoop:
     ) -> BuoyCalcValidationResult:
         worktree = Path(session.worktree_root).resolve(strict=True)
         git = GitReadOnlyAdapter(worktree, git_executable=self._git_executable)
+        runtime = self.runtime_prerequisites()
+        if runtime.blockers:
+            raise ToolExecutionError(
+                "runtime prerequisites not satisfied: " + "; ".join(runtime.blockers)
+            )
 
         before_head = self._required_output(git.head_sha(), "before HEAD")
         before_diff = self._required_output(git.diff_worktree(), "before worktree diff")
@@ -382,7 +400,7 @@ class BuoyCalcControlledEngineeringLoop:
         if unknown:
             raise ToolAccessError(f"validator profile is not allow-listed: {unknown[0]}")
 
-        specs = {spec.command_id: spec for spec in _VALIDATOR_SPECS}
+        specs = self._resolved_validator_specs(runtime)
         runner = AllowListedProcessRunner(specs, root=worktree)
         profile_evidence: list[ValidationProfileEvidence] = []
         all_steps_pass = True
@@ -442,6 +460,98 @@ class BuoyCalcControlledEngineeringLoop:
             tracked_state_unchanged=tracked_state_unchanged,
             release_state=RELEASE_STATE,
         )
+
+    def runtime_prerequisites(self) -> RuntimePrerequisiteStatus:
+        dotnet = self._resolve_runtime_executable("dotnet")
+        pwsh = self._resolve_runtime_executable("pwsh")
+        blockers: list[str] = []
+        sdks: tuple[str, ...] = ()
+
+        if dotnet is None:
+            blockers.append("dotnet executable not found")
+        else:
+            result = subprocess.run(
+                [dotnet, "--list-sdks"],
+                cwd=self._repository_root,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                shell=False,
+                timeout=30.0,
+                check=False,
+            )
+            if result.returncode != 0:
+                blockers.append("dotnet --list-sdks failed")
+            else:
+                sdks = tuple(
+                    line.strip()
+                    for line in result.stdout.splitlines()
+                    if line.strip()
+                )
+                if not any(line.startswith("8.") for line in sdks):
+                    blockers.append(".NET 8 SDK not found")
+
+        if pwsh is None:
+            blockers.append("pwsh executable not found")
+
+        return RuntimePrerequisiteStatus(
+            dotnet_executable=dotnet,
+            pwsh_executable=pwsh,
+            dotnet_sdk8_available=any(line.startswith("8.") for line in sdks),
+            dotnet_sdks=sdks,
+            blockers=tuple(blockers),
+        )
+
+    def _resolved_validator_specs(
+        self,
+        runtime: RuntimePrerequisiteStatus,
+    ) -> dict[str, CommandSpec]:
+        if runtime.blockers:
+            raise ToolExecutionError(
+                "runtime prerequisites not satisfied: " + "; ".join(runtime.blockers)
+            )
+        assert runtime.dotnet_executable is not None
+        assert runtime.pwsh_executable is not None
+        specs: dict[str, CommandSpec] = {}
+        for spec in _VALIDATOR_SPECS:
+            executable = spec.executable
+            if executable == "dotnet":
+                executable = runtime.dotnet_executable
+            elif executable == "pwsh":
+                executable = runtime.pwsh_executable
+            specs[spec.command_id] = CommandSpec(
+                command_id=spec.command_id,
+                executable=executable,
+                fixed_args=spec.fixed_args,
+                timeout_seconds=spec.timeout_seconds,
+                max_output_bytes=spec.max_output_bytes,
+            )
+        return specs
+
+    @staticmethod
+    def _resolve_runtime_executable(name: str) -> str | None:
+        found = shutil.which(name)
+        if found:
+            return str(Path(found).resolve(strict=True))
+
+        candidates: list[Path] = []
+        if os.name == "nt":
+            program_files = os.environ.get("ProgramFiles")
+            if program_files:
+                if name == "dotnet":
+                    candidates.append(Path(program_files) / "dotnet" / "dotnet.exe")
+                elif name == "pwsh":
+                    candidates.append(
+                        Path(program_files) / "PowerShell" / "7" / "pwsh.exe"
+                    )
+
+        for candidate in candidates:
+            if candidate.is_file():
+                return str(candidate.resolve(strict=True))
+        return None
 
     def cleanup(self, session: WorktreeSession) -> None:
         self._worktrees.cleanup(session)
