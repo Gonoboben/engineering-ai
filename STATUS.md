@@ -308,7 +308,7 @@ Historical CI note:
 - PR #100 KiCad CI run `35105701440`: `CANCELLED_NON_PASS`
 - no PR #100 CI PASS claimed: `ENFORCED`
 - Gate 012 implementation head `53d54fe8a27fa88f0381590fcca4a80b43b276f3`: deterministic regression `108/108 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- local primary-workstation smoke: `NOT_RUN_REQUIRED_BEFORE_MERGE`
+- local primary-workstation smoke: `BLOCKED_LOCAL_REPOSITORY_NOT_FOUND`; clone required before smoke
 - PlataVM package set: `PACKAGE_SET_NOT_READY`
 - fabrication: `NOT_GRANTED`
 - physical: `NOT_EXECUTED`
@@ -351,4 +351,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run the Gate 012 local read-only smoke against `C:\\workspace\\repos\\plataVM`, including the two fixed validators, and record the exact branch/HEAD/origin-main, governance conflicts, KiCad inventory, validator results, and unchanged Git-visible state. Do not rerun PlataVM GitHub Actions or modify PR #100.
+Create a normal local clone of `Gonoboben/plataVM` at `C:\\workspace\\repos\\plataVM` without modifying repository content, then run the Gate 012 read-only smoke with the two fixed validators and record exact branch/HEAD/origin-main, governance conflicts, KiCad inventory, validator results, and unchanged Git-visible state. Do not rerun PlataVM GitHub Actions or modify PR #100.
