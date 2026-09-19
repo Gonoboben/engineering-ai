@@ -1433,3 +1433,156 @@ conflict prevents controlled worktree creation and file mutation.
 Next:
 final acceptance-state CI, scope review, and exact-SHA human squash-merge
 approval for PR #26.
+
+
+---
+
+## 2026-09-19 — Gate 013 accepted and merged
+
+Final approved PR head:
+`5822cc1a92dc1dbbd431f8f523b61e983efbfbfc`.
+
+Final validation:
+- deterministic tests: `119/119 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- real PlataVM policy-block smoke: `PASS_POLICY_BLOCK_BEFORE_MUTATION`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`2a8cdf6594d8eb6b29e2efb200683af95167bb20`.
+
+Issue #25 closed.
+
+Accepted capability:
+- controlled isolated local worktree mechanism;
+- exact before-content SHA-256 binding;
+- explicit path allow-list;
+- fixed validator loop;
+- success bounded to `READY_FOR_HUMAN_APPROVAL`;
+- commit/push/PR/merge still forbidden;
+- real PlataVM write remains blocked by unresolved authoritative source conflict.
+
+Gate 013 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 014 BuoyCalc read-only adapter opened
+
+Issue:
+`#27 — Gate 014 — BuoyCalc read-only adapter`.
+
+Branch:
+`gate-014-buoycalc-readonly-adapter`.
+
+Base:
+Gate 013 squash merge `2a8cdf6594d8eb6b29e2efb200683af95167bb20`.
+
+Current BuoyCalc main observed:
+`0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`.
+
+Mandatory project authority read:
+- `AGENTS.md`;
+- `docs/OPTIMIZATION_PLAN.md`;
+- `RELEASE.md`.
+
+Implemented scope:
+- strict read-only BuoyCalc profile/policy;
+- governance SHA-256 provenance;
+- Git branch/HEAD/origin-main/dirty snapshot;
+- deterministic checks for frozen physics/release invariant markers;
+- tracked-file inventory through fixed read-only `git ls-files`;
+- conservative calculation-core/read-model/presentation/tooling classification;
+- explicit CI states preserving CANCELLED/PENDING/MISSING as non-PASS;
+- fixed release state
+  `NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`;
+- local read-only smoke harness.
+
+Remote evidence:
+- PR #604 exact head `149c2eae96cd20f0ccff97ce18d51c2c36cc55c7`
+  had successful .NET Build, Selected Shape Consumer Scan,
+  Report Store Consumer Scan and Validation 601 Main Gate;
+- current merge commit main returned no workflow runs;
+- no release PASS is inferred from PR-head evidence.
+
+Explicitly absent:
+- calculation execution;
+- physics/solver changes;
+- UI/PDF/2D/report changes;
+- validators in this Gate;
+- project writes;
+- RC packaging/trigger/tag/release;
+- 3D.
+
+Next:
+open draft PR and run Engineering AI regression/CI before the local BuoyCalc
+read-only smoke.
+
+
+---
+
+## 2026-09-19 — Gate 014 BuoyCalc adapter implementation validated
+
+Implementation head:
+`facc9d8b4a514120ce5be3a886fc77c8eda87dcc`.
+
+Validated:
+- mandatory governance resolution;
+- SHA-256 provenance;
+- read-only Git snapshot;
+- frozen invariant-marker checks;
+- tracked-file inventory through fixed `git ls-files`;
+- conservative source-boundary classification;
+- presentation/report paths never physics-authoritative;
+- CI state separation including CANCELLED/PENDING/MISSING as non-PASS;
+- fixed release state remains unauthorized;
+- strict read-only profile/policy schema;
+- no write/calculation/release API;
+- structured missing-checkout handling.
+
+Validation:
+- deterministic tests: `128/128 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 014 state:
+`IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`.
+
+Remaining:
+stable-head CI followed by one local strict read-only smoke on the real BuoyCalc
+checkout.
+
+
+---
+
+## 2026-09-19 — Gate 014 final BuoyCalc read-only smoke passed
+
+Final local strict read-only smoke executed on the primary workstation.
+
+Engineering AI head at smoke:
+`b17fa249f4d717ed24b74898285addefac79be6c`.
+
+Observed BuoyCalc:
+- `main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- `origin/main` same SHA;
+- clean before/after smoke;
+- all ten frozen invariant markers PASS;
+- 471 tracked source entries inventoried;
+- presentation/report physics-authority violation: false;
+- release state remained
+  `NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`;
+- physical validation remained `PHYSICAL_NOT_EXECUTED`;
+- repository unchanged;
+- smoke exit `0`.
+
+Classification:
+`PASS_STRICT_READ_ONLY_BASELINE`.
+
+No calculation/solver execution, validation weakening, project write,
+RC packaging, release trigger, tag, GitHub Release or other BuoyCalc mutation
+occurred.
+
+Next:
+final acceptance-state CI, scope review, and exact-SHA human squash-merge
+approval for PR #28.

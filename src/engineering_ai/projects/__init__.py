@@ -1,5 +1,12 @@
 """External engineering-project adapters and profiles."""
 
+from engineering_ai.projects.buoycalc import (
+    BuoyCalcCIState,
+    BuoyCalcReadOnlyAdapter,
+    BuoyCalcReadOnlySnapshot,
+    SourceBoundaryClass,
+    classify_ci_state as classify_buoycalc_ci_state,
+)
 from engineering_ai.projects.platavm import (
     CIState,
     GovernanceDocument,
@@ -18,6 +25,9 @@ from engineering_ai.projects.platavm_controlled import (
 )
 
 __all__ = [
+    "BuoyCalcCIState",
+    "BuoyCalcReadOnlyAdapter",
+    "BuoyCalcReadOnlySnapshot",
     "CIState",
     "ControlledLoopState",
     "ControlledPatchResult",
@@ -28,6 +38,8 @@ __all__ = [
     "PlataVMReadOnlySnapshot",
     "PlataVMValidatorResult",
     "ValidatorState",
+    "SourceBoundaryClass",
     "WorktreePreparation",
+    "classify_buoycalc_ci_state",
     "classify_ci_conclusion",
 ]

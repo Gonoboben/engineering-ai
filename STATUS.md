@@ -31,15 +31,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 011 merge commit: `da23f2c60a604f022ee91d6b129afc4ed2523a18`
 - Gate 012: `ACCEPTED_MERGED`
 - Gate 012 merge commit: `6df110df27458e221fb2713439b5e778da1da57f`
+- Gate 013: `ACCEPTED_MERGED`
+- Gate 013 merge commit: `2a8cdf6594d8eb6b29e2efb200683af95167bb20`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `013 — PlataVM controlled engineering loop`
-- Issue: `#25`
-- PR: `#26 (DRAFT)`
-- Branch: `gate-013-platavm-controlled-engineering-loop`
-- Base: `6df110df27458e221fb2713439b5e778da1da57f`
+- Gate: `014 — BuoyCalc read-only adapter`
+- Issue: `#27`
+- PR: `#28 (DRAFT)`
+- Branch: `gate-014-buoycalc-readonly-adapter`
+- Base: `2a8cdf6594d8eb6b29e2efb200683af95167bb20`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -77,14 +79,15 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Vision/image/CAD workers: `DEFERRED`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
-- PlataVM controlled worktree loop: `IMPLEMENTED_CI_VALIDATED_PENDING_REAL_PROJECT_BLOCK_SMOKE`
+- PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
+- BuoyCalc strict read-only adapter: `IMPLEMENTED_PENDING_VALIDATION`
 - External controlled review bridge: `DESIGNED_NOT_IMPLEMENTED`
 
 ## Connected engineering projects
-- PlataVM: `CONTROLLED_GATE013_IN_PROGRESS_BLOCKED_BY_SOURCE_CONFLICT`
-- BuoyCalc: `NOT_CONNECTED`
+- PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
+- BuoyCalc: `READ_ONLY_GATE014_IN_PROGRESS`
 
-Gate 013 adds a bounded isolated-worktree capability, but the real PlataVM repository remains write-blocked because authoritative governance conflicts with current Git state. No commit, push, PR mutation, CI rerun, architecture/fabrication/release/physical-state change is permitted.
+Gate 014 accesses BuoyCalc strictly read-only. It preserves calculation-core physics authority, selected X/Z semantics, exact signed/release invariants and physical-validation class. It cannot modify BuoyCalc, run release packaging, authorize v1.0.0, or treat UI/PDF/2D/report paths as physics sources.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -326,8 +329,8 @@ Historical CI note:
 - series production: `NOT_GRANTED`
 
 ## Gate 013 validation state
-- Issue #25: `OPEN`
-- PR #26: `DRAFT`
+- Issue #25: `CLOSED`
+- PR #26: `MERGED`
 - branch base equals Gate 012 squash merge `6df110df27458e221fb2713439b5e778da1da57f`: `PASS`
 - controlled branch/worktree adapter: `IMPLEMENTED`
 - fixed branch prefix: `engineering-ai/`
@@ -348,6 +351,38 @@ Historical CI note:
 - real PlataVM current write state: `BLOCKED_SOURCE_CONFLICT`
 - implementation head `9574f44c37189205ba8577096ce08b9dd893642f`: deterministic regression `119/119 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - real primary-workstation policy-block smoke: `PASS_POLICY_BLOCK_BEFORE_MUTATION`; state `BLOCKED_SOURCE_CONFLICT`, worktree_created=false, repository_unchanged=true, remote_mutation_attempted=false, EXIT=0
+- final PR head: `5822cc1a92dc1dbbd431f8f523b61e983efbfbfc`
+- final deterministic regression: `119/119 PASS`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `2a8cdf6594d8eb6b29e2efb200683af95167bb20`
+- Gate 013 state: `ACCEPTED_MERGED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 014 validation state
+- Issue #27: `OPEN`
+- branch base equals Gate 013 squash merge `2a8cdf6594d8eb6b29e2efb200683af95167bb20`: `PASS`
+- BuoyCalc adapter mode: `STRICT_READ_ONLY`
+- mandatory governance: `AGENTS.md / docs/OPTIMIZATION_PLAN.md / RELEASE.md`
+- current BuoyCalc main: `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`
+- calculation/solver physics authority: `PRESERVED`
+- UI/PDF/2D/report authority: `PRESENTATION_CONSUMER_ONLY`
+- selected calculated X/Z: `PRIMARY_USER_ENGINEERING_GEOMETRY`
+- segmentation target: `0.20 m`
+- signed feedback budget: `64`
+- signed WeightWaterKgM semantics: `UNCHANGED`
+- Accepted signed candidate: `EXACT_DETERMINISTIC_FIXED_POINT`
+- 3D: `POST_V1_OUT_OF_SCOPE`
+- required CI state classifier: `PASS / FAIL / CANCELLED / PENDING / MISSING / UNKNOWN`
+- release state: `NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`
+- project write/delete/Git mutation/release API: `ABSENT`
+- PR #604 exact-head core required workflows: `.NET Build PASS / Selected Shape Consumer Scan PASS / Report Store Consumer Scan PASS / Validation 601 Main Gate PASS`
+- current main workflow-run evidence query: `EMPTY -> NO RELEASE PASS INFERRED`
+- implementation head `facc9d8b4a514120ce5be3a886fc77c8eda87dcc`: deterministic regression `128/128 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- local primary-workstation smoke: `PASS_STRICT_READ_ONLY_BASELINE`; main/head/origin-main unchanged at `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`, dirty=false, all invariant checks PASS, 471 tracked source entries, presentation_physics_violation=false, release NOT_AUTHORIZED, physical NOT_EXECUTED, EXIT=0
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -386,4 +421,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 013 acceptance-state head. If green, perform final scope review, mark PR #26 ready for review, and request explicit human exact-SHA squash-merge approval. Do not synchronize PlataVM governance or mutate PR #100 inside Gate 013.
+Run generic and strict exact-head CI on the final Gate 014 acceptance-state head. If green, perform final scope review, mark PR #28 ready for review, and request explicit human exact-SHA squash-merge approval. Do not run calculation/solver changes, release packaging, RC branch mutation, tag/release actions, or any BuoyCalc write.
