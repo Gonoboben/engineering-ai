@@ -239,7 +239,7 @@ A stronger external model can provide useful architecture/review assistance whil
 ---
 
 ## ADR-0015 — Use append-only local SQLite decision/evidence memory
-Status: `PROPOSED_GATE_016`
+Status: `ACCEPTED_GATE_016`
 
 ### Decision
 Engineering AI decision/evidence memory uses a local append-only SQLite store
@@ -277,3 +277,50 @@ decision.
 - Gate 017 may later retrieve memory into bounded model context only through
   separate policy-controlled retrieval semantics;
 - vector databases/embeddings remain deferred.
+
+
+---
+
+## ADR-0016 — Use deterministic provenance-preserving retrieval as the baseline
+Status: `PROPOSED_GATE_017`
+
+### Decision
+Engineering AI retrieval starts with a deterministic lexical layer over the
+accepted Gate 016 decision/evidence memory.
+
+Default retrieval:
+- is project-scoped;
+- uses latest revisions only;
+- excludes MODEL/ADVISORY records;
+- excludes PROPOSED ADRs;
+- preserves authority, validation class, physical state, provenance,
+  evidence/source references and integrity SHA-256;
+- uses bounded candidate/result/context budgets;
+- returns a typed context package only;
+- performs no automatic Blackboard/model prompt injection.
+
+Advisory memory, proposed ADRs and historical revisions may be retrieved only
+through explicit opt-in and remain visibly labelled.
+
+Semantic/vector retrieval is not accepted by default. It may be introduced only
+after a separate local benchmark demonstrates materially better relevant
+engineering recall than repository/search baselines while preserving provenance,
+validation semantics and acceptable resource cost.
+
+### Rationale
+Gate 016 established durable memory, but retrieval is another trust boundary.
+A memory record becoming relevant to a query must not silently increase its
+authority or validation class.
+
+A lexical baseline is offline, deterministic, dependency-free and directly
+auditable. It also creates a measurable benchmark before adding embeddings or
+a vector database.
+
+### Consequence
+- retrieval rank is relevance only, not evidence strength;
+- retrieved metadata remains explicit in every context item;
+- superseded/advisory/proposed records cannot silently enter default context;
+- context is bounded without truncating individual records;
+- memory integrity failures fail closed;
+- no vector backend is added in Gate 017 unless separately benchmark-qualified;
+- Gate 018 remains responsible for knowledge promotion/invalidation lifecycle.
