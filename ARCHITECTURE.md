@@ -267,6 +267,31 @@ The bridge:
 - cannot bypass the deterministic Supervisor;
 - is optional, so local Engineering AI remains functional offline.
 
+### 4.15 Persistent memory retrieval boundary
+
+Gate 016 persistent memory is repository-independent shared engineering state,
+but retrieval from that memory remains Supervisor/policy-controlled.
+
+Gate 017 baseline retrieval:
+- reads only typed memory records;
+- requires an explicit project_id;
+- defaults to latest revisions;
+- excludes model/advisory memory by default;
+- excludes proposed ADRs by default;
+- preserves validation class, authority, provenance, source/evidence references,
+  physical state and record integrity hash;
+- uses deterministic bounded lexical ranking;
+- produces a typed bounded context package;
+- does not automatically inject that package into a model or Task Blackboard.
+
+Retrieval relevance never promotes a record's evidence class. A highly relevant
+ADVISORY record remains ADVISORY; a SOURCE record remains SOURCE; software test
+evidence never becomes PHYSICAL.
+
+Semantic/vector retrieval is an optional future backend, not an architectural
+requirement. It requires benchmark evidence against simpler repository/search
+methods before acceptance.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control
