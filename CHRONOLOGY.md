@@ -1518,3 +1518,37 @@ Explicitly absent:
 Next:
 open draft PR and run Engineering AI regression/CI before the local BuoyCalc
 read-only smoke.
+
+
+---
+
+## 2026-09-19 — Gate 014 BuoyCalc adapter implementation validated
+
+Implementation head:
+`facc9d8b4a514120ce5be3a886fc77c8eda87dcc`.
+
+Validated:
+- mandatory governance resolution;
+- SHA-256 provenance;
+- read-only Git snapshot;
+- frozen invariant-marker checks;
+- tracked-file inventory through fixed `git ls-files`;
+- conservative source-boundary classification;
+- presentation/report paths never physics-authoritative;
+- CI state separation including CANCELLED/PENDING/MISSING as non-PASS;
+- fixed release state remains unauthorized;
+- strict read-only profile/policy schema;
+- no write/calculation/release API;
+- structured missing-checkout handling.
+
+Validation:
+- deterministic tests: `128/128 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 014 state:
+`IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`.
+
+Remaining:
+stable-head CI followed by one local strict read-only smoke on the real BuoyCalc
+checkout.
