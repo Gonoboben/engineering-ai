@@ -2184,3 +2184,43 @@ Next:
 run final generic and strict exact-head CI on the post-benchmark evidence/status head,
 perform final scope review, mark PR #34 ready for review, then request explicit human
 exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 017 final acceptance checkpoint passed
+
+Post-benchmark evidence head:
+`578510beed676a1d6b71c8842e0ebace27564301`.
+
+Final acceptance validation:
+- generic workflow run `35464308651`: `PASS`;
+- strict exact-head workflow run `35464308598`: `PASS`;
+- deterministic regression: `178/178 PASS`;
+- exact revision verification: `PASS`.
+
+Final scope review:
+`PASS`.
+
+Confirmed absent from Gate 017:
+- embeddings/vector database or semantic backend;
+- automatic RAG/model prompt injection;
+- memory write/update/delete through retrieval;
+- evidence promotion through retrieval;
+- unrestricted shell;
+- model ownership of policy, permissions, state or tools;
+- Gate 018 knowledge-lifecycle implementation.
+
+Semantic/vector backend remains:
+`DEFERRED_NOT_JUSTIFIED`.
+
+Gate 017 state prepared for final documentation-head recheck:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0016 remains:
+`PROPOSED_GATE_017`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run generic and strict exact-head CI on the final documentation-only head. If green,
+mark PR #34 ready for review and request exact-SHA squash-merge approval.

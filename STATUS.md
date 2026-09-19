@@ -48,7 +48,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#34 (DRAFT)`
 - Branch: `gate-017-retrieval-layer`
 - Base: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
-- State: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -497,8 +497,10 @@ Historical CI note:
 - implementation head `9e5874ec19b15b7d429f3fcb6752f73b3e8e7a28`: deterministic regression `178/178 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - stable pre-smoke head `c5c2c5648efa7b12447ad5bffed9451c7b4c2868`: deterministic regression `178/178 PASS`, generic CI run `35463811833` `PASS`, strict exact-head CI run `35463811817` `PASS`
 - local retrieval benchmark/smoke: `PASS_DETERMINISTIC_RETRIEVAL_BENCHMARK`; baseline mean recall@3 `0.25`, retrieval mean recall@3 `1.0`, improved relevant cases `3`, safety PASS, not-worse-all-relevant PASS, semantic/vector backend `DEFERRED_NOT_JUSTIFIED`, automatic context injection=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0
-- final acceptance-state generic CI: `PENDING`
-- final acceptance-state strict exact-head CI: `PENDING`
+- final acceptance-state head `578510beed676a1d6b71c8842e0ebace27564301`: deterministic regression `178/178 PASS`
+- final acceptance-state generic CI run `35464308651`: `PASS`
+- final acceptance-state strict exact-head CI run `35464308598`: `PASS`
+- final scope review: `PASS`; no vector/embedding backend, auto-injection, memory write/promotion path, unrestricted shell, permission/state ownership transfer, or Gate 018 implementation
 - physical validation semantics: `UNCHANGED`
 
 ## Primary workstation status
@@ -537,4 +539,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final generic and strict exact-head CI on the post-benchmark Gate 017 evidence/status head. If green, perform final scope review, mark PR #34 ready for review, and request explicit human exact-SHA squash-merge approval. Do not add embeddings/vector retrieval: the accepted lexical benchmark already improved mean recall@3 from 0.25 to 1.0 with safety preserved, so semantic/vector remains DEFERRED_NOT_JUSTIFIED.
+Run generic and strict exact-head CI once more on the final documentation-only Gate 017 head. If green, mark PR #34 ready for review and request explicit human exact-SHA squash-merge approval. ADR-0016 remains PROPOSED_GATE_017 until that approval and squash merge.

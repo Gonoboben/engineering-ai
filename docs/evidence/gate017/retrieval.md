@@ -263,9 +263,27 @@ Per-case result:
 The lexical baseline therefore satisfies Gate 017 acceptance. No embedding or vector
 database is justified by this benchmark.
 
+## Final acceptance checkpoint
+
+Post-benchmark evidence head:
+`578510beed676a1d6b71c8842e0ebace27564301`.
+
+Validation:
+- generic workflow run `35464308651`: `PASS`;
+- strict exact-head workflow run `35464308598`: `PASS`;
+- deterministic regression: `178/178 PASS`;
+- exact revision verification: `PASS`.
+
+Final scope review:
+`PASS`.
+
+Reviewed scope contains only Gate 017 retrieval, benchmark, schema, Supervisor read-only
+boundary, tests, architecture/evidence/status documentation. No vector/embedding backend,
+automatic RAG/model injection, memory write path, evidence promotion, unrestricted shell,
+permission/state ownership transfer, or Gate 018 lifecycle implementation is present.
+
 ## Remaining acceptance
 
-1. final acceptance-state generic + strict exact-head CI on the post-benchmark evidence head;
-2. final scope review;
-3. mark PR #34 ready for review;
-4. exact-SHA human squash-merge approval.
+1. final documentation-head generic + strict exact-head recheck;
+2. mark PR #34 ready for review;
+3. exact-SHA human squash-merge approval.

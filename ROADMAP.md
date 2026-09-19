@@ -300,7 +300,7 @@ Add structured storage/search for:
 Start with simple local storage (repository files/SQLite/search).
 
 ### Gate 017 — Retrieval layer
-Status: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Add semantic/vector retrieval only if benchmarked against repository/search approaches and shown to improve relevant engineering recall without hiding provenance.
 
