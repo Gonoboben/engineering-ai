@@ -3,6 +3,8 @@ from __future__ import annotations
 import itertools
 import json
 import sqlite3
+import subprocess
+import sys
 import tempfile
 import unittest
 from datetime import datetime, timezone
@@ -473,6 +475,37 @@ class DecisionEvidenceMemoryTests(unittest.TestCase):
 
         with self.assertRaises(MemorySchemaError):
             make_store(self.path)
+
+    def test_local_persistent_reopen_smoke_harness(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(root / "scripts/gate016_memory_smoke.py"),
+                "--project-id",
+                "engineering-ai",
+            ],
+            cwd=root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        payload = json.loads(result.stdout)
+        self.assertEqual(
+            payload["state"],
+            "PASS_LOCAL_PERSISTENT_REOPEN_MEMORY",
+        )
+        self.assertTrue(payload["database_reopened"])
+        self.assertTrue(payload["loaded_record_hash_preserved"])
+        self.assertEqual(payload["supersession"]["history_revisions"], [1, 2])
+        self.assertFalse(payload["model_truth_promotion"])
+        self.assertFalse(payload["automatic_context_injection"])
+        self.assertFalse(payload["vector_search"])
+        self.assertEqual(
+            payload["physical_validation"],
+            "PHYSICAL_NOT_EXECUTED",
+        )
 
     def test_no_update_delete_or_generic_sql_api_is_exposed(self) -> None:
         with make_store(self.path) as store:
