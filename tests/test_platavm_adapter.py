@@ -95,6 +95,7 @@ class PlataVMReadOnlyAdapterTests(unittest.TestCase):
             "Docs/CHRONOLOGY.md": "# chronology\n",
             "Docs/chronology/2026-09-18.md": "older\n",
             "Docs/chronology/2026-09-19.md": "latest\n",
+            "Docs/chronology/README.md": "chronology index\n",
             "Hardware/KiCad/PlataVM.kicad_pro": "(project)\n",
             "Hardware/KiCad/PlataVM.kicad_sch": "(schematic)\n",
             "Hardware/KiCad/Footprints.pretty/Test.kicad_mod": "(module)\n",
@@ -157,6 +158,16 @@ class PlataVMReadOnlyAdapterTests(unittest.TestCase):
             "Hardware/KiCad/Footprints.pretty/Test.kicad_mod",
             snapshot.kicad_assets,
         )
+
+    def test_latest_chronology_ignores_readme_and_requires_dated_entry(self) -> None:
+        adapter = self.adapter()
+        latest = adapter.latest_chronology()
+        self.assertEqual(latest.path, "Docs/chronology/2026-09-19.md")
+
+        (self.root / "Docs/chronology/2026-09-18.md").unlink()
+        (self.root / "Docs/chronology/2026-09-19.md").unlink()
+        with self.assertRaises(ToolExecutionError):
+            adapter.latest_chronology()
 
     def test_missing_mandatory_governance_file_is_hard_error(self) -> None:
         (self.root / "Docs/OPEN_QUESTIONS.md").unlink()
