@@ -1278,3 +1278,37 @@ The defect was corrected without weakening the filesystem boundary:
 - a regression fixture proves README cannot win selection.
 
 Final corrected-head CI and one corrected-head local smoke remain required.
+
+
+---
+
+## 2026-09-19 — Gate 012 final corrected-head local smoke passed
+
+Final corrected-head local smoke executed on the primary workstation after the
+chronology-selection fix.
+
+Engineering AI head at smoke:
+`4ba5d7890f86648dfdcbc0ecab23508c4e0ebf3e`.
+
+Observed PlataVM:
+- `main@dcba77466d4800c0e7a336a2771684e066f845db`;
+- `origin/main` same SHA;
+- clean before/after smoke;
+- latest chronology correctly resolved to
+  `Docs/chronology/2026-09-11-post-pr96-status-roadmap-checkpoint-v1-9.md`;
+- 62 KiCad assets;
+- stale PROJECT_STATUS main pointer surfaced as `SOURCE_CONFLICT`;
+- repository integrity PASS;
+- semantic Gates `47/47 PASS`;
+- process exit `0`;
+- physical state remained `PHYSICAL_NOT_EXECUTED`.
+
+No PlataVM Git-visible state changed. No GitHub Actions rerun and no PR #100
+mutation occurred.
+
+Gate 012 local-smoke state:
+`PASS_READ_ONLY_WITH_EXPECTED_SOURCE_CONFLICT`.
+
+Next step:
+final acceptance-state generic + strict exact-head CI, scope review, and exact-SHA
+human squash-merge approval for PR #24.
