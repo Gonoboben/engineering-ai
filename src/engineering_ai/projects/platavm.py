@@ -236,7 +236,10 @@ class PlataVMReadOnlyAdapter:
         )
 
     def kicad_assets(self) -> tuple[str, ...]:
-        queue: list[tuple[str, int]] = [(".", 0)]
+        kicad_root = "Hardware/KiCad"
+        if not self._filesystem.exists(kicad_root):
+            raise ToolExecutionError("mandatory PlataVM Hardware/KiCad tree missing")
+        queue: list[tuple[str, int]] = [(kicad_root, 0)]
         assets: list[str] = []
         scanned = 0
 
