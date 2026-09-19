@@ -29,16 +29,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 010 merge commit: `34d18a85b5a00510331b4c75501a0672bc607093`
 - Gate 011: `ACCEPTED_MERGED`
 - Gate 011 merge commit: `da23f2c60a604f022ee91d6b129afc4ed2523a18`
+- Gate 012: `ACCEPTED_MERGED`
+- Gate 012 merge commit: `6df110df27458e221fb2713439b5e778da1da57f`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `012 — PlataVM read-only adapter`
-- Issue: `#23`
-- PR: `#24 (DRAFT)`
-- Branch: `gate-012-platavm-readonly-adapter`
-- Base: `da23f2c60a604f022ee91d6b129afc4ed2523a18`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `013 — PlataVM controlled engineering loop`
+- Issue: `#25`
+- PR: `#26 (DRAFT)`
+- Branch: `gate-013-platavm-controlled-engineering-loop`
+- Base: `6df110df27458e221fb2713439b5e778da1da57f`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_REAL_PROJECT_BLOCK_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -74,14 +76,15 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
 - Vision/image/CAD workers: `DEFERRED`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
-- PlataVM read-only adapter: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+- PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
+- PlataVM controlled worktree loop: `IMPLEMENTED_CI_VALIDATED_PENDING_REAL_PROJECT_BLOCK_SMOKE`
 - External controlled review bridge: `DESIGNED_NOT_IMPLEMENTED`
 
 ## Connected engineering projects
-- PlataVM: `READ_ONLY_GATE012_IN_PROGRESS`
+- PlataVM: `CONTROLLED_GATE013_IN_PROGRESS_BLOCKED_BY_SOURCE_CONFLICT`
 - BuoyCalc: `NOT_CONNECTED`
 
-Gate 012 accesses PlataVM only through the strict read-only adapter. No PlataVM file, Git ref, PR state, CI run, architecture, fabrication/release state, or physical state may be modified.
+Gate 013 adds a bounded isolated-worktree capability, but the real PlataVM repository remains write-blocked because authoritative governance conflicts with current Git state. No commit, push, PR mutation, CI rerun, architecture/fabrication/release/physical-state change is permitted.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -288,8 +291,8 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 012 validation state
-- Issue #23: `OPEN`
-- PR #24: `DRAFT`
+- Issue #23: `CLOSED`
+- PR #24: `MERGED`
 - branch base equals Gate 011 squash merge `da23f2c60a604f022ee91d6b129afc4ed2523a18`: `PASS`
 - PlataVM adapter mode: `STRICT_READ_ONLY`
 - project profile/policy: `IMPLEMENTED_SCHEMA_VALIDATED`
@@ -308,12 +311,44 @@ Historical CI note:
 - PR #100 KiCad CI run `35105701440`: `CANCELLED_NON_PASS`
 - no PR #100 CI PASS claimed: `ENFORCED`
 - Gate 012 implementation head `53d54fe8a27fa88f0381590fcca4a80b43b276f3`: deterministic regression `108/108 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final PR head: `cff21648524c667233daf9a765e161871ea23b7c`
+- final deterministic regression: `110/110 PASS`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `6df110df27458e221fb2713439b5e778da1da57f`
+- Gate 012 state: `ACCEPTED_MERGED`
 - final local primary-workstation smoke: `PASS_READ_ONLY_WITH_EXPECTED_SOURCE_CONFLICT`; PlataVM main/head/origin-main unchanged at `dcba77466d4800c0e7a336a2771684e066f845db`, clean before/after, dated chronology `2026-09-11-post-pr96-status-roadmap-checkpoint-v1-9.md`, 62 KiCad assets, repository integrity PASS, semantic Gates 47/47 PASS, EXIT=0
 - PlataVM package set: `PACKAGE_SET_NOT_READY`
 - fabrication: `NOT_GRANTED`
 - physical: `NOT_EXECUTED`
 - population: `PROTOTYPE_BASIS_ONLY_NOT_RELEASED / UNDECIDED`
 - series production: `NOT_GRANTED`
+
+## Gate 013 validation state
+- Issue #25: `OPEN`
+- PR #26: `DRAFT`
+- branch base equals Gate 012 squash merge `6df110df27458e221fb2713439b5e778da1da57f`: `PASS`
+- controlled branch/worktree adapter: `IMPLEMENTED`
+- fixed branch prefix: `engineering-ai/`
+- primary repository clean precondition: `ENFORCED`
+- patch target allow-list: `ENFORCED`
+- exact before-content SHA-256 precondition: `ENFORCED`
+- existing-file replacement only: `ENFORCED`
+- absolute/parent/symlink escape: `REJECTED`
+- diff capture after write: `IMPLEMENTED`
+- project policy: `propose_patch AUTONOMOUS / write_worktree HUMAN_APPROVAL_REQUIRED`
+- local_commit / push_remote / open_pr / merge_pr: `FORBIDDEN`
+- architecture / physics / validator weakening / fabrication / release: `FORBIDDEN`
+- post-write validators: `platavm.repository_integrity / platavm.semantic_gates`
+- validator failure -> ready state: `PROHIBITED`
+- maximum successful loop state: `READY_FOR_HUMAN_APPROVAL`
+- synthetic controlled-write fixture path: `PASS`
+- source conflict blocks before worktree creation: `PASS`
+- real PlataVM current write state: `BLOCKED_SOURCE_CONFLICT`
+- implementation head `9574f44c37189205ba8577096ce08b9dd893642f`: deterministic regression `119/119 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- real primary-workstation policy-block smoke: `PENDING`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
 - host: Windows 11 Pro build `10.0.22000` (`KNOWN_PLATFORM_RISK`, not a current blocker)
@@ -351,4 +386,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 012 acceptance-state head. If green, perform final scope review, mark PR #24 ready for review, and request explicit human exact-SHA squash-merge approval. Do not modify PlataVM PR #100 or rerun its GitHub Actions.
+Run the Gate 013 real-project policy-block smoke against `C:\\workspace\\repos\\plataVM` on the stable Gate 013 head. Expected: `BLOCKED_SOURCE_CONFLICT`, no worktree created, repository HEAD/status unchanged, no remote mutation. Do not synchronize PlataVM governance inside Engineering AI; that requires a separate PlataVM Gate.
