@@ -1,5 +1,12 @@
 """External engineering-project adapters and profiles."""
 
+from engineering_ai.projects.buoycalc import (
+    BuoyCalcCIState,
+    BuoyCalcReadOnlyAdapter,
+    BuoyCalcReadOnlySnapshot,
+    SourceBoundaryClass,
+    classify_ci_state as classify_buoycalc_ci_state,
+)
 from engineering_ai.projects.platavm import (
     CIState,
     GovernanceDocument,
@@ -36,11 +43,3 @@ __all__ = [
     "classify_buoycalc_ci_state",
     "classify_ci_conclusion",
 ]
-
-from engineering_ai.projects.buoycalc import (
-    BuoyCalcCIState,
-    BuoyCalcReadOnlyAdapter,
-    BuoyCalcReadOnlySnapshot,
-    SourceBoundaryClass,
-    classify_ci_state as classify_buoycalc_ci_state,
-)
