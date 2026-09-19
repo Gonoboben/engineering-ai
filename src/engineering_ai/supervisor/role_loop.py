@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from typing import Any, Callable, Mapping, Sequence
 
@@ -158,8 +158,14 @@ class PlannerExecutorReviewerLoop:
         max_plan_steps: int = 16,
         max_tool_calls: int = 8,
         max_revisions: int = 1,
+        max_protocol_retries: int = 1,
     ) -> None:
-        if max_plan_steps <= 0 or max_tool_calls <= 0 or max_revisions < 0:
+        if (
+            max_plan_steps <= 0
+            or max_tool_calls <= 0
+            or max_revisions < 0
+            or max_protocol_retries < 0
+        ):
             raise ValueError("role-loop bounds must be positive/non-negative")
         self._policy = deepcopy(policy)
         self._state = deepcopy(state)
@@ -177,6 +183,7 @@ class PlannerExecutorReviewerLoop:
         self._max_plan_steps = max_plan_steps
         self._max_tool_calls = max_tool_calls
         self._max_revisions = max_revisions
+        self._max_protocol_retries = max_protocol_retries
 
     @property
     def state(self) -> dict[str, Any]:
@@ -197,10 +204,10 @@ class PlannerExecutorReviewerLoop:
         revision_note: str | None = None
 
         while True:
-            plan = self._run_planner(
-                job=working_job, user_task=user_task, revision_note=revision_note
-            )
             try:
+                plan = self._run_planner(
+                    job=working_job, user_task=user_task, revision_note=revision_note
+                )
                 self._validate_plan(working_job, plan)
             except (SemanticValidationError, ValueError) as exc:
                 machine.transition(LoopState.FAIL)
@@ -224,11 +231,24 @@ class PlannerExecutorReviewerLoop:
             )
             machine.transition(LoopState.EXECUTE)
 
-            execution_or_terminal = self._run_executor(
-                job=working_job,
-                user_task=user_task,
-                plan=plan,
-            )
+            try:
+                execution_or_terminal = self._run_executor(
+                    job=working_job,
+                    user_task=user_task,
+                    plan=plan,
+                )
+            except (SemanticValidationError, ValueError) as exc:
+                machine.transition(LoopState.FAIL)
+                return self._finish(
+                    machine=machine,
+                    job=working_job,
+                    plan=plan,
+                    execution=execution,
+                    review=review,
+                    revision_count=revision_count,
+                    blocker=f"invalid executor output: {exc}",
+                    status="FAIL",
+                )
             if isinstance(execution_or_terminal, RoleLoopResult):
                 return execution_or_terminal
             execution = execution_or_terminal
@@ -256,12 +276,25 @@ class PlannerExecutorReviewerLoop:
             )
             machine.transition(LoopState.REVIEW)
 
-            review = self._run_reviewer(
-                job=working_job,
-                user_task=user_task,
-                plan=plan,
-                execution=execution,
-            )
+            try:
+                review = self._run_reviewer(
+                    job=working_job,
+                    user_task=user_task,
+                    plan=plan,
+                    execution=execution,
+                )
+            except (SemanticValidationError, ValueError) as exc:
+                machine.transition(LoopState.FAIL)
+                return self._finish(
+                    machine=machine,
+                    job=working_job,
+                    plan=plan,
+                    execution=execution,
+                    review=review,
+                    revision_count=revision_count,
+                    blocker=f"invalid reviewer output: {exc}",
+                    status="FAIL",
+                )
 
             if review.decision is ReviewDecision.ACCEPT:
                 machine.transition(LoopState.COMPLETE)
@@ -372,11 +405,11 @@ class PlannerExecutorReviewerLoop:
             max_output_tokens=self._config.max_output_tokens,
             reasoning_effort=self._config.reasoning_effort,
         )
-        response = self._provider.chat(
-            request, timeout_seconds=self._config.timeout_seconds
+        response, payload = self._structured_role_response(
+            job=job,
+            role=EngineeringRole.PLANNER,
+            request=request,
         )
-        self._record_model_call(job, EngineeringRole.PLANNER, response)
-        payload = self._json_object(response.content, EngineeringRole.PLANNER)
         steps = self._string_tuple(payload.get("steps"), "steps")
         allowed = self._string_tuple(payload.get("allowed_actions"), "allowed_actions")
         return PlanResult(steps=steps, allowed_actions=allowed, model_response=response)
@@ -595,11 +628,11 @@ class PlannerExecutorReviewerLoop:
             max_output_tokens=self._config.max_output_tokens,
             reasoning_effort=self._config.reasoning_effort,
         )
-        response = self._provider.chat(
-            request, timeout_seconds=self._config.timeout_seconds
+        response, payload = self._structured_role_response(
+            job=job,
+            role=EngineeringRole.REVIEWER,
+            request=request,
         )
-        self._record_model_call(job, EngineeringRole.REVIEWER, response)
-        payload = self._json_object(response.content, EngineeringRole.REVIEWER)
         try:
             decision = ReviewDecision(payload.get("decision"))
         except ValueError as exc:
@@ -608,6 +641,45 @@ class PlannerExecutorReviewerLoop:
         if not isinstance(summary, str) or not summary.strip():
             raise SemanticValidationError("reviewer summary must be non-empty")
         return ReviewResult(decision=decision, summary=summary, model_response=response)
+
+    def _structured_role_response(
+        self,
+        *,
+        job: dict[str, Any],
+        role: EngineeringRole,
+        request: ModelRequest,
+    ) -> tuple[ModelResponse, dict[str, Any]]:
+        current_request = request
+        last_error: SemanticValidationError | None = None
+
+        for attempt in range(self._max_protocol_retries + 1):
+            response = self._provider.chat(
+                current_request, timeout_seconds=self._config.timeout_seconds
+            )
+            self._record_model_call(job, role, response)
+            try:
+                return response, self._json_object(response.content, role)
+            except SemanticValidationError as exc:
+                last_error = exc
+                if attempt >= self._max_protocol_retries:
+                    break
+                current_request = replace(
+                    request,
+                    messages=request.messages
+                    + (
+                        ModelMessage(
+                            "user",
+                            "Protocol correction: the previous response did not satisfy "
+                            "the required JSON schema. Return exactly one valid JSON "
+                            "object matching the schema, with no prose or markdown.",
+                        ),
+                    ),
+                )
+
+        assert last_error is not None
+        raise SemanticValidationError(
+            f"{role.value} structured-output retry exhausted: {last_error}"
+        ) from last_error
 
     def _validate_plan(self, job: dict[str, Any], plan: PlanResult) -> None:
         if not plan.steps:
@@ -740,7 +812,12 @@ class PlannerExecutorReviewerLoop:
                 runtime_version=response.runtime_version,
                 model=response.model,
                 ok=True,
-                summary=f"{role.value} model response received",
+                summary=(
+                    f"{role.value} model response received; "
+                    f"done_reason={response.done_reason or 'unknown'}; "
+                    f"content_chars={len(response.content)}; "
+                    f"tool_calls={len(response.tool_calls)}"
+                ),
                 before_ref=self._repository_ref(),
                 after_ref=self._repository_ref(),
             )
