@@ -123,7 +123,7 @@ Final acceptance:
 Do not hard-code model-family semantics into Supervisor behavior.
 
 ### Gate 006 — Planner / Executor / Reviewer loop
-Status: `IMPLEMENTED_DETERMINISTIC_VALIDATED_PENDING_LOCAL_SMOKE`
+Status: `RUNTIME_SMOKE_PASS_PENDING_FINAL_ACCEPTANCE`
 
 Implemented:
 - typed Planner / Executor / Reviewer roles and results;
@@ -144,9 +144,12 @@ Deterministic validation:
 - generic CI on that head: `PASS`;
 - strict exact-head CI on that head: `PASS`.
 
-Remaining acceptance evidence:
-- execute the local runtime smoke on the primary workstation;
-- record the smoke result without treating it as physical validation;
+Acceptance evidence:
+- local runtime smoke on primary workstation at head `f3c434e630a10bbf016e28d6c873df4f79783c28`: `PASS`;
+- result: `COMPLETE / PASS`, bounded `read_repository`, SHA-256 evidence for `STATUS.md`, Reviewer `ACCEPT`;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+Remaining final acceptance:
 - final regression and strict exact-head CI on the final documentation/evidence head;
 - explicit exact-SHA human squash-merge approval.
 
