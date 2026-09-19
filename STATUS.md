@@ -43,10 +43,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `016 — Decision/evidence memory`
 - Issue: `#31`
-- PR: `PENDING_DRAFT`
+- PR: `#32 (DRAFT)`
 - Branch: `gate-016-decision-evidence-memory`
 - Base: `496896ebb368618cbd9f3c6f26e31fae4acb8922`
-- State: `IMPLEMENTED_PENDING_VALIDATION`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -452,10 +452,10 @@ Historical CI note:
 - physical PASS/FAIL synthesis from software/model records: `PROHIBITED`
 - no generic SQL/update/delete API: `ENFORCED`
 - memory record JSON Schema: `IMPLEMENTED`
+- implementation head `436e040fdf2198f10c56061855a2c4437d4786fe`: deterministic regression `161/161 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - local persistent/reopen smoke: `PENDING`
-- deterministic regression: `PENDING`
-- generic CI: `PENDING`
-- strict exact-head CI: `PENDING`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -494,4 +494,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Open Gate 016 draft PR and run deterministic/generic/strict exact-head validation. Correct only memory implementation/schema defects. Then run the local persistent/reopen memory smoke. Do not add vector search, RAG/context injection, external/cloud memory, model-managed truth, autonomous accepted ADRs or destructive migrations.
+Run generic and strict exact-head CI on the stable Gate 016 evidence/status head, then run the local persistent/reopen memory smoke on the primary workstation. Do not add vector search, RAG/context injection, external/cloud memory, model-managed truth, autonomous accepted ADRs or destructive migrations.
