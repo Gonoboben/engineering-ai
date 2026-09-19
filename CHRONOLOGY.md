@@ -607,3 +607,29 @@ Human direction:
 
 Next step:
 prepare deterministic Gate 008 benchmark/evidence harness, then install and benchmark the two fixed candidate tags on the primary workstation.
+
+
+---
+
+## 2026-09-19 — Gate 008 candidate models installed and metadata verified
+
+Primary workstation repository head before installation:
+`685f1ec046f0b42b8bd8d7c533dab7e5043cb6ce`.
+
+Installed:
+- `qwen3.5:9b` — local ID `6488c96fa5fa`, 6.6 GB package, architecture `qwen35`, 9.7B parameters, context 262144, Q4_K_M, capabilities completion/vision/tools/thinking;
+- `qwen2.5-coder:7b-instruct` — local ID `dae161e27b0e`, 4.7 GB package, architecture `qwen2`, 7.6B parameters, context 32768, Q4_K_M, capabilities completion/tools/insert.
+
+Captured environment remained:
+- `OLLAMA_CONTEXT_LENGTH=8192`;
+- `OLLAMA_HOST=127.0.0.1:11434`;
+- `OLLAMA_MAX_LOADED_MODELS=1`;
+- `OLLAMA_MODELS=C:\workspace\models\ollama`;
+- `OLLAMA_NO_CLOUD=1`;
+- `OLLAMA_NUM_PARALLEL=1`;
+- `ollama ps` empty before benchmark.
+
+No Electronics/PCB/KiCad/ERC/DRC/SPICE capability was tested.
+
+Next step:
+run only the Qwen3.5-9B general/Planner benchmark before starting any Qwen2.5-Coder benchmark.
