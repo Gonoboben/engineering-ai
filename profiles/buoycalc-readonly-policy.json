@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "policy_version": "gate014-buoycalc-readonly-v1",
+  "project_id": "buoycalc",
+  "autonomous_actions": [
+    "read_repository"
+  ],
+  "approval_required_actions": [],
+  "forbidden_actions": [
+    "search_documents",
+    "run_calculation",
+    "run_simulation",
+    "run_validator",
+    "propose_patch",
+    "write_worktree",
+    "local_commit",
+    "push_remote",
+    "open_pr",
+    "merge_pr",
+    "release_authorization",
+    "fabrication_authorization",
+    "architecture_change",
+    "physics_change",
+    "validator_weakening",
+    "external_disclosure",
+    "destructive_action",
+    "scope_expansion"
+  ],
+  "mandatory_validators": [
+    ".NET Build",
+    "Selected Shape Consumer Scan",
+    "Report Store Consumer Scan",
+    "BuoyCalc Validation 601 Main Gate",
+    "BuoyCalc Windows Build: success"
+  ],
+  "stop_conditions": [
+    "mandatory governance source is missing",
+    "engineering invariant marker is missing or changed",
+    "presentation/report path is treated as physics authority",
+    "required exact-head CI is missing, pending, cancelled, failed or unknown",
+    "manual Windows RC smoke approval is absent",
+    "requested action is outside Gate 014 strict read-only scope"
+  ],
+  "retry_limit": 0
+}
