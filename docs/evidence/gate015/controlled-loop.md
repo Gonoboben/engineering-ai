@@ -259,3 +259,46 @@ Validation:
 - strict exact-head CI: `PASS`.
 
 A second real smoke is required.
+
+
+## Real primary-workstation smoke attempt 2 — prerequisite preflight block
+
+The corrected Gate 015 smoke reran on the real BuoyCalc checkout after runtime
+preflight was added.
+
+Observed primary repository:
+- branch: `main`;
+- HEAD: `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- `origin/main`: same SHA;
+- dirty: `false`;
+- before/after status: `## main...origin/main`;
+- repository_unchanged: `true`.
+
+Preflight result:
+- state: `BLOCKED_RUNTIME_PREREQUISITE`;
+- dotnet_executable: `null`;
+- pwsh_executable: `null`;
+- dotnet_sdk8_available: `false`;
+- dotnet_sdks: empty;
+- blockers:
+  - `dotnet executable not found`;
+  - `pwsh executable not found`;
+- process exit: `4`.
+
+The corrected preflight blocked before worktree creation and before any
+build/test/validation execution.
+
+Release remained:
+`NOT_AUTHORIZED`.
+
+Physical validation remained:
+`PHYSICAL_NOT_EXECUTED`.
+
+Classification:
+`RUNTIME_PREREQUISITE_MISSING`.
+
+Required local prerequisites before smoke attempt 3:
+- Microsoft .NET 8 SDK;
+- PowerShell 7 (`pwsh`).
+
+No BuoyCalc engineering failure is recorded because no validation profile ran.
