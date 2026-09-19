@@ -308,7 +308,7 @@ Historical CI note:
 - PR #100 KiCad CI run `35105701440`: `CANCELLED_NON_PASS`
 - no PR #100 CI PASS claimed: `ENFORCED`
 - Gate 012 implementation head `53d54fe8a27fa88f0381590fcca4a80b43b276f3`: deterministic regression `108/108 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- local primary-workstation smoke: `BLOCKED_LOCAL_REPOSITORY_NOT_FOUND`; clone required before smoke
+- local primary-workstation smoke attempt 2: `READ_ONLY_BOUNDARY_PASS_WITH_CHRONOLOGY_SELECTION_DEFECT`; main/head/origin-main unchanged, 62 KiCad assets, repository integrity PASS, semantic Gates 47/47 PASS, SOURCE_CONFLICT correctly surfaced; chronology README selection defect corrected, final corrected-head smoke pending
 - PlataVM package set: `PACKAGE_SET_NOT_READY`
 - fabrication: `NOT_GRANTED`
 - physical: `NOT_EXECUTED`
@@ -351,4 +351,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Create a normal local clone of `Gonoboben/plataVM` at `C:\\workspace\\repos\\plataVM` without modifying repository content, then run the Gate 012 read-only smoke with the two fixed validators and record exact branch/HEAD/origin-main, governance conflicts, KiCad inventory, validator results, and unchanged Git-visible state. Do not rerun PlataVM GitHub Actions or modify PR #100.
+Validate the chronology-selection correction with generic and strict exact-head CI, then rerun the Gate 012 local read-only smoke on the corrected exact head. Require a dated `Docs/chronology/YYYY-MM-DD*.md` selection, unchanged PlataVM Git-visible state, repository integrity PASS and semantic Gates PASS. Do not rerun PlataVM GitHub Actions or modify PR #100.
