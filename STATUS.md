@@ -37,16 +37,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 014 merge commit: `0f7ec3c01829f9c193e5730ec5144eee77c00b52`
 - Gate 015: `ACCEPTED_MERGED`
 - Gate 015 merge commit: `496896ebb368618cbd9f3c6f26e31fae4acb8922`
+- Gate 016: `ACCEPTED_MERGED`
+- Gate 016 merge commit: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `016 — Decision/evidence memory`
-- Issue: `#31`
-- PR: `#32 (DRAFT)`
-- Branch: `gate-016-decision-evidence-memory`
-- Base: `496896ebb368618cbd9f3c6f26e31fae4acb8922`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `017 — Retrieval layer`
+- Issue: `#33`
+- PR: `PENDING_DRAFT`
+- Branch: `gate-017-retrieval-layer`
+- Base: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
+- State: `IMPLEMENTED_PENDING_VALIDATION`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -73,7 +75,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate B: `qwen3.6:27b-q4_K_M` — `3 PASS / 1 INCONCLUSIVE_TRUNCATED`; memory-stable but ~2.45–2.55 eval tok/s and ~37.7 min aggregate benchmark time on this workstation
 - Stretch candidate: `qwen3.6:35b` — `DEFERRED_NOT_JUSTIFIED_ON_CURRENT_WORKSTATION` after measured 27B CPU-heavy performance
 - Planner / Executor / Reviewer loop: `IMPLEMENTED_RUNTIME_VALIDATED`
-- Engineering memory runtime: `IMPLEMENTED_PENDING_VALIDATION_GATE_016`
+- Engineering memory runtime: `IMPLEMENTED_VALIDATED_GATE_016`
+- Retrieval layer: `IMPLEMENTED_PENDING_VALIDATION_GATE_017`
 - Supervised multi-model architecture: `ACCEPTED_GATE_007`
 - Model capability registry/router runtime: `IMPLEMENTED_VALIDATED_GATE_009`
 - Task Blackboard/runtime hand-offs: `IMPLEMENTED_VALIDATED_GATE_010`
@@ -92,7 +95,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
 - BuoyCalc: `CONTROLLED_GATE015_ACCEPTED`
 
-Gate 015 controlled BuoyCalc integration is accepted. Gate 016 adds local append-only decision/evidence memory only; it does not inject memory into model context. Model-authored memory remains advisory, accepted ADRs remain human-only, and physical evidence retains its explicit validation class.
+Gate 015 controlled BuoyCalc integration is accepted. Gate 016 append-only decision/evidence memory is accepted. Gate 017 adds bounded provenance-preserving retrieval over that memory; it does not automatically inject context into models and does not add semantic/vector retrieval without benchmark justification.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -427,12 +430,17 @@ Historical CI note:
 - corrected exact-identity deregistered-residue recovery head `d8405894bfb9152256e28ca49678f27ed8a2471d`: deterministic regression `147/147 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - final stale-worktree recovery: `PASS`; worktree_removed=true, branch_removed=true, registered_before_cleanup=false, fallback_used=true, repository_unchanged=true, EXIT=0
 - Gate 015 real-project result: `PASS_CONTROLLED_BUOYCALC_VALIDATION_AND_CLEANUP`
-- final acceptance-state generic CI: `PENDING`
-- final acceptance-state strict exact-head CI: `PENDING`
+- final PR head: `2f503df7750eafb4e19fed796dc2a6642d509616`
+- final deterministic regression: `161/161 PASS`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
+- Gate 016 state: `ACCEPTED_MERGED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 016 validation state
-- Issue #31: `OPEN`
+- Issue #31: `CLOSED`
 - branch base equals Gate 015 squash merge `496896ebb368618cbd9f3c6f26e31fae4acb8922`: `PASS`
 - storage: `LOCAL_SQLITE_STANDARD_LIBRARY`
 - schema version: `1.0`
@@ -457,6 +465,34 @@ Historical CI note:
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 017 validation state
+- Issue #33: `OPEN`
+- branch base equals Gate 016 squash merge `a71c084078ae7c12361555eaed2f3d7c887d61d6`: `PASS`
+- retrieval mode: `DETERMINISTIC_LEXICAL_TYPED_MEMORY`
+- project isolation: `ENFORCED`
+- latest revision default: `ENFORCED`
+- MODEL/ADVISORY default inclusion: `PROHIBITED`
+- proposed ADR default inclusion: `PROHIBITED`
+- explicit advisory/proposed/history opt-in: `IMPLEMENTED_WITH_LABEL_PRESERVATION`
+- stable lexical ranking: `IMPLEMENTED`
+- bounded candidate count: `MAX_100`
+- bounded result count: `MAX_100 / request-bounded`
+- bounded context characters: `256..100000`
+- record truncation within context package: `PROHIBITED`
+- provenance/evidence/source refs preserved: `IMPLEMENTED`
+- content SHA-256 preserved: `IMPLEMENTED`
+- memory integrity failure behavior: `FAIL_CLOSED`
+- automatic Blackboard/model context injection: `NOT_IMPLEMENTED_PROHIBITED_GATE_017`
+- semantic/vector backend: `DEFERRED_NOT_JUSTIFIED_PENDING_BENCHMARK`
+- retrieval benchmark: `IMPLEMENTED_PENDING_VALIDATION`
+- retrieval context JSON Schema: `IMPLEMENTED`
+- external dependency addition: `NONE`
+- deterministic regression: `PENDING`
+- generic CI: `PENDING`
+- strict exact-head CI: `PENDING`
+- local retrieval benchmark/smoke: `PENDING`
+- physical validation semantics: `UNCHANGED`
 
 ## Primary workstation status
 - host: Windows 11 Pro build `10.0.22000` (`KNOWN_PLATFORM_RISK`, not a current blocker)
@@ -494,4 +530,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final generic and strict exact-head CI on the Gate 016 acceptance-state head. If green, perform final scope review, mark PR #32 ready for review, and request explicit human exact-SHA squash-merge approval. Do not add vector search, RAG/context injection, external/cloud memory, model-managed truth, autonomous accepted ADRs or destructive migrations.
+Open Gate 017 draft PR and run deterministic/generic/strict exact-head validation of the lexical retrieval layer and benchmark. Add no embeddings/vector backend unless the benchmark evidence separately justifies it. After CI, run one local retrieval benchmark/smoke on the primary workstation.
