@@ -165,6 +165,7 @@ class PlannerExecutorReviewerLoop:
         self._state = deepcopy(state)
         validate_instance("project-policy.schema.json", self._policy)
         validate_instance("project-state.schema.json", self._state)
+        self._audit = audit_emitter or AuditEmitter()
         self._supervisor = Supervisor(
             policy=self._policy, state=self._state, audit_emitter=self._audit
         )
@@ -172,7 +173,6 @@ class PlannerExecutorReviewerLoop:
         self._config = model_config
         self._tool_specs = dict(tool_specs)
         self._tool_executors = dict(tool_executors)
-        self._audit = audit_emitter or AuditEmitter()
         self._audit_events: list[dict[str, Any]] = []
         self._max_plan_steps = max_plan_steps
         self._max_tool_calls = max_tool_calls
