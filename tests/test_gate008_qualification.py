@@ -74,6 +74,27 @@ class Gate008QualificationTests(unittest.TestCase):
         for forbidden in ("kicad", "pcb", "erc", "drc", "spice", "schematic"):
             self.assertNotIn(forbidden, text)
 
+    def test_clamp_scorer_accepts_expression_or_return_statement(self) -> None:
+        self.assertEqual(
+            self.module._normalized_return_expression("max(lo, min(hi, x))"),
+            "max(lo,min(hi,x))",
+        )
+        self.assertEqual(
+            self.module._normalized_return_expression(
+                "return max(lo, min(hi, x))"
+            ),
+            "max(lo,min(hi,x))",
+        )
+
+    def test_json_content_does_not_count_as_native_tool_call(self) -> None:
+        class Response:
+            content = '{"name":"read_repository","arguments":{"path":"STATUS.md"}}'
+            tool_calls = ()
+
+        passed, note = self.module._tool_scorer(Response())
+        self.assertFalse(passed)
+        self.assertIn("exactly one inert", note)
+
     def test_exit_code_semantics_match_existing_benchmark_contract(self) -> None:
         self.assertEqual(
             self.module._exit_code({"failed": 0, "unscored": 0}), 0
