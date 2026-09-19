@@ -1093,3 +1093,35 @@ Explicitly out of scope:
 
 Next step:
 open draft PR and run deterministic/generic/strict exact-head validation.
+
+
+---
+
+## 2026-09-19 — Gate 011 review implementation validated
+
+Implementation validation head:
+`117ee434e1b55faf06580bd8ae9474e5f1085107`.
+
+Validated:
+- deterministic evidence resolves support/contradiction before model review;
+- Qwen-originated unresolved claims route to `gpt-oss:20b / medium`;
+- gpt-oss-originated unresolved claims cannot self-review;
+- same-model review is rejected;
+- model review records remain `ADVISORY`;
+- review does not promote model output to deterministic evidence;
+- one bounded revision maximum;
+- second revision request -> `NEEDS_HUMAN_APPROVAL`;
+- inconclusive review -> `NEEDS_HUMAN_APPROVAL`;
+- non-evidence records cannot be declared deterministic evidence;
+- no majority voting or confidence aggregation;
+- no Electronics/PCB/KiCad/Vision roles added.
+
+Validation:
+- deterministic tests: `99/99 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 011 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+One final exact-head CI run is required after acceptance-state synchronization.
