@@ -17,15 +17,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 004 merge commit: `bc950ded14487b0de90e9209589486fe6bfd83f2`
 - Gate 005: `ACCEPTED_MERGED`
 - Gate 005 merge commit: `ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`
+- Gate 006: `ACCEPTED_MERGED`
+- Gate 006 merge commit: `24b1fbc009920c1dee8317c784ef42711044be87`
 - Control-plane architecture: `ACCEPTED_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `006 — Planner / Executor / Reviewer loop`
-- Issue: `#11`
-- PR: `PENDING_DRAFT`
-- Branch: `gate-006-planner-executor-reviewer`
-- State: `RUNTIME_SMOKE_PASS_PENDING_FINAL_EXACT_HEAD_CI_AND_HUMAN_APPROVAL`
+- Gate: `007 — Supervised multi-model architecture baseline`
+- Issue: `#13`
+- PR: `#14 (DRAFT)`
+- Branch: `gate-007-supervised-multi-model-architecture`
+- Base: `24b1fbc009920c1dee8317c784ef42711044be87`
+- State: `ARCHITECTURE_BASELINE_IN_PROGRESS`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -53,15 +56,19 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Stretch candidate: `qwen3.6:35b` — `DEFERRED_NOT_JUSTIFIED_ON_CURRENT_WORKSTATION` after measured 27B CPU-heavy performance
 - Planner / Executor / Reviewer loop: `IMPLEMENTED_RUNTIME_VALIDATED`
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
-- Multi-agent routing: `DEFERRED`
+- Supervised multi-model architecture: `GATE_007_IN_PROGRESS`
+- Model capability registry/router runtime: `DESIGNED_NOT_IMPLEMENTED`
+- Task Blackboard/runtime hand-offs: `DESIGNED_NOT_IMPLEMENTED`
+- Candidate Qwen3.5-9B qualification: `NOT_RUN`
+- Candidate Qwen2.5-Coder-7B qualification: `NOT_RUN`
 - Vision/image/CAD workers: `DEFERRED`
-- External/OpenAI bridge: `OPTIONAL_NOT_IMPLEMENTED`
+- External controlled review bridge: `DESIGNED_NOT_IMPLEMENTED`
 
 ## Connected engineering projects
 - PlataVM: `NOT_CONNECTED`
 - BuoyCalc: `NOT_CONNECTED`
 
-Gate 006 does not access or modify either engineering project.
+Gate 007 is architecture/governance only and does not access or modify either engineering project.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -112,8 +119,8 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 006 validation state
-- Issue #11: `OPEN`
-- draft PR #12: `OPEN`
+- Issue #11: `CLOSED`
+- PR #12: `MERGED`
 - branch from Gate 005 merge commit: `PASS`
 - typed Planner / Executor / Reviewer role separation: `IMPLEMENTED_VALIDATED`
 - deterministic role state machine and illegal-transition rejection: `PASS`
@@ -138,7 +145,30 @@ Historical CI note:
 - corrected-head generic CI after Reviewer recovery: `PASS`
 - corrected-head strict exact-head CI after Reviewer recovery: `PASS`
 - local runtime smoke attempt 3 on `f3c434e630a10bbf016e28d6c873df4f79783c28`: `PASS` — `COMPLETE / PASS`, `read_repository`, evidence `sha256:STATUS.md:ac9f1cb5c40f9793a0342df00f7926b9b95af12e9f7e70b2f27b5710097b4b45`, Reviewer `ACCEPT`
-- final strict exact-head CI after evidence/documentation updates: `NOT_RUN`
+- final PR head: `04d3f7653471b8bb8db7f90d939e55b122bfc1c1`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`, `50/50`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `24b1fbc009920c1dee8317c784ef42711044be87`
+- Gate 006 state: `ACCEPTED_MERGED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 007 validation state
+- Issue #13: `OPEN`
+- draft PR #14: `OPEN`
+- branch base equals Gate 006 squash merge `24b1fbc009920c1dee8317c784ef42711044be87`: `PASS`
+- architecture scope only: `IN_PROGRESS`
+- Supervisor remains sole permission/state/tool authority: `REQUIRED`
+- unrestricted peer-to-peer swarm: `PROHIBITED`
+- model agreement/majority vote as evidence: `PROHIBITED`
+- Model Capability Registry semantics: `DOCUMENTED_PENDING_REVIEW`
+- deterministic Model Router authority: `DOCUMENTED_PENDING_REVIEW`
+- Task Blackboard semantics: `DOCUMENTED_PENDING_REVIEW`
+- external ChatGPT/OpenAI control boundary: `DOCUMENTED_PENDING_REVIEW`
+- Qwen3.5-9B/Qwen2.5-Coder local qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_007`
+- implementation changes: `NONE_EXPECTED`
+- final exact-head CI: `PENDING`
+- explicit exact-SHA architecture approval before merge: `REQUIRED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -172,7 +202,9 @@ Security constraint for local model services:
 - simulation does not imply physical validation;
 - material actions are auditable;
 - human approval remains mandatory at defined irreversible/architecture/physics boundaries;
-- single-agent core precedes multi-agent expansion.
+- validated single-agent core remains the foundation for all supervised multi-model expansion;
+- specialist models communicate only through Supervisor-controlled hand-offs;
+- model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final regression and strict exact-head CI on the final Gate 006 evidence/documentation head. If green, request explicit human squash-merge approval for PR #12 at that exact head SHA. Physical validation remains `PHYSICAL_NOT_EXECUTED`.
+Complete Gate 007 architecture/documentation consistency review, run generic and strict exact-head CI on PR #14, and stop for explicit human exact-SHA architecture approval before squash merge. Do not download or qualify new models until Gate 007 is accepted.
