@@ -21,9 +21,26 @@
 - installation: PASS
 - local model ID: `6488c96fa5fa`
 - exact local metadata: architecture `qwen35`; parameters `9.7B`; context length `262144`; embedding length `4096`; quantization `Q4_K_M`; capabilities `completion, vision, tools, thinking`; runtime requirement `0.17.1`; license `Apache-2.0`
-- general suite: NOT_RUN
-- resource evidence: NOT_RECORDED
-- qualification: NOT_EVALUATED
+- general suite: `4/4 PASS`, failed `0`, unscored `0`
+- benchmark runtime: Ollama `0.34.2`
+- settings: context `8192`, max output `2048`, reasoning `none`
+- aggregate wall time: ~`31.446 s`
+- cold first case: ~`29.394 s`, including ~`8.213 s` model load and ~`20.916 s` prompt evaluation
+- warm case wall times: ~`0.849 s`, `0.586 s`, `0.617 s`
+- eval throughput by case: ~`57.72`, `49.55`, `46.02`, `67.02 tok/s`
+- structured JSON: `PASS`
+- bounded Planner contract: `PASS`
+- validation semantics: `PASS`
+- inert tool proposal: `PASS`, exact `read_repository(path=STATUS.md)`
+- done_reason: `stop` for all four cases
+- truncation/timeouts/provider errors: `0`
+- runtime placement: `100% GPU`
+- model VRAM allocation reported by Ollama: `5,628,493,822 bytes` (~`5.37 GiB`)
+- post-run total GPU memory used: `7487 MiB`; free `538 MiB`
+- post-run free physical RAM: `22,517,204 KiB` (~`21.47 GiB`)
+- resource evidence: `RECORDED`
+- qualification: `QUALIFIED_GENERAL_PLANNER`
+- note: speed is not treated as a direct apples-to-apples replacement comparison with Gate 005 gpt-oss because this Gate uses a different case matrix and Ollama runtime `0.34.2` versus historical `0.34.1`
 
 ## Candidate C — qwen2.5-coder:7b-instruct
 
@@ -54,7 +71,7 @@
 
 ## Final acceptance
 
-- candidate results recorded: PENDING
+- candidate results recorded: QWEN35_GENERAL_RECORDED; QWEN25_CODER_PENDING
 - resource evidence recorded: PENDING
 - qualification states recorded: PENDING
 - final generic CI: PENDING
