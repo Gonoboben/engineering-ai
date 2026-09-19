@@ -678,3 +678,48 @@ Electronics/PCB/KiCad/ERC/DRC/SPICE capability remains:
 
 Next step:
 run only the Qwen2.5-Coder-7B-Instruct code/repository suite.
+
+
+---
+
+## 2026-09-19 — Gate 008 Qwen2.5-Coder first run exposed scorer false negative and tool transport limitation
+
+Tested model:
+`qwen2.5-coder:7b-instruct`, local ID `dae161e27b0e`, Q4_K_M, 7.6B.
+
+Runtime:
+- Ollama `0.34.2`;
+- context `8192`;
+- max output `2048`;
+- reasoning argument omitted.
+
+Observed attempt-1 result under the original scorer:
+- `2 PASS / 2 FAIL / 0 INCONCLUSIVE`.
+
+Case review:
+- `code-clamp-repair`: model returned `return max(lo, min(hi, x))`, which is semantically correct; the scorer accepted only the bare expression and therefore produced a false negative;
+- `code-off-by-one-repair`: `PASS`;
+- `code-review-evidence`: `PASS`;
+- `code-tool-proposal`: `FAIL`; the model wrote a JSON-shaped tool intent into `content` but returned no native `tool_calls`.
+
+Correction:
+- clamp scorer now accepts the same correct expression either with or without an explicit `return` prefix;
+- tool-call scorer remains unchanged and still requires native inert `tool_calls`;
+- a regression test explicitly proves that JSON in content does not count as native tool transport.
+
+Resource observations:
+- aggregate wall time ~`4.746 s`;
+- first cold case ~`3.616 s`;
+- warm cases ~`0.289 s`, `0.468 s`, `0.373 s`;
+- placement `100% GPU`;
+- model VRAM allocation ~`4.78 GiB`;
+- total post-run GPU memory used `6164 MiB`, free `1861 MiB`;
+- post-run free physical RAM ~`22.04 GiB`;
+- no truncation, timeout, or provider error.
+
+Classification:
+- clamp failure = `BENCHMARK_FALSE_NEGATIVE_CORRECTED`;
+- native tool transport failure = `REAL_RUNTIME_CONTRACT_FAILURE_ATTEMPT_1`.
+
+Next step:
+rerun the fixed code/repository suite on the corrected exact head before assigning any final Coder qualification state.
