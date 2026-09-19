@@ -27,7 +27,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `008 — Local specialist model qualification`
 - Issue: `#15`
-- PR: `PENDING_DRAFT`
+- PR: `#16 (DRAFT)`
 - Branch: `gate-008-local-specialist-model-qualification`
 - Base: `3903672d44f6ac5119183eb58363847d42e25d9b`
 - State: `QUALIFICATION_PREPARATION_IN_PROGRESS`
@@ -187,8 +187,9 @@ Historical CI note:
 - benchmark-equivalent max output: `2048`
 - Electronics/PCB/KiCad/ERC/DRC/SPICE capability: `NOT_RUN_OUT_OF_SCOPE`
 - 27B-class downloads: `DEFERRED_OUT_OF_SCOPE`
-- deterministic regression: `PENDING`
-- candidate benchmark evidence: `PENDING`
+- preparation head `bf35c839b43aa558d007e16c86ea0e973274ecee`: deterministic regression `54/54 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- evidence template: `docs/evidence/gate008/qualification.md`
+- candidate benchmark evidence: `PENDING_LOCAL_RUNS`
 - final exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
