@@ -32,7 +32,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#18 (DRAFT)`
 - Branch: `gate-009-model-capability-registry-router`
 - Base: `d797ac476cc6653932b683932d025de747f3e918`
-- State: `IMPLEMENTED_PENDING_VALIDATION`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -217,9 +217,9 @@ Historical CI note:
 - Router provider/model/tool execution: `NOT_IMPLEMENTED_PROHIBITED`
 - Supervisor-owned `route_model()` boundary: `IMPLEMENTED`
 - Task Blackboard / model hand-offs: `NOT_IMPLEMENTED_GATE010`
-- deterministic regression: `PENDING`
-- generic CI: `PENDING`
-- strict exact-head CI: `PENDING`
+- implementation head `6671d4e6fe9c11734f87ba23dba064e4d9a5ac50`: deterministic regression `69/69 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -258,4 +258,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Complete Gate 009 deterministic registry/router tests and exact-head CI, then request explicit human exact-SHA squash-merge approval for PR #18. Do not implement Task Blackboard or Electronics/PCB/KiCad routing in this Gate.
+Run generic and strict exact-head CI on the final Gate 009 acceptance-state head. If green, request explicit human exact-SHA squash-merge approval for PR #18. Do not implement Task Blackboard or Electronics/PCB/KiCad routing in this Gate.
