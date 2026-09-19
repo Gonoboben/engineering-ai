@@ -77,11 +77,18 @@ def _normalize_code(value: Any) -> str:
     return "".join(value.split())
 
 
+def _normalized_return_expression(value: Any) -> str:
+    fixed = _normalize_code(value)
+    if fixed.startswith("return"):
+        fixed = fixed[len("return") :]
+    return fixed
+
+
 def _clamp_scorer(response):
     value = _json_object(response)
     if value is None:
         return False, "response is not a JSON object"
-    fixed = _normalize_code(value.get("fixed_expression"))
+    fixed = _normalized_return_expression(value.get("fixed_expression"))
     ok = fixed in {
         "max(lo,min(hi,x))",
         "min(hi,max(lo,x))",
