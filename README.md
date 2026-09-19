@@ -15,10 +15,11 @@ The first real integration targets are existing engineering projects such as Pla
 - deterministic engineering validators outrank model claims;
 - explicit separation of simulation and physical validation;
 - evidence/provenance and audit for material actions;
-- single-agent reliability before multi-agent specialization.
+- validated single-agent reliability as the foundation for Supervisor-mediated multi-model specialization;
+- models communicate through controlled task hand-offs rather than unrestricted peer-to-peer messaging.
 
 ## Current state
-The project is in its architecture/governance bootstrap phase. See:
+Gate 006 established the validated Planner / Executor / Reviewer control loop. Gate 007 is defining the supervised multi-model architecture that will qualify and route specialized local models without changing Supervisor authority. See:
 - `AGENTS.md` — global governance and stop conditions;
 - `ARCHITECTURE.md` — system architecture;
 - `ROADMAP.md` — staged implementation plan;
@@ -26,4 +27,4 @@ The project is in its architecture/governance bootstrap phase. See:
 - `DECISIONS.md` — architectural decisions;
 - `CHRONOLOGY.md` — project chronology.
 
-No production local model/runtime or connected-project modification is part of Gate 001.
+Current accepted local baseline: `gpt-oss:20b / medium / 8192` through loopback-only Ollama. Qwen3.5-9B and Qwen2.5-Coder-7B are planned qualification candidates, not yet accepted production roles. Connected engineering projects remain `NOT_CONNECTED` until their dedicated Gates.
