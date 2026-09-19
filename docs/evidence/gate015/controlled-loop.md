@@ -302,3 +302,78 @@ Required local prerequisites before smoke attempt 3:
 - PowerShell 7 (`pwsh`).
 
 No BuoyCalc engineering failure is recorded because no validation profile ran.
+
+
+## Real primary-workstation smoke attempt 3 — validation PASS, cleanup recovery required
+
+The third real Gate 015 smoke ran after .NET 8 SDK and PowerShell 7 were made
+available locally.
+
+Observed primary BuoyCalc repository:
+- branch: `main`;
+- HEAD: `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- `origin/main`: same SHA;
+- dirty: `false`;
+- before/after status: `## main...origin/main`;
+- repository_unchanged: `true`.
+
+Validation result:
+- state: `READY_FOR_HUMAN_APPROVAL`;
+- all fixed profiles passed:
+  - `buoycalc.dotnet_build`: PASS;
+  - `buoycalc.selected_shape_consumer_scan`: PASS;
+  - `buoycalc.report_store_consumer_scan`: PASS;
+  - `buoycalc.validation_601`: PASS;
+- all recorded steps returned exit code 0;
+- no step timed out;
+- no output was truncated;
+- all evidence was classified `SOFTWARE_DETERMINISTIC`;
+- `tracked_state_unchanged=true`;
+- release state:
+  `NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`;
+- physical validation:
+  `PHYSICAL_NOT_EXECUTED`.
+
+Cleanup result:
+- worktree_removed: `false`;
+- branch_removed: `false`;
+- cleanup_state:
+  `FAIL: ToolExecutionError: git disposable worktree remove failed: Permission denied`;
+- process exit: `1`.
+
+Disposable objects left for guarded recovery:
+- branch:
+  `engineering-ai/buoycalc/gate015-smoke-0db1e7cc17e3`;
+- worktree:
+  `C:\Users\wasd8\AppData\Local\Temp\engineering-ai-gate015-buoycalc-h_kcvqpw\gate015-0db1e7cc17e3`;
+- base SHA:
+  `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`.
+
+Classification:
+`PASS_SOFTWARE_VALIDATION_WITH_CLEANUP_INFRASTRUCTURE_BLOCK`.
+
+This is not a BuoyCalc engineering validation failure. All controlled software
+validators passed and tracked project state remained unchanged. Gate acceptance
+remains blocked only until the stale disposable worktree/branch is safely
+removed.
+
+### Windows cleanup hardening
+
+The disposable cleanup path now:
+1. retries fixed `git worktree remove --force` three times;
+2. if Windows still returns Permission denied, uses a guarded filesystem
+   fallback only after proving HEAD==base and both tracked/cached diffs empty;
+3. runs fixed `git worktree prune --expire now`;
+4. deletes the controlled branch only when it still points exactly to base SHA.
+
+A dedicated recovery harness was added for already-left Gate 015 disposable
+worktrees. It verifies registered worktree identity, controlled branch prefix,
+base SHA and clean tracked state before deletion.
+
+Hardened cleanup head:
+`87354398cd745856d8ff89798b5527e51477641c`.
+
+Validation:
+- deterministic tests: `145/145 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
