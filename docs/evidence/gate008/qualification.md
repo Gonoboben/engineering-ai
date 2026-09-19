@@ -47,9 +47,25 @@
 - installation: PASS
 - local model ID: `dae161e27b0e`
 - exact local metadata: architecture `qwen2`; parameters `7.6B`; context length `32768`; embedding length `3584`; quantization `Q4_K_M`; capabilities `completion, tools, insert`; license `Apache-2.0`
-- code suite: NOT_RUN
-- resource evidence: NOT_RECORDED
-- qualification: NOT_EVALUATED
+- code suite attempt 1: observed `2 PASS / 2 FAIL / 0 INCONCLUSIVE` under the original scorer
+- diagnostic interpretation:
+  - `code-clamp-repair`: model returned semantically correct `return max(lo, min(hi, x))`; original scorer rejected the optional `return` prefix — classified as benchmark false negative, scorer corrected without weakening semantics
+  - `code-off-by-one-repair`: `PASS`
+  - `code-review-evidence`: `PASS`
+  - `code-tool-proposal`: `FAIL`; model emitted JSON-like tool intent in response content instead of native `tool_calls`
+- runtime: Ollama `0.34.2`
+- settings: context `8192`, max output `2048`, reasoning argument omitted
+- aggregate wall time attempt 1: ~`4.746 s`
+- cold first case: ~`3.616 s`, including ~`3.228 s` model load
+- warm case wall times: ~`0.289 s`, `0.468 s`, `0.373 s`
+- native tool transport compatibility: `FAILED_ATTEMPT_1`
+- truncation/timeouts/provider errors: `0`
+- runtime placement: `100% GPU`
+- model VRAM allocation reported by Ollama: `5,133,943,438 bytes` (~`4.78 GiB`)
+- post-run total GPU memory used: `6164 MiB`; free `1861 MiB`
+- post-run free physical RAM: `23,110,456 KiB` (~`22.04 GiB`)
+- resource evidence: `RECORDED_ATTEMPT_1`
+- qualification: `PENDING_RERUN_AFTER_SCORER_CORRECTION`
 
 ## Runtime environment captured before benchmark
 
@@ -71,7 +87,7 @@
 
 ## Final acceptance
 
-- candidate results recorded: QWEN35_GENERAL_RECORDED; QWEN25_CODER_PENDING
+- candidate results recorded: QWEN35_GENERAL_RECORDED; QWEN25_CODER_ATTEMPT1_RECORDED_PENDING_CORRECTED_RERUN
 - resource evidence recorded: PENDING
 - qualification states recorded: PENDING
 - final generic CI: PENDING
