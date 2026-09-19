@@ -79,6 +79,30 @@ def main() -> int:
 
     readonly = BuoyCalcReadOnlyAdapter(repository)
     before = snapshot_dict(readonly)
+
+    with tempfile.TemporaryDirectory(prefix="engineering-ai-gate015-prereq-") as prereq_tmp:
+        prereq_loop = BuoyCalcControlledEngineeringLoop(repository, prereq_tmp)
+        runtime = prereq_loop.runtime_prerequisites()
+
+    if runtime.blockers:
+        payload = {
+            "gate": "015",
+            "state": "BLOCKED_RUNTIME_PREREQUISITE",
+            "runtime": {
+                "dotnet_executable": runtime.dotnet_executable,
+                "pwsh_executable": runtime.pwsh_executable,
+                "dotnet_sdk8_available": runtime.dotnet_sdk8_available,
+                "dotnet_sdks": list(runtime.dotnet_sdks),
+                "blockers": list(runtime.blockers),
+            },
+            "before": before,
+            "after": snapshot_dict(readonly),
+            "repository_unchanged": before == snapshot_dict(readonly),
+            "release_state": "NOT_AUTHORIZED",
+            "physical_validation": "PHYSICAL_NOT_EXECUTED",
+        }
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 4
     base_sha = str(before["head_sha"])
     suffix = base_sha[:12]
     worktree_parent = Path(
