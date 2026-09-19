@@ -181,15 +181,15 @@ Historical CI note:
 ## Gate 008 validation state
 - Issue #15: `OPEN`
 - branch base equals Gate 007 squash merge `3903672d44f6ac5119183eb58363847d42e25d9b`: `PASS`
-- candidate `qwen3.5:9b`: `NOT_INSTALLED_OR_NOT_VERIFIED`
-- candidate `qwen2.5-coder:7b-instruct`: `NOT_INSTALLED_OR_NOT_VERIFIED`
+- candidate `qwen3.5:9b`: `INSTALLED_METADATA_VERIFIED`, ID `6488c96fa5fa`, `9.7B`, `Q4_K_M`, local context `262144`
+- candidate `qwen2.5-coder:7b-instruct`: `INSTALLED_METADATA_VERIFIED`, ID `dae161e27b0e`, `7.6B`, `Q4_K_M`, local context `32768`
 - context comparison baseline: `8192`
 - benchmark-equivalent max output: `2048`
 - Electronics/PCB/KiCad/ERC/DRC/SPICE capability: `NOT_RUN_OUT_OF_SCOPE`
 - 27B-class downloads: `DEFERRED_OUT_OF_SCOPE`
 - preparation head `bf35c839b43aa558d007e16c86ea0e973274ecee`: deterministic regression `54/54 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - evidence template: `docs/evidence/gate008/qualification.md`
-- candidate benchmark evidence: `PENDING_LOCAL_RUNS`
+- candidate benchmark evidence: `INSTALL_METADATA_RECORDED_PENDING_QWEN35_GENERAL_RUN`
 - final exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -229,4 +229,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Prepare the Gate 008 benchmark/evidence harness and fixed installation commands, validate the deterministic suite, then install and benchmark `qwen3.5:9b` and `qwen2.5-coder:7b-instruct` on the primary workstation. Do not test Electronics/PCB/KiCad capability in Gate 008.
+Run only the `qwen3.5:9b` Gate 008 general/Planner benchmark at context `8192`, max output `2048`, reasoning `none`, then record its output and runtime/resource evidence before starting the Qwen2.5-Coder suite. Do not test Electronics/PCB/KiCad capability in Gate 008.
