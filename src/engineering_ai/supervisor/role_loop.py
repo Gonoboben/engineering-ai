@@ -432,12 +432,22 @@ class PlannerExecutorReviewerLoop:
             request, timeout_seconds=self._config.timeout_seconds
         )
         self._record_model_call(job, EngineeringRole.EXECUTOR, response)
-        payload = self._json_object(response.content, EngineeringRole.EXECUTOR)
-        summary = payload.get("summary")
-        if not isinstance(summary, str) or not summary.strip():
-            raise SemanticValidationError("executor summary must be non-empty")
-
         proposals = response.tool_calls
+        if response.content.strip():
+            payload = self._json_object(response.content, EngineeringRole.EXECUTOR)
+            summary = payload.get("summary")
+            if not isinstance(summary, str) or not summary.strip():
+                raise SemanticValidationError("executor summary must be non-empty")
+        elif proposals:
+            summary = (
+                f"executor proposed {len(proposals)} tool call"
+                f"{'s' if len(proposals) != 1 else ''}"
+            )
+        else:
+            raise SemanticValidationError(
+                "executor returned neither structured content nor tool proposals"
+            )
+
         if len(proposals) > self._max_tool_calls:
             raise SemanticValidationError("executor exceeded bounded tool proposal limit")
 
