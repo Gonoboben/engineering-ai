@@ -28,7 +28,7 @@ A model claim cannot override a failed deterministic check or physical evidence.
 - Simulation/synthetic/calculation PASS must never be represented as physical validation.
 - All material actions must be attributable and auditable.
 - Existing project repositories are connected through adapters/profiles; their contents are not duplicated into this control-plane repository unless explicitly required.
-- Multi-agent specialization is deferred until the single-agent core is stable and measurable.
+- Supervised multi-model specialization is permitted only on top of the validated single-agent core, through the deterministic Supervisor, and only for evidence-qualified role/model combinations; unrestricted peer-to-peer model swarms remain prohibited.
 
 ## Human approval required
 Stop before any of the following unless the active project policy explicitly grants narrower pre-approval:

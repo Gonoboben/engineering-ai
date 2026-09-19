@@ -21,16 +21,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 006 merge commit: `24b1fbc009920c1dee8317c784ef42711044be87`
 - Gate 007: `ACCEPTED_MERGED`
 - Gate 007 merge commit: `3903672d44f6ac5119183eb58363847d42e25d9b`
+- Gate 008: `ACCEPTED_MERGED`
+- Gate 008 merge commit: `d797ac476cc6653932b683932d025de747f3e918`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `008 — Local specialist model qualification`
-- Issue: `#15`
-- PR: `#16 (DRAFT)`
-- Branch: `gate-008-local-specialist-model-qualification`
-- Base: `3903672d44f6ac5119183eb58363847d42e25d9b`
-- State: `QUALIFICATION_COMPLETE_PENDING_HUMAN_APPROVAL`
+- Gate: `009 — Model capability registry and deterministic router`
+- Issue: `#17`
+- PR: `#18 (DRAFT)`
+- Branch: `gate-009-model-capability-registry-router`
+- Base: `d797ac476cc6653932b683932d025de747f3e918`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -59,7 +61,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Planner / Executor / Reviewer loop: `IMPLEMENTED_RUNTIME_VALIDATED`
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Supervised multi-model architecture: `ACCEPTED_GATE_007`
-- Model capability registry/router runtime: `DESIGNED_NOT_IMPLEMENTED`
+- Model capability registry/router runtime: `IMPLEMENTED_PENDING_VALIDATION`
 - Task Blackboard/runtime hand-offs: `DESIGNED_NOT_IMPLEMENTED`
 - Candidate Qwen3.5-9B qualification: `QUALIFIED_GENERAL_PLANNER`
 - Candidate Qwen2.5-Coder-7B qualification: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`; native tool transport repeatedly fails under current Ollama contract, so role must be no-native-tool-proposal until separately requalified
@@ -71,7 +73,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM: `NOT_CONNECTED`
 - BuoyCalc: `NOT_CONNECTED`
 
-Gate 008 qualifies local models only and does not access or modify either engineering project.
+Gate 009 implements model selection only and does not access or modify either engineering project.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -179,7 +181,7 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 008 validation state
-- Issue #15: `OPEN`
+- Issue #15: `CLOSED`
 - branch base equals Gate 007 squash merge `3903672d44f6ac5119183eb58363847d42e25d9b`: `PASS`
 - candidate `qwen3.5:9b`: `INSTALLED_METADATA_VERIFIED`, ID `6488c96fa5fa`, `9.7B`, `Q4_K_M`, local context `262144`
 - candidate `qwen2.5-coder:7b-instruct`: `INSTALLED_METADATA_VERIFIED`, ID `dae161e27b0e`, `7.6B`, `Q4_K_M`, local context `32768`
@@ -191,7 +193,33 @@ Historical CI note:
 - evidence template: `docs/evidence/gate008/qualification.md`
 - candidate benchmark evidence: `QWEN35_GENERAL_4_OF_4_PASS; QWEN25_CODE_3_OF_4_WITH_CONFIRMED_NATIVE_TOOL_TRANSPORT_LIMITATION`
 - qualification-evidence head `d57c79dbeea54be42512146958e67526d1ad13af`: deterministic regression `56/56 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- final exact-head CI after acceptance-state synchronization: `PENDING`
+- final PR head: `30ccc9c54e519885678d10c4eee72f428b17b079`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`, `56/56`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `d797ac476cc6653932b683932d025de747f3e918`
+- Gate 008 state: `ACCEPTED_MERGED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 009 validation state
+- Issue #17: `OPEN`
+- PR #18: `DRAFT`
+- branch base equals Gate 008 squash merge `d797ac476cc6653932b683932d025de747f3e918`: `PASS`
+- evidence-backed registry: `IMPLEMENTED`
+- explicit task classes only: `GENERAL_PLANNING / CODE_REPOSITORY / BASELINE_REASONING`
+- `GENERAL_PLANNING -> qwen3.5:9b`: `IMPLEMENTED`
+- `CODE_REPOSITORY -> qwen2.5-coder:7b-instruct`: `IMPLEMENTED_WITH_GATE008_LIMITATION`
+- Coder native tool requirement -> `NO_ROUTE`: `IMPLEMENTED`
+- `BASELINE_REASONING -> gpt-oss:20b / medium`: `IMPLEMENTED_WITHOUT_NEW_SPECIALIST_CLAIM`
+- context/output qualification bounds: `ENFORCED`
+- free-text/LLM task classification: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- Electronics/PCB/KiCad/Vision routes: `NOT_IMPLEMENTED_PROHIBITED_GATE009`
+- Router provider/model/tool execution: `NOT_IMPLEMENTED_PROHIBITED`
+- Supervisor-owned `route_model()` boundary: `IMPLEMENTED`
+- Task Blackboard / model hand-offs: `NOT_IMPLEMENTED_GATE010`
+- implementation head `6671d4e6fe9c11734f87ba23dba064e4d9a5ac50`: deterministic regression `69/69 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -230,4 +258,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 008 acceptance-state head. If green, request explicit human exact-SHA squash-merge approval for PR #16. Do not expand into Electronics/PCB/KiCad capability.
+Run generic and strict exact-head CI on the final Gate 009 acceptance-state head. If green, request explicit human exact-SHA squash-merge approval for PR #18. Do not implement Task Blackboard or Electronics/PCB/KiCad routing in this Gate.

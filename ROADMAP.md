@@ -182,7 +182,7 @@ Defines:
 No model download, model qualification, router code, Blackboard runtime, project adapter, or external bridge implementation belongs in this Gate.
 
 ### Gate 008 — Local specialist model qualification
-Status: `QUALIFICATION_COMPLETE_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
 Qualify practical local candidates on the primary workstation before assigning production roles.
 
@@ -211,7 +211,7 @@ Required measurements:
 Public benchmark/model-card claims are advisory; local measured evidence determines qualification.
 
 ### Gate 009 — Model capability registry and deterministic router
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Implement:
 - typed model/runtime identity;
