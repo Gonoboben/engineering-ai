@@ -192,3 +192,80 @@ It must prove:
 - presentation/report paths are not physics-authoritative;
 - release remains unauthorized;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+
+## Primary-workstation final BuoyCalc read-only smoke
+
+The strict Gate 014 smoke completed successfully on the real Windows checkout.
+
+Engineering AI pre-smoke head:
+`b17fa249f4d717ed24b74898285addefac79be6c`.
+
+Observed BuoyCalc repository:
+- path: `C:\workspace\repos\buoycalc-windows`;
+- branch: `main`;
+- HEAD: `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- `origin/main`: `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- dirty: `false`;
+- baseline_aligned: `true`;
+- repository_unchanged: `true`.
+
+Governance SHA-256:
+- `AGENTS.md`:
+  `1c9a78c3baed5ca452f26f783f9ca02ec7c632ff36652b6a7036c396770bdb0c`;
+- `docs/OPTIMIZATION_PLAN.md`:
+  `981d531b89da43ab136cd79bf98b71bcb099f39c17b39cd74af4a663c5906260`;
+- `RELEASE.md`:
+  `b901cc8dd9edbb7d9fdfffb50c0bfcabe9ab7c6a4d8cac0968995774ea43b3c0`.
+
+Invariant checks:
+- physics-domain-authority: PASS;
+- presentation-is-renderer-only: PASS;
+- selected-xz-primary-geometry: PASS;
+- segmentation-020m: PASS;
+- signed-feedback-budget-64: PASS;
+- signed-weightwater-semantics: PASS;
+- exact-deterministic-fixed-point: PASS;
+- renderers-presentation-only: PASS;
+- 3d-post-v1: PASS;
+- release-needs-manual-smoke: PASS.
+
+Invariant violations:
+`[]`.
+
+Tracked source inventory:
+- total: `471`;
+- VALIDATION_OR_TOOLING: `97`;
+- PRESENTATION_CONSUMER: `113`;
+- GOVERNANCE: `3`;
+- OTHER: `196`;
+- READ_MODEL_CONSUMER: `10`;
+- CALCULATION_CORE_CANDIDATE: `52`.
+
+Presentation/report physics-authority violation:
+`false`.
+
+Required check semantics were exposed exactly as:
+- governance: .NET Build / Selected Shape Consumer Scan /
+  Report Store Consumer Scan;
+- release additionally: BuoyCalc Validation 601 Main Gate /
+  BuoyCalc Windows Build: success.
+
+Release state:
+`NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Smoke state:
+`READ_ONLY_BASELINE_OK`.
+
+Smoke process exit:
+`0`.
+
+Classification:
+`PASS_STRICT_READ_ONLY_BASELINE`.
+
+No calculation, validator, solver, PDF/report generation, RC packaging, release
+trigger, tag, GitHub Release, project write, commit, push or PR mutation was
+performed.
