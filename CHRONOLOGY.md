@@ -1660,3 +1660,38 @@ Physical validation remains:
 Next:
 Engineering AI regression/CI, then one explicitly approved real BuoyCalc
 disposable-worktree validation smoke.
+
+
+---
+
+## 2026-09-19 — Gate 015 controlled BuoyCalc implementation validated
+
+Validated implementation head:
+`b40baea3294474fafa26936e06b0fa5c7d69ea86`.
+
+Validated control boundaries:
+- primary main/clean/HEAD==origin-main prerequisite;
+- `engineering-ai/buoycalc/` controlled branch prefix;
+- exact target allow-list and before-content SHA-256 binding;
+- governance and calculation-core/solver target rejection;
+- fixed shell-free validator profiles from accepted BuoyCalc workflows;
+- validator tracked-state mutation detection;
+- structured SOFTWARE_DETERMINISTIC evidence hashes;
+- successful suite bounded to `READY_FOR_HUMAN_APPROVAL`;
+- release remains unauthorized;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`;
+- guarded disposable generated-artifact cleanup;
+- explicit CLI human approval required for real worktree smoke;
+- no remote/release mutation API.
+
+Validation:
+- deterministic tests: `143/143 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 015 state:
+`IMPLEMENTED_CI_VALIDATED_PENDING_REAL_SMOKE`.
+
+Remaining:
+stable-head CI and one explicit primary-workstation disposable-worktree
+validation smoke on the real BuoyCalc checkout.
