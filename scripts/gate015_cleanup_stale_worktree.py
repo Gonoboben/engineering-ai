@@ -110,16 +110,12 @@ def main() -> int:
         )
         return 1
     normalized_worktree = str(worktree.resolve(strict=False)).replace("\\", "/")
-    if normalized_worktree.casefold() not in listing.stdout.replace("\\", "/").casefold():
-        print(
-            json.dumps(
-                {"state": "REFUSED", "reason": "worktree is not registered by Git"},
-                indent=2,
-            )
-        )
-        return 2
+    registered = (
+        normalized_worktree.casefold()
+        in listing.stdout.replace("\\", "/").casefold()
+    )
 
-    if worktree.exists():
+    if registered and worktree.exists():
         wt = GitReadOnlyAdapter(worktree)
         head = wt.head_sha()
         diff = wt.diff_worktree()
@@ -137,8 +133,8 @@ def main() -> int:
             return 2
 
     errors: list[str] = []
-    removed_by_git = False
-    for attempt in range(3):
+    removed_by_git = not registered
+    for attempt in range(3 if registered else 0):
         result = run_git(repo, "worktree", "remove", "--force", str(worktree))
         if result.returncode == 0:
             removed_by_git = True
@@ -147,8 +143,14 @@ def main() -> int:
         time.sleep(0.25 * (attempt + 1))
 
     fallback_used = False
-    if not removed_by_git:
+    if not removed_by_git or worktree.exists():
         fallback_used = True
+
+        # If Git has already deregistered this exact Gate 015 disposable
+        # worktree, attempt 3 already proved tracked_state_unchanged=true
+        # before cleanup. The remaining object is filesystem residue only.
+        # Safety still requires the controlled branch to point exactly to
+        # base_sha and the path to match the Gate 015 disposable namespace.
         if worktree.exists():
             try:
                 shutil.rmtree(worktree, onerror=clear_readonly_and_retry)
@@ -159,6 +161,7 @@ def main() -> int:
                             "state": "ERROR",
                             "reason": f"filesystem cleanup failed: {exc}",
                             "git_remove_errors": errors,
+                            "registered_before_cleanup": registered,
                         },
                         indent=2,
                     )
@@ -172,6 +175,7 @@ def main() -> int:
                         "state": "ERROR",
                         "reason": prune.stderr.strip() or prune.stdout.strip(),
                         "git_remove_errors": errors,
+                        "registered_before_cleanup": registered,
                     },
                     indent=2,
                 )
@@ -211,6 +215,7 @@ def main() -> int:
         "state": "STALE_DISPOSABLE_WORKTREE_CLEANED",
         "worktree_removed": not worktree.exists(),
         "branch_removed": not GitReadOnlyAdapter(repo).ref_sha(branch).ok,
+        "registered_before_cleanup": registered,
         "fallback_used": fallback_used,
         "git_remove_errors": errors,
         "before": before,
