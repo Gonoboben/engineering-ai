@@ -19,6 +19,30 @@ from engineering_ai.tools import ToolExecutionError
 from engineering_ai.validation import validate_instance
 
 
+class Gate012SmokeHarnessTests(unittest.TestCase):
+    def test_missing_repository_is_structured_nonzero_state(self) -> None:
+        repository_root = Path(__file__).resolve().parents[1]
+        missing = repository_root / "definitely-missing-platavm-checkout"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(repository_root / "scripts/gate012_platavm_readonly_smoke.py"),
+                "--repository",
+                str(missing),
+            ],
+            cwd=repository_root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 2)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["snapshot_state"], "LOCAL_REPOSITORY_NOT_FOUND")
+        self.assertEqual(payload["physical_validation"], "PHYSICAL_NOT_EXECUTED")
+        self.assertEqual(payload["validators"], [])
+        self.assertEqual(result.stderr, "")
+
+
 @unittest.skipIf(shutil.which("git") is None, "git executable is required")
 class PlataVMReadOnlyAdapterTests(unittest.TestCase):
     def setUp(self) -> None:
