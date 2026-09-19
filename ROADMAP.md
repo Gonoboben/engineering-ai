@@ -162,7 +162,7 @@ Acceptance focus remains: the Supervisor, not the model, controls transitions an
 ## Phase 2 — Supervised multi-model foundation
 
 ### Gate 007 — Supervised multi-model architecture baseline
-Status: `ARCHITECTURE_DOCUMENTED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
 Issue:
 `#13`
@@ -182,7 +182,7 @@ Defines:
 No model download, model qualification, router code, Blackboard runtime, project adapter, or external bridge implementation belongs in this Gate.
 
 ### Gate 008 — Local specialist model qualification
-Status: `NOT_STARTED`
+Status: `IN_PROGRESS`
 
 Qualify practical local candidates on the primary workstation before assigning production roles.
 
