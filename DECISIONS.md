@@ -174,7 +174,7 @@ Fine-tuning/LoRA may be evaluated later using curated validated datasets as a se
 ---
 
 ## ADR-0013 — Use Supervisor-mediated multi-model specialization
-Status: `PROPOSED_PENDING_GATE_007_ACCEPTANCE`
+Status: `ACCEPTED_GATE_007`
 
 ### Decision
 Engineering AI may use multiple specialized local models only as replaceable advisory workers behind the deterministic Supervisor.
@@ -218,7 +218,7 @@ Direct peer-to-peer agent systems can amplify shared errors, hide provenance, an
 ---
 
 ## ADR-0014 — External AI oversight uses a controlled bridge
-Status: `PROPOSED_PENDING_GATE_007_ACCEPTANCE`
+Status: `ACCEPTED_GATE_007`
 
 ### Decision
 ChatGPT/OpenAI or another external model may later act as an optional external reviewer/architect through a policy-controlled bridge, but it receives no direct authority over local policy, state, credentials, unrestricted shell, or project repositories.

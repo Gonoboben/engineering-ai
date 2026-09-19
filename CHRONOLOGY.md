@@ -546,3 +546,259 @@ Gate 007 state:
 `ARCHITECTURE_DOCUMENTED_PENDING_HUMAN_APPROVAL`.
 
 A final exact-head CI run is required after status/chronology synchronization before requesting exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 007 accepted and merged
+
+Final approved PR head:
+`c09dae76d0526a899233a9b4656affd0d4c7e631`.
+
+Final validation:
+- deterministic tests: `50/50 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- explicit exact-SHA architecture approval: `PASS`.
+
+Squash merge on `main`:
+`3903672d44f6ac5119183eb58363847d42e25d9b`.
+
+Issue #13 closed.
+
+Accepted architecture:
+- Supervisor-mediated specialist models;
+- deterministic Model Capability Registry / Router authority;
+- Supervisor-controlled Task Blackboard;
+- evidence-based disagreement handling;
+- optional controlled external review bridge;
+- no unrestricted peer-to-peer swarm;
+- model agreement is not evidence.
+
+Gate 007 state:
+`ACCEPTED_MERGED`.
+
+---
+
+## 2026-09-19 — Gate 008 local specialist model qualification opened
+
+Issue:
+`#15 — Gate 008 — Local specialist model qualification`.
+
+Branch:
+`gate-008-local-specialist-model-qualification`.
+
+Base:
+Gate 007 squash merge `3903672d44f6ac5119183eb58363847d42e25d9b`.
+
+Candidates:
+- `qwen3.5:9b`;
+- `qwen2.5-coder:7b-instruct`.
+
+Reference:
+- accepted `gpt-oss:20b / medium / context 8192 / max output 2048`.
+
+Human direction:
+- do not test Electronics/PCB capability in Gate 008;
+- do not run KiCad/ERC/DRC/SPICE specialist tests;
+- prepare and qualify the basic model stack first;
+- determine engineering specialist assignments later;
+- do not download 27B-class models in this Gate.
+
+Next step:
+prepare deterministic Gate 008 benchmark/evidence harness, then install and benchmark the two fixed candidate tags on the primary workstation.
+
+
+---
+
+## 2026-09-19 — Gate 008 candidate models installed and metadata verified
+
+Primary workstation repository head before installation:
+`685f1ec046f0b42b8bd8d7c533dab7e5043cb6ce`.
+
+Installed:
+- `qwen3.5:9b` — local ID `6488c96fa5fa`, 6.6 GB package, architecture `qwen35`, 9.7B parameters, context 262144, Q4_K_M, capabilities completion/vision/tools/thinking;
+- `qwen2.5-coder:7b-instruct` — local ID `dae161e27b0e`, 4.7 GB package, architecture `qwen2`, 7.6B parameters, context 32768, Q4_K_M, capabilities completion/tools/insert.
+
+Captured environment remained:
+- `OLLAMA_CONTEXT_LENGTH=8192`;
+- `OLLAMA_HOST=127.0.0.1:11434`;
+- `OLLAMA_MAX_LOADED_MODELS=1`;
+- `OLLAMA_MODELS=C:\workspace\models\ollama`;
+- `OLLAMA_NO_CLOUD=1`;
+- `OLLAMA_NUM_PARALLEL=1`;
+- `ollama ps` empty before benchmark.
+
+No Electronics/PCB/KiCad/ERC/DRC/SPICE capability was tested.
+
+Next step:
+run only the Qwen3.5-9B general/Planner benchmark before starting any Qwen2.5-Coder benchmark.
+
+
+---
+
+## 2026-09-19 — Gate 008 Qwen3.5-9B general/Planner qualification passed
+
+Tested model:
+`qwen3.5:9b`, local ID `6488c96fa5fa`, Q4_K_M, 9.7B.
+
+Runtime:
+- Ollama `0.34.2`;
+- context `8192`;
+- max output `2048`;
+- reasoning `none`.
+
+Result:
+- general suite: `4/4 PASS`;
+- failed: `0`;
+- unscored: `0`;
+- structured JSON: `PASS`;
+- bounded Planner contract: `PASS`;
+- validation semantics: `PASS`;
+- inert tool proposal: `PASS`;
+- truncation/timeouts/provider errors: `0`.
+
+Performance/resource observations:
+- aggregate wall time ~`31.446 s`;
+- first cold case ~`29.394 s`;
+- warm cases ~`0.849 s`, `0.586 s`, `0.617 s`;
+- eval throughput by case ~`57.72`, `49.55`, `46.02`, `67.02 tok/s`;
+- Ollama placement: `100% GPU`;
+- model VRAM allocation ~`5.37 GiB`;
+- total post-run GPU memory used `7487 MiB`, free `538 MiB`;
+- post-run free physical RAM ~`21.47 GiB`.
+
+Qualification:
+`QUALIFIED_GENERAL_PLANNER`.
+
+The speed result is not treated as a direct replacement comparison with historical Gate 005 gpt-oss because the benchmark matrix and Ollama runtime version differ.
+
+Electronics/PCB/KiCad/ERC/DRC/SPICE capability remains:
+`NOT_RUN_OUT_OF_SCOPE_GATE_008`.
+
+Next step:
+run only the Qwen2.5-Coder-7B-Instruct code/repository suite.
+
+
+---
+
+## 2026-09-19 — Gate 008 Qwen2.5-Coder first run exposed scorer false negative and tool transport limitation
+
+Tested model:
+`qwen2.5-coder:7b-instruct`, local ID `dae161e27b0e`, Q4_K_M, 7.6B.
+
+Runtime:
+- Ollama `0.34.2`;
+- context `8192`;
+- max output `2048`;
+- reasoning argument omitted.
+
+Observed attempt-1 result under the original scorer:
+- `2 PASS / 2 FAIL / 0 INCONCLUSIVE`.
+
+Case review:
+- `code-clamp-repair`: model returned `return max(lo, min(hi, x))`, which is semantically correct; the scorer accepted only the bare expression and therefore produced a false negative;
+- `code-off-by-one-repair`: `PASS`;
+- `code-review-evidence`: `PASS`;
+- `code-tool-proposal`: `FAIL`; the model wrote a JSON-shaped tool intent into `content` but returned no native `tool_calls`.
+
+Correction:
+- clamp scorer now accepts the same correct expression either with or without an explicit `return` prefix;
+- tool-call scorer remains unchanged and still requires native inert `tool_calls`;
+- a regression test explicitly proves that JSON in content does not count as native tool transport.
+
+Resource observations:
+- aggregate wall time ~`4.746 s`;
+- first cold case ~`3.616 s`;
+- warm cases ~`0.289 s`, `0.468 s`, `0.373 s`;
+- placement `100% GPU`;
+- model VRAM allocation ~`4.78 GiB`;
+- total post-run GPU memory used `6164 MiB`, free `1861 MiB`;
+- post-run free physical RAM ~`22.04 GiB`;
+- no truncation, timeout, or provider error.
+
+Classification:
+- clamp failure = `BENCHMARK_FALSE_NEGATIVE_CORRECTED`;
+- native tool transport failure = `REAL_RUNTIME_CONTRACT_FAILURE_ATTEMPT_1`.
+
+Next step:
+rerun the fixed code/repository suite on the corrected exact head before assigning any final Coder qualification state.
+
+
+---
+
+## 2026-09-19 — Gate 008 Qwen2.5-Coder corrected rerun confirmed limited qualification
+
+Corrected rerun:
+- model `qwen2.5-coder:7b-instruct`;
+- context `8192`;
+- max output `2048`;
+- reasoning argument omitted;
+- Ollama `0.34.2`.
+
+Result:
+- `3 PASS / 1 FAIL / 0 INCONCLUSIVE`;
+- clamp repair: `PASS`;
+- off-by-one repair: `PASS`;
+- evidence review: `PASS`;
+- native tool proposal: `FAIL`.
+
+The remaining failure reproduced attempt 1 exactly:
+the model emitted the correct JSON-shaped tool intent in ordinary response
+`content` but returned no native `tool_calls`.
+
+This is classified as a confirmed runtime-contract limitation, not a coding
+correctness failure.
+
+Performance/resource observations:
+- aggregate wall time ~`1.680 s`;
+- case wall times ~`0.639 s`, `0.308 s`, `0.476 s`, `0.255 s`;
+- eval throughput ~`42.63`, `62.06`, `56.42`, `76.96 tok/s`;
+- placement `100% GPU`;
+- model VRAM allocation ~`4.78 GiB`;
+- total post-run GPU memory used `6079 MiB`, free `1946 MiB`;
+- post-run free physical RAM ~`22.08 GiB`;
+- no truncation, timeout, or provider error.
+
+Final Gate 008 role qualification:
+`QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`.
+
+Restriction:
+`NO_NATIVE_TOOL_PROPOSALS_UNDER_CURRENT_OLLAMA_CONTRACT`.
+
+The model may be used for code/repository analysis, repair, review, and
+generation when required context is supplied by the deterministic Supervisor
+or another authorized acquisition step. It must not be routed to a task that
+requires it to originate native tool calls until separately corrected and
+requalified.
+
+Qwen3.5-9B remains:
+`QUALIFIED_GENERAL_PLANNER`.
+
+Electronics/PCB/KiCad/ERC/DRC/SPICE remains:
+`NOT_RUN_OUT_OF_SCOPE_GATE_008`.
+
+Next step:
+final regression and exact-head CI, then human exact-SHA Gate 008 merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 008 qualification evidence head validated
+
+Qualification evidence head:
+`d57c79dbeea54be42512146958e67526d1ad13af`.
+
+Validation:
+- deterministic tests: `56/56 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Qualification state:
+- `qwen3.5:9b`: `QUALIFIED_GENERAL_PLANNER`;
+- `qwen2.5-coder:7b-instruct`: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`;
+- Coder limitation: `NO_NATIVE_TOOL_PROPOSALS_UNDER_CURRENT_OLLAMA_CONTRACT`;
+- Electronics/PCB/KiCad/ERC/DRC/SPICE: `NOT_RUN_OUT_OF_SCOPE_GATE_008`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+One final exact-head CI run is required after this acceptance-state synchronization before explicit human squash-merge approval for PR #16.
