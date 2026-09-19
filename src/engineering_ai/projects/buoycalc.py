@@ -274,50 +274,28 @@ class BuoyCalcReadOnlyAdapter:
         return tuple(checks)
 
     def source_inventory(self) -> tuple[SourceInventoryEntry, ...]:
-        queue: list[tuple[str, int]] = []
-        for entry in self._filesystem.list_directory("."):
-            if entry.is_dir:
-                name = Path(entry.relative_path).name
-                if name in {".git", ".venv", "artifacts", "bin", "obj"}:
-                    continue
-                queue.append((entry.relative_path, 1))
-            elif self._interesting_file(entry.relative_path):
-                queue.append((entry.relative_path, -1))
+        tracked = self._git.tracked_files()
+        if not tracked.ok:
+            raise ToolExecutionError("unable to enumerate BuoyCalc tracked files")
 
-        inventory: list[SourceInventoryEntry] = []
-        scanned = 0
-        while queue:
-            relative, depth = queue.pop(0)
-            if depth == -1:
-                inventory.append(
-                    SourceInventoryEntry(
-                        path=relative,
-                        boundary_class=self.classify_path(relative),
-                    )
-                )
-                continue
-            if depth > self._max_scan_depth:
-                raise ToolExecutionError("BuoyCalc source scan exceeded max_scan_depth")
+        paths = tuple(
+            line.strip()
+            for line in tracked.stdout.splitlines()
+            if line.strip()
+        )
+        if len(paths) > self._max_scan_entries:
+            raise ToolExecutionError(
+                "BuoyCalc source inventory exceeded max_scan_entries"
+            )
 
-            for entry in self._filesystem.list_directory(relative):
-                scanned += 1
-                if scanned > self._max_scan_entries:
-                    raise ToolExecutionError(
-                        "BuoyCalc source scan exceeded max_scan_entries"
-                    )
-                if entry.is_dir:
-                    name = Path(entry.relative_path).name
-                    if name in {".git", ".venv", "artifacts", "bin", "obj"}:
-                        continue
-                    queue.append((entry.relative_path, depth + 1))
-                elif self._interesting_file(entry.relative_path):
-                    inventory.append(
-                        SourceInventoryEntry(
-                            path=entry.relative_path,
-                            boundary_class=self.classify_path(entry.relative_path),
-                        )
-                    )
-
+        inventory = tuple(
+            SourceInventoryEntry(
+                path=path,
+                boundary_class=self.classify_path(path),
+            )
+            for path in paths
+            if self._interesting_file(path)
+        )
         return tuple(sorted(inventory, key=lambda item: item.path.casefold()))
 
     @staticmethod
@@ -337,6 +315,7 @@ class BuoyCalcReadOnlyAdapter:
             or "/presentation/" in f"/{normalized}"
             or "pdf" in name
             or "renderer" in name
+            or "report" in name
             or "mainwindow" in name
         ):
             return SourceBoundaryClass.PRESENTATION_CONSUMER
