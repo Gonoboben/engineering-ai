@@ -156,7 +156,27 @@ calculation core or release pipeline.
 
 ## Deterministic validation
 
-Pending Engineering AI regression and exact-head CI.
+Implementation head:
+`facc9d8b4a514120ce5be3a886fc77c8eda87dcc`
+
+Result:
+- deterministic tests: `128/128 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+Validated boundaries:
+- mandatory governance resolution;
+- invariant-marker detection and drift reporting;
+- tracked-file inventory count bound;
+- presentation/report paths cannot be classified as calculation-core candidates;
+- PASS/FAIL/CANCELLED/PENDING/MISSING/UNKNOWN CI-state separation;
+- fixed release state remains unauthorized;
+- committed profile/policy schema validation;
+- project write/release/execution API absence;
+- missing local checkout returns structured `LOCAL_REPOSITORY_NOT_FOUND` with exit code 2.
+
+Final acceptance-state CI remains required after status/evidence synchronization.
 
 ## Remaining acceptance
 
