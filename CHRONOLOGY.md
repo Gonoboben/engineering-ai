@@ -1734,3 +1734,28 @@ Regression:
 
 Next:
 stable corrected-head CI and real smoke attempt 2.
+
+
+---
+
+## 2026-09-19 — Gate 015 smoke attempt 2 confirmed missing .NET 8 and PowerShell 7
+
+Corrected runtime-preflight smoke ran on the real primary workstation.
+
+Result:
+- `BLOCKED_RUNTIME_PREREQUISITE`;
+- `dotnet_executable=null`;
+- `pwsh_executable=null`;
+- `.NET 8 SDK unavailable`;
+- no worktree created;
+- no validation profile executed;
+- primary BuoyCalc main/head/status unchanged;
+- release remained unauthorized;
+- physical remained `PHYSICAL_NOT_EXECUTED`;
+- exit `4`.
+
+Classification:
+`RUNTIME_PREREQUISITE_MISSING`.
+
+Required before attempt 3:
+Microsoft .NET 8 SDK and PowerShell 7.
