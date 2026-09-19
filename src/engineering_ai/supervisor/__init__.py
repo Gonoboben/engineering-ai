@@ -27,6 +27,14 @@ from engineering_ai.supervisor.role_loop import (
     RoleModelConfig,
     RoleStateMachine,
 )
+from engineering_ai.supervisor.review import (
+    DisagreementDecision,
+    DisagreementRequest,
+    DisagreementState,
+    EvidenceDisposition,
+    IndependentReviewFinding,
+    ReviewApplication,
+)
 from engineering_ai.supervisor.stubs import StubTool
 
 __all__ = [
@@ -41,6 +49,11 @@ __all__ = [
     "HandoffDecision",
     "HandoffRequest",
     "Decision",
+    "DisagreementDecision",
+    "DisagreementRequest",
+    "DisagreementState",
+    "EvidenceDisposition",
+    "IndependentReviewFinding",
     "EngineeringRole",
     "ExecutionResult",
     "LoopState",
@@ -49,6 +62,7 @@ __all__ = [
     "PolicyDecision",
     "ProposalExecutionResult",
     "PolicyEngine",
+    "ReviewApplication",
     "ReviewDecision",
     "ReviewResult",
     "RoleExecutionResult",
