@@ -462,8 +462,13 @@ Historical CI note:
 - memory record JSON Schema: `IMPLEMENTED`
 - implementation head `436e040fdf2198f10c56061855a2c4437d4786fe`: deterministic regression `161/161 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - local persistent/reopen smoke: `PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`; 3 initial / 3 reopened / 4 final records, hash preserved, exact supersession revision 2 over revision 1, deterministic search PASS, temp DB removed, model truth promotion=false, automatic context injection=false, vector search=false, physical NOT_EXECUTED, EXIT=0
-- final acceptance-state generic CI: `PENDING`
-- final acceptance-state strict exact-head CI: `PENDING`
+- final PR head: `2f503df7750eafb4e19fed796dc2a6642d509616`
+- final deterministic regression: `161/161 PASS`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
+- Gate 016 state: `ACCEPTED_MERGED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 017 validation state
