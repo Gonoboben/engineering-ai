@@ -241,7 +241,7 @@ No unrestricted peer-to-peer model messaging.
 Writing a model claim to the Blackboard does not promote it to evidence.
 
 ### Gate 011 — Independent review and disagreement escalation
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Add controlled second-model review and explicit disagreement handling.
 
