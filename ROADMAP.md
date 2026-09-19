@@ -269,7 +269,7 @@ Capabilities:
 No project modification.
 
 ### Gate 013 — PlataVM controlled engineering loop
-Status: `IMPLEMENTED_CI_VALIDATED_PENDING_REAL_PROJECT_BLOCK_SMOKE`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Add controlled branch/worktree writes and project-specific policy enforcement.
 
