@@ -414,7 +414,10 @@ Historical CI note:
 - commit / push / open_pr / merge_pr / tag / release API: `ABSENT`
 - disposable generated-artifact cleanup: `TRACKED_DIFF_AND_HEAD_GUARDED`
 - implementation head `b40baea3294474fafa26936e06b0fa5c7d69ea86`: deterministic regression `143/143 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- real primary-workstation controlled validation smoke: `PENDING`
+- real primary-workstation controlled validation smoke attempt 1: `INFRASTRUCTURE_PREREQUISITE_BLOCK`; dotnet unresolved, no validator profile executed, disposable worktree/branch removed, primary BuoyCalc unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED
+- runtime prerequisite preflight: `IMPLEMENTED`; dotnet PATH/common-Windows-path resolution + .NET 8 SDK check + pwsh resolution before worktree creation
+- corrected runtime-preflight head `b6a490377f98cbe5d063e2a7460a977309507fe1`: deterministic regression `144/144 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
+- real primary-workstation controlled validation smoke attempt 2: `PENDING`
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -455,4 +458,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the stable Gate 015 evidence/status head, then run one explicitly approved disposable-worktree BuoyCalc validation smoke against `C:\\workspace\\repos\\buoycalc-windows`. Do not modify calculation-core/governance, commit/push/open PR/merge BuoyCalc, or perform RC/tag/release actions.
+Run generic and strict exact-head CI on the corrected Gate 015 pre-smoke head, then rerun the explicitly approved BuoyCalc smoke. Runtime prerequisites must be satisfied before worktree creation. Do not modify calculation-core/governance, commit/push/open PR/merge BuoyCalc, or perform RC/tag/release actions.
