@@ -39,10 +39,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `014 — BuoyCalc read-only adapter`
 - Issue: `#27`
-- PR: `PENDING_DRAFT`
+- PR: `#28 (DRAFT)`
 - Branch: `gate-014-buoycalc-readonly-adapter`
 - Base: `2a8cdf6594d8eb6b29e2efb200683af95167bb20`
-- State: `IMPLEMENTED_PENDING_VALIDATION`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -379,10 +379,10 @@ Historical CI note:
 - project write/delete/Git mutation/release API: `ABSENT`
 - PR #604 exact-head core required workflows: `.NET Build PASS / Selected Shape Consumer Scan PASS / Report Store Consumer Scan PASS / Validation 601 Main Gate PASS`
 - current main workflow-run evidence query: `EMPTY -> NO RELEASE PASS INFERRED`
-- deterministic regression: `PENDING`
-- generic CI: `PENDING`
-- strict exact-head CI: `PENDING`
+- implementation head `facc9d8b4a514120ce5be3a886fc77c8eda87dcc`: deterministic regression `128/128 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - local primary-workstation smoke: `PENDING`
+- final acceptance-state generic CI: `PENDING`
+- final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -421,4 +421,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Open Gate 014 draft PR and run deterministic/generic/strict exact-head validation. Then run the strict local BuoyCalc read-only smoke against `C:\\workspace\\repos\\buoycalc-windows`. Do not run calculation/solver changes, release packaging, RC branch mutation, tag/release actions, or any BuoyCalc write.
+Run generic and strict exact-head CI on the stable Gate 014 evidence/status head, then run the strict local BuoyCalc read-only smoke against `C:\\workspace\\repos\\buoycalc-windows`. Do not run calculation/solver changes, release packaging, RC branch mutation, tag/release actions, or any BuoyCalc write.
