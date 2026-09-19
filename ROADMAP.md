@@ -281,7 +281,7 @@ Status: `ACCEPTED_MERGED`
 Connect BuoyCalc with its calculation-core/physics boundaries and validation semantics.
 
 ### Gate 015 — BuoyCalc controlled engineering loop
-Status: `IMPLEMENTED_PENDING_VALIDATION`
+Status: `IMPLEMENTED_CI_VALIDATED_PENDING_REAL_SMOKE`
 
 Enable controlled modifications, build/test/validation runs and structured evidence capture.
 
