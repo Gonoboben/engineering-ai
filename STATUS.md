@@ -42,7 +42,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#28 (DRAFT)`
 - Branch: `gate-014-buoycalc-readonly-adapter`
 - Base: `2a8cdf6594d8eb6b29e2efb200683af95167bb20`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -380,7 +380,7 @@ Historical CI note:
 - PR #604 exact-head core required workflows: `.NET Build PASS / Selected Shape Consumer Scan PASS / Report Store Consumer Scan PASS / Validation 601 Main Gate PASS`
 - current main workflow-run evidence query: `EMPTY -> NO RELEASE PASS INFERRED`
 - implementation head `facc9d8b4a514120ce5be3a886fc77c8eda87dcc`: deterministic regression `128/128 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- local primary-workstation smoke: `PENDING`
+- local primary-workstation smoke: `PASS_STRICT_READ_ONLY_BASELINE`; main/head/origin-main unchanged at `0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`, dirty=false, all invariant checks PASS, 471 tracked source entries, presentation_physics_violation=false, release NOT_AUTHORIZED, physical NOT_EXECUTED, EXIT=0
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -421,4 +421,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the stable Gate 014 evidence/status head, then run the strict local BuoyCalc read-only smoke against `C:\\workspace\\repos\\buoycalc-windows`. Do not run calculation/solver changes, release packaging, RC branch mutation, tag/release actions, or any BuoyCalc write.
+Run generic and strict exact-head CI on the final Gate 014 acceptance-state head. If green, perform final scope review, mark PR #28 ready for review, and request explicit human exact-SHA squash-merge approval. Do not run calculation/solver changes, release packaging, RC branch mutation, tag/release actions, or any BuoyCalc write.
