@@ -290,6 +290,52 @@ class RoleLoopTests(unittest.TestCase):
         self.assertEqual(result.state, LoopState.FAIL)
         self.assertIn("outside approved plan", result.blocker)
 
+    def test_reviewer_invalid_json_retries_once_and_can_recover(self):
+        provider = FakeProvider(
+            [
+                {"content": {"steps": ["inspect"], "allowed_actions": ["read_repository"]}},
+                {
+                    "content": {"summary": "inspection complete"},
+                    "tool_calls": [ModelToolCall("read_repository", {"path": "STATUS.md"})],
+                },
+                {"raw_content": ""},
+                {"content": {"decision": "ACCEPT", "summary": "evidence is sufficient"}},
+            ]
+        )
+        result = make_loop(provider).run(job=job(), user_task="Inspect STATUS.md")
+        self.assertEqual(result.state, LoopState.COMPLETE)
+        self.assertEqual(result.job["status"], "PASS")
+        self.assertEqual(len(provider.requests), 4)
+        self.assertIn("Protocol correction", provider.requests[-1].messages[-1].content)
+
+    def test_reviewer_invalid_json_retry_exhaustion_is_terminal_fail(self):
+        provider = FakeProvider(
+            [
+                {"content": {"steps": ["inspect"], "allowed_actions": ["read_repository"]}},
+                {
+                    "content": {"summary": "inspection complete"},
+                    "tool_calls": [ModelToolCall("read_repository", {"path": "STATUS.md"})],
+                },
+                {"raw_content": ""},
+                {"raw_content": ""},
+            ]
+        )
+        result = make_loop(provider).run(job=job(), user_task="Inspect STATUS.md")
+        self.assertEqual(result.state, LoopState.FAIL)
+        self.assertEqual(result.job["status"], "FAIL")
+        self.assertIn("structured-output retry exhausted", result.blocker)
+
+    def test_executor_invalid_output_is_terminal_fail_not_exception(self):
+        provider = FakeProvider(
+            [
+                {"content": {"steps": ["inspect"], "allowed_actions": ["read_repository"]}},
+                {"raw_content": ""},
+            ]
+        )
+        result = make_loop(provider).run(job=job(), user_task="Inspect STATUS.md")
+        self.assertEqual(result.state, LoopState.FAIL)
+        self.assertIn("invalid executor output", result.blocker)
+
     def test_reviewer_reject_is_terminal_fail(self):
         provider = FakeProvider(
             [
