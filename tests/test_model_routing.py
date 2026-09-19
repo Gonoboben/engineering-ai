@@ -11,6 +11,7 @@ from engineering_ai.models import (
     RouteStatus,
     accepted_registry,
 )
+from engineering_ai.supervisor import Supervisor
 
 
 class ModelRoutingTests(unittest.TestCase):
@@ -139,6 +140,58 @@ class ModelRoutingTests(unittest.TestCase):
 
     def test_router_object_has_no_provider_or_tool_execution_dependency(self) -> None:
         self.assertEqual(set(vars(self.router)), {"_registry"})
+
+    def test_supervisor_owns_routing_boundary_without_executing_anything(self) -> None:
+        policy = {
+            "schema_version": "1.0",
+            "policy_version": "1.0",
+            "project_id": "engineering-ai",
+            "autonomous_actions": ["read_repository"],
+            "approval_required_actions": ["architecture_change"],
+            "forbidden_actions": ["validator_weakening"],
+            "mandatory_validators": [],
+            "stop_conditions": [],
+            "retry_limit": 1,
+        }
+        state = {
+            "schema_version": "1.0",
+            "state_revision": 1,
+            "project_id": "engineering-ai",
+            "current_gate": "009",
+            "active_job_id": None,
+            "repository_ref": {
+                "branch": "gate-009-model-capability-registry-router",
+                "head_sha": "test",
+            },
+            "architecture_baseline": "Gate 007",
+            "effective_permissions": {
+                "autonomous": ["read_repository"],
+                "approval_required": ["architecture_change"],
+                "forbidden": ["validator_weakening"],
+            },
+            "pending_checks": [],
+            "blockers": [],
+            "validation_states": [
+                {
+                    "check_id": "physical-validation",
+                    "validation_class": "PHYSICAL",
+                    "state": "PHYSICAL_NOT_EXECUTED",
+                    "evidence_refs": [],
+                }
+            ],
+            "next_admissible_action": None,
+        }
+        supervisor = Supervisor(
+            policy=policy,
+            state=state,
+            model_router=self.router,
+        )
+        decision = supervisor.route_model(
+            RouteRequest(task_class=ModelTaskClass.GENERAL_PLANNING)
+        )
+        self.assertEqual(decision.status, RouteStatus.ROUTE)
+        self.assertEqual(decision.model, "qwen3.5:9b")
+        self.assertEqual(supervisor.audit_events, ())
 
 
 if __name__ == "__main__":
