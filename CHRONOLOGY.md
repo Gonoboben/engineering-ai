@@ -1244,3 +1244,37 @@ Next admissible step:
 create a normal local clone at the profile path, then repeat the same strict
 read-only smoke. No PlataVM GitHub Actions rerun or PR #100 mutation is
 authorized by Gate 012.
+
+
+---
+
+## 2026-09-19 — Gate 012 real smoke exposed chronology-selection defect
+
+A real local PlataVM checkout was created and the strict Gate 012 smoke ran on
+the primary workstation.
+
+Observed PlataVM state:
+- `main@dcba77466d4800c0e7a336a2771684e066f845db`;
+- `origin/main` same SHA;
+- clean before/after smoke;
+- 62 bounded KiCad assets;
+- stale `PROJECT_STATUS` main pointer correctly surfaced as `SOURCE_CONFLICT`;
+- repository integrity PASS: 365 tracked paths / 35 JSON;
+- semantic Gates PASS: 47/47;
+- process exit 0;
+- physical state remained `PHYSICAL_NOT_EXECUTED`.
+
+However, the adapter selected `Docs/chronology/README.md` as the latest
+chronology item. That violates Gate 012's requirement to resolve the latest
+dated chronology entry.
+
+Classification:
+`READ_ONLY_BOUNDARY_PASS_WITH_CHRONOLOGY_SELECTION_DEFECT`.
+
+The defect was corrected without weakening the filesystem boundary:
+- only `YYYY-MM-DD*.md` direct chronology entries are candidates;
+- README/non-dated files are excluded;
+- zero dated entries is a hard error;
+- a regression fixture proves README cannot win selection.
+
+Final corrected-head CI and one corrected-head local smoke remain required.
