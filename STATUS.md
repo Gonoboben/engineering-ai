@@ -418,7 +418,9 @@ Historical CI note:
 - runtime prerequisite preflight: `IMPLEMENTED`; dotnet PATH/common-Windows-path resolution + .NET 8 SDK check + pwsh resolution before worktree creation
 - corrected runtime-preflight head `b6a490377f98cbe5d063e2a7460a977309507fe1`: deterministic regression `144/144 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - real primary-workstation controlled validation smoke attempt 2: `RUNTIME_PREREQUISITE_MISSING`; dotnet=null, pwsh=null, .NET 8 SDK unavailable, worktree not created, primary BuoyCalc unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED, EXIT=4
-- required local prerequisites before smoke attempt 3: `Microsoft .NET 8 SDK + PowerShell 7`
+- runtime prerequisites installed before attempt 3: `Microsoft .NET 8 SDK + PowerShell 7`
+- real primary-workstation controlled validation smoke attempt 3: `PASS_SOFTWARE_VALIDATION_WITH_CLEANUP_INFRASTRUCTURE_BLOCK`; all 4 profiles PASS, tracked_state_unchanged=true, primary repository unchanged, release NOT_AUTHORIZED, physical NOT_EXECUTED; stale disposable worktree/branch recovery pending
+- Windows disposable cleanup hardening head `87354398cd745856d8ff89798b5527e51477641c`: deterministic regression `145/145 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -459,4 +461,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Install only the missing local prerequisites (`Microsoft .NET 8 SDK` and `PowerShell 7`), verify `dotnet --list-sdks` includes an 8.x SDK and `pwsh` starts, then rerun the explicitly approved BuoyCalc smoke. Do not modify calculation-core/governance, commit/push/open PR/merge BuoyCalc, or perform RC/tag/release actions.
+Run the guarded Gate 015 stale-worktree recovery harness for the exact remaining disposable worktree/branch from smoke attempt 3. Do not rerun the full BuoyCalc validation suite unless recovery evidence is insufficient. After cleanup PASS, run final Gate 015 acceptance-state CI and request exact-SHA squash-merge approval.
