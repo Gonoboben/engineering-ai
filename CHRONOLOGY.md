@@ -2091,3 +2091,45 @@ ADR-0016 added as `PROPOSED_GATE_017`.
 Next:
 open draft PR and validate retrieval implementation + benchmark before any
 consideration of semantic/vector retrieval.
+
+
+---
+
+## 2026-09-19 — Gate 017 retrieval implementation validated
+
+Validated implementation head:
+`9e5874ec19b15b7d429f3fcb6752f73b3e8e7a28`.
+
+Validated:
+- deterministic provenance-preserving lexical retrieval;
+- latest-only default;
+- MODEL/ADVISORY default exclusion;
+- PROPOSED ADR default exclusion;
+- explicit advisory/proposed/history opt-in with labels preserved;
+- stable lexical relevance ranking;
+- bounded candidate/result/context budgets;
+- no per-record truncation;
+- provenance/evidence/source refs and integrity SHA preserved;
+- project isolation;
+- memory integrity failure fail-closed;
+- retrieval context JSON Schema;
+- no write/vector/context-injection API;
+- deterministic recall benchmark smoke under CI;
+- Supervisor-owned same-project retrieval boundary;
+- cross-project Supervisor retrieval rejection;
+- no automatic Blackboard/handoff creation.
+
+Validation:
+- deterministic tests: `178/178 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Semantic/vector backend remains:
+`DEFERRED_NOT_JUSTIFIED`.
+
+Gate 017 state:
+`IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_BENCHMARK`.
+
+Remaining:
+stable pre-smoke exact-head CI and one primary-workstation retrieval
+benchmark/smoke with metrics captured.
