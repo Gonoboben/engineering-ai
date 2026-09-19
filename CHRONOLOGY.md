@@ -1953,3 +1953,40 @@ ADR-0015 added as `PROPOSED_GATE_016`.
 Next:
 open draft PR and run deterministic/generic/strict exact-head validation before
 the local persistent/reopen smoke.
+
+
+---
+
+## 2026-09-19 — Gate 016 decision/evidence memory implementation validated
+
+Validated implementation head:
+`436e040fdf2198f10c56061855a2c4437d4786fe`.
+
+Validated:
+- local SQLite standard-library store;
+- append-only immutable revisions;
+- SQLite UPDATE/DELETE protection;
+- exact latest-record supersession;
+- schema-version binding;
+- canonical SHA-256 integrity;
+- reopen persistence;
+- project isolation;
+- deterministic bounded filter/keyword search;
+- model memory remains ADVISORY;
+- accepted ADR requires HUMAN authority;
+- deterministic/physical evidence promotion guards;
+- tamper/hash mismatch detection;
+- absence of generic SQL/update/delete/vector/context-injection API;
+- persistent/reopen smoke harness regression.
+
+Validation:
+- deterministic tests: `161/161 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+Gate 016 state:
+`IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`.
+
+Remaining:
+stable pre-smoke exact-head CI and one primary-workstation persistent/reopen
+memory smoke.
