@@ -377,3 +377,41 @@ Validation:
 - deterministic tests: `145/145 PASS`;
 - generic CI: `PASS`;
 - strict exact-head CI: `PASS`.
+
+
+## Stale-worktree recovery attempt 1 — already deregistered
+
+The first guarded recovery run returned:
+
+`REFUSED: worktree is not registered by Git`.
+
+Post-run primary repository evidence:
+- `main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- status: `## main...origin/main`;
+- `git worktree list` showed only:
+  `C:/workspace/repos/buoycalc-windows 0db1e7c [main]`.
+
+Interpretation:
+Git had already removed the disposable worktree registration during the prior
+cleanup attempt even though Windows filesystem deletion had failed.
+
+Recovery harness was tightened to support this exact state:
+- exact worktree identity must be
+  `gate015-<base[:12]>`;
+- exact branch identity must be
+  `engineering-ai/buoycalc/gate015-smoke-<base[:12]>`;
+- controlled branch must still point exactly to base SHA;
+- primary repository snapshot must remain unchanged;
+- registered-worktree cleanup remains fully guarded;
+- if Git has already deregistered the exact smoke worktree, only residual
+  filesystem cleanup plus controlled branch deletion is permitted.
+
+Corrected recovery head:
+`d8405894bfb9152256e28ca49678f27ed8a2471d`.
+
+Validation:
+- deterministic tests: `147/147 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+No full BuoyCalc validation rerun is required.
