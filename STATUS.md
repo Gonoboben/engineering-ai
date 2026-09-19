@@ -23,16 +23,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 007 merge commit: `3903672d44f6ac5119183eb58363847d42e25d9b`
 - Gate 008: `ACCEPTED_MERGED`
 - Gate 008 merge commit: `d797ac476cc6653932b683932d025de747f3e918`
+- Gate 009: `ACCEPTED_MERGED`
+- Gate 009 merge commit: `711d23fb9739e7d9069e5d2569f00231988ef176`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `009 — Model capability registry and deterministic router`
-- Issue: `#17`
-- PR: `#18 (DRAFT)`
-- Branch: `gate-009-model-capability-registry-router`
-- Base: `d797ac476cc6653932b683932d025de747f3e918`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `010 — Task Blackboard and supervised model hand-offs`
+- Issue: `#19`
+- PR: `#20 (DRAFT)`
+- Branch: `gate-010-task-blackboard-handoffs`
+- Base: `711d23fb9739e7d9069e5d2569f00231988ef176`
+- State: `IMPLEMENTED_PENDING_VALIDATION`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -61,8 +63,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Planner / Executor / Reviewer loop: `IMPLEMENTED_RUNTIME_VALIDATED`
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Supervised multi-model architecture: `ACCEPTED_GATE_007`
-- Model capability registry/router runtime: `IMPLEMENTED_PENDING_VALIDATION`
-- Task Blackboard/runtime hand-offs: `DESIGNED_NOT_IMPLEMENTED`
+- Model capability registry/router runtime: `IMPLEMENTED_VALIDATED_GATE_009`
+- Task Blackboard/runtime hand-offs: `IMPLEMENTED_PENDING_VALIDATION`
 - Candidate Qwen3.5-9B qualification: `QUALIFIED_GENERAL_PLANNER`
 - Candidate Qwen2.5-Coder-7B qualification: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`; native tool transport repeatedly fails under current Ollama contract, so role must be no-native-tool-proposal until separately requalified
 - Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
@@ -73,7 +75,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM: `NOT_CONNECTED`
 - BuoyCalc: `NOT_CONNECTED`
 
-Gate 009 implements model selection only and does not access or modify either engineering project.
+Gate 010 implements Blackboard/runtime hand-offs only and does not access or modify either engineering project.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -202,8 +204,8 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 009 validation state
-- Issue #17: `OPEN`
-- PR #18: `DRAFT`
+- Issue #17: `CLOSED`
+- PR #18: `MERGED`
 - branch base equals Gate 008 squash merge `d797ac476cc6653932b683932d025de747f3e918`: `PASS`
 - evidence-backed registry: `IMPLEMENTED`
 - explicit task classes only: `GENERAL_PLANNING / CODE_REPOSITORY / BASELINE_REASONING`
@@ -218,8 +220,37 @@ Historical CI note:
 - Supervisor-owned `route_model()` boundary: `IMPLEMENTED`
 - Task Blackboard / model hand-offs: `NOT_IMPLEMENTED_GATE010`
 - implementation head `6671d4e6fe9c11734f87ba23dba064e4d9a5ac50`: deterministic regression `69/69 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- final acceptance-state generic CI: `PENDING`
-- final acceptance-state strict exact-head CI: `PENDING`
+- final PR head: `507eeb5af13e9c138d8dfc023eb2bcd032e4b5c9`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`, `69/69`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `711d23fb9739e7d9069e5d2569f00231988ef176`
+- Gate 009 state: `ACCEPTED_MERGED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 010 validation state
+- Issue #19: `OPEN`
+- PR #20: `DRAFT`
+- branch base equals Gate 009 squash merge `711d23fb9739e7d9069e5d2569f00231988ef176`: `PASS`
+- typed append-only Task Blackboard: `IMPLEMENTED`
+- worker surface: `READ_ONLY_VIEW`
+- model claim/tool proposal validation class: `ADVISORY_ONLY`
+- deterministic evidence requires deterministic-tool authority + evidence refs: `ENFORCED`
+- Supervisor-owned task/context/evidence/handoff API: `IMPLEMENTED`
+- explicit record-ID visibility on handoffs: `ENFORCED`
+- hidden/cross-task evidence satisfying context: `PROHIBITED`
+- deterministic acquisition precedence for explicit missing context: `IMPLEMENTED`
+- missing-context tool planner route: `GENERAL_PLANNING -> qwen3.5:9b`
+- ambiguous acquisition escalation: `BASELINE_REASONING -> gpt-oss:20b / medium`
+- Coder handoff only after visible deterministic required context is complete: `ENFORCED`
+- Coder native tool proposal handoff: `NO_ROUTE`
+- direct worker-to-worker writes: `NOT_IMPLEMENTED_PROHIBITED`
+- independent disagreement review: `NOT_IMPLEMENTED_GATE011`
+- Electronics/PCB/KiCad/Vision roles: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE010`
+- project adapters/write authority: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- deterministic regression: `PENDING`
+- generic CI: `PENDING`
+- strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -258,4 +289,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 009 acceptance-state head. If green, request explicit human exact-SHA squash-merge approval for PR #18. Do not implement Task Blackboard or Electronics/PCB/KiCad routing in this Gate.
+Run full Gate 010 regression plus generic and strict exact-head CI on the Blackboard/handoff implementation. Correct implementation defects without weakening policy, then synchronize acceptance evidence and request explicit human exact-SHA squash-merge approval for PR #20. Do not implement Gate 011 disagreement review or Electronics/PCB/KiCad roles.
