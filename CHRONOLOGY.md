@@ -1552,3 +1552,37 @@ Gate 014 state:
 Remaining:
 stable-head CI followed by one local strict read-only smoke on the real BuoyCalc
 checkout.
+
+
+---
+
+## 2026-09-19 — Gate 014 final BuoyCalc read-only smoke passed
+
+Final local strict read-only smoke executed on the primary workstation.
+
+Engineering AI head at smoke:
+`b17fa249f4d717ed24b74898285addefac79be6c`.
+
+Observed BuoyCalc:
+- `main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`;
+- `origin/main` same SHA;
+- clean before/after smoke;
+- all ten frozen invariant markers PASS;
+- 471 tracked source entries inventoried;
+- presentation/report physics-authority violation: false;
+- release state remained
+  `NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`;
+- physical validation remained `PHYSICAL_NOT_EXECUTED`;
+- repository unchanged;
+- smoke exit `0`.
+
+Classification:
+`PASS_STRICT_READ_ONLY_BASELINE`.
+
+No calculation/solver execution, validation weakening, project write,
+RC packaging, release trigger, tag, GitHub Release or other BuoyCalc mutation
+occurred.
+
+Next:
+final acceptance-state CI, scope review, and exact-SHA human squash-merge
+approval for PR #28.
