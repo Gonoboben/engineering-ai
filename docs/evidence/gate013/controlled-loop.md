@@ -172,3 +172,39 @@ Expected current result:
 This real-project block is the correct Gate 013 behavior until PlataVM
 authoritative governance is synchronized in a separately controlled PlataVM
 Gate.
+
+
+## Real PlataVM primary-workstation policy-block smoke
+
+The Gate 013 real-project smoke completed on the primary Windows workstation.
+
+Engineering AI Gate 013 head at smoke:
+`a7f4fda9a487733711248d684d1107f5a0b59e76`.
+
+Observed PlataVM repository:
+- path: `C:\workspace\repos\plataVM`;
+- before HEAD: `dcba77466d4800c0e7a336a2771684e066f845db`;
+- before status: `## main...origin/main`;
+- after HEAD: `dcba77466d4800c0e7a336a2771684e066f845db`;
+- after status: `## main...origin/main`;
+- repository_unchanged: `true`.
+
+Detected source conflict:
+`PROJECT_STATUS declared main c9703c58486eb5efe6a1d1d3e1bbf37815cd2a65 != origin/main dcba77466d4800c0e7a336a2771684e066f845db`.
+
+Controlled-loop result:
+- state: `BLOCKED_SOURCE_CONFLICT`;
+- worktree_created: `false`;
+- remote_mutation_attempted: `false`;
+- physical_validation: `PHYSICAL_NOT_EXECUTED`;
+- process exit: `0`.
+
+This is the required Gate 013 safety result for the current real PlataVM state.
+The authoritative source conflict stopped the controlled loop before any
+worktree creation or file mutation.
+
+No PlataVM file, branch, commit, PR, CI run, release/fabrication state, or
+physical state was changed.
+
+Final real-project smoke classification:
+`PASS_POLICY_BLOCK_BEFORE_MUTATION`.
