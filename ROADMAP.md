@@ -281,14 +281,14 @@ Status: `ACCEPTED_MERGED`
 Connect BuoyCalc with its calculation-core/physics boundaries and validation semantics.
 
 ### Gate 015 — BuoyCalc controlled engineering loop
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
 Enable controlled modifications, build/test/validation runs and structured evidence capture.
 
 ## Phase 4 — Persistent engineering memory
 
 ### Gate 016 — Decision/evidence memory
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_PENDING_VALIDATION`
 
 Add structured storage/search for:
 - ADRs;
