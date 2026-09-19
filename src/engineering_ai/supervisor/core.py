@@ -6,6 +6,12 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Protocol
 
+from engineering_ai.memory.retrieval import (
+    PolicyControlledMemoryRetriever,
+    RetrievalContextPackage,
+    RetrievalPolicyError,
+    RetrievalRequest,
+)
 from engineering_ai.models.routing import (
     DeterministicModelRouter,
     RouteDecision,
@@ -85,6 +91,7 @@ class Supervisor:
         audit_emitter: AuditEmitter | None = None,
         model_router: DeterministicModelRouter | None = None,
         blackboard: TaskBlackboard | None = None,
+        memory_retriever: PolicyControlledMemoryRetriever | None = None,
     ) -> None:
         self._policy = deepcopy(policy)
         self._state = deepcopy(state)
@@ -92,6 +99,7 @@ class Supervisor:
         self._audit = audit_emitter or AuditEmitter()
         self._model_router = model_router
         self._blackboard = blackboard
+        self._memory_retriever = memory_retriever
         self._audit_events: list[dict[str, Any]] = []
 
     @property
@@ -110,6 +118,21 @@ class Supervisor:
         if self._model_router is None:
             raise RuntimeError("Supervisor has no model router configured")
         return self._model_router.route(request)
+
+    def retrieve_memory_context(
+        self,
+        request: RetrievalRequest,
+    ) -> RetrievalContextPackage:
+        """Retrieve bounded memory context without injecting or executing it."""
+
+        if self._memory_retriever is None:
+            raise RuntimeError("Supervisor has no memory retriever configured")
+        state_project = self._state.get("project_id")
+        if request.project_id != state_project:
+            raise RetrievalPolicyError(
+                "retrieval project_id must match Supervisor project state"
+            )
+        return self._memory_retriever.retrieve(request)
 
     def blackboard_view(
         self,
