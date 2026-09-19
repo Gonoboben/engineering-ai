@@ -40,7 +40,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#26 (DRAFT)`
 - Branch: `gate-013-platavm-controlled-engineering-loop`
 - Base: `6df110df27458e221fb2713439b5e778da1da57f`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_REAL_PROJECT_BLOCK_SMOKE`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -347,7 +347,7 @@ Historical CI note:
 - source conflict blocks before worktree creation: `PASS`
 - real PlataVM current write state: `BLOCKED_SOURCE_CONFLICT`
 - implementation head `9574f44c37189205ba8577096ce08b9dd893642f`: deterministic regression `119/119 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- real primary-workstation policy-block smoke: `PENDING`
+- real primary-workstation policy-block smoke: `PASS_POLICY_BLOCK_BEFORE_MUTATION`; state `BLOCKED_SOURCE_CONFLICT`, worktree_created=false, repository_unchanged=true, remote_mutation_attempted=false, EXIT=0
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -386,4 +386,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run the Gate 013 real-project policy-block smoke against `C:\\workspace\\repos\\plataVM` on the stable Gate 013 head. Expected: `BLOCKED_SOURCE_CONFLICT`, no worktree created, repository HEAD/status unchanged, no remote mutation. Do not synchronize PlataVM governance inside Engineering AI; that requires a separate PlataVM Gate.
+Run generic and strict exact-head CI on the final Gate 013 acceptance-state head. If green, perform final scope review, mark PR #26 ready for review, and request explicit human exact-SHA squash-merge approval. Do not synchronize PlataVM governance or mutate PR #100 inside Gate 013.
