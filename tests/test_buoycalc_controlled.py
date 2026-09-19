@@ -509,6 +509,52 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         self.assertNotEqual(branch.returncode, 0)
         self.assertEqual(self._git("rev-parse", "HEAD").strip(), self.base_sha)
 
+    def test_disposable_cleanup_falls_back_after_git_permission_denied(self) -> None:
+        loop = self.loop()
+        prep = loop.prepare(
+            worktree_name="permission-fallback",
+            branch="engineering-ai/buoycalc/permission-fallback",
+        )
+        assert prep.session is not None
+        worktree = Path(prep.session.worktree_root)
+        generated = worktree / "artifacts/generated.txt"
+        generated.parent.mkdir(parents=True, exist_ok=True)
+        generated.write_text("generated\n", encoding="utf-8")
+
+        adapter = loop._worktrees
+        original_run_git = adapter._run_git
+        remove_attempts = {"count": 0}
+
+        def flaky_run_git(args, *, operation):
+            if args[:3] == ["worktree", "remove", "--force"]:
+                remove_attempts["count"] += 1
+                return subprocess.CompletedProcess(
+                    args=args,
+                    returncode=1,
+                    stdout="",
+                    stderr="error: failed to delete worktree: Permission denied",
+                )
+            return original_run_git(args, operation=operation)
+
+        with patch.object(adapter, "_run_git", side_effect=flaky_run_git):
+            loop.cleanup_disposable_generated(prep.session)
+
+        self.assertEqual(remove_attempts["count"], 3)
+        self.assertFalse(worktree.exists())
+        branch = subprocess.run(
+            [
+                "git",
+                "show-ref",
+                "--verify",
+                "refs/heads/engineering-ai/buoycalc/permission-fallback",
+            ],
+            cwd=self.root,
+            check=False,
+            capture_output=True,
+        )
+        self.assertNotEqual(branch.returncode, 0)
+        self.assertEqual(self._git("rev-parse", "HEAD").strip(), self.base_sha)
+
     def test_disposable_cleanup_rejects_tracked_diff(self) -> None:
         loop = self.loop()
         prep = loop.prepare(
