@@ -150,7 +150,7 @@ class ModelRoutingTests(unittest.TestCase):
             "approval_required_actions": ["architecture_change"],
             "forbidden_actions": ["validator_weakening"],
             "mandatory_validators": [],
-            "stop_conditions": [],
+            "stop_conditions": ["approval boundary reached"],
             "retry_limit": 1,
         }
         state = {
