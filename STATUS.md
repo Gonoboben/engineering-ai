@@ -46,7 +46,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#32 (DRAFT)`
 - Branch: `gate-016-decision-evidence-memory`
 - Base: `496896ebb368618cbd9f3c6f26e31fae4acb8922`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -453,7 +453,7 @@ Historical CI note:
 - no generic SQL/update/delete API: `ENFORCED`
 - memory record JSON Schema: `IMPLEMENTED`
 - implementation head `436e040fdf2198f10c56061855a2c4437d4786fe`: deterministic regression `161/161 PASS`, generic CI `PASS`, strict exact-head CI `PASS`
-- local persistent/reopen smoke: `PENDING`
+- local persistent/reopen smoke: `PASS_LOCAL_PERSISTENT_REOPEN_MEMORY`; 3 initial / 3 reopened / 4 final records, hash preserved, exact supersession revision 2 over revision 1, deterministic search PASS, temp DB removed, model truth promotion=false, automatic context injection=false, vector search=false, physical NOT_EXECUTED, EXIT=0
 - final acceptance-state generic CI: `PENDING`
 - final acceptance-state strict exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
@@ -494,4 +494,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the stable Gate 016 evidence/status head, then run the local persistent/reopen memory smoke on the primary workstation. Do not add vector search, RAG/context injection, external/cloud memory, model-managed truth, autonomous accepted ADRs or destructive migrations.
+Run final generic and strict exact-head CI on the Gate 016 acceptance-state head. If green, perform final scope review, mark PR #32 ready for review, and request explicit human exact-SHA squash-merge approval. Do not add vector search, RAG/context injection, external/cloud memory, model-managed truth, autonomous accepted ADRs or destructive migrations.
