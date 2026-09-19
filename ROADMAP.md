@@ -256,7 +256,7 @@ Majority voting between models never substitutes for evidence.
 ## Phase 3 — Existing project integration
 
 ### Gate 012 — PlataVM read-only adapter
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
 Connect the existing PlataVM repository in read-only mode.
 
@@ -269,7 +269,7 @@ Capabilities:
 No project modification.
 
 ### Gate 013 — PlataVM controlled engineering loop
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Add controlled branch/worktree writes and project-specific policy enforcement.
 

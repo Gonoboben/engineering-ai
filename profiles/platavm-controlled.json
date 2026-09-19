@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "project_id": "platavm",
+  "display_name": "PlataVM V1.9 controlled engineering",
+  "repository": {
+    "local_path": "C:\\workspace\\repos\\plataVM",
+    "remote": "Gonoboben/plataVM",
+    "default_branch": "main"
+  },
+  "authoritative_files": [
+    "AGENTS.md",
+    "Docs/PROJECT_STATUS.md",
+    "Docs/PROJECT_CONTROL.md",
+    "Docs/PROJECT_MASTER.md",
+    "Docs/ARCHITECTURE_BASELINE.md",
+    "Docs/OPEN_QUESTIONS.md",
+    "Docs/TRACEABILITY_V1_9.md",
+    "Docs/CHRONOLOGY.md",
+    "Docs/chronology/"
+  ],
+  "policy_ref": "profiles/platavm-controlled-policy.json",
+  "architecture_baseline": "V1.9",
+  "tool_profiles": [
+    "platavm.repository_integrity",
+    "platavm.semantic_gates"
+  ]
+}

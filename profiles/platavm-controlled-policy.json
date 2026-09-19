@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "policy_version": "gate013-controlled-v1",
+  "project_id": "platavm",
+  "autonomous_actions": [
+    "read_repository",
+    "run_validator",
+    "propose_patch"
+  ],
+  "approval_required_actions": [
+    "write_worktree"
+  ],
+  "forbidden_actions": [
+    "search_documents",
+    "run_calculation",
+    "run_simulation",
+    "local_commit",
+    "push_remote",
+    "open_pr",
+    "merge_pr",
+    "release_authorization",
+    "fabrication_authorization",
+    "architecture_change",
+    "physics_change",
+    "validator_weakening",
+    "external_disclosure",
+    "destructive_action",
+    "scope_expansion"
+  ],
+  "mandatory_validators": [
+    "platavm.repository_integrity",
+    "platavm.semantic_gates"
+  ],
+  "stop_conditions": [
+    "authoritative governance files conflict with repository state",
+    "primary repository is dirty",
+    "patch target is outside the explicit job allow-list",
+    "patch expected_sha256 does not match current content",
+    "validator changes Git-visible state",
+    "validator fails or times out",
+    "requested action is outside Gate 013 controlled scope"
+  ],
+  "retry_limit": 1
+}
