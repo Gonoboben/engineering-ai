@@ -6,6 +6,11 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Protocol
 
+from engineering_ai.models.routing import (
+    DeterministicModelRouter,
+    RouteDecision,
+    RouteRequest,
+)
 from engineering_ai.supervisor.audit import AuditEmitter
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
 from engineering_ai.validation import SemanticValidationError, validate_instance
@@ -60,11 +65,13 @@ class Supervisor:
         policy: dict[str, Any],
         state: dict[str, Any],
         audit_emitter: AuditEmitter | None = None,
+        model_router: DeterministicModelRouter | None = None,
     ) -> None:
         self._policy = deepcopy(policy)
         self._state = deepcopy(state)
         self._policy_engine = PolicyEngine(self._policy, self._state)
         self._audit = audit_emitter or AuditEmitter()
+        self._model_router = model_router
         self._audit_events: list[dict[str, Any]] = []
 
     @property
@@ -74,6 +81,15 @@ class Supervisor:
     @property
     def audit_events(self) -> tuple[dict[str, Any], ...]:
         return tuple(deepcopy(self._audit_events))
+
+    def route_model(self, request: RouteRequest) -> RouteDecision:
+        """Route an explicit task class through the configured deterministic router.
+
+        Routing is selection only. It never invokes a provider, model, or tool.
+        """
+        if self._model_router is None:
+            raise RuntimeError("Supervisor has no model router configured")
+        return self._model_router.route(request)
 
     def evaluate_tool_proposal(
         self,
