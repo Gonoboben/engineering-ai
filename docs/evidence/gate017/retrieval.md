@@ -121,6 +121,11 @@ Project_id is mandatory; cross-project memory cannot satisfy retrieval.
 A memory integrity/hash failure propagates as a hard failure; corrupted memory
 is not returned.
 
+The Supervisor exposes retrieval through a narrow read-only
+`retrieve_memory_context()` boundary. The request project_id must equal the
+Supervisor's current project state. Retrieval returns the typed package only
+and does not create Blackboard records or model handoffs.
+
 The retriever exposes no:
 - append/update/delete;
 - generic SQL;
@@ -189,14 +194,40 @@ Project physical validation remains whatever the source record states.
 Gate 017 itself:
 `PHYSICAL_NOT_EXECUTED`.
 
-## Pending validation
+## Deterministic implementation validation
 
-- draft PR;
-- deterministic regression;
-- generic CI;
-- strict exact-head CI;
-- benchmark metrics;
-- primary-workstation retrieval benchmark/smoke;
-- final acceptance-state CI;
-- final scope review;
-- exact-SHA human squash-merge approval.
+Validated implementation head:
+`9e5874ec19b15b7d429f3fcb6752f73b3e8e7a28`.
+
+Result:
+- deterministic tests: `178/178 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`;
+- exact revision verification: `PASS`.
+
+Validated boundaries include:
+- default MODEL/ADVISORY exclusion;
+- explicit advisory opt-in with labels preserved;
+- default proposed-ADR exclusion;
+- explicit proposed-ADR opt-in;
+- latest-only default and explicit history retrieval;
+- stable lexical ranking and tie-break;
+- bounded result/context budgets;
+- whole-record omission rather than record truncation;
+- provenance/evidence/source refs and content hash preservation;
+- project isolation;
+- memory integrity failure propagation;
+- retrieval context JSON Schema;
+- read-only retrieval API;
+- benchmark smoke returns PASS under CI;
+- Supervisor-owned same-project retrieval boundary;
+- cross-project Supervisor retrieval rejection;
+- Supervisor retrieval does not create Blackboard/handoff context.
+
+## Remaining acceptance
+
+1. stable pre-smoke generic + strict exact-head CI;
+2. primary-workstation retrieval benchmark/smoke PASS with metrics captured;
+3. final acceptance-state CI;
+4. final scope review;
+5. exact-SHA human squash-merge approval.
