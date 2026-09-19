@@ -1759,3 +1759,53 @@ Classification:
 
 Required before attempt 3:
 Microsoft .NET 8 SDK and PowerShell 7.
+
+
+---
+
+## 2026-09-19 — Gate 015 smoke attempt 3 passed software validation; cleanup blocked
+
+Real primary-workstation smoke executed after local .NET 8 SDK and PowerShell 7
+became available.
+
+BuoyCalc baseline before/after:
+`main@0db1e7cc17e309fc1402fe58b265d2e95c2d4d39`, clean and unchanged.
+
+All fixed profiles passed:
+- `buoycalc.dotnet_build`;
+- `buoycalc.selected_shape_consumer_scan`;
+- `buoycalc.report_store_consumer_scan`;
+- `buoycalc.validation_601`.
+
+All steps completed with exit 0, no timeout and no truncation.
+Tracked state remained unchanged.
+
+Software terminal state:
+`READY_FOR_HUMAN_APPROVAL`.
+
+Release remained:
+`NOT_AUTHORIZED_REQUIRES_EXPLICIT_MANUAL_WINDOWS_RC_SMOKE`.
+
+Physical remained:
+`PHYSICAL_NOT_EXECUTED`.
+
+The only failure was disposable Windows worktree removal:
+`Permission denied`.
+
+The temporary branch/worktree remained and process exited 1.
+
+Classification:
+`PASS_SOFTWARE_VALIDATION_WITH_CLEANUP_INFRASTRUCTURE_BLOCK`.
+
+Cleanup was hardened with retry plus a guarded Windows filesystem fallback and
+Git worktree prune. A dedicated stale-worktree recovery harness was added.
+
+Cleanup-hardening head:
+`87354398cd745856d8ff89798b5527e51477641c`.
+
+Regression:
+`145/145 PASS`; generic CI PASS; strict exact-head CI PASS.
+
+Next:
+recover only the exact stale worktree/branch. Full BuoyCalc validation does not
+need repetition solely for this cleanup defect.
