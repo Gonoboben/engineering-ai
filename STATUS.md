@@ -19,16 +19,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 005 merge commit: `ddf6fd9420bc60d3d812a17b948f7319e2cb63cd`
 - Gate 006: `ACCEPTED_MERGED`
 - Gate 006 merge commit: `24b1fbc009920c1dee8317c784ef42711044be87`
-- Control-plane architecture: `ACCEPTED_BASELINE`
+- Gate 007: `ACCEPTED_MERGED`
+- Gate 007 merge commit: `3903672d44f6ac5119183eb58363847d42e25d9b`
+- Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `007 — Supervised multi-model architecture baseline`
-- Issue: `#13`
-- PR: `#14 (DRAFT)`
-- Branch: `gate-007-supervised-multi-model-architecture`
-- Base: `24b1fbc009920c1dee8317c784ef42711044be87`
-- State: `ARCHITECTURE_DOCUMENTED_PENDING_HUMAN_APPROVAL`
+- Gate: `008 — Local specialist model qualification`
+- Issue: `#15`
+- PR: `PENDING_DRAFT`
+- Branch: `gate-008-local-specialist-model-qualification`
+- Base: `3903672d44f6ac5119183eb58363847d42e25d9b`
+- State: `QUALIFICATION_PREPARATION_IN_PROGRESS`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -56,11 +58,12 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Stretch candidate: `qwen3.6:35b` — `DEFERRED_NOT_JUSTIFIED_ON_CURRENT_WORKSTATION` after measured 27B CPU-heavy performance
 - Planner / Executor / Reviewer loop: `IMPLEMENTED_RUNTIME_VALIDATED`
 - Engineering memory runtime: `DESIGNED_NOT_IMPLEMENTED`
-- Supervised multi-model architecture: `GATE_007_IN_PROGRESS`
+- Supervised multi-model architecture: `ACCEPTED_GATE_007`
 - Model capability registry/router runtime: `DESIGNED_NOT_IMPLEMENTED`
 - Task Blackboard/runtime hand-offs: `DESIGNED_NOT_IMPLEMENTED`
-- Candidate Qwen3.5-9B qualification: `NOT_RUN`
-- Candidate Qwen2.5-Coder-7B qualification: `NOT_RUN`
+- Candidate Qwen3.5-9B qualification: `NOT_RUN_GATE_008`
+- Candidate Qwen2.5-Coder-7B qualification: `NOT_RUN_GATE_008`
+- Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
 - Vision/image/CAD workers: `DEFERRED`
 - External controlled review bridge: `DESIGNED_NOT_IMPLEMENTED`
 
@@ -68,7 +71,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM: `NOT_CONNECTED`
 - BuoyCalc: `NOT_CONNECTED`
 
-Gate 007 is architecture/governance only and does not access or modify either engineering project.
+Gate 008 qualifies local models only and does not access or modify either engineering project.
 
 ## Gate 004 validation state
 - Gate 002/003 regression suite: `PASS`
@@ -154,8 +157,8 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 007 validation state
-- Issue #13: `OPEN`
-- draft PR #14: `OPEN`
+- Issue #13: `CLOSED`
+- PR #14: `MERGED`
 - branch base equals Gate 006 squash merge `24b1fbc009920c1dee8317c784ef42711044be87`: `PASS`
 - architecture scope only: `DOCUMENTED_REVIEWED`
 - Supervisor remains sole permission/state/tool authority: `REQUIRED`
@@ -168,8 +171,25 @@ Historical CI note:
 - Qwen3.5-9B/Qwen2.5-Coder local qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_007`
 - implementation changes: `NONE_EXPECTED`
 - architecture-prep head `a8128d8f28815e2c100f8f9b71940b61b830491c`: generic CI `PASS`, strict exact-head CI `PASS`, deterministic tests `50/50 PASS`
-- final exact-head CI after status/chronology synchronization: `PENDING`
-- explicit exact-SHA architecture approval before merge: `REQUIRED`
+- final PR head: `c09dae76d0526a899233a9b4656affd0d4c7e631`
+- final generic CI: `PASS`
+- final strict exact-head CI: `PASS`, `50/50`
+- explicit exact-SHA architecture approval: `PASS`
+- squash merge commit: `3903672d44f6ac5119183eb58363847d42e25d9b`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 008 validation state
+- Issue #15: `OPEN`
+- branch base equals Gate 007 squash merge `3903672d44f6ac5119183eb58363847d42e25d9b`: `PASS`
+- candidate `qwen3.5:9b`: `NOT_INSTALLED_OR_NOT_VERIFIED`
+- candidate `qwen2.5-coder:7b-instruct`: `NOT_INSTALLED_OR_NOT_VERIFIED`
+- context comparison baseline: `8192`
+- benchmark-equivalent max output: `2048`
+- Electronics/PCB/KiCad/ERC/DRC/SPICE capability: `NOT_RUN_OUT_OF_SCOPE`
+- 27B-class downloads: `DEFERRED_OUT_OF_SCOPE`
+- deterministic regression: `PENDING`
+- candidate benchmark evidence: `PENDING`
+- final exact-head CI: `PENDING`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -208,4 +228,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 007 status/chronology head. If green, stop for explicit human exact-SHA architecture approval before squash merge. Do not download or qualify new models until Gate 007 is accepted.
+Prepare the Gate 008 benchmark/evidence harness and fixed installation commands, validate the deterministic suite, then install and benchmark `qwen3.5:9b` and `qwen2.5-coder:7b-instruct` on the primary workstation. Do not test Electronics/PCB/KiCad capability in Gate 008.
