@@ -874,3 +874,42 @@ Explicitly absent:
 
 Next step:
 complete deterministic tests and generic/strict exact-head CI before requesting exact-SHA human merge approval.
+
+
+---
+
+## 2026-09-19 — Gate 009 routing implementation validated
+
+Implementation validation head:
+`6671d4e6fe9c11734f87ba23dba064e4d9a5ac50`.
+
+Validated:
+- immutable evidence-backed Model Capability Registry;
+- deterministic explicit-task-class Router;
+- Supervisor-owned `route_model()` boundary;
+- context/output qualification limits;
+- native-tool capability requirement;
+- explicit `NO_ROUTE` behavior;
+- deterministic tie-breaking;
+- no provider/model/tool execution dependency;
+- no Electronics/PCB/KiCad/Vision task classes.
+
+Routing:
+- `GENERAL_PLANNING -> qwen3.5:9b`;
+- `CODE_REPOSITORY -> qwen2.5-coder:7b-instruct` when native tool proposals are not required;
+- `CODE_REPOSITORY + native tool proposal required -> NO_ROUTE`;
+- `BASELINE_REASONING -> gpt-oss:20b / medium`.
+
+Validation:
+- deterministic tests: `69/69 PASS`;
+- generic CI: `PASS`;
+- strict exact-head CI: `PASS`.
+
+CI during test development rejected incomplete test-only policy/state fixtures.
+The production Router/Supervisor policy semantics were not weakened; fixtures
+were corrected to satisfy the existing schema and mandatory approval boundaries.
+
+Gate 009 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+One final exact-head CI run is required after acceptance-state synchronization.
