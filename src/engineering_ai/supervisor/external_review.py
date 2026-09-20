@@ -24,6 +24,9 @@ _ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$")
 _PROJECT_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 _MAX_HARD_CONTEXT_CHARS = 200_000
 _MAX_HARD_OUTPUT_CHARS = 50_000
+_MAX_PURPOSE_CHARS = 4_000
+_MAX_SOURCE_REF_CHARS = 2_048
+_MAX_KIND_CHARS = 128
 _MAX_TIMEOUT_SECONDS = 600
 
 
@@ -86,9 +89,25 @@ def _parse_utc(value: str) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
+def _freeze(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return MappingProxyType({str(k): _freeze(v) for k, v in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze(item) for item in value)
+    return value
+
+
+def _thaw(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(k): _thaw(v) for k, v in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw(item) for item in value]
+    return value
+
+
 def _canonical_json(value: Any) -> str:
     return json.dumps(
-        value,
+        _thaw(value),
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),
@@ -126,8 +145,12 @@ class ExternalContextItem:
             raise ValueError("invalid context project_id")
         if not self.source_ref.strip():
             raise ValueError("source_ref must be non-empty")
+        if len(self.source_ref) > _MAX_SOURCE_REF_CHARS:
+            raise ValueError("source_ref exceeds hard character limit")
         if not self.kind.strip():
             raise ValueError("kind must be non-empty")
+        if len(self.kind) > _MAX_KIND_CHARS:
+            raise ValueError("kind exceeds hard character limit")
         if not self.content:
             raise ValueError("context content must be non-empty")
         if self.contains_secrets:
@@ -178,6 +201,8 @@ class ExternalConsultationRequest:
             raise ValueError("invalid job_id")
         if not self.purpose.strip():
             raise ValueError("purpose must be non-empty")
+        if len(self.purpose) > _MAX_PURPOSE_CHARS:
+            raise ValueError("purpose exceeds hard character limit")
         if not self.provider_name.strip():
             raise ValueError("provider_name must be non-empty")
         if not self.model.strip():
@@ -341,7 +366,7 @@ class ExternalConsultationSnapshot:
         object.__setattr__(
             self,
             "request_manifest",
-            MappingProxyType(dict(self.request_manifest)),
+            _freeze(dict(self.request_manifest)),
         )
 
     def as_dict(self) -> dict[str, Any]:
@@ -367,7 +392,7 @@ def _snapshot_hash_payload(snapshot: ExternalConsultationSnapshot) -> dict[str, 
         "project_id": snapshot.project_id,
         "consultation_id": snapshot.consultation_id,
         "event_type": snapshot.event_type.value,
-        "request_manifest": dict(snapshot.request_manifest),
+        "request_manifest": _thaw(snapshot.request_manifest),
         "provider_name": snapshot.provider_name,
         "model": snapshot.model,
         "approval_required": snapshot.approval_required,
@@ -743,7 +768,7 @@ class ExternalConsultationLedger:
             raise ExternalReviewIntegrityError("consultation terminal event missing")
         if second.supersedes_event_id != first.event_id:
             raise ExternalReviewIntegrityError("consultation supersession chain broken")
-        if dict(first.request_manifest) != dict(second.request_manifest):
+        if _thaw(first.request_manifest) != _thaw(second.request_manifest):
             raise ExternalReviewIntegrityError("consultation manifest mutated")
         if (
             first.provider_name != second.provider_name

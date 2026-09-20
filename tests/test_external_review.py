@@ -312,6 +312,44 @@ class ExternalReviewBridgeTests(unittest.TestCase):
                 consultation_id="consultation-cross-project",
             )
 
+    def test_purpose_and_context_labels_have_hard_bounds(self) -> None:
+        with self.assertRaises(ValueError):
+            replace(
+                request(consultation_id="consultation-purpose-bound"),
+                purpose="p" * 4001,
+            )
+        with self.assertRaises(ValueError):
+            ExternalContextItem(
+                context_id="ctx-source-bound",
+                project_id="engineering-ai",
+                source_ref="s" * 2049,
+                kind="FILE_EXCERPT",
+                content="x",
+            )
+        with self.assertRaises(ValueError):
+            ExternalContextItem(
+                context_id="ctx-kind-bound",
+                project_id="engineering-ai",
+                source_ref="source",
+                kind="k" * 129,
+                content="x",
+            )
+
+    def test_persisted_manifest_is_deeply_immutable(self) -> None:
+        req = request(consultation_id="consultation-immutable")
+        outcome = self.bridge(FakeExternalProvider()).consult(req)
+        self.assertEqual(
+            outcome.status,
+            ExternalConsultationStatus.NEEDS_HUMAN_APPROVAL,
+        )
+        item = self.ledger.get(
+            project_id="engineering-ai",
+            consultation_id=req.consultation_id,
+        )
+        with self.assertRaises(TypeError):
+            item.request_manifest["model"] = "mutated"
+        self.assertIsInstance(item.request_manifest["context_items"], tuple)
+
     def test_context_budget_is_enforced_before_provider_call(self) -> None:
         with self.assertRaises(ExternalReviewPolicyError):
             request(
