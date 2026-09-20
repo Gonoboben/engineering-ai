@@ -1,0 +1,5 @@
+# Gate 026 canonical install toolchain.
+# Measured on 2026-09-20 in PR #52 on both ubuntu-latest and windows-latest.
+pip==26.2.1
+setuptools==84.0.0
+wheel==0.48.0
