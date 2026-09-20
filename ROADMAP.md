@@ -300,14 +300,23 @@ Add structured storage/search for:
 Start with simple local storage (repository files/SQLite/search).
 
 ### Gate 017 — Retrieval layer
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Add semantic/vector retrieval only if benchmarked against repository/search approaches and shown to improve relevant engineering recall without hiding provenance.
+Accepted merge commit:
+`f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
+
+Delivered deterministic provenance-preserving lexical retrieval over Gate 016 memory. The measured primary-workstation benchmark improved mean recall@3 from `0.25` to `1.0` while preserving safety/provenance. Semantic/vector retrieval remains `DEFERRED_NOT_JUSTIFIED`.
 
 ### Gate 018 — Knowledge lifecycle
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
-Define promotion rules for observations -> evidence -> accepted project knowledge, including invalidation when source revisions change.
+Issue: `#35`
+
+Branch: `gate-018-knowledge-lifecycle`
+
+Base: Gate 017 squash merge `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`.
+
+Define promotion rules for observations -> evidence -> accepted project knowledge, including deterministic staleness/invalidation when bound source revisions change.
 
 ## Phase 5 — Unattended local operation
 

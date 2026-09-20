@@ -1,3 +1,17 @@
+from engineering_ai.memory.lifecycle import (
+    KnowledgeAssessment,
+    KnowledgeAssessmentState,
+    KnowledgeBinding,
+    KnowledgeLifecycle,
+    KnowledgeLifecycleConflictError,
+    KnowledgeLifecycleError,
+    KnowledgeLifecycleIntegrityError,
+    KnowledgeLifecycleIntegrityReport,
+    KnowledgeLifecycleLedger,
+    KnowledgeLifecyclePolicyError,
+    KnowledgeLifecycleRecord,
+    KnowledgeStage,
+)
 """Decision/evidence memory primitives."""
 
 from engineering_ai.memory.retrieval import (
@@ -27,6 +41,18 @@ from engineering_ai.memory.store import (
 )
 
 __all__ = [
+    "KnowledgeAssessment",
+    "KnowledgeAssessmentState",
+    "KnowledgeBinding",
+    "KnowledgeLifecycle",
+    "KnowledgeLifecycleConflictError",
+    "KnowledgeLifecycleError",
+    "KnowledgeLifecycleIntegrityError",
+    "KnowledgeLifecycleIntegrityReport",
+    "KnowledgeLifecycleLedger",
+    "KnowledgeLifecyclePolicyError",
+    "KnowledgeLifecycleRecord",
+    "KnowledgeStage",
     "PolicyControlledMemoryRetriever",
     "RetrievalContextPackage",
     "RetrievalPolicyError",

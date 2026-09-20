@@ -2224,3 +2224,235 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run generic and strict exact-head CI on the final documentation-only head. If green,
 mark PR #34 ready for review and request exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 017 accepted and merged
+
+Final approved PR head:
+`ee9f5ad0861a5188f8aa4086098f6f14a4fb74c3`.
+
+Final validation:
+- deterministic tests: `178/178 PASS`;
+- final generic workflow run `35464391333`: `PASS`;
+- final strict exact-head workflow run `35464391322`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation retrieval benchmark: `PASS_DETERMINISTIC_RETRIEVAL_BENCHMARK`;
+- baseline mean recall@3: `0.25`;
+- retrieval mean recall@3: `1.0`;
+- safety/not-worse checks: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`.
+
+Issue #33 closed.
+
+Accepted capability:
+- deterministic project-scoped lexical retrieval over Gate 016 memory;
+- latest revisions by default;
+- MODEL/ADVISORY and PROPOSED ADR records excluded by default;
+- explicit labelled opt-in for advisory/proposed/history;
+- bounded candidate/result/context budgets with no per-record truncation;
+- provenance/evidence/source references and integrity SHA preserved;
+- Supervisor-owned retrieval boundary;
+- no automatic Blackboard/model context injection;
+- semantic/vector backend remains `DEFERRED_NOT_JUSTIFIED`.
+
+ADR-0016 state:
+`ACCEPTED_GATE_017`.
+
+Gate 017 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 018 knowledge lifecycle opened
+
+Issue:
+`#35 — Gate 018 — Knowledge lifecycle`.
+
+Branch:
+`gate-018-knowledge-lifecycle`.
+
+Base:
+Gate 017 squash merge
+`f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`.
+
+Declared scope:
+- typed lifecycle states for observations/evidence/accepted knowledge/stale or invalid knowledge;
+- deterministic policy-qualified promotion;
+- source/evidence/provenance/integrity preservation;
+- append-only lifecycle history/supersession;
+- deterministic source-revision drift detection;
+- Supervisor-controlled lifecycle evaluation;
+- schemas/tests/evidence and regression validation.
+
+Explicitly out of scope:
+- semantic/vector retrieval;
+- automatic model/Blackboard context injection;
+- model-owned promotion/permissions;
+- silent Gate 016 UPDATE/DELETE;
+- physical validation inference;
+- online learning/fine-tuning;
+- Gate 019 job queue;
+- Gate 023 vision worker/Qwen3-VL integration;
+- architecture/physics changes;
+- external/cloud bridge.
+
+Next:
+create the initial synchronization checkpoint commit, open one draft PR for Issue #35,
+then implement and validate the deterministic knowledge lifecycle.
+
+
+---
+
+## 2026-09-20 — Gate 018 deterministic knowledge lifecycle implemented
+
+Initial implementation head:
+`e679067ca060d3182d4c51b18229c5c0d780a02e`.
+
+Implemented:
+- separate append-only local SQLite lifecycle ledger;
+- exact binding to immutable Gate 016 memory record/revision/SHA identities;
+- lifecycle stages OBSERVATION / EVIDENCE / ACCEPTED / INVALIDATED;
+- advisory-only observation inputs;
+- HUMAN/SUPERVISOR lifecycle transition authority;
+- current non-model evidence qualification;
+- CONTROL/ADR excluded from lifecycle evidence promotion;
+- source/evidence revision drift assessment;
+- append-only invalidation;
+- Supervisor-owned project-scoped lifecycle API;
+- lifecycle-record and assessment JSON Schemas;
+- deterministic local smoke script;
+- no automatic model/Blackboard context injection;
+- no physical-validation inference.
+
+Validation:
+- deterministic regression: `191/191 PASS`;
+- generic workflow run `35513495763`: `PASS`;
+- strict exact-head workflow run `35513495762`: `PASS`.
+
+Scope review found one lifecycle completeness gap:
+after INVALIDATED there was no path to re-qualify the same knowledge identity
+when updated evidence became available.
+
+---
+
+## 2026-09-20 — Gate 018 requalification gap closed
+
+Corrected implementation head:
+`72569edf34af12b78c0d3f04f6905c61e1d310d6`.
+
+Correction:
+- INVALIDATED knowledge may be re-qualified only with current evidence/source
+  revisions;
+- requalification appends a new EVIDENCE revision;
+- acceptance then appends a new ACCEPTED revision;
+- complete history remains intact;
+- no old acceptance or invalidation is rewritten.
+
+Additional boundary test:
+an accepted human CONTROL/ADR memory record cannot be supplied as lifecycle
+evidence, so the lifecycle cannot bypass human control authority.
+
+Gate 023 isolation:
+model-name strings in lifecycle fixtures were changed to generic vision fixtures;
+no Qwen3-VL runtime, model route or vision worker is implemented in Gate 018.
+
+Validation:
+- deterministic regression: `193/193 PASS`;
+- generic workflow run `35513601561`: `PASS`;
+- strict exact-head workflow run `35513601565`: `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+ADR-0017 added as `PROPOSED_GATE_018`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then perform one primary-workstation local lifecycle smoke.
+
+
+---
+
+## 2026-09-20 — Gate 018 primary-workstation lifecycle smoke passed
+
+Exact Engineering AI head:
+`7d23cfd62e616659a793d21c7cb22ee7af0ca388`.
+
+Local primary-workstation result:
+`PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`.
+
+Observed:
+- accepted state before source change: `ACCEPTED_CURRENT`;
+- observation validation class: `ADVISORY`;
+- source revision: `1 -> 2`;
+- stale assessment: `STALE_SOURCE_REVISION`;
+- explicit invalidation appended as lifecycle revision `4`;
+- final assessment: `INVALIDATED`;
+- lifecycle history revisions: `1 / 2 / 3 / 4`;
+- lifecycle history stages:
+  `OBSERVATION / EVIDENCE / ACCEPTED / INVALIDATED`;
+- Gate 016 memory integrity: `PASS`;
+- Gate 018 lifecycle integrity: `PASS`;
+- automatic context injection: `false`;
+- semantic/vector backend: `DEFERRED_NOT_JUSTIFIED`;
+- physical validation inferred: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+Gate 018 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record the smoke evidence, run final generic + strict exact-head CI on the
+post-smoke documentation head, complete final scope review, then stop at
+explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 018 final acceptance checkpoint passed
+
+Post-smoke evidence head:
+`6e02671de1d774f679372419ef24ba6d7db4b278`.
+
+Validation:
+- deterministic regression: `193/193 PASS`;
+- generic workflow run `35513857456`: `PASS`;
+- strict exact-head workflow run `35513857442`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation lifecycle smoke:
+  `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`.
+
+Final scope review:
+`PASS`.
+
+Confirmed absent from Gate 018 runtime:
+- Qwen3-VL/vision worker routing or model integration;
+- embeddings/vector/semantic backend;
+- automatic model or Blackboard context injection;
+- PHYSICAL_PASS synthesis;
+- generic SQL mutation API;
+- Gate 019 queue implementation;
+- Gate 023 vision implementation;
+- architecture/physics/fabrication/release authority expansion.
+
+SQLite UPDATE/DELETE occurrences are limited to append-only prohibition triggers
+and tamper/fail-closed tests.
+
+Gate 018 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0017 remains:
+`PROPOSED_GATE_018`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #36 ready for review if green, then stop at human approval.

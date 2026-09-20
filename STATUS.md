@@ -39,15 +39,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 015 merge commit: `496896ebb368618cbd9f3c6f26e31fae4acb8922`
 - Gate 016: `ACCEPTED_MERGED`
 - Gate 016 merge commit: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
+- Gate 017: `ACCEPTED_MERGED`
+- Gate 017 merge commit: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `017 — Retrieval layer`
-- Issue: `#33`
-- PR: `#34 (DRAFT)`
-- Branch: `gate-017-retrieval-layer`
-- Base: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
+- Gate: `018 — Knowledge lifecycle`
+- Issue: `#35`
+- PR: `#36 (DRAFT)`
+- Branch: `gate-018-knowledge-lifecycle`
+- Base: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -76,7 +78,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Stretch candidate: `qwen3.6:35b` — `DEFERRED_NOT_JUSTIFIED_ON_CURRENT_WORKSTATION` after measured 27B CPU-heavy performance
 - Planner / Executor / Reviewer loop: `IMPLEMENTED_RUNTIME_VALIDATED`
 - Engineering memory runtime: `IMPLEMENTED_VALIDATED_GATE_016`
-- Retrieval layer: `IMPLEMENTED_PENDING_VALIDATION_GATE_017`
+- Retrieval layer: `IMPLEMENTED_VALIDATED_GATE_017`
 - Supervised multi-model architecture: `ACCEPTED_GATE_007`
 - Model capability registry/router runtime: `IMPLEMENTED_VALIDATED_GATE_009`
 - Task Blackboard/runtime hand-offs: `IMPLEMENTED_VALIDATED_GATE_010`
@@ -472,7 +474,8 @@ Historical CI note:
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Gate 017 validation state
-- Issue #33: `OPEN`
+- Issue #33: `CLOSED`
+- PR #34: `MERGED`
 - branch base equals Gate 016 squash merge `a71c084078ae7c12361555eaed2f3d7c887d61d6`: `PASS`
 - retrieval mode: `DETERMINISTIC_LEXICAL_TYPED_MEMORY`
 - project isolation: `ENFORCED`
@@ -502,6 +505,48 @@ Historical CI note:
 - final acceptance-state strict exact-head CI run `35464308598`: `PASS`
 - final scope review: `PASS`; no vector/embedding backend, auto-injection, memory write/promotion path, unrestricted shell, permission/state ownership transfer, or Gate 018 implementation
 - physical validation semantics: `UNCHANGED`
+- final approved PR head: `ee9f5ad0861a5188f8aa4086098f6f14a4fb74c3`
+- final documentation-head generic CI run `35464391333`: `PASS`
+- final documentation-head strict exact-head CI run `35464391322`: `PASS`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
+- Gate 017 state: `ACCEPTED_MERGED`
+- ADR-0016: `ACCEPTED_GATE_017`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 018 validation state
+- Issue #35: `OPEN`
+- PR #36: `OPEN / DRAFT`
+- branch: `gate-018-knowledge-lifecycle`
+- branch base equals Gate 017 squash merge `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`: `PASS`
+- lifecycle storage: `SEPARATE_APPEND_ONLY_LOCAL_SQLITE_LEDGER`
+- Gate 016 memory migration/mutation: `NONE`
+- lifecycle stages: `OBSERVATION / EVIDENCE / ACCEPTED / INVALIDATED`
+- exact memory revision/SHA binding: `IMPLEMENTED`
+- observation input: `ADVISORY_ONLY`
+- lifecycle transition authority: `HUMAN_OR_SUPERVISOR_ONLY`
+- MODEL-owned lifecycle transitions: `PROHIBITED`
+- evidence promotion: `CURRENT_NON_MODEL_EVIDENCE_QUALIFIED_ONLY`
+- CONTROL/ADR evidence promotion: `PROHIBITED`
+- source revision drift: `STALE_SOURCE_REVISION`
+- evidence revision drift: `STALE_EVIDENCE_REVISION`
+- stale invalidation: `APPEND_ONLY`
+- requalification after invalidation: `IMPLEMENTED_CURRENT_EVIDENCE_REQUIRED`
+- project isolation: `ENFORCED_BY_MEMORY_AND_SUPERVISOR_PROJECT_SCOPE`
+- lifecycle integrity SHA-256: `IMPLEMENTED_FAIL_CLOSED`
+- automatic model/advisory promotion: `PROHIBITED`
+- automatic physical validation synthesis: `PROHIBITED`
+- automatic model/Blackboard context injection: `NOT_IMPLEMENTED_PROHIBITED`
+- semantic/vector retrieval: `OUT_OF_SCOPE_DEFERRED_NOT_JUSTIFIED`
+- Gate 019 queue: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- Gate 023 vision worker/Qwen3-VL integration: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE_018`
+- implementation head `e679067ca060d3182d4c51b18229c5c0d780a02e`: deterministic regression `191/191 PASS`, generic CI run `35513495763 PASS`, strict exact-head CI run `35513495762 PASS`
+- lifecycle-gap correction head `72569edf34af12b78c0d3f04f6905c61e1d310d6`: deterministic regression `193/193 PASS`, generic CI run `35513601561 PASS`, strict exact-head CI run `35513601565 PASS`
+- primary-workstation local lifecycle smoke: `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`; exact head `7d23cfd62e616659a793d21c7cb22ee7af0ca388`, accepted state before source change `ACCEPTED_CURRENT`, source revision `1 -> 2`, stale state `STALE_SOURCE_REVISION`, final state `INVALIDATED`, history revisions `1/2/3/4`, memory integrity=true, lifecycle integrity=true, automatic_context_injection=false, physical_validation_inferred=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
+- post-smoke evidence head `6e02671de1d774f679372419ef24ba6d7db4b278`: deterministic regression `193/193 PASS`, generic CI run `35513857456 PASS`, strict exact-head CI run `35513857442 PASS`
+- final scope review: `PASS`; no Qwen3-VL/vision runtime, embeddings/vector backend, automatic context injection, PHYSICAL_PASS synthesis, generic SQL mutation API, Gate 019 implementation, Gate 023 implementation, architecture/physics/fabrication/release authority expansion; UPDATE/DELETE occurrences limited to append-only SQLite prohibition triggers and tamper tests
+- ADR-0017: `PROPOSED_GATE_018`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
 - host: Windows 11 Pro build `10.0.22000` (`KNOWN_PLATFORM_RISK`, not a current blocker)
@@ -539,4 +584,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI once more on the final documentation-only Gate 017 head. If green, mark PR #34 ready for review and request explicit human exact-SHA squash-merge approval. ADR-0016 remains PROPOSED_GATE_017 until that approval and squash merge.
+Run one final generic and strict exact-head CI on the final documentation-only Gate 018 head. If green, mark PR #36 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0017 remains PROPOSED_GATE_018 until that approval and squash merge.

@@ -282,7 +282,7 @@ decision.
 ---
 
 ## ADR-0016 — Use deterministic provenance-preserving retrieval as the baseline
-Status: `PROPOSED_GATE_017`
+Status: `ACCEPTED_GATE_017`
 
 ### Decision
 Engineering AI retrieval starts with a deterministic lexical layer over the
@@ -324,3 +324,61 @@ a vector database.
 - memory integrity failures fail closed;
 - no vector backend is added in Gate 017 unless separately benchmark-qualified;
 - Gate 018 remains responsible for knowledge promotion/invalidation lifecycle.
+
+
+---
+
+## ADR-0017 — Use a separate append-only ledger for knowledge lifecycle
+Status: `PROPOSED_GATE_018`
+
+### Decision
+Engineering AI knowledge promotion/invalidation is represented in a separate
+local append-only SQLite lifecycle ledger layered over the accepted Gate 016
+decision/evidence memory.
+
+The lifecycle ledger does not copy or rewrite Gate 016 record contents. Instead
+each lifecycle record binds exact memory revisions by project_id, memory_id,
+record_id, revision, content SHA-256, authority, kind and validation class.
+
+Lifecycle stages are:
+- `OBSERVATION`;
+- `EVIDENCE`;
+- `ACCEPTED`;
+- `INVALIDATED`.
+
+Model-authored observations remain ADVISORY and cannot own lifecycle
+transitions. Evidence qualification requires current, non-model,
+evidence-qualified memory records. CONTROL/ADR records are deliberately not
+evidence-qualified through this lifecycle, preserving human authority over
+accepted ADRs and existing architecture/policy boundaries.
+
+A bound source/evidence revision becoming superseded is detected
+deterministically. The claim is assessed as stale and may then be invalidated by
+appending a new lifecycle revision. After invalidation, the same knowledge
+identity may be re-qualified using current evidence and accepted again, also
+through append-only revisions.
+
+Lifecycle assessment never infers physical validation and performs no automatic
+model/Blackboard context injection.
+
+### Rationale
+Gate 016 provides durable immutable evidence records and Gate 017 retrieves
+them safely, but neither defines when a claim becomes accepted knowledge or how
+that acceptance reacts when supporting sources change.
+
+Keeping lifecycle state separate avoids a migration or semantic mutation of the
+already accepted Gate 016 store. Exact revision/hash bindings make stale
+knowledge mechanically detectable while preserving the full history of what
+was known, accepted, invalidated and later re-qualified.
+
+### Consequence
+- Gate 016 memory UPDATE/DELETE semantics remain unchanged;
+- knowledge history is append-only and integrity-hashed;
+- source/evidence drift never silently leaves an old acceptance current;
+- model confidence/majority never promotes knowledge;
+- accepted non-control knowledge does not bypass architecture/physics/release
+  approval boundaries;
+- physical PASS/FAIL remains explicit physical evidence only;
+- Gate 017 retrieval does not itself promote lifecycle state;
+- Gate 019 queueing and Gate 023 vision integration remain separate future
+  Gates.

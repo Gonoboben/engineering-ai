@@ -12,6 +12,12 @@ from engineering_ai.memory.retrieval import (
     RetrievalPolicyError,
     RetrievalRequest,
 )
+from engineering_ai.memory.lifecycle import (
+    KnowledgeAssessment,
+    KnowledgeLifecycle,
+    KnowledgeLifecycleRecord,
+)
+from engineering_ai.memory.store import MemoryAuthority
 from engineering_ai.models.routing import (
     DeterministicModelRouter,
     RouteDecision,
@@ -92,6 +98,7 @@ class Supervisor:
         model_router: DeterministicModelRouter | None = None,
         blackboard: TaskBlackboard | None = None,
         memory_retriever: PolicyControlledMemoryRetriever | None = None,
+        knowledge_lifecycle: KnowledgeLifecycle | None = None,
     ) -> None:
         self._policy = deepcopy(policy)
         self._state = deepcopy(state)
@@ -100,6 +107,7 @@ class Supervisor:
         self._model_router = model_router
         self._blackboard = blackboard
         self._memory_retriever = memory_retriever
+        self._knowledge_lifecycle = knowledge_lifecycle
         self._audit_events: list[dict[str, Any]] = []
 
     @property
@@ -133,6 +141,109 @@ class Supervisor:
                 "retrieval project_id must match Supervisor project state"
             )
         return self._memory_retriever.retrieve(request)
+
+    def record_knowledge_observation(
+        self,
+        *,
+        knowledge_id: str,
+        claim: dict[str, Any],
+        observation_record_ids: tuple[str, ...],
+        provenance: tuple[str, ...],
+        authority: MemoryAuthority = MemoryAuthority.SUPERVISOR,
+    ) -> KnowledgeLifecycleRecord:
+        """Record an advisory observation under Supervisor-owned project scope."""
+
+        return self._require_knowledge_lifecycle().record_observation(
+            project_id=self._state["project_id"],
+            knowledge_id=knowledge_id,
+            claim=claim,
+            observation_record_ids=observation_record_ids,
+            authority=authority,
+            provenance=provenance,
+        )
+
+    def promote_knowledge_to_evidence(
+        self,
+        *,
+        knowledge_id: str,
+        evidence_record_ids: tuple[str, ...],
+        source_record_ids: tuple[str, ...] = (),
+        provenance: tuple[str, ...],
+        authority: MemoryAuthority = MemoryAuthority.SUPERVISOR,
+    ) -> KnowledgeLifecycleRecord:
+        """Promote only evidence-qualified current memory revisions."""
+
+        return self._require_knowledge_lifecycle().promote_to_evidence(
+            project_id=self._state["project_id"],
+            knowledge_id=knowledge_id,
+            evidence_record_ids=evidence_record_ids,
+            source_record_ids=source_record_ids,
+            authority=authority,
+            provenance=provenance,
+        )
+
+    def accept_knowledge(
+        self,
+        *,
+        knowledge_id: str,
+        provenance: tuple[str, ...],
+        authority: MemoryAuthority = MemoryAuthority.SUPERVISOR,
+    ) -> KnowledgeLifecycleRecord:
+        """Accept current evidence-backed non-ADR project knowledge.
+
+        Architecture/policy/physics acceptance remains governed by existing
+        project policy and human-approval boundaries outside this lifecycle API.
+        """
+
+        return self._require_knowledge_lifecycle().accept(
+            project_id=self._state["project_id"],
+            knowledge_id=knowledge_id,
+            authority=authority,
+            provenance=provenance,
+        )
+
+    def assess_knowledge(
+        self,
+        *,
+        knowledge_id: str,
+    ) -> KnowledgeAssessment:
+        """Assess current lifecycle state and bound revision freshness."""
+
+        return self._require_knowledge_lifecycle().assess(
+            project_id=self._state["project_id"],
+            knowledge_id=knowledge_id,
+        )
+
+    def invalidate_stale_knowledge(
+        self,
+        *,
+        knowledge_id: str,
+        provenance: tuple[str, ...],
+        authority: MemoryAuthority = MemoryAuthority.SUPERVISOR,
+    ) -> KnowledgeLifecycleRecord:
+        """Append an invalidation only after deterministic dependency drift."""
+
+        return self._require_knowledge_lifecycle().invalidate_if_stale(
+            project_id=self._state["project_id"],
+            knowledge_id=knowledge_id,
+            authority=authority,
+            provenance=provenance,
+        )
+
+    def knowledge_history(
+        self,
+        *,
+        knowledge_id: str,
+    ) -> tuple[KnowledgeLifecycleRecord, ...]:
+        return self._require_knowledge_lifecycle().history(
+            project_id=self._state["project_id"],
+            knowledge_id=knowledge_id,
+        )
+
+    def _require_knowledge_lifecycle(self) -> KnowledgeLifecycle:
+        if self._knowledge_lifecycle is None:
+            raise RuntimeError("Supervisor has no knowledge lifecycle configured")
+        return self._knowledge_lifecycle
 
     def blackboard_view(
         self,

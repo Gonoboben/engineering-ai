@@ -292,6 +292,47 @@ Semantic/vector retrieval is an optional future backend, not an architectural
 requirement. It requires benchmark evidence against simpler repository/search
 methods before acceptance.
 
+### 4.16 Knowledge lifecycle boundary
+
+Gate 018 adds a deterministic lifecycle over Gate 016 memory without changing
+or migrating accepted Gate 016 records.
+
+Lifecycle state is stored in a separate append-only local SQLite ledger. Each
+lifecycle revision binds exact immutable memory identities by:
+- project_id;
+- memory_id;
+- record_id;
+- revision;
+- canonical content SHA-256;
+- memory kind, authority and validation class.
+
+The lifecycle states are:
+`OBSERVATION -> EVIDENCE -> ACCEPTED -> INVALIDATED`.
+
+An invalidated knowledge identity may later be re-qualified from current
+evidence and accepted again. Re-qualification appends new lifecycle revisions;
+it never erases or rewrites prior accepted/invalidated history.
+
+Control rules:
+- observation inputs must remain ADVISORY memory records;
+- MODEL authority cannot own a lifecycle transition;
+- evidence promotion accepts only current non-model evidence-qualified memory;
+- CONTROL/ADR records are not evidence-qualified by the lifecycle and therefore
+  cannot be used to bypass human architecture/policy decision authority;
+- source and evidence revisions are bound exactly and checked against current
+  Gate 016 memory revisions;
+- dependency drift produces explicit STALE_SOURCE_REVISION or
+  STALE_EVIDENCE_REVISION assessment;
+- invalidation is append-only;
+- no lifecycle transition infers PHYSICAL PASS/FAIL;
+- lifecycle operations do not automatically inject context into models or the
+  Task Blackboard.
+
+An `ACCEPTED` lifecycle record means only that a non-control engineering claim
+has current policy-qualified evidence. It does not authorize architecture,
+physics, fabrication, release, destructive actions or any other action that
+already requires human approval.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control
