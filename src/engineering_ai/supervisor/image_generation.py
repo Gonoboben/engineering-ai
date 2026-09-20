@@ -125,6 +125,7 @@ class ImageGenerationWorker:
     ) -> ImageGenerationWorkerResult:
         if job.get("project_id") != request.project_id:
             raise ValueError("image-generation request project_id must match job project_id")
+        self._publisher.validate_target(request.output_relative_path)
 
         route = self._router.route(
             RouteRequest(
