@@ -63,11 +63,11 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `026 — Reproducible local installation`
 - Issue: `#51`
-- PR: `#52 (DRAFT; IMPLEMENTATION VALIDATED)`
+- PR: `#52 (READY FOR REVIEW)`
 - Branch: `gate-026-reproducible-local-installation`
 - Base: `171ff20125389d2d953576a0d3340c13dc1dc53f`
 - Validated implementation head: `6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`
-- State: `IMPLEMENTED_VALIDATED_PENDING_READY_CHECKPOINT`
+- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -786,11 +786,10 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic, strict exact-head and Gate 026 install validation on the
-documentation/evidence checkpoint. If all remain green, mark PR #52 ready for
-review, synchronize ready-state source-of-truth, freeze the branch, run the
-final exact-head validation set, and stop at explicit human exact-SHA
-squash-merge approval.
+Freeze Gate 026 content at the ready-state synchronization head. Run generic,
+strict exact-head and Gate 026 Ubuntu/Windows install validation on that exact
+head. If all remain green, stop at explicit human exact-SHA squash-merge
+approval for PR #52.
 
 Do not infer the separate Phase 8 offline-continuation criterion from Gate 026.
 
