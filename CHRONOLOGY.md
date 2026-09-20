@@ -3678,3 +3678,35 @@ Next:
 run final generic + strict exact-head CI on the final documentation head, mark
 PR #46 ready for review if green, freeze the branch, and stop at explicit human
 exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 023 ready-for-review consistency checkpoint
+
+PR #46 was marked ready for review after the previous final-head validation
+passed without changing branch content.
+
+A subsequent source-of-truth consistency review found two stale status entries:
+- PR #46 was still labelled DRAFT in STATUS.md;
+- Next admissible action still referred to completed Gate 022 / PR #44.
+
+Those documentation-only inconsistencies were corrected before final branch
+freeze.
+
+Runtime implementation remains unchanged from validated hardening head:
+`82ca772902738de0670fab84bbd28914d0684e44`.
+
+Gate 023 remains:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0022 remains:
+`PROPOSED_GATE_023`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+the exact PR head after this documentation-only consistency checkpoint must pass
+both generic and strict exact-head CI. If green, freeze the branch and stop at
+explicit human exact-SHA squash-merge approval.
