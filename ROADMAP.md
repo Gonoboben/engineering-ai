@@ -337,7 +337,7 @@ Delivered persisted one-shot due schedules and bounded unattended sessions with 
 ## Phase 6 — Optional external consultation and control
 
 ### Gate 021 — External controlled reasoning/review bridge
-Status: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+Status: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
 
 Issue: `#41`
 

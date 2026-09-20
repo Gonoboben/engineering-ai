@@ -90,27 +90,43 @@ Confirmed absent:
 - semantic/vector backend
 - physical PASS inference
 
-## Remaining acceptance evidence
-Run one primary-workstation Windows/Python 3.12 fake-provider smoke on a stable
-post-documentation Gate 021 head using:
-`scripts/gate021_external_review_smoke.py`
+## Primary-workstation Windows fake-provider smoke
 
-Required observations:
-- unapproved_status = NEEDS_HUMAN_APPROVAL;
-- unapproved_provider_called = false;
-- approved_status = PASS;
-- approved_provider_called = true;
-- provider_call_count = 1;
-- exact_explicit_context_sent = true;
-- outbound_content_persisted = false;
-- request/response hashes recorded;
-- review_authority = ADVISORY;
-- review_evidence_eligible = false;
-- tool_surface_exposed = false;
-- ledger reopen/integrity PASS;
-- real_external_network_call = false;
-- automatic_external_approval = false;
-- physical_validation = PHYSICAL_NOT_EXECUTED.
+Exact head:
+`306466507f5ead228b4efd7194df9a85512d80cf`
+
+Result:
+`PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`
+
+Observed:
+- unapproved_status = `NEEDS_HUMAN_APPROVAL`
+- unapproved_provider_called = `false`
+- approved_status = `PASS`
+- approved_provider_called = `true`
+- provider_call_count = `1`
+- exact_explicit_context_sent = `true`
+- outbound_content_persisted = `false`
+- request_manifest_hash_recorded = `true`
+- response_hash_recorded = `true`
+- review_authority = `ADVISORY`
+- review_evidence_eligible = `false`
+- tool_surface_exposed = `false`
+- ledger_database_created = `true`
+- ledger_database_reopened = `true`
+- ledger_events_checked_before_reopen = `4`
+- ledger_events_checked_after_reopen = `4`
+- ledger_integrity = `true`
+- real_external_network_call = `false`
+- automatic_external_approval = `false`
+- physical_validation = `PHYSICAL_NOT_EXECUTED`
+- EXIT = `0`
+- working tree remained clean and branch head unchanged.
+
+## Remaining acceptance evidence
+
+Run final generic and strict exact-head CI on the post-smoke evidence/status
+head and complete final runtime scope review. Then prepare and validate one
+final documentation-only acceptance head.
 
 ADR-0020 remains `PROPOSED_GATE_021` until explicit exact-SHA human approval
 and squash merge.

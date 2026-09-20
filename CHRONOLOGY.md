@@ -3160,3 +3160,47 @@ ADR-0020 added as `PROPOSED_GATE_021`.
 Next:
 synchronize architecture/status/evidence documentation, re-run exact-head CI,
 then perform one primary-workstation fake-provider smoke.
+
+
+---
+
+## 2026-09-20 — Gate 021 primary-workstation fake-provider smoke passed
+
+Exact Engineering AI head:
+`306466507f5ead228b4efd7194df9a85512d80cf`.
+
+Local result:
+`PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`.
+
+Observed:
+- unapproved status: `NEEDS_HUMAN_APPROVAL`;
+- unapproved provider called: `false`;
+- approved status: `PASS`;
+- approved provider called: `true`;
+- provider call count: `1`;
+- exact explicit context sent: `true`;
+- outbound context persisted: `false`;
+- request manifest hash recorded: `true`;
+- response hash recorded: `true`;
+- review authority: `ADVISORY`;
+- review evidence eligible: `false`;
+- tool surface exposed: `false`;
+- ledger database created and reopened: `true`;
+- ledger events checked before/after reopen: `4 / 4`;
+- ledger integrity: `PASS`;
+- real external network call: `false`;
+- automatic external approval: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+This smoke validates the actual Gate 021 runtime on the primary Windows
+workstation without any real external disclosure or network dependency.
+
+Gate 021 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record local smoke evidence, run final acceptance CI and runtime scope review,
+prepare the final documentation-only acceptance head, then stop at explicit
+exact-SHA human squash-merge approval.
