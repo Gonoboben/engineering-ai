@@ -61,13 +61,12 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `026 — Reproducible local installation`
-- Issue: `#51`
-- PR: `#52 (READY FOR REVIEW)`
-- Branch: `gate-026-reproducible-local-installation`
-- Base: `171ff20125389d2d953576a0d3340c13dc1dc53f`
-- Validated implementation head: `6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`
-- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
+- Gate: `027 — Offline continuation boundary for connected projects`
+- Issue: `#53`
+- PR: `NOT_OPEN_YET / BRANCH_SYNCHRONIZATION_IN_PROGRESS`
+- Branch: `gate-027-offline-continuation-boundary`
+- Base: `d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
+- State: `IN_PROGRESS`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -115,7 +114,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
 - External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
 - Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
-- Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_PENDING_ACCEPTANCE`
+- Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_ACCEPTED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -786,12 +785,15 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Freeze Gate 026 content at the ready-state synchronization head. Run generic,
-strict exact-head and Gate 026 Ubuntu/Windows install validation on that exact
-head. If all remain green, stop at explicit human exact-SHA squash-merge
-approval for PR #52.
+Implement Gate 027 Issue #53 on branch
+`gate-027-offline-continuation-boundary`: add explicit network-requirement
+classification to allow-listed process commands, block network-capable commands
+before subprocess execution in offline mode, and validate local continuation
+paths for PlataVM and BuoyCalc without claiming unavailable network-dependent
+validator PASS.
 
-Do not infer the separate Phase 8 offline-continuation criterion from Gate 026.
+Stop at any architecture/policy expansion or the final human exact-SHA merge
+boundary.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
