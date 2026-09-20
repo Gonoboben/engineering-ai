@@ -67,6 +67,7 @@ def main() -> int:
         )
 
     import engineering_ai
+    from engineering_ai.validation import SCHEMA_DIR, check_all_schemas
 
     package_file = Path(engineering_ai.__file__).resolve()
     source_tree = (repo_root / "src").resolve()
@@ -82,6 +83,24 @@ def main() -> int:
             f"engineering_ai imported from source tree instead of installed wheel: {package_file}"
         )
 
+    check_all_schemas()
+    installed_schema_dir = SCHEMA_DIR.resolve()
+    schema_files = sorted(path.name for path in installed_schema_dir.glob("*.schema.json"))
+    if len(schema_files) != 14:
+        mismatches.append(
+            f"expected 14 installed schema files, got {len(schema_files)}"
+        )
+    try:
+        installed_schema_dir.relative_to(repo_root)
+    except ValueError:
+        schemas_loaded_from_repo = False
+    else:
+        schemas_loaded_from_repo = True
+    if schemas_loaded_from_repo:
+        mismatches.append(
+            f"installed environment resolved schemas from repository: {installed_schema_dir}"
+        )
+
     if len(args.expected_wheel_sha256) != 64 or any(
         ch not in "0123456789abcdef" for ch in args.expected_wheel_sha256.lower()
     ):
@@ -95,6 +114,9 @@ def main() -> int:
         "engineering_ai": project_version,
         "package_file": str(package_file),
         "imported_from_source_tree": imported_from_source_tree,
+        "schema_dir": str(installed_schema_dir),
+        "schema_count": len(schema_files),
+        "schemas_loaded_from_repo": schemas_loaded_from_repo,
         "expected_wheel_sha256": args.expected_wheel_sha256.lower(),
         "observed_versions": dict(sorted(observed.items())),
         "mismatches": mismatches,
