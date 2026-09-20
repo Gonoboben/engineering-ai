@@ -327,7 +327,7 @@ Accepted merge commit:
 Delivered a persisted append-only Supervisor-owned job queue with deterministic FIFO claim, bounded retry persistence, explicit timeout/deadline handling, WAITING_FOR_APPROVAL persistence, fail-closed interrupted-run recovery and full predecessor-chain integrity.
 
 ### Gate 020 — Scheduled/overnight engineering runs
-Status: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+Status: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
 
 Issue: `#39`
 

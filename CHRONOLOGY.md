@@ -2928,3 +2928,49 @@ ADR-0019 added as `PROPOSED_GATE_020`.
 Next:
 synchronize architecture/status/evidence documentation, re-run exact-head CI,
 then perform one primary-workstation scheduled/unattended smoke.
+
+
+---
+
+## 2026-09-20 — Gate 020 primary-workstation scheduled/unattended smoke passed
+
+Exact Engineering AI head:
+`82ead2e02f381a9ce988263058662c2614b23428`.
+
+Local result:
+`PASS_SCHEDULED_UNATTENDED_RUN_SESSION`.
+
+Observed:
+- due schedule executed: `true`;
+- future schedule remained SCHEDULED: `true`;
+- autonomous schedule-allowed job final state: `PASS`;
+- approval-required job final state: `WAITING_FOR_APPROVAL`;
+- forbidden job final state: `BLOCKED`;
+- autonomous schedule-unlisted job final state: `QUEUED`;
+- interrupted prior RUNNING job final state: `BLOCKED`;
+- summary counts: PASS=1 / BLOCKED=2 / WAITING_FOR_APPROVAL=1 /
+  FAIL=0 / CANCELLED=0 / QUEUED=0;
+- summary evidence refs: `ev-gate020-read`;
+- approval tool calls: none;
+- forbidden tool calls: none;
+- schedule-unlisted tool calls: none;
+- schedule database created and reopened: `true`;
+- schedule events checked before/after reopen: `4 / 4`;
+- schedule integrity: `PASS`;
+- queue events checked: `13`;
+- queue integrity: `PASS`;
+- automatic approval: `false`;
+- OS scheduler installation: `false`;
+- daemon/service: `false`;
+- distributed workers: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+Gate 020 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record local smoke evidence, run final acceptance CI and runtime scope review,
+prepare the final documentation-only acceptance head, then stop at explicit
+exact-SHA human squash-merge approval.

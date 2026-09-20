@@ -54,7 +54,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#40 (DRAFT)`
 - Branch: `gate-020-scheduled-overnight-runs`
 - Base: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+- State: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -637,7 +637,7 @@ Historical CI note:
 - initial implementation head `d455738ee9522aa7c1c2671cc3cd9bf6f1e567e5`: deterministic regression `226/226 PASS`, generic CI run `35522348903 PASS`, strict exact-head CI run `35522348911 PASS`
 - chronology-hardening head `a61a3e1fa16341265396b66a9db73700bfaabc7c`: deterministic regression `227/227 PASS`, generic CI run `35522438419 PASS`, strict exact-head CI run `35522438328 PASS`
 - runtime scope review: `PASS`; no OS scheduler installation, daemon/service, automatic approval API, unrestricted shell, distributed worker runtime, external/cloud scheduler, semantic/vector backend, vision integration, PHYSICAL_PASS synthesis, or generic SQL write API
-- primary-workstation scheduled/overnight smoke: `PENDING`
+- primary-workstation scheduled/overnight smoke: `PASS_SCHEDULED_UNATTENDED_RUN_SESSION`; exact head `82ead2e02f381a9ce988263058662c2614b23428`, due_schedule_executed=true, future_schedule_remained_scheduled=true, autonomous_allowed_final_state=PASS, approval_final_state=WAITING_FOR_APPROVAL, forbidden_final_state=BLOCKED, unlisted_autonomous_final_state=QUEUED, interrupted_final_state=BLOCKED, summary PASS=1/BLOCKED=2/WAITING_FOR_APPROVAL=1/FAIL=0/CANCELLED=0/QUEUED=0, summary evidence `ev-gate020-read`, approval/forbidden/unlisted tool calls empty, schedule database created/reopened, schedule integrity=true, queue integrity=true, automatic_approval=false, os_scheduler_installation=false, daemon_service=false, distributed_workers=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - ADR-0019: `PROPOSED_GATE_020`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -677,4 +677,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the Gate 020 architecture/evidence documentation head. If green, run one primary-workstation Windows scheduled/unattended smoke using `scripts/gate020_scheduled_run_smoke.py`. The smoke must prove due-only execution, policy re-authorization, no tool call for approval/forbidden actions, fail-closed interrupted-job recovery, untouched schedule-unlisted autonomous work, summary/evidence integrity, persisted reopen, and `PHYSICAL_NOT_EXECUTED`.
+Run final generic and strict exact-head CI on the post-smoke Gate 020 evidence/status head, perform final scope review, then prepare one documentation-only acceptance checkpoint. Run one last exact-head CI on that final head, mark PR #40 ready for review, and stop at explicit human exact-SHA squash-merge approval. ADR-0019 remains PROPOSED_GATE_020 until approval and merge.

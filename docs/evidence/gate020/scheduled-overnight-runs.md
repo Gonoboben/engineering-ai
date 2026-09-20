@@ -77,24 +77,47 @@ Confirmed absent:
 - PHYSICAL_PASS synthesis
 - generic SQL write API
 
+## Primary-workstation Windows smoke
+
+Exact head:
+`82ead2e02f381a9ce988263058662c2614b23428`
+
+Result:
+`PASS_SCHEDULED_UNATTENDED_RUN_SESSION`
+
+Observed:
+- due_schedule_executed = `true`
+- future_schedule_remained_scheduled = `true`
+- autonomous_allowed_final_state = `PASS`
+- approval_final_state = `WAITING_FOR_APPROVAL`
+- forbidden_final_state = `BLOCKED`
+- unlisted_autonomous_final_state = `QUEUED`
+- interrupted_final_state = `BLOCKED`
+- summary_counts = `PASS 1 / BLOCKED 2 / WAITING_FOR_APPROVAL 1 / FAIL 0 / CANCELLED 0 / QUEUED 0`
+- summary_evidence_refs = `ev-gate020-read`
+- approval_tool_calls = `[]`
+- forbidden_tool_calls = `[]`
+- unlisted_tool_calls = `[]`
+- schedule_database_created = `true`
+- schedule_database_reopened = `true`
+- schedule_events_checked_before_reopen = `4`
+- schedule_events_checked_after_reopen = `4`
+- schedule_integrity = `true`
+- queue_events_checked = `13`
+- queue_integrity = `true`
+- automatic_approval = `false`
+- os_scheduler_installation = `false`
+- daemon_service = `false`
+- distributed_workers = `false`
+- physical_validation = `PHYSICAL_NOT_EXECUTED`
+- EXIT = `0`
+- working tree remained clean and branch head unchanged.
+
 ## Remaining acceptance evidence
-Run one primary-workstation Windows/Python 3.12 smoke on a stable
-post-documentation Gate 020 head using
-`scripts/gate020_scheduled_run_smoke.py`.
 
-Required observations:
-- due schedule executes;
-- future schedule remains SCHEDULED;
-- autonomous allowed job reaches PASS;
-- approval-required job reaches WAITING_FOR_APPROVAL and its tool is not called;
-- forbidden job reaches BLOCKED and its tool is not called;
-- schedule-unlisted autonomous job remains QUEUED and its tool is not called;
-- interrupted RUNNING job recovers BLOCKED;
-- schedule/session ledger reopens with integrity PASS;
-- queue integrity PASS;
-- automatic_approval=false;
-- os_scheduler_installation=false;
-- daemon_service=false;
-- physical validation remains PHYSICAL_NOT_EXECUTED.
+Run final generic and strict exact-head CI on the post-smoke evidence/status
+head and complete final runtime scope review. Then prepare and validate one
+final documentation-only acceptance head.
 
-ADR-0019 remains `PROPOSED_GATE_020` until exact-SHA human approval and squash merge.
+ADR-0019 remains `PROPOSED_GATE_020` until explicit exact-SHA human approval
+and squash merge.
