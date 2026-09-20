@@ -22,10 +22,10 @@ class NetworkRequirement(str, Enum):
 class CommandSpec:
     command_id: str
     executable: str
+    network_requirement: NetworkRequirement
     fixed_args: tuple[str, ...] = ()
     timeout_seconds: float = 10.0
     max_output_bytes: int = 65_536
-    network_requirement: NetworkRequirement = NetworkRequirement.LOCAL_ONLY
 
     def __post_init__(self) -> None:
         if not self.command_id:
