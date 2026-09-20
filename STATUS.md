@@ -47,16 +47,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 019 merge commit: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
 - Gate 020: `ACCEPTED_MERGED`
 - Gate 020 merge commit: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
+- Gate 021: `ACCEPTED_MERGED`
+- Gate 021 merge commit: `992b2ac07ea1a192919be286eef026a2fa255e73`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `021 — External controlled reasoning/review bridge`
-- Issue: `#41`
-- PR: `#42 (DRAFT)`
-- Branch: `gate-021-external-controlled-review-bridge`
-- Base: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `022 — Controlled MCP/tool exposure`
+- Issue: `#43`
+- PR: `NOT_OPEN_YET`
+- Branch: `gate-022-controlled-mcp-tool-exposure`
+- Base: `992b2ac07ea1a192919be286eef026a2fa255e73`
+- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -97,7 +99,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
 - BuoyCalc strict read-only adapter: `IMPLEMENTED_VALIDATED_GATE_014`
 - BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
-- External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_PENDING_ACCEPTANCE`
+- External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -687,7 +689,29 @@ Historical CI note:
 - primary-workstation fake-provider smoke: `PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`; exact head `306466507f5ead228b4efd7194df9a85512d80cf`, unapproved_status=NEEDS_HUMAN_APPROVAL, unapproved_provider_called=false, approved_status=PASS, approved_provider_called=true, provider_call_count=1, exact_explicit_context_sent=true, outbound_content_persisted=false, request_manifest_hash_recorded=true, response_hash_recorded=true, review_authority=ADVISORY, review_evidence_eligible=false, tool_surface_exposed=false, ledger database created/reopened, ledger events checked 4/4, ledger_integrity=true, real_external_network_call=false, automatic_external_approval=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - post-smoke evidence head `cf57c13890637d3e1d072e0d83e66f97cb13e365`: deterministic regression `247/247 PASS`, generic CI run `35525232870 PASS`, strict exact-head CI run `35525232786 PASS`
 - final runtime scope review: `PASS`; no concrete external network client, local tool surface, shell/subprocess, automatic approval, credentials/API-key handling, MCP runtime, semantic/vector backend, PHYSICAL_PASS synthesis, or architecture/physics/fabrication/release authority expansion
-- ADR-0020: `PROPOSED_GATE_021`
+- final approved PR head: `75a87489affac650455a4456d3b982d1a3f1496a`
+- final deterministic regression: `247/247 PASS`
+- final generic CI run `35525309946`: `PASS`
+- final strict exact-head CI run `35525309947`: `PASS`
+- exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `992b2ac07ea1a192919be286eef026a2fa255e73`
+- Issue #41: `CLOSED / COMPLETED`
+- Gate 021 state: `ACCEPTED_MERGED`
+- ADR-0020: `ACCEPTED_GATE_021`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 022 validation state
+- Issue #43: `OPEN`
+- branch: `gate-022-controlled-mcp-tool-exposure`
+- branch base equals Gate 021 squash merge `992b2ac07ea1a192919be286eef026a2fa255e73`: `PASS`
+- typed capability registry: `NOT_IMPLEMENTED_YET`
+- current Supervisor/PolicyEngine check per invocation: `REQUIRED`
+- named human approval where mapped action requires it: `REQUIRED`
+- unregistered capability invocation: `PROHIBITED`
+- generic shell/process/filesystem-write/Git-mutation surface: `PROHIBITED`
+- dynamic import/eval/reflection execution: `PROHIBITED`
+- append-only invocation audit: `NOT_IMPLEMENTED_YET`
+- public internet listener: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -726,4 +750,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on this final documentation-only Gate 021 head. If green, mark PR #42 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0020 remains PROPOSED_GATE_021 until that approval and squash merge.
+Publish the Gate 022 synchronization checkpoint, open one draft PR for Issue #43, then implement a typed registered-capability bridge over existing narrow local tools. Every invocation must re-evaluate current Supervisor/PolicyEngine policy; approval-required actions need named approval; unregistered or denied capabilities make zero tool calls. Do not add generic shell/process/file-write/Git-mutation access, automatic approvals, public network listeners, dynamic imports/eval or broader project authority.

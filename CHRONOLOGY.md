@@ -3244,3 +3244,79 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #42 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 021 accepted and merged
+
+Final approved PR head:
+`75a87489affac650455a4456d3b982d1a3f1496a`.
+
+Final validation:
+- deterministic regression: `247/247 PASS`;
+- generic workflow run `35525309946`: `PASS`;
+- strict exact-head workflow run `35525309947`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation fake-provider smoke:
+  `PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`;
+- final runtime scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`992b2ac07ea1a192919be286eef026a2fa255e73`.
+
+Issue #41 closed as completed.
+
+ADR-0020 state:
+`ACCEPTED_GATE_021`.
+
+Gate 021 state:
+`ACCEPTED_MERGED`.
+
+Real external network call:
+`NOT_RUN / NOT_REQUIRED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 022 controlled MCP/tool exposure opened
+
+Issue:
+`#43 — Gate 022 — Controlled MCP/tool exposure`.
+
+Branch:
+`gate-022-controlled-mcp-tool-exposure`.
+
+Base:
+Gate 021 squash merge
+`992b2ac07ea1a192919be286eef026a2fa255e73`.
+
+Declared scope:
+- typed explicit local capability registry;
+- existing narrow local capability implementations only;
+- explicit action mapping and project binding;
+- current Supervisor/PolicyEngine authorization for every invocation;
+- named approval when the mapped action currently requires it;
+- zero tool calls for denied/missing-approval/unregistered capability requests;
+- bounded request/response/timeout behavior;
+- append-only invocation audit with request/response hashes;
+- fake/in-process transport acceptance before any concrete MCP transport binding.
+
+Explicitly out of scope:
+- unrestricted MCP server exposing the workstation;
+- generic shell/process command surface;
+- arbitrary filesystem write/delete;
+- generic Git mutation/push/merge;
+- automatic human approval;
+- credentials/secrets relay;
+- public internet listener;
+- semantic/vector retrieval;
+- Vision/CAD/image workers;
+- architecture/physics/fabrication/release authority expansion.
+
+Next:
+publish the Gate 022 synchronization checkpoint and open one draft PR for
+Issue #43.

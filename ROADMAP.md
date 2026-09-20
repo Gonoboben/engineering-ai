@@ -337,27 +337,23 @@ Delivered persisted one-shot due schedules and bounded unattended sessions with 
 ## Phase 6 — Optional external consultation and control
 
 ### Gate 021 — External controlled reasoning/review bridge
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#41`
+Accepted merge commit:
+`992b2ac07ea1a192919be286eef026a2fa255e73`
 
-Branch: `gate-021-external-controlled-review-bridge`
-
-Base: Gate 020 squash merge `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`.
-
-Add a policy-controlled optional bridge for ChatGPT/OpenAI or another external reviewer/architect.
-
-Requirements:
-- local core remains functional offline;
-- outbound project context is explicit and policy-controlled;
-- calls/results are audited;
-- external models never bypass local Supervisor policy, approvals, or evidence semantics;
-- no unrestricted shell/filesystem authority is exposed.
+Delivered a provider-neutral, policy-controlled external advisory-review bridge with explicit bounded disclosure manifests, named approval enforcement, metadata-only append-only audit, zero local tool authority and ADVISORY-only response semantics.
 
 ### Gate 022 — Controlled MCP/tool exposure
-Status: `NOT_STARTED`
+Status: `IN_PROGRESS`
 
-Expose selected local capabilities through a controlled bridge when useful. Keep write authority narrow, typed, policy-gated, and reviewable.
+Issue: `#43`
+
+Branch: `gate-022-controlled-mcp-tool-exposure`
+
+Base: Gate 021 squash merge `992b2ac07ea1a192919be286eef026a2fa255e73`.
+
+Expose selected existing local capabilities through a typed, policy-gated bridge. Initial acceptance remains deliberately narrow: registered capabilities only, current Supervisor/PolicyEngine re-authorization on every invocation, named approval where current policy requires it, append-only invocation audit, and no generic shell/filesystem-write/Git-mutation surface.
 
 ## Phase 7 — Multimodal engineering
 

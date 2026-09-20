@@ -485,7 +485,7 @@ automatic replay after process failure and keep audit history reconstructable.
 ---
 
 ## ADR-0020 — External review uses explicit disclosure manifests and remains advisory
-Status: `PROPOSED_GATE_021`
+Status: `ACCEPTED_GATE_021`
 
 ### Decision
 Gate 021 implements external reasoning/review as an optional provider-neutral
