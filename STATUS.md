@@ -60,7 +60,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#46 (DRAFT)`
 - Branch: `gate-023-provenance-preserving-vision-worker`
 - Base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
-- State: `IMPLEMENTED_VALIDATION_IN_PROGRESS`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -95,7 +95,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate Qwen3.5-9B qualification: `QUALIFIED_GENERAL_PLANNER`
 - Candidate Qwen2.5-Coder-7B qualification: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`; native tool transport repeatedly fails under current Ollama contract, so role must be no-native-tool-proposal until separately requalified
 - Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
-- Vision worker boundary: `IMPLEMENTED_GATE_023_VALIDATION_IN_PROGRESS`
+- Vision worker boundary: `IMPLEMENTED_VALIDATED_GATE_023_PENDING_ACCEPTANCE`
 - Accepted production Vision model: `NOT_QUALIFIED`
 - Accepted registry Vision route: `NO_ROUTE_UNTIL_MEASURED_QUALIFICATION`
 - Visual model observations: `ADVISORY_ONLY / evidence_eligible=false`
@@ -779,3 +779,22 @@ Security constraint for local model services:
 
 ## Next admissible action
 Run one final generic and strict exact-head CI on this final documentation-only Gate 022 head. If green, mark PR #44 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0021 remains PROPOSED_GATE_022 until that approval and squash merge.
+
+## Gate 023 validation state
+- base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
+- validated hardening head: `82ca772902738de0670fab84bbd28914d0684e44`
+- deterministic regression: `280/280 PASS`
+- generic workflow run `35527817840`: `PASS`
+- strict exact-head workflow run `35527817828`: `PASS`
+- deterministic smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`
+- accepted production Vision model: `NOT_QUALIFIED`
+- default accepted Vision route: `NO_ROUTE`
+- result authority: `ADVISORY`
+- evidence eligibility: `false`
+- raw image persistence by Vision result: `false`
+- external/cloud Vision call: `NOT_RUN / NOT_IMPLEMENTED`
+- automatic evidence promotion: `false`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+- ADR-0022: `PROPOSED_GATE_023`
+- final exact-head documentation CI: `PENDING`
+- human exact-SHA squash-merge approval: `PENDING`
