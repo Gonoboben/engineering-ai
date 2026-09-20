@@ -160,7 +160,7 @@ class OllamaProviderTests(unittest.TestCase):
         image = ModelImageAttachment(
             source_ref="schematic:page-1",
             media_type="image/png",
-            data=b"explicit-image-bytes",
+            data=b"\x89PNG\r\n\x1a\nexplicit-image-bytes",
         )
         request = ModelRequest(
             model="vision-test",
@@ -173,7 +173,7 @@ class OllamaProviderTests(unittest.TestCase):
         message = body["messages"][0]
         self.assertEqual(
             message["images"],
-            [base64.b64encode(b"explicit-image-bytes").decode("ascii")],
+            [base64.b64encode(b"\x89PNG\r\n\x1a\nexplicit-image-bytes").decode("ascii")],
         )
         self.assertNotIn("source_ref", message)
         self.assertNotIn("path", message)
