@@ -63,10 +63,11 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `027 — Offline continuation boundary for connected projects`
 - Issue: `#53`
-- PR: `NOT_OPEN_YET / BRANCH_SYNCHRONIZATION_IN_PROGRESS`
+- PR: `#54 (DRAFT; IMPLEMENTATION VALIDATED)`
 - Branch: `gate-027-offline-continuation-boundary`
 - Base: `d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
-- State: `IN_PROGRESS`
+- Validated implementation/architecture head: `323b2db90c1470634ea816a4a96eb1f9dcc47ed9`
+- State: `IMPLEMENTED_VALIDATED_PENDING_READY_CHECKPOINT`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -115,6 +116,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
 - Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
 - Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_ACCEPTED`
+- Offline continuation boundary: `IMPLEMENTED_VALIDATED_GATE_027_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -785,15 +787,13 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Implement Gate 027 Issue #53 on branch
-`gate-027-offline-continuation-boundary`: add explicit network-requirement
-classification to allow-listed process commands, block network-capable commands
-before subprocess execution in offline mode, and validate local continuation
-paths for PlataVM and BuoyCalc without claiming unavailable network-dependent
-validator PASS.
+Run generic, strict exact-head, Gate 026 install and Gate 027 offline-continuation
+validation on the documentation/evidence checkpoint. If all remain green, mark
+PR #54 ready for review, synchronize the ready-state source of truth, freeze
+the branch, run the final exact-head validation set, and stop at explicit human
+exact-SHA squash-merge approval.
 
-Stop at any architecture/policy expansion or the final human exact-SHA merge
-boundary.
+Do not reinterpret an offline-blocked network-required validator as PASS.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
