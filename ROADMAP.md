@@ -407,55 +407,48 @@ Final validation:
 ADR-0023: `ACCEPTED_GATE_024`.
 
 ### Gate 025 — Image-generation worker
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#49`
+Accepted merge commit:
+`171ff20125389d2d953576a0d3340c13dc1dc53f`
 
-PR: `#50`
+Final approved PR head:
+`eca63b5c28ea908c6cb43900aa97909d0fb289bc`
 
-Branch: `gate-025-non-authoritative-image-generation-worker`
+Delivered bounded local text-to-image concept generation with explicit
+evidence-qualified routing, existing Supervisor `propose_patch` authority,
+deterministic PNG validation and root-bounded publication. Generated imagery
+remains `ADVISORY_CONCEPT_ONLY`, `evidence_eligible=false`,
+`engineering_drawing=false`.
 
-Base: Gate 024 squash merge `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`.
-
-Implemented bounded local text-to-image concept generation with:
-- distinct evidence-qualified `IMAGE_GENERATION` routing;
-- no unmeasured production image-generation route;
-- local-only provider contract;
-- current Supervisor `propose_patch` authorization before provider execution;
-- deterministic PNG structure/CRC/raster/dimension validation;
-- root-bounded atomic PNG publication;
-- fixed non-authoritative result semantics:
-  `ADVISORY_CONCEPT_ONLY`, `evidence_eligible=false`,
-  `engineering_drawing=false`.
-
-Validated smoke head:
-`a5bb614a430a0d5b00d3adab57c4a62fd1b41e7f`.
-
-Validation:
+Final validation:
 - deterministic regression: `301/301 PASS`;
-- generic CI `35531846754`: `PASS`;
-- strict exact-head CI `35531846777`: `PASS`;
-- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`.
+- generic workflow `35532035872`: `PASS`;
+- strict exact-head workflow `35532035537`: `PASS`;
+- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`;
+- production image-generation model/provider: `NOT_QUALIFIED`;
+- default accepted route: `NO_ROUTE`;
+- real provider call: `NOT_RUN`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-PNG hardening head:
-`93991af1b5b7505ce0546dd58297daf810d6409e`.
-
-Hardening validation:
-- generic CI `35531878630`: `PASS`;
-- strict exact-head CI `35531878735`: `PASS`.
-
-Production image-generation model/provider:
-`NOT_QUALIFIED`; default accepted route remains `NO_ROUTE`.
-
-Real image-generation provider call:
-`NOT_RUN`.
-
-ADR-0024 remains `PROPOSED_GATE_025` until explicit exact-SHA squash merge.
-
-Physical validation:
-`PHYSICAL_NOT_EXECUTED`.
+ADR-0024: `ACCEPTED_GATE_025`.
 
 ## Phase 8 — Stable engineering platform
+
+### Gate 026 — Reproducible local installation
+Status: `IN_PROGRESS`
+
+Issue: `#51`
+
+Branch: `gate-026-reproducible-local-installation`
+
+Base: Gate 025 squash merge
+`171ff20125389d2d953576a0d3340c13dc1dc53f`.
+
+Close the first v1.0 readiness criterion by defining and validating a
+cross-platform, non-editable clean-install path with measured/frozen dependency
+and build-tool versions. This Gate does not claim offline continuation; offline
+dependency acquisition remains a separate Phase 8 criterion.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
