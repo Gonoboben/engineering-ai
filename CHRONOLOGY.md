@@ -2650,3 +2650,41 @@ Next:
 record smoke evidence, run final generic + strict exact-head CI on the
 post-smoke documentation head, complete final scope review, then stop at
 explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 019 post-smoke predecessor-integrity hardening
+
+The first primary-workstation smoke passed on:
+`f423f16d4895049121026386f37a9c9c68b8bf89`.
+
+Subsequent final scope review identified one fail-closed robustness gap:
+`list_current()` validated each latest event hash, while full predecessor-chain
+validation occurred through get()/history()/verify_integrity() and again before
+a claim. A control-state listing should itself fail closed if an older queue
+event has been corrupted.
+
+Hardening head:
+`5f1f3a480042180b31b75df50a8736f3386e1ac7`.
+
+Correction:
+- list_current() now validates the complete append-only history for every
+  returned job before exposing current control state;
+- a regression test tampers an old ENQUEUED predecessor while leaving the latest
+  event untouched and requires list_current() to fail closed.
+
+Validation:
+- deterministic regression: `210/210 PASS`;
+- generic workflow run `35519588215`: `PASS`;
+- strict exact-head workflow run `35519588222`: `PASS`;
+- runtime scope review: `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Because runtime code changed after the first primary-workstation smoke, that
+smoke is retained as valid historical evidence but is not presented as exact
+validation of the hardened runtime.
+
+Next:
+freeze documentation, re-run CI, then repeat the short primary-workstation
+persistence/reopen smoke on the hardened runtime before final acceptance.

@@ -96,3 +96,38 @@ head and complete final scope review.
 
 ADR-0018 remains `PROPOSED_GATE_019` until explicit exact-SHA human approval
 and squash merge.
+
+
+## Post-smoke predecessor-integrity hardening
+
+The first primary-workstation smoke passed on:
+`f423f16d4895049121026386f37a9c9c68b8bf89`.
+
+A later scope/integrity review strengthened current-state reads so
+`list_current()` validates each returned job's complete predecessor chain, not
+only the latest row. This prevents an older corrupted queue event from being
+silently hidden behind an intact latest event.
+
+Hardened runtime head:
+`5f1f3a480042180b31b75df50a8736f3386e1ac7`
+
+Validation:
+- deterministic tests: `210/210 PASS`
+- generic CI: `35519588215 PASS`
+- strict exact-head CI: `35519588222 PASS`
+- predecessor-tamper read-path regression: `PASS`
+- runtime scope review: `PASS`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+Runtime scope review confirmed absent:
+- scheduling/cron/daemon implementation
+- automatic approval granting
+- queue-owned tool execution
+- distributed worker implementation
+- semantic/vector backend
+- vision/Qwen runtime integration
+- PHYSICAL_PASS synthesis
+- generic SQL write API
+
+Because this is a runtime change after the first Windows smoke, one repeat
+primary-workstation smoke is required before final Gate 019 acceptance.
