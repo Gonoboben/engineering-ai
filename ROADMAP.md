@@ -436,55 +436,43 @@ ADR-0024: `ACCEPTED_GATE_025`.
 ## Phase 8 — Stable engineering platform
 
 ### Gate 026 — Reproducible local installation
-Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#51`
+Issue: `#51 CLOSED / COMPLETED`
 
-PR: `#52 (READY FOR REVIEW)`
+PR: `#52 MERGED`
 
-Branch: `gate-026-reproducible-local-installation`
+Final approved PR head:
+`8e27641c250a0b3f0061c9de41e9ecdd13d17f20`
 
-Base: Gate 025 squash merge
-`171ff20125389d2d953576a0d3340c13dc1dc53f`.
+Squash merge:
+`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
 
-Validated implementation head:
-`6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`.
+Final exact-head validation:
+- generic workflow `35536044039`: `PASS`;
+- strict exact-head workflow `35536043981`: `PASS`;
+- Gate 026 install workflow `35536044021`: Ubuntu `PASS`, Windows `PASS`;
+- installed-package regression: `306/306 PASS` on both platforms;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-Delivered:
-- documented Python 3.12.x install contract;
-- exact frozen runtime and install-tool dependency sets;
-- clean fresh-venv bootstrap;
-- non-editable wheel install;
-- repeated wheel SHA-256 equality check per platform;
-- installed package/version/schema verification;
-- `pip check`;
-- full installed-package deterministic regression;
-- Ubuntu and Windows acceptance workflow.
+Gate 026 closes the reproducible-local-installation criterion only. Offline
+continuation remains a separate Phase 8 criterion.
 
-Implementation validation:
-- deterministic installed-package regression:
-  `306/306 PASS` on Ubuntu;
-- deterministic installed-package regression:
-  `306/306 PASS` on Windows;
-- generic workflow `35535616430`: `PASS`;
-- strict exact-head workflow `35535616425`: `PASS`;
-- Gate 026 install workflow `35535616417`:
-  Ubuntu `PASS`, Windows `PASS`.
+### Gate 027 — Offline continuation boundary for connected projects
+Status: `IN_PROGRESS`
 
-Gate 026 establishes the reproducible-local-installation criterion only.
-Offline dependency acquisition and offline continuation remain separate Phase 8
-criteria and are not inferred from this PASS.
+Issue: `#53`
 
-Ready-for-review checkpoint:
-- documentation/evidence head:
-  `a04337bbfbc0d9306b4f9a8a2f4d93dbc62bfb5b`;
-- generic workflow `35535865183`: `PASS`;
-- strict exact-head workflow `35535865222`: `PASS`;
-- Gate 026 install workflow `35535865187`:
-  Ubuntu `PASS`, Windows `PASS`.
+Branch: `gate-027-offline-continuation-boundary`
 
-Physical validation:
-`PHYSICAL_NOT_EXECUTED`.
+Base:
+`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
+
+Objective:
+close the next v1.0 criterion by making network requirements explicit in
+allow-listed process commands and proving that connected-project local
+operations continue in an offline fail-closed mode without hidden
+network-capable subprocess execution.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
