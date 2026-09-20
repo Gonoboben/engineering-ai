@@ -68,7 +68,7 @@ def qualified_router() -> DeterministicModelRouter:
     return DeterministicModelRouter(ModelCapabilityRegistry((capability,)))
 
 
-def request(data: bytes = b"png-image-payload") -> VisionWorkerRequest:
+def request(data: bytes = b"\x89PNG\r\n\x1a\npng-image-payload") -> VisionWorkerRequest:
     return VisionWorkerRequest(
         project_id="engineering-ai",
         task_id="vision-task-1",
@@ -86,7 +86,7 @@ def request(data: bytes = b"png-image-payload") -> VisionWorkerRequest:
 class VisionInputTests(unittest.TestCase):
     def test_input_hash_and_descriptor_are_deterministic(self) -> None:
         item = request().images[0]
-        self.assertEqual(item.size_bytes, len(b"png-image-payload"))
+        self.assertEqual(item.size_bytes, len(b"\x89PNG\r\n\x1a\npng-image-payload"))
         self.assertEqual(len(item.content_sha256), 64)
         self.assertEqual(item.content_sha256, item.as_attachment().content_sha256)
 
@@ -94,7 +94,9 @@ class VisionInputTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             VisionInput("x", "image/gif", b"x")
         with self.assertRaises(ValueError):
-            VisionInput("bad\nref", "image/png", b"x")
+            VisionInput("bad\nref", "image/png", b"\x89PNG\r\n\x1a\nx")
+        with self.assertRaises(ValueError):
+            VisionInput("bad-signature", "image/png", b"not-a-png")
 
 
 class VisionWorkerTests(unittest.TestCase):
@@ -172,7 +174,7 @@ class VisionWorkerTests(unittest.TestCase):
             max_total_image_bytes=3,
         )
         with self.assertRaises(VisionBudgetError):
-            worker.observe(request(b"1234"))
+            worker.observe(request(b"\x89PNG\r\n\x1a\n1234"))
         self.assertEqual(provider.calls, [])
 
     def test_malformed_structured_output_fails_closed(self) -> None:
