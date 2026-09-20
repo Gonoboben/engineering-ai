@@ -355,15 +355,36 @@ Delivered a transport-neutral immutable registered-capability broker with dual `
 ## Phase 7 — Multimodal engineering
 
 ### Gate 023 — Vision worker
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Issue: `#45`
+
+PR: `#46`
 
 Branch: `gate-023-provenance-preserving-vision-worker`
 
 Base: Gate 022 squash merge `3111a1d793c05ead0292839500e698a9c5fe2c56`.
 
-Support explicit schematics/photos/screenshots/plots as bounded provenance-preserving model inputs and structured ADVISORY observations. Gate 023 must not treat visual model interpretation as deterministic/physical evidence and must fail closed when no evidence-qualified Vision route exists.
+Implemented a bounded provenance-preserving Vision-worker boundary for explicit
+PNG/JPEG/WebP inputs, inline-only loopback transport, deterministic
+qualification-gated Vision routing, exact source-ref constrained structured
+observations and ADVISORY-only result semantics.
+
+The accepted registry intentionally contains no production Vision model until
+separate measured local qualification evidence exists; therefore the default
+Vision route is `NO_ROUTE`.
+
+Validated hardening head:
+`82ca772902738de0670fab84bbd28914d0684e44`.
+
+Validation:
+- deterministic regression: `280/280 PASS`;
+- generic CI `35527817840`: `PASS`;
+- strict exact-head CI `35527817828`: `PASS`;
+- smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+ADR-0022 remains `PROPOSED_GATE_023` until explicit exact-SHA squash merge.
 
 ### Gate 024 — CAD worker
 Status: `NOT_STARTED`
