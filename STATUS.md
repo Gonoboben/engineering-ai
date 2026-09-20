@@ -60,7 +60,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#46 (DRAFT)`
 - Branch: `gate-023-provenance-preserving-vision-worker`
 - Base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
-- State: `OPENED_PENDING_IMPLEMENTATION`
+- State: `IMPLEMENTED_VALIDATION_IN_PROGRESS`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -95,14 +95,19 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate Qwen3.5-9B qualification: `QUALIFIED_GENERAL_PLANNER`
 - Candidate Qwen2.5-Coder-7B qualification: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`; native tool transport repeatedly fails under current Ollama contract, so role must be no-native-tool-proposal until separately requalified
 - Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
-- Vision/image/CAD workers: `DEFERRED`
+- Vision worker boundary: `IMPLEMENTED_GATE_023_VALIDATION_IN_PROGRESS`
+- Accepted production Vision model: `NOT_QUALIFIED`
+- Accepted registry Vision route: `NO_ROUTE_UNTIL_MEASURED_QUALIFICATION`
+- Visual model observations: `ADVISORY_ONLY / evidence_eligible=false`
+- CAD worker: `DEFERRED_GATE_024`
+- Image-generation worker: `DEFERRED_GATE_025`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
 - BuoyCalc strict read-only adapter: `IMPLEMENTED_VALIDATED_GATE_014`
 - BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
 - External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
-- Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_PENDING_ACCEPTANCE`
+- Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
