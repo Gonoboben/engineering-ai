@@ -388,6 +388,41 @@ class PersistedJobQueueTests(unittest.TestCase):
                 job_id="job-tamper",
             )
 
+    def test_list_current_fails_closed_on_tampered_predecessor(self) -> None:
+        self.queue.enqueue(make_job("job-old-tamper"), timeout_seconds=120)
+        claimed = self.queue.claim_next(project_id="engineering-ai")
+        assert claimed is not None
+        passed = claimed.job_dict()
+        passed["status"] = "PASS"
+        self.queue.persist_execution_result(
+            project_id="engineering-ai",
+            job_id="job-old-tamper",
+            result_job=passed,
+        )
+
+        self.queue.close()
+        conn = sqlite3.connect(self.path)
+        try:
+            conn.execute("DROP TRIGGER job_queue_events_no_update")
+            conn.execute(
+                """
+                UPDATE job_queue_events
+                SET reason = 'tampered-old-event'
+                WHERE job_id = 'job-old-tamper' AND event_type = 'ENQUEUED'
+                """
+            )
+            conn.commit()
+        finally:
+            conn.close()
+
+        self.queue = PersistedJobQueue(
+            self.path,
+            clock=self.clock,
+            event_id_factory=self.ids,
+        )
+        with self.assertRaises(JobQueueIntegrityError):
+            self.queue.list_current(project_id="engineering-ai")
+
     def test_history_chain_and_integrity_report(self) -> None:
         self.queue.enqueue(make_job("job-history"), timeout_seconds=120)
         claimed = self.queue.claim_next(project_id="engineering-ai")

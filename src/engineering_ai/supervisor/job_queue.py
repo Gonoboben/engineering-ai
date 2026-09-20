@@ -325,7 +325,20 @@ class PersistedJobQueue:
         ).fetchall()
         if len(rows) > self._max_jobs:
             raise JobQueuePolicyError("persisted job count exceeded max_jobs")
-        return tuple(self._row_to_snapshot(row) for row in rows)
+
+        # A current-state read is authoritative control-state input. Validate the
+        # complete append-only history for every returned job rather than only
+        # the latest row, so corruption in an older predecessor fails closed.
+        current: list[JobQueueSnapshot] = []
+        for row in rows:
+            history = self.history(
+                project_id=project_id,
+                job_id=str(row["job_id"]),
+            )
+            if not history:
+                raise JobQueueIntegrityError("current job has no queue history")
+            current.append(history[-1])
+        return tuple(current)
 
     def claim_next(
         self,
