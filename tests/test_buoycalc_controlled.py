@@ -234,9 +234,10 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         self.assertEqual(prep.blockers, ())
         assert prep.session is not None
 
+        worktree_target = Path(prep.session.worktree_root) / "docs" / "note.md"
         proposal = PatchProposal(
             relative_path="docs/note.md",
-            expected_sha256=sha256_text("before\n"),
+            expected_sha256=hashlib.sha256(worktree_target.read_bytes()).hexdigest(),
             new_content="after\n",
             rationale="synthetic non-core controlled patch",
         )
