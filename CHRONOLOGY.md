@@ -3568,3 +3568,74 @@ Physical validation:
 Next:
 implement the bounded Vision input/worker boundary and deterministic regression,
 then run generic + strict exact-head CI.
+
+
+---
+
+## 2026-09-20 — Gate 023 Vision worker implementation checkpoint
+
+Initial implementation head:
+`bb48c4ff1af907e324455e0979208192ac972a6c`.
+
+Implemented:
+- explicit transient image attachments with source refs and SHA-256 identity;
+- PNG/JPEG/WebP media allow-list and bounded payloads;
+- inline-only loopback Ollama image transport;
+- distinct `VISION_ANALYSIS` deterministic routing class;
+- Vision routing requires explicit measured `supports_vision_inputs`;
+- accepted registry intentionally contains no unmeasured production Vision route;
+- bounded Vision worker request/result contract;
+- exact source-ref constrained structured observations;
+- provider tool calls rejected on Vision path;
+- result fixed to `ADVISORY`, `evidence_eligible=false`;
+- no automatic Blackboard/evidence/knowledge promotion.
+
+Validation:
+- deterministic regression: `278/278 PASS`;
+- generic workflow run `35527536750`: `PASS`;
+- strict exact-head workflow run `35527536771`: `PASS`.
+
+Input hardening then added basic declared-media signature validation. Intermediate
+head `f33f2ba785e37d43d96a4e5293a013af4047c222` correctly failed CI because
+the pre-existing synthetic image fixtures did not yet carry valid signatures.
+
+Corrected hardening/smoke head:
+`539d8dfb328aefa496b957110f1e903036844357`.
+
+Validation:
+- signature-valid fixtures: `PASS`;
+- Gate 023 smoke harness included in deterministic regression;
+- deterministic regression: `279/279 PASS`;
+- generic workflow run `35527660162`: `PASS`;
+- strict exact-head workflow run `35527660202`: `PASS`;
+- smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
+- default accepted Vision route: `NO_ROUTE`;
+- provider calls before qualified synthetic route: `0`;
+- production Vision model qualified: `false`;
+- result authority: `ADVISORY`;
+- evidence eligible: `false`;
+- external network: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Runtime scope review:
+`PASS`.
+
+Confirmed absent:
+- arbitrary filesystem/URL image acquisition;
+- camera/live-video capture;
+- shell/process/Git authority;
+- generic tool execution from Vision provider;
+- automatic approval;
+- automatic evidence promotion;
+- external/cloud Vision provider;
+- CAD manipulation;
+- image generation;
+- architecture/physics/fabrication/release authority expansion.
+
+ADR-0022 state:
+`PROPOSED_GATE_023`.
+
+Next:
+run final documentation/evidence exact-head validation, update PR #46 to ready
+for review when green, then stop at explicit exact-SHA human squash-merge
+approval.
