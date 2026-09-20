@@ -588,7 +588,7 @@ filesystem reader into an unrestricted project-data exfiltration API.
 ---
 
 ## ADR-0022 — Visual model observations preserve source identity and remain advisory
-Status: `PROPOSED_GATE_023`
+Status: `ACCEPTED_GATE_023`
 
 ### Decision
 Gate 023 introduces a bounded local Vision-worker path for explicit images.
