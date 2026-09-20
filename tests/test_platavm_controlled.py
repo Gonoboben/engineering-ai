@@ -106,7 +106,7 @@ class PlataVMControlledLoopTests(unittest.TestCase):
         for relative, content in docs.items():
             path = self.root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content, encoding="utf-8")
+            path.write_bytes(content.encode("utf-8"))
 
     def _git(self, *args: str) -> str:
         return subprocess.run(
