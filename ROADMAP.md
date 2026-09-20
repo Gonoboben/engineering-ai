@@ -459,11 +459,11 @@ Gate 026 closes the reproducible-local-installation criterion only. Offline
 continuation remains a separate Phase 8 criterion.
 
 ### Gate 027 — Offline continuation boundary for connected projects
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
 
 Issue: `#53`
 
-PR: `#54 (DRAFT; implementation validated)`
+PR: `#54 (READY FOR REVIEW)`
 
 Branch: `gate-027-offline-continuation-boundary`
 
@@ -497,6 +497,14 @@ Implementation validation:
 Gate 027 proves the Engineering AI control-plane offline boundary. It does not
 claim OS-level packet filtering or formal network-freedom of arbitrary
 project-owned script internals.
+
+Ready-for-review checkpoint:
+- implementation/evidence head:
+  `25401cdd3b15b5979d22ca44603e56425876b5e6`;
+- generic workflow `35537939691`: `PASS`;
+- strict exact-head workflow `35537939692`: `PASS`;
+- Gate 027 offline workflow `35537939698`: `PASS`;
+- inherited Gate 026 install workflow `35537939708`: `PASS`.
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
