@@ -56,7 +56,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#42 (DRAFT)`
 - Branch: `gate-021-external-controlled-review-bridge`
 - Base: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
-- State: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -685,6 +685,8 @@ Historical CI note:
 - corrected hardened head `f6ed7a9a36c75f08248efe6fbe8148b5fa75a2c8`: deterministic regression `247/247 PASS`, generic CI run `35524489887 PASS`, strict exact-head CI run `35524489903 PASS`
 - runtime scope review: `PASS`; no concrete network client, local tool surface, shell/subprocess, automatic approval, credentials, MCP, vector backend or PHYSICAL_PASS synthesis
 - primary-workstation fake-provider smoke: `PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`; exact head `306466507f5ead228b4efd7194df9a85512d80cf`, unapproved_status=NEEDS_HUMAN_APPROVAL, unapproved_provider_called=false, approved_status=PASS, approved_provider_called=true, provider_call_count=1, exact_explicit_context_sent=true, outbound_content_persisted=false, request_manifest_hash_recorded=true, response_hash_recorded=true, review_authority=ADVISORY, review_evidence_eligible=false, tool_surface_exposed=false, ledger database created/reopened, ledger events checked 4/4, ledger_integrity=true, real_external_network_call=false, automatic_external_approval=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
+- post-smoke evidence head `cf57c13890637d3e1d072e0d83e66f97cb13e365`: deterministic regression `247/247 PASS`, generic CI run `35525232870 PASS`, strict exact-head CI run `35525232786 PASS`
+- final runtime scope review: `PASS`; no concrete external network client, local tool surface, shell/subprocess, automatic approval, credentials/API-key handling, MCP runtime, semantic/vector backend, PHYSICAL_PASS synthesis, or architecture/physics/fabrication/release authority expansion
 - ADR-0020: `PROPOSED_GATE_021`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -724,4 +726,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final generic and strict exact-head CI on the post-smoke Gate 021 evidence/status head, perform final runtime scope review, then prepare one documentation-only acceptance checkpoint. Run one last exact-head CI on that final head, mark PR #42 ready for review, and stop at explicit human exact-SHA squash-merge approval. ADR-0020 remains PROPOSED_GATE_021 until approval and merge.
+Run one final generic and strict exact-head CI on this final documentation-only Gate 021 head. If green, mark PR #42 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0020 remains PROPOSED_GATE_021 until that approval and squash merge.

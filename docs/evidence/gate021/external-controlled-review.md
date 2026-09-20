@@ -130,3 +130,32 @@ final documentation-only acceptance head.
 
 ADR-0020 remains `PROPOSED_GATE_021` until explicit exact-SHA human approval
 and squash merge.
+
+
+## Final acceptance checkpoint
+
+Post-smoke evidence head:
+`cf57c13890637d3e1d072e0d83e66f97cb13e365`
+
+Validation:
+- deterministic tests: `247/247 PASS`
+- generic CI run: `35525232870 PASS`
+- strict exact-head CI run: `35525232786 PASS`
+- primary-workstation fake-provider smoke:
+  `PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`
+
+Final runtime scope review:
+`PASS`
+
+Confirmed absent:
+- concrete external network client
+- credentials/API-key handling
+- provider local tool/filesystem/shell/Git authority
+- automatic approval granting
+- MCP runtime
+- semantic/vector backend
+- physical PASS inference
+- architecture/physics/fabrication/release authority expansion
+
+ADR-0020 remains `PROPOSED_GATE_021` until explicit exact-SHA human approval
+and squash merge.
