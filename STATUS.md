@@ -53,16 +53,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 022 merge commit: `3111a1d793c05ead0292839500e698a9c5fe2c56`
 - Gate 023: `ACCEPTED_MERGED`
 - Gate 023 merge commit: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
+- Gate 024: `ACCEPTED_MERGED`
+- Gate 024 merge commit: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `024 — Controlled parametric CAD worker`
-- Issue: `#47`
-- PR: `#48 (READY FOR REVIEW)`
-- Branch: `gate-024-controlled-parametric-cad-worker`
-- Base: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `025 — Non-authoritative image-generation worker`
+- Issue: `#49`
+- PR: `NOT_OPEN_YET / BRANCH_SYNCHRONIZATION_IN_PROGRESS`
+- Branch: `gate-025-non-authoritative-image-generation-worker`
+- Base: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
+- State: `IN_PROGRESS`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -101,8 +103,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Accepted production Vision model: `NOT_QUALIFIED`
 - Accepted registry Vision route: `NO_ROUTE_UNTIL_MEASURED_QUALIFICATION`
 - Visual model observations: `ADVISORY_ONLY / evidence_eligible=false`
-- CAD worker: `IMPLEMENTED_VALIDATED_GATE_024_PENDING_ACCEPTANCE`
-- Image-generation worker: `DEFERRED_GATE_025`
+- CAD worker: `IMPLEMENTED_VALIDATED_GATE_024_ACCEPTED`
+- Image-generation worker: `IN_PROGRESS_GATE_025`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
@@ -780,10 +782,13 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final ready-state Gate 024
-documentation-only head. If both remain green, freeze PR #48 and stop at
-explicit human exact-SHA squash-merge approval. ADR-0023 remains
-`PROPOSED_GATE_024` until that approval and accepted merge.
+Implement and validate the bounded Gate 025 text-to-image concept-generation
+worker on Issue #49 / branch
+`gate-025-non-authoritative-image-generation-worker`. Preserve
+`ADVISORY_CONCEPT_ONLY`, no production image-model qualification by inference,
+no engineering-evidence promotion and `PHYSICAL_NOT_EXECUTED`. Stop at any
+authority expansion, external-disclosure boundary or final exact-SHA squash
+merge.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -832,7 +837,7 @@ explicit human exact-SHA squash-merge approval. ADR-0023 remains
 - fabrication authorization: `NOT_GRANTED`
 - release authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
-- ADR-0023: `PROPOSED_GATE_024`
+- ADR-0023: `ACCEPTED_GATE_024`
 - pre-ready documentation/evidence head `a3f979ce4035a64981af911807b7f6fdfcd1c7f3`: generic CI `35531115705 PASS`, strict exact-head CI `35531115699 PASS`
 - final ready-state exact-head CI: `REQUIRED_ON_FINAL_HEAD`
 - human exact-SHA squash-merge approval: `PENDING`
