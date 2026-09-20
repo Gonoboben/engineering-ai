@@ -537,7 +537,7 @@ a second copy of disclosed project content.
 ---
 
 ## ADR-0021 — MCP/tool exposure uses an immutable registered-capability broker
-Status: `PROPOSED_GATE_022`
+Status: `ACCEPTED_GATE_022`
 
 ### Decision
 Gate 022 exposes local capabilities only through an immutable registry of typed
@@ -582,4 +582,55 @@ filesystem reader into an unrestricted project-data exfiltration API.
 - invocation audit is append-only and tamper-evident;
 - no concrete MCP listener/server is required for Gate 022 acceptance;
 - future MCP transport binding must preserve this broker contract;
+- physical validation remains explicit and separate.
+
+
+---
+
+## ADR-0022 — Visual model observations preserve source identity and remain advisory
+Status: `PROPOSED_GATE_023`
+
+### Decision
+Gate 023 introduces a bounded local Vision-worker path for explicit images.
+
+Every visual input is caller-supplied and carries an explicit source reference,
+allow-listed media type, byte size and SHA-256 identity. Image bytes are
+transient model input and are not themselves promoted into control-plane
+evidence/state by the Vision worker.
+
+Vision analysis is a distinct deterministic routing class. A model may receive
+that route only when its capability record explicitly qualifies Vision input
+support and carries measured qualification evidence. Gate 023 does not infer
+Vision qualification from a model family name, advertised multimodality or a
+successful provider call.
+
+Structured visual observations must cite only exact source references supplied
+in the request. Model-derived visual observations are always `ADVISORY`,
+`evidence_eligible=false`, and never constitute deterministic or physical
+evidence by themselves.
+
+The Vision provider receives no filesystem path, URL, camera, shell, Git,
+generic tool or approval authority. Provider tool calls are rejected. The local
+Ollama transport accepts only inline image bytes supplied by the caller.
+
+### Rationale
+Image interpretation is useful for schematics, photographs, screenshots and
+plots, but a multimodal model can misread symbols, dimensions, topology or
+visual context. Treating visual model output as measurement or deterministic
+evidence would violate the established evidence hierarchy.
+
+Explicit provenance and a separate qualification-gated route allow multimodal
+assistance without creating ambient file access or silently increasing model
+authority.
+
+### Consequence
+- unsupported media/signature mismatches and budget violations fail closed;
+- the accepted model registry may legitimately return `NO_ROUTE` for Vision
+  until local qualification evidence exists;
+- source identity/hash remains visible in Vision results;
+- raw image bytes are not returned in the advisory observation record;
+- no automatic Blackboard/evidence/knowledge promotion occurs;
+- CAD manipulation remains Gate 024;
+- image generation remains Gate 025;
+- software/synthetic Vision PASS does not imply physical validation;
 - physical validation remains explicit and separate.

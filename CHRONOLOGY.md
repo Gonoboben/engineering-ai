@@ -3492,3 +3492,221 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #44 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 022 accepted and merged
+
+Final approved PR head:
+`e3d3d6e67dbd782fc7df1e420424ec1fedf32c02`.
+
+Final validation:
+- deterministic regression: `268/268 PASS`;
+- generic workflow run `35526813486`: `PASS`;
+- strict exact-head workflow run `35526813470`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation fake-transport smoke: `PASS_CONTROLLED_MCP_TOOL_EXPOSURE`;
+- final runtime scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`3111a1d793c05ead0292839500e698a9c5fe2c56`.
+
+PR #44:
+`MERGED`.
+
+Issue #43:
+`CLOSED / COMPLETED`.
+
+ADR-0021 state:
+`ACCEPTED_GATE_022`.
+
+Gate 022 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 023 provenance-preserving Vision worker opened
+
+Issue:
+`#45 — Gate 023 — Provenance-preserving Vision worker`.
+
+Branch:
+`gate-023-provenance-preserving-vision-worker`.
+
+Base:
+Gate 022 squash merge
+`3111a1d793c05ead0292839500e698a9c5fe2c56`.
+
+Declared scope:
+- explicit bounded image inputs with project/source provenance and SHA-256;
+- transient image payload transport only;
+- loopback-only Ollama multimodal request support;
+- deterministic Vision routing/capability requirement;
+- structured model observations tied to supplied source refs;
+- ADVISORY-only result semantics with `evidence_eligible=false`;
+- fail-closed media/hash/size/source/provider/schema handling;
+- no automatic Blackboard evidence promotion.
+
+Explicitly out of scope:
+- deterministic-evidence OCR promotion;
+- unmeasured production qualification of a new Vision model;
+- live camera/video ingestion;
+- external/cloud vision APIs;
+- arbitrary filesystem/URL loading;
+- CAD manipulation;
+- image generation;
+- architecture/physics/fabrication/release authority expansion.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+implement the bounded Vision input/worker boundary and deterministic regression,
+then run generic + strict exact-head CI.
+
+
+---
+
+## 2026-09-20 — Gate 023 Vision worker implementation checkpoint
+
+Initial implementation head:
+`bb48c4ff1af907e324455e0979208192ac972a6c`.
+
+Implemented:
+- explicit transient image attachments with source refs and SHA-256 identity;
+- PNG/JPEG/WebP media allow-list and bounded payloads;
+- inline-only loopback Ollama image transport;
+- distinct `VISION_ANALYSIS` deterministic routing class;
+- Vision routing requires explicit measured `supports_vision_inputs`;
+- accepted registry intentionally contains no unmeasured production Vision route;
+- bounded Vision worker request/result contract;
+- exact source-ref constrained structured observations;
+- provider tool calls rejected on Vision path;
+- result fixed to `ADVISORY`, `evidence_eligible=false`;
+- no automatic Blackboard/evidence/knowledge promotion.
+
+Validation:
+- deterministic regression: `278/278 PASS`;
+- generic workflow run `35527536750`: `PASS`;
+- strict exact-head workflow run `35527536771`: `PASS`.
+
+Input hardening then added basic declared-media signature validation. Intermediate
+head `f33f2ba785e37d43d96a4e5293a013af4047c222` correctly failed CI because
+the pre-existing synthetic image fixtures did not yet carry valid signatures.
+
+Corrected hardening/smoke head:
+`539d8dfb328aefa496b957110f1e903036844357`.
+
+Validation:
+- signature-valid fixtures: `PASS`;
+- Gate 023 smoke harness included in deterministic regression;
+- deterministic regression: `279/279 PASS`;
+- generic workflow run `35527660162`: `PASS`;
+- strict exact-head workflow run `35527660202`: `PASS`;
+- smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
+- default accepted Vision route: `NO_ROUTE`;
+- provider calls before qualified synthetic route: `0`;
+- production Vision model qualified: `false`;
+- result authority: `ADVISORY`;
+- evidence eligible: `false`;
+- external network: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Runtime scope review:
+`PASS`.
+
+Confirmed absent:
+- arbitrary filesystem/URL image acquisition;
+- camera/live-video capture;
+- shell/process/Git authority;
+- generic tool execution from Vision provider;
+- automatic approval;
+- automatic evidence promotion;
+- external/cloud Vision provider;
+- CAD manipulation;
+- image generation;
+- architecture/physics/fabrication/release authority expansion.
+
+ADR-0022 state:
+`PROPOSED_GATE_023`.
+
+Next:
+run final documentation/evidence exact-head validation, update PR #46 to ready
+for review when green, then stop at explicit exact-SHA human squash-merge
+approval.
+
+
+---
+
+## 2026-09-20 — Gate 023 final hardening checkpoint passed
+
+Validated hardening head:
+`82ca772902738de0670fab84bbd28914d0684e44`.
+
+Additional hardening:
+- raw Vision input bytes hidden from normal object representation;
+- provider response identity must match the deterministic routed provider;
+- explicit negative regression for provider mismatch.
+
+Validation:
+- deterministic regression: `280/280 PASS`;
+- generic workflow run `35527817840`: `PASS`;
+- strict exact-head workflow run `35527817828`: `PASS`;
+- smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
+- production Vision model qualification: `NOT_RUN / NOT_QUALIFIED`;
+- default accepted Vision route: `NO_ROUTE`;
+- model result authority: `ADVISORY`;
+- evidence eligible: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Final runtime scope review:
+`PASS`.
+
+Gate 023 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0022 remains:
+`PROPOSED_GATE_023`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run final generic + strict exact-head CI on the final documentation head, mark
+PR #46 ready for review if green, freeze the branch, and stop at explicit human
+exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 023 ready-for-review consistency checkpoint
+
+PR #46 was marked ready for review after the previous final-head validation
+passed without changing branch content.
+
+A subsequent source-of-truth consistency review found two stale status entries:
+- PR #46 was still labelled DRAFT in STATUS.md;
+- Next admissible action still referred to completed Gate 022 / PR #44.
+
+Those documentation-only inconsistencies were corrected before final branch
+freeze.
+
+Runtime implementation remains unchanged from validated hardening head:
+`82ca772902738de0670fab84bbd28914d0684e44`.
+
+Gate 023 remains:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0022 remains:
+`PROPOSED_GATE_023`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+the exact PR head after this documentation-only consistency checkpoint must pass
+both generic and strict exact-head CI. If green, freeze the branch and stop at
+explicit human exact-SHA squash-merge approval.

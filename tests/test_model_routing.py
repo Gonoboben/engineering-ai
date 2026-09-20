@@ -95,12 +95,47 @@ class ModelRoutingTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             RouteRequest(task_class="ELECTRONICS")  # type: ignore[arg-type]
 
-    def test_no_electronics_or_kicad_task_class_exists(self) -> None:
+    def test_vision_task_class_exists_but_default_registry_has_no_unmeasured_route(self) -> None:
         names = {item.value for item in ModelTaskClass}
+        self.assertIn("VISION_ANALYSIS", names)
         self.assertNotIn("ELECTRONICS", names)
         self.assertNotIn("PCB", names)
         self.assertNotIn("KICAD", names)
-        self.assertNotIn("VISION", names)
+
+        decision = self.router.route(
+            RouteRequest(
+                task_class=ModelTaskClass.VISION_ANALYSIS,
+                requires_vision_inputs=True,
+            )
+        )
+        self.assertEqual(decision.status, RouteStatus.NO_ROUTE)
+        self.assertEqual(decision.considered_models, ())
+        self.assertIsNone(decision.model)
+
+    def test_vision_route_requires_explicit_measured_vision_capability(self) -> None:
+        candidate = ModelCapability(
+            model="measured-vision",
+            provider="fake",
+            task_classes=(ModelTaskClass.VISION_ANALYSIS,),
+            qualification="QUALIFIED_VISION_TEST",
+            max_qualified_context_tokens=8192,
+            max_qualified_output_tokens=2048,
+            reasoning_effort=None,
+            supports_native_tool_proposals=False,
+            supports_vision_inputs=True,
+            evidence_refs=("ev-vision-local",),
+            priority=10,
+        )
+        router = DeterministicModelRouter(ModelCapabilityRegistry((candidate,)))
+        decision = router.route(
+            RouteRequest(
+                task_class=ModelTaskClass.VISION_ANALYSIS,
+                requires_vision_inputs=True,
+            )
+        )
+        self.assertEqual(decision.status, RouteStatus.ROUTE)
+        self.assertEqual(decision.model, "measured-vision")
+        self.assertEqual(decision.evidence_refs, ("ev-vision-local",))
 
     def test_registry_rejects_duplicate_model_identity(self) -> None:
         entry = self.registry.entries[0]

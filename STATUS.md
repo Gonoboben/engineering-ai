@@ -49,15 +49,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 020 merge commit: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
 - Gate 021: `ACCEPTED_MERGED`
 - Gate 021 merge commit: `992b2ac07ea1a192919be286eef026a2fa255e73`
+- Gate 022: `ACCEPTED_MERGED`
+- Gate 022 merge commit: `3111a1d793c05ead0292839500e698a9c5fe2c56`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `022 — Controlled MCP/tool exposure`
-- Issue: `#43`
-- PR: `#44 (DRAFT)`
-- Branch: `gate-022-controlled-mcp-tool-exposure`
-- Base: `992b2ac07ea1a192919be286eef026a2fa255e73`
+- Gate: `023 — Provenance-preserving Vision worker`
+- Issue: `#45`
+- PR: `#46 (READY FOR REVIEW)`
+- Branch: `gate-023-provenance-preserving-vision-worker`
+- Base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -93,14 +95,19 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate Qwen3.5-9B qualification: `QUALIFIED_GENERAL_PLANNER`
 - Candidate Qwen2.5-Coder-7B qualification: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`; native tool transport repeatedly fails under current Ollama contract, so role must be no-native-tool-proposal until separately requalified
 - Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
-- Vision/image/CAD workers: `DEFERRED`
+- Vision worker boundary: `IMPLEMENTED_VALIDATED_GATE_023_PENDING_ACCEPTANCE`
+- Accepted production Vision model: `NOT_QUALIFIED`
+- Accepted registry Vision route: `NO_ROUTE_UNTIL_MEASURED_QUALIFICATION`
+- Visual model observations: `ADVISORY_ONLY / evidence_eligible=false`
+- CAD worker: `DEFERRED_GATE_024`
+- Image-generation worker: `DEFERRED_GATE_025`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
 - BuoyCalc strict read-only adapter: `IMPLEMENTED_VALIDATED_GATE_014`
 - BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
 - External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
-- Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_PENDING_ACCEPTANCE`
+- Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -771,4 +778,23 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on this final documentation-only Gate 022 head. If green, mark PR #44 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0021 remains PROPOSED_GATE_022 until that approval and squash merge.
+Run final generic and strict exact-head CI on the final Gate 023 documentation-only PR head. If both remain green, freeze the branch and stop at explicit human exact-SHA squash-merge approval for PR #46. ADR-0022 remains PROPOSED_GATE_023 until that approval and squash merge.
+
+## Gate 023 validation state
+- base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
+- validated hardening head: `82ca772902738de0670fab84bbd28914d0684e44`
+- deterministic regression: `280/280 PASS`
+- generic workflow run `35527817840`: `PASS`
+- strict exact-head workflow run `35527817828`: `PASS`
+- deterministic smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`
+- accepted production Vision model: `NOT_QUALIFIED`
+- default accepted Vision route: `NO_ROUTE`
+- result authority: `ADVISORY`
+- evidence eligibility: `false`
+- raw image persistence by Vision result: `false`
+- external/cloud Vision call: `NOT_RUN / NOT_IMPLEMENTED`
+- automatic evidence promotion: `false`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+- ADR-0022: `PROPOSED_GATE_023`
+- final exact-head documentation CI: `REQUIRED_ON_FINAL_HEAD / PR_CHECKS_AUTHORITATIVE`
+- human exact-SHA squash-merge approval: `PENDING`

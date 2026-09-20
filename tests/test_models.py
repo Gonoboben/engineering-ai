@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import json
 import unittest
 from dataclasses import replace
@@ -7,6 +8,7 @@ from unittest.mock import patch
 
 from engineering_ai.models import (
     BenchmarkCase,
+    ModelImageAttachment,
     ModelMessage,
     ModelMetrics,
     ModelRequest,
@@ -135,6 +137,47 @@ class OllamaProviderTests(unittest.TestCase):
         self.assertEqual(body["options"]["num_predict"], 256)
         self.assertEqual(body["options"]["seed"], 7)
         self.assertEqual(body["tools"][0]["function"]["name"], "read_repository")
+
+    def test_chat_serializes_explicit_images_inline_without_path_or_url_authority(self) -> None:
+        provider = OllamaProvider()
+        captured = []
+        replies = iter(
+            [
+                {"version": "1.0-test"},
+                {
+                    "model": "vision-test",
+                    "message": {"role": "assistant", "content": "{}"},
+                    "done": True,
+                    "done_reason": "stop",
+                },
+            ]
+        )
+
+        def fake_urlopen(request, timeout):
+            captured.append(request)
+            return FakeResponse(next(replies))
+
+        image = ModelImageAttachment(
+            source_ref="schematic:page-1",
+            media_type="image/png",
+            data=b"\x89PNG\r\n\x1a\nexplicit-image-bytes",
+        )
+        request = ModelRequest(
+            model="vision-test",
+            messages=(ModelMessage("user", "Inspect.", images=(image,)),),
+        )
+        with patch("engineering_ai.models.ollama.urlopen", side_effect=fake_urlopen):
+            provider.chat(request)
+
+        body = json.loads(captured[1].data.decode("utf-8"))
+        message = body["messages"][0]
+        self.assertEqual(
+            message["images"],
+            [base64.b64encode(b"\x89PNG\r\n\x1a\nexplicit-image-bytes").decode("ascii")],
+        )
+        self.assertNotIn("source_ref", message)
+        self.assertNotIn("path", message)
+        self.assertNotIn("url", message)
 
     def test_runtime_diagnostics_records_running_model_resource_fields(self) -> None:
         provider = OllamaProvider()

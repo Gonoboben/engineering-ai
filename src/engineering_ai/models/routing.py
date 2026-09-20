@@ -16,6 +16,7 @@ class ModelTaskClass(str, Enum):
     GENERAL_PLANNING = "GENERAL_PLANNING"
     CODE_REPOSITORY = "CODE_REPOSITORY"
     BASELINE_REASONING = "BASELINE_REASONING"
+    VISION_ANALYSIS = "VISION_ANALYSIS"
 
 
 class RouteStatus(str, Enum):
@@ -33,6 +34,7 @@ class ModelCapability:
     max_qualified_output_tokens: int
     reasoning_effort: str | None
     supports_native_tool_proposals: bool
+    supports_vision_inputs: bool = False
     limitations: tuple[str, ...] = ()
     evidence_refs: tuple[str, ...] = ()
     priority: int = 100
@@ -60,6 +62,7 @@ class RouteRequest:
     context_tokens: int = 8192
     max_output_tokens: int = 2048
     requires_native_tool_proposals: bool = False
+    requires_vision_inputs: bool = False
 
     def __post_init__(self) -> None:
         if not isinstance(self.task_class, ModelTaskClass):
@@ -137,6 +140,12 @@ class DeterministicModelRouter:
                 and not entry.supports_native_tool_proposals
             ):
                 reasons.append("native tool proposals not qualified")
+            vision_required = (
+                request.requires_vision_inputs
+                or request.task_class is ModelTaskClass.VISION_ANALYSIS
+            )
+            if vision_required and not entry.supports_vision_inputs:
+                reasons.append("vision inputs not qualified")
 
             if reasons:
                 rejected.append(f"{entry.model}: " + "; ".join(reasons))

@@ -99,6 +99,19 @@ from engineering_ai.supervisor.review import (
     ReviewApplication,
 )
 from engineering_ai.supervisor.stubs import StubTool
+from engineering_ai.supervisor.vision import (
+    VisionAdvisoryObservation,
+    VisionAuthority,
+    VisionBudgetError,
+    VisionInput,
+    VisionProtocolError,
+    VisionRoutingError,
+    VisionSourceDescriptor,
+    VisionWorker,
+    VisionWorkerError,
+    VisionWorkerRequest,
+    VisionWorkerResult,
+)
 
 __all__ = [
     "CapabilityBinding",
@@ -191,4 +204,15 @@ __all__ = [
     "TaskBlackboard",
     "Supervisor",
     "ToolOutcome",
+    "VisionAdvisoryObservation",
+    "VisionAuthority",
+    "VisionBudgetError",
+    "VisionInput",
+    "VisionProtocolError",
+    "VisionRoutingError",
+    "VisionSourceDescriptor",
+    "VisionWorker",
+    "VisionWorkerError",
+    "VisionWorkerRequest",
+    "VisionWorkerResult",
 ]
