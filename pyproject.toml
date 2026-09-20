@@ -13,3 +13,6 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.data-files]
+"engineering-ai/schemas" = ["schemas/*.schema.json"]
