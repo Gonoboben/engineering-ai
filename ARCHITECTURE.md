@@ -536,6 +536,45 @@ and `invoke()`, but cannot obtain broader authority than the accepted broker.
 Tool/software PASS never implies physical validation. Physical validation
 remains `PHYSICAL_NOT_EXECUTED` unless independently established.
 
+### 4.21 Provenance-preserving Vision worker boundary
+
+Gate 023 adds a bounded local Vision-worker path for explicit
+schematics/photos/screenshots/plots without changing the deterministic authority
+model.
+
+Visual inputs are caller-supplied transient records. Each image carries:
+- an explicit project/source reference;
+- an allow-listed media type (PNG, JPEG or WebP);
+- a bounded byte payload;
+- deterministic byte size and SHA-256 identity.
+
+The provider transport receives image bytes inline only. It receives no local
+path, URL, filesystem handle, camera handle, shell, Git or tool authority. The
+loopback Ollama adapter serializes only the explicit bytes supplied by the
+caller.
+
+Vision analysis is a distinct deterministic routing class. A candidate may be
+routed only if its measured capability record explicitly qualifies Vision input
+support and carries qualification evidence. Gate 023 deliberately does not
+self-qualify a production Vision model: until separate measured local evidence
+is accepted, the default accepted registry returns `NO_ROUTE` for Vision.
+
+A Vision result:
+- cites only exact source references from the supplied image manifest;
+- is schema-bounded;
+- is always `ADVISORY`;
+- is `evidence_eligible=false`;
+- cannot directly become deterministic or physical evidence;
+- is not automatically promoted to the Task Blackboard or knowledge lifecycle.
+
+Provider tool calls are rejected on the Vision path. Unsupported media,
+signature mismatch, input-budget overflow, missing qualification, provider
+mismatch, malformed JSON/schema output or unknown source references fail closed.
+Raw image bytes are not part of the returned observation record.
+
+Vision/software/synthetic PASS never implies physical validation. Physical
+validation remains `PHYSICAL_NOT_EXECUTED` unless independently established.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control
