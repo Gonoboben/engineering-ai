@@ -3445,3 +3445,50 @@ Next:
 record local smoke evidence, run final acceptance CI and runtime scope review,
 prepare the final documentation-only acceptance head, then stop at explicit
 exact-SHA human squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 022 final acceptance checkpoint passed
+
+Post-smoke evidence head:
+`4a341253e2adcf74beeda2d01fe75b023178e0b7`.
+
+Validation:
+- deterministic regression: `268/268 PASS`;
+- generic workflow run `35526705661`: `PASS`;
+- strict exact-head workflow run `35526705659`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation fake-transport smoke:
+  `PASS_CONTROLLED_MCP_TOOL_EXPOSURE`.
+
+Final runtime scope review:
+`PASS`.
+
+Confirmed absent from Gate 022 runtime:
+- public network listener/concrete MCP transport;
+- dynamic import/eval/reflection-selected callables;
+- generic shell/process command surface;
+- project filesystem write/delete surface;
+- Git mutation/push/merge surface;
+- automatic approval granting;
+- credentials/API-key relay;
+- PHYSICAL_PASS synthesis;
+- architecture/physics/fabrication/release authority expansion.
+
+Confirmed present:
+- current `external_disclosure` policy check before registered handler execution;
+- mapped-action current policy check;
+- explicit file path allow-list for `filesystem.read_text`;
+- payload-free append-only invocation metadata audit.
+
+Gate 022 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0021 remains:
+`PROPOSED_GATE_022`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #44 ready for review if green, then stop at human approval.

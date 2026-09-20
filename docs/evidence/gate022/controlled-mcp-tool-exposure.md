@@ -137,3 +137,39 @@ final documentation-only acceptance head.
 
 ADR-0021 remains `PROPOSED_GATE_022` until explicit exact-SHA human approval
 and squash merge.
+
+
+## Final acceptance checkpoint
+
+Post-smoke evidence head:
+`4a341253e2adcf74beeda2d01fe75b023178e0b7`
+
+Validation:
+- deterministic tests: `268/268 PASS`
+- generic CI run: `35526705661 PASS`
+- strict exact-head CI run: `35526705659 PASS`
+- primary-workstation fake-transport smoke:
+  `PASS_CONTROLLED_MCP_TOOL_EXPOSURE`
+
+Final runtime scope review:
+`PASS`
+
+Confirmed absent:
+- public network listener/concrete MCP transport
+- dynamic import/eval/reflection-selected callables
+- generic shell/process command surface
+- project filesystem write/delete surface
+- Git mutation/push/merge surface
+- automatic approval granting
+- credentials/API-key relay
+- physical PASS inference
+- architecture/physics/fabrication/release authority expansion
+
+Confirmed present:
+- external-disclosure authorization before local handler execution
+- mapped-action authorization
+- explicit path allow-list for filesystem.read_text
+- append-only tamper-evident metadata audit without request/result payload copies
+
+ADR-0021 remains `PROPOSED_GATE_022` until explicit exact-SHA human approval
+and squash merge.
