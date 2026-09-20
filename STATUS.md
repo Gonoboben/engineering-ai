@@ -57,7 +57,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `023 — Provenance-preserving Vision worker`
 - Issue: `#45`
-- PR: `NOT_OPENED_YET`
+- PR: `#46 (DRAFT)`
 - Branch: `gate-023-provenance-preserving-vision-worker`
 - Base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
 - State: `OPENED_PENDING_IMPLEMENTATION`
