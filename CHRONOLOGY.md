@@ -2974,3 +2974,46 @@ Next:
 record local smoke evidence, run final acceptance CI and runtime scope review,
 prepare the final documentation-only acceptance head, then stop at explicit
 exact-SHA human squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 020 final acceptance checkpoint passed
+
+Post-smoke evidence head:
+`42e9fd0fe6ea9db05751a78e2a0ecd5327fe32d1`.
+
+Validation:
+- deterministic regression: `227/227 PASS`;
+- generic workflow run `35523735071`: `PASS`;
+- strict exact-head workflow run `35523735159`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation scheduled/unattended smoke:
+  `PASS_SCHEDULED_UNATTENDED_RUN_SESSION`.
+
+Final runtime scope review:
+`PASS`.
+
+Confirmed absent from Gate 020 runtime:
+- Windows Task Scheduler/systemd/launchd installation;
+- long-lived daemon/service lifecycle;
+- automatic approval granting;
+- unrestricted shell;
+- distributed worker runtime;
+- external/cloud scheduler;
+- semantic/vector backend;
+- vision/Qwen runtime integration;
+- PHYSICAL_PASS synthesis;
+- generic SQL write API;
+- architecture/physics/fabrication/release authority expansion.
+
+Gate 020 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0019 remains:
+`PROPOSED_GATE_020`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #40 ready for review if green, then stop at human approval.

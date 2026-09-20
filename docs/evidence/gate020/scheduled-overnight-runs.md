@@ -121,3 +121,35 @@ final documentation-only acceptance head.
 
 ADR-0019 remains `PROPOSED_GATE_020` until explicit exact-SHA human approval
 and squash merge.
+
+
+## Final acceptance checkpoint
+
+Post-smoke evidence head:
+`42e9fd0fe6ea9db05751a78e2a0ecd5327fe32d1`
+
+Validation:
+- deterministic tests: `227/227 PASS`
+- generic CI run: `35523735071 PASS`
+- strict exact-head CI run: `35523735159 PASS`
+- primary-workstation smoke:
+  `PASS_SCHEDULED_UNATTENDED_RUN_SESSION`
+
+Final runtime scope review:
+`PASS`
+
+Confirmed absent:
+- OS scheduler/service installation
+- long-lived daemon/service runtime
+- automatic approval granting
+- unrestricted shell
+- external/cloud scheduler
+- distributed workers
+- semantic/vector backend
+- vision runtime
+- PHYSICAL_PASS synthesis
+- generic SQL write API
+- architecture/physics/fabrication/release authority expansion
+
+ADR-0019 remains `PROPOSED_GATE_020` until explicit exact-SHA human approval
+and squash merge.
