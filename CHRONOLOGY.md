@@ -3786,3 +3786,75 @@ Physical validation:
 Next:
 publish the synchronization checkpoint, open one draft PR for Issue #47, then
 implement and validate the bounded Gate 024 runtime.
+
+
+---
+
+## 2026-09-20 — Gate 024 controlled parametric CAD worker implementation checkpoint
+
+Implemented:
+- immutable bounded millimetre CAD specification;
+- axis-aligned box/cylinder primitives with translation-only placement;
+- canonical design SHA-256;
+- analytical primitive volume and per-entity/assembly AABB calculation;
+- existing Supervisor `propose_patch` authority as the only CAD publication gate;
+- zero CAD backend calls when current policy denies the proposal;
+- fixed repository-owned FreeCADCmd helper with data-only JSON and `shell=False`;
+- no model-supplied Python/macros/shell/eval/exec/dynamic command surface;
+- root-bounded FCStd candidate publication;
+- temporary candidate/report staging;
+- deterministic runtime geometry comparison before target publication;
+- artifact/design/geometry SHA-256 preservation;
+- result authority `PROPOSED_PATCH_ONLY`;
+- geometry consistency evidence separated from engineering-design correctness;
+- physical state fixed to `PHYSICAL_NOT_EXECUTED`.
+
+Deterministic smoke:
+`PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`.
+
+Corrected full-suite checkpoint:
+`bd9ebd15206be83f012e4ddd5625257247d37653`.
+
+Validation:
+- deterministic regression: `289/289 PASS`;
+- generic workflow `35530909113`: `PASS`;
+- strict exact-head workflow `35530909124`: `PASS`.
+
+Earlier test-fixture-only failures were caused by an invalid synthetic Git SHA
+that violated the pre-existing project-state schema. The fixture was corrected
+without weakening any schema, validator, policy or CAD check.
+
+Hardened runtime head:
+`a02822fdecb8573fb20b33fb70b94e6ca5ac16cc`.
+
+Additional hardening:
+- primitive kind cannot be caller-overridden;
+- placement and entity objects are explicitly typed;
+- temporary artifact/report symlinks are rejected;
+- artifact publication failures fail closed;
+- trusted FreeCAD helper requires positive dimensions.
+
+Validation:
+- generic workflow `35530942168`: `PASS`;
+- strict exact-head workflow `35530942160`: `PASS`.
+
+Architecture:
+- section 4.22 records the proposal-only CAD authority/evidence boundary;
+- ADR-0023 added as `PROPOSED_GATE_024`.
+
+Real FreeCAD workstation runtime:
+`NOT_RUN`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+run final exact-head CI on the documentation/evidence head, mark PR #48 ready
+for review if green, synchronize any ready-state documentation, freeze the
+branch, and stop at explicit human exact-SHA squash-merge approval.
