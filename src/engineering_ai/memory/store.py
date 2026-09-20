@@ -352,9 +352,13 @@ class DecisionEvidenceMemory:
         self._record_id_factory = record_id_factory
         self._max_scan_records = max_scan_records
         self._conn = sqlite3.connect(str(self._path))
-        self._conn.row_factory = sqlite3.Row
-        self._conn.execute("PRAGMA foreign_keys = ON")
-        self._initialize()
+        try:
+            self._conn.row_factory = sqlite3.Row
+            self._conn.execute("PRAGMA foreign_keys = ON")
+            self._initialize()
+        except BaseException:
+            self._conn.close()
+            raise
 
     @property
     def database_path(self) -> Path:
