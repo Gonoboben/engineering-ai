@@ -63,10 +63,11 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `026 — Reproducible local installation`
 - Issue: `#51`
-- PR: `NOT_OPEN_YET / BRANCH_SYNCHRONIZATION_IN_PROGRESS`
+- PR: `#52 (DRAFT; IMPLEMENTATION VALIDATED)`
 - Branch: `gate-026-reproducible-local-installation`
 - Base: `171ff20125389d2d953576a0d3340c13dc1dc53f`
-- State: `IN_PROGRESS`
+- Validated implementation head: `6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`
+- State: `IMPLEMENTED_VALIDATED_PENDING_READY_CHECKPOINT`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -114,6 +115,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
 - External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
 - Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
+- Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -784,12 +786,13 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Implement Gate 026 Issue #51 on branch
-`gate-026-reproducible-local-installation`: establish the canonical
-non-editable clean-install contract, measure/freeze the install toolchain, and
-validate it on Ubuntu and Windows. Do not claim offline continuation or any
-other Phase 8 criterion by inference. Stop at final exact-SHA squash-merge
-approval or any scope/architecture boundary.
+Run generic, strict exact-head and Gate 026 install validation on the
+documentation/evidence checkpoint. If all remain green, mark PR #52 ready for
+review, synchronize ready-state source-of-truth, freeze the branch, run the
+final exact-head validation set, and stop at explicit human exact-SHA
+squash-merge approval.
+
+Do not infer the separate Phase 8 offline-continuation criterion from Gate 026.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
