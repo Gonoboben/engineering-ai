@@ -621,6 +621,59 @@ not establish design intent, structural adequacy, manufacturability,
 fabrication authorization, release authorization or physical validation.
 Physical state therefore remains `PHYSICAL_NOT_EXECUTED`.
 
+### 4.23 Non-authoritative image-generation worker boundary
+
+Gate 025 adds bounded local text-to-image generation as a concept/visual aid
+without changing the deterministic authority or evidence hierarchy.
+
+Image generation is a distinct deterministic routing class. A candidate may be
+routed only when its capability record explicitly qualifies image generation and
+carries measured evidence references. The accepted production registry
+deliberately contains no image-generation route until separate measured local
+qualification is accepted.
+
+The Gate 025 provider contract is local-only and receives:
+- a bounded text prompt;
+- explicit raster width/height;
+- a deterministic seed;
+- the exact routed model identity.
+
+It receives no filesystem path, URL, shell, Git, generic tool, project policy or
+approval authority. External/cloud generation and reference-image editing are
+outside Gate 025.
+
+Publication is mapped only to the existing Supervisor action
+`propose_patch`. Current policy is checked before any image provider call.
+Policy denial therefore results in zero provider calls and no artifact.
+
+The accepted output baseline is PNG only. Before publication, deterministic
+validation checks:
+- PNG signature;
+- chunk boundaries and CRC;
+- exactly one valid IHDR first chunk;
+- 8-bit RGB/RGBA, non-interlaced baseline;
+- zlib-decodable IDAT raster;
+- scanline filter values;
+- exact requested width/height;
+- required IDAT/IEND structure and no trailing bytes;
+- configured byte/dimension limits.
+
+Only after validation may the bytes be atomically published to a root-bounded
+relative `.png` target. Path traversal, symlink traversal and ambiguous
+backslash paths fail closed.
+
+A successful Gate 025 result is always
+`ADVISORY_CONCEPT_ONLY`, `evidence_eligible=false`, and
+`engineering_drawing=false`. The SHA-256 proves identity of the generated
+bytes; it does not prove semantic correctness, dimensions depicted in the image,
+engineering adequacy or manufacturability.
+
+Generated imagery must be deterministically reconstructed/validated in an
+authoritative engineering representation before it can support an engineering
+drawing, schematic, CAD or fabrication claim. Image-generation software/smoke
+PASS never implies physical validation. Physical validation remains
+`PHYSICAL_NOT_EXECUTED`.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control
