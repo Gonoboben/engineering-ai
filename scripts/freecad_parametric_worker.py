@@ -22,12 +22,14 @@ def _parse_args():
     return parser.parse_args()
 
 
-def _require_number(value, name):
+def _require_number(value, name, *, positive=False):
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{name} must be numeric")
     number = float(value)
     if not (-1.0e12 < number < 1.0e12):
         raise ValueError(f"{name} outside helper bound")
+    if positive and number <= 0:
+        raise ValueError(f"{name} must be positive")
     return number
 
 
@@ -103,9 +105,9 @@ def main() -> int:
                 if set(entity) != expected_keys:
                     raise ValueError("BOX has unexpected fields")
                 obj = document.addObject("Part::Box", entity_id)
-                obj.Length = _require_number(entity["length_mm"], "length_mm")
-                obj.Width = _require_number(entity["width_mm"], "width_mm")
-                obj.Height = _require_number(entity["height_mm"], "height_mm")
+                obj.Length = _require_number(entity["length_mm"], "length_mm", positive=True)
+                obj.Width = _require_number(entity["width_mm"], "width_mm", positive=True)
+                obj.Height = _require_number(entity["height_mm"], "height_mm", positive=True)
             elif kind == "CYLINDER":
                 expected_keys = {
                     "entity_id",
@@ -117,8 +119,8 @@ def main() -> int:
                 if set(entity) != expected_keys:
                     raise ValueError("CYLINDER has unexpected fields")
                 obj = document.addObject("Part::Cylinder", entity_id)
-                obj.Radius = _require_number(entity["radius_mm"], "radius_mm")
-                obj.Height = _require_number(entity["height_mm"], "height_mm")
+                obj.Radius = _require_number(entity["radius_mm"], "radius_mm", positive=True)
+                obj.Height = _require_number(entity["height_mm"], "height_mm", positive=True)
                 obj.Angle = 360.0
             else:
                 raise ValueError("unsupported primitive kind")
