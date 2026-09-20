@@ -50,7 +50,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#36 (DRAFT)`
 - Branch: `gate-018-knowledge-lifecycle`
 - Base: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+- State: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -542,7 +542,7 @@ Historical CI note:
 - Gate 023 vision worker/Qwen3-VL integration: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE_018`
 - implementation head `e679067ca060d3182d4c51b18229c5c0d780a02e`: deterministic regression `191/191 PASS`, generic CI run `35513495763 PASS`, strict exact-head CI run `35513495762 PASS`
 - lifecycle-gap correction head `72569edf34af12b78c0d3f04f6905c61e1d310d6`: deterministic regression `193/193 PASS`, generic CI run `35513601561 PASS`, strict exact-head CI run `35513601565 PASS`
-- primary-workstation local lifecycle smoke: `PENDING`
+- primary-workstation local lifecycle smoke: `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`; exact head `7d23cfd62e616659a793d21c7cb22ee7af0ca388`, accepted state before source change `ACCEPTED_CURRENT`, source revision `1 -> 2`, stale state `STALE_SOURCE_REVISION`, final state `INVALIDATED`, history revisions `1/2/3/4`, memory integrity=true, lifecycle integrity=true, automatic_context_injection=false, physical_validation_inferred=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - ADR-0017: `PROPOSED_GATE_018`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -582,4 +582,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run the Gate 018 primary-workstation local lifecycle smoke on the exact stable branch head after documentation/evidence synchronization. If the smoke passes with append-only history, source-drift invalidation, requalification semantics, integrity checks, no automatic context injection and no physical-validation inference, record the evidence and proceed to final acceptance-state CI/scope review. Do not add semantic/vector retrieval, Gate 019 queueing or Gate 023 vision integration.
+Run final generic and strict exact-head CI on the post-smoke Gate 018 evidence/status head, perform final scope review, and if green mark PR #36 ready for review. Then stop at explicit human exact-SHA squash-merge approval. ADR-0017 remains PROPOSED_GATE_018 until that approval and squash merge.

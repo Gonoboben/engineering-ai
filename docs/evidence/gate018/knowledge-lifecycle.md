@@ -66,18 +66,37 @@ Node.js 20 are being forced to Node.js 24. The Gate 018 deterministic test suite
 still completes successfully; this warning is not treated as engineering
 validation evidence.
 
+## Primary-workstation local smoke
+
+Exact head:
+`7d23cfd62e616659a793d21c7cb22ee7af0ca388`
+
+Result:
+`PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`
+
+Observed:
+- accepted_state_before_source_change = `ACCEPTED_CURRENT`
+- observation_validation_class = `ADVISORY`
+- source_revision_before = `1`
+- source_revision_after = `2`
+- stale_state = `STALE_SOURCE_REVISION`
+- invalidated_revision = `4`
+- final_state = `INVALIDATED`
+- history_revisions = `[1, 2, 3, 4]`
+- history_stages = `[OBSERVATION, EVIDENCE, ACCEPTED, INVALIDATED]`
+- memory_integrity = `true`
+- lifecycle_integrity = `true`
+- automatic_context_injection = `false`
+- semantic_vector_backend = `DEFERRED_NOT_JUSTIFIED`
+- physical_validation_inferred = `false`
+- physical_validation = `PHYSICAL_NOT_EXECUTED`
+- EXIT = `0`
+- working tree remained clean and branch head unchanged.
+
 ## Remaining acceptance evidence
-One primary-workstation Windows/Python 3.12 local smoke is required on a stable
-Gate 018 head. It must demonstrate:
-- append-only lifecycle history;
-- accepted state before source change;
-- source revision supersession;
-- stale-source detection;
-- explicit invalidation;
-- memory and lifecycle integrity PASS;
-- automatic_context_injection=false;
-- physical_validation_inferred=false;
-- physical validation remains PHYSICAL_NOT_EXECUTED.
+
+Run final generic and strict exact-head CI on the post-smoke evidence/status
+head and complete final scope review.
 
 ADR-0017 remains `PROPOSED_GATE_018` until final exact-SHA human approval and
 squash merge.

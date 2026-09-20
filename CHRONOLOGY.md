@@ -2375,3 +2375,41 @@ ADR-0017 added as `PROPOSED_GATE_018`.
 Next:
 synchronize architecture/status/evidence documentation, re-run exact-head CI,
 then perform one primary-workstation local lifecycle smoke.
+
+
+---
+
+## 2026-09-20 — Gate 018 primary-workstation lifecycle smoke passed
+
+Exact Engineering AI head:
+`7d23cfd62e616659a793d21c7cb22ee7af0ca388`.
+
+Local primary-workstation result:
+`PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`.
+
+Observed:
+- accepted state before source change: `ACCEPTED_CURRENT`;
+- observation validation class: `ADVISORY`;
+- source revision: `1 -> 2`;
+- stale assessment: `STALE_SOURCE_REVISION`;
+- explicit invalidation appended as lifecycle revision `4`;
+- final assessment: `INVALIDATED`;
+- lifecycle history revisions: `1 / 2 / 3 / 4`;
+- lifecycle history stages:
+  `OBSERVATION / EVIDENCE / ACCEPTED / INVALIDATED`;
+- Gate 016 memory integrity: `PASS`;
+- Gate 018 lifecycle integrity: `PASS`;
+- automatic context injection: `false`;
+- semantic/vector backend: `DEFERRED_NOT_JUSTIFIED`;
+- physical validation inferred: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+Gate 018 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record the smoke evidence, run final generic + strict exact-head CI on the
+post-smoke documentation head, complete final scope review, then stop at
+explicit human exact-SHA squash-merge approval.
