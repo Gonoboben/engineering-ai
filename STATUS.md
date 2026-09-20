@@ -796,5 +796,5 @@ Run one final generic and strict exact-head CI on this final documentation-only 
 - automatic evidence promotion: `false`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 - ADR-0022: `PROPOSED_GATE_023`
-- final exact-head documentation CI: `PENDING`
+- final exact-head documentation CI: `REQUIRED_ON_FINAL_HEAD / PR_CHECKS_AUTHORITATIVE`
 - human exact-SHA squash-merge approval: `PENDING`
