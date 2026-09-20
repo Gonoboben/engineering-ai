@@ -2730,3 +2730,45 @@ Next:
 record final local evidence, run final acceptance CI and scope review, prepare
 the final documentation-only acceptance head, then stop at explicit exact-SHA
 human squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 019 final acceptance checkpoint passed
+
+Post-repeat-smoke evidence head:
+`1248e2a1fd13f7d1aeb12ee3b523848d3e9dc503`.
+
+Validation:
+- deterministic regression: `210/210 PASS`;
+- generic workflow run `35521519407`: `PASS`;
+- strict exact-head workflow run `35521519425`: `PASS`;
+- exact revision verification: `PASS`;
+- repeat primary-workstation persistence/reopen smoke:
+  `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`.
+
+Final runtime scope review:
+`PASS`.
+
+Confirmed absent from Gate 019 runtime:
+- scheduler/cron/time-of-day runner;
+- daemon/service lifecycle;
+- automatic approval granting;
+- queue-owned tool execution;
+- distributed workers;
+- semantic/vector backend;
+- vision/Qwen runtime integration;
+- PHYSICAL_PASS synthesis;
+- generic SQL write API;
+- architecture/physics/fabrication/release authority expansion.
+
+Gate 019 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0018 remains:
+`PROPOSED_GATE_019`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #38 ready for review if green, then stop at human approval.

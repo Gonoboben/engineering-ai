@@ -172,3 +172,34 @@ documentation-only acceptance head.
 
 ADR-0018 remains `PROPOSED_GATE_019` until explicit exact-SHA human approval
 and squash merge.
+
+
+## Final acceptance checkpoint
+
+Post-repeat-smoke evidence head:
+`1248e2a1fd13f7d1aeb12ee3b523848d3e9dc503`
+
+Validation:
+- deterministic tests: `210/210 PASS`
+- generic CI run: `35521519407 PASS`
+- strict exact-head CI run: `35521519425 PASS`
+- repeat primary-workstation smoke:
+  `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`
+
+Final runtime scope review:
+`PASS`
+
+Confirmed absent:
+- scheduler/cron/overnight runner implementation
+- daemon/service lifecycle
+- automatic approval granting
+- queue-owned tool execution
+- distributed workers
+- semantic/vector backend
+- vision/Qwen runtime integration
+- PHYSICAL_PASS synthesis
+- generic SQL write API
+- architecture/physics/fabrication/release authority expansion
+
+ADR-0018 remains `PROPOSED_GATE_019` until explicit exact-SHA human approval
+and squash merge.

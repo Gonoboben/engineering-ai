@@ -319,7 +319,7 @@ Delivered a deterministic append-only lifecycle over Gate 016 memory:
 ## Phase 5 — Unattended local operation
 
 ### Gate 019 — Job queue
-Status: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Issue: `#37`
 

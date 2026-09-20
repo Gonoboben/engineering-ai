@@ -52,7 +52,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#38 (DRAFT)`
 - Branch: `gate-019-persisted-job-queue`
 - Base: `75ee907446e952fbfc8a53006c1fd65f1257faea`
-- State: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -591,6 +591,8 @@ Historical CI note:
 - post-smoke runtime hardening head `5f1f3a480042180b31b75df50a8736f3386e1ac7`: `list_current()` now validates each job's complete predecessor chain; predecessor-tamper regression added; deterministic regression `210/210 PASS`, generic CI run `35519588215 PASS`, strict exact-head CI run `35519588222 PASS`
 - runtime scope review after hardening: `PASS`; changed runtime contains no scheduler/cron/daemon, automatic approval API, tool-execution surface inside queue, semantic/vector backend, vision integration, PHYSICAL_PASS synthesis, or generic SQL write API
 - primary-workstation repeat smoke on post-hardening runtime: `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`; exact head `165e85404e42f1db457572842cf21fc80d08f4da`, database_created=true, database_reopened=true, fifo_retry_tail_preserved=true, retry_attempts_preserved=1, retry_final_state=PASS, approval_wait_survived_reopen=true, approval_final_state=PASS, interrupted_run_recovery=INTERRUPTED_RECOVERY, interrupted_final_state=BLOCKED, queue_events_checked=13, queue_jobs_checked=3, queue_integrity=true, automatic_approval=false, scheduled_execution=false, distributed_workers=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
+- post-repeat-smoke evidence head `1248e2a1fd13f7d1aeb12ee3b523848d3e9dc503`: deterministic regression `210/210 PASS`, generic CI run `35521519407 PASS`, strict exact-head CI run `35521519425 PASS`
+- final runtime scope review: `PASS`; no scheduler/cron/daemon, automatic approval API, queue-owned tool execution, distributed workers, semantic/vector backend, vision/Qwen runtime, PHYSICAL_PASS synthesis, or generic SQL write API
 - ADR-0018: `PROPOSED_GATE_019`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -630,4 +632,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final generic and strict exact-head CI on the post-repeat-smoke Gate 019 evidence/status head, perform final scope review, and if green prepare the final documentation-only acceptance checkpoint. Then run one last exact-head CI on that final head, mark PR #38 ready for review, and stop at explicit human exact-SHA squash-merge approval. ADR-0018 remains PROPOSED_GATE_019 until approval and merge.
+Run one final generic and strict exact-head CI on this final documentation-only Gate 019 head. If green, mark PR #38 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0018 remains PROPOSED_GATE_019 until that approval and squash merge.
