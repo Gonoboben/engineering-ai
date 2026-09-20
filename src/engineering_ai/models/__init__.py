@@ -19,6 +19,7 @@ from engineering_ai.models.protocol import (
     ModelProviderUnavailable,
 )
 from engineering_ai.models.types import (
+    ModelImageAttachment,
     ModelMessage,
     ModelMetrics,
     ModelRequest,
@@ -34,6 +35,7 @@ __all__ = [
     "ModelCapability",
     "ModelCapabilityRegistry",
     "ModelTaskClass",
+    "ModelImageAttachment",
     "ModelMessage",
     "ModelMetrics",
     "ModelProvider",
