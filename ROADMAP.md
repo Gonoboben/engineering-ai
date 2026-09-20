@@ -355,17 +355,12 @@ Delivered a transport-neutral immutable registered-capability broker with dual `
 ## Phase 7 — Multimodal engineering
 
 ### Gate 023 — Vision worker
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#45`
+Accepted merge commit:
+`f3c826a434eca8e5d7163f5cf4166560717bdbc2`
 
-PR: `#46`
-
-Branch: `gate-023-provenance-preserving-vision-worker`
-
-Base: Gate 022 squash merge `3111a1d793c05ead0292839500e698a9c5fe2c56`.
-
-Implemented a bounded provenance-preserving Vision-worker boundary for explicit
+Delivered a bounded provenance-preserving Vision-worker boundary for explicit
 PNG/JPEG/WebP inputs, inline-only loopback transport, deterministic
 qualification-gated Vision routing, exact source-ref constrained structured
 observations and ADVISORY-only result semantics.
@@ -374,22 +369,35 @@ The accepted registry intentionally contains no production Vision model until
 separate measured local qualification evidence exists; therefore the default
 Vision route is `NO_ROUTE`.
 
-Validated hardening head:
-`82ca772902738de0670fab84bbd28914d0684e44`.
+Final approved PR head:
+`880a8d4fce352e5c614254119192d7bf7d283e27`.
 
-Validation:
+Final validation:
 - deterministic regression: `280/280 PASS`;
-- generic CI `35527817840`: `PASS`;
-- strict exact-head CI `35527817828`: `PASS`;
+- generic CI `35529619290`: `PASS`;
+- strict exact-head CI `35529619244`: `PASS`;
 - smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-ADR-0022 remains `PROPOSED_GATE_023` until explicit exact-SHA squash merge.
+ADR-0022: `ACCEPTED_GATE_023`.
 
 ### Gate 024 — CAD worker
-Status: `NOT_STARTED`
+Status: `IN_PROGRESS`
 
-Integrate controlled parametric CAD generation/manipulation with deterministic geometry checks.
+Issue: `#47`
+
+Branch: `gate-024-controlled-parametric-cad-worker`
+
+Base: Gate 023 squash merge `f3c826a434eca8e5d7163f5cf4166560717bdbc2`.
+
+Implement controlled proposal-only parametric CAD generation/manipulation with
+deterministic geometry checks. Gate 024 must reuse the existing Supervisor
+`propose_patch` authority rather than grant a new autonomous write permission.
+
+Acceptance scope is bounded to trusted data-driven CAD operations, root-bounded
+artifact publication, deterministic geometry verification and explicit
+`PHYSICAL_NOT_EXECUTED`. Arbitrary model-supplied scripts, fabrication/release
+authority and Gate 025 image generation remain out of scope.
 
 ### Gate 025 — Image-generation worker
 Status: `NOT_STARTED`
