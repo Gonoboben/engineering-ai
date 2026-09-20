@@ -159,8 +159,10 @@ class ScheduledRunSummary:
             raise ValueError("invalid schedule_id")
         if not _PROJECT_RE.fullmatch(self.project_id):
             raise ValueError("invalid project_id")
-        _parse_utc(self.started_at)
-        _parse_utc(self.completed_at)
+        started = _parse_utc(self.started_at)
+        completed = _parse_utc(self.completed_at)
+        if completed < started:
+            raise ValueError("completed_at cannot be earlier than started_at")
         if not self.stop_reason.strip():
             raise ValueError("stop_reason must be non-empty")
         if self.claims < 0:

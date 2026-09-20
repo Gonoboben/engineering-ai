@@ -433,6 +433,31 @@ class ScheduledRunTests(unittest.TestCase):
         self.assertEqual(completed.summary.counts["QUEUED"], 1)
         self.assertEqual(completed.summary.stop_reason, "MAX_JOBS_REACHED")
 
+    def test_summary_rejects_completed_before_started(self) -> None:
+        from engineering_ai.supervisor import ScheduledRunSummary
+
+        with self.assertRaises(ValueError):
+            ScheduledRunSummary(
+                session_id="session-invalid-time",
+                schedule_id="schedule-invalid-time",
+                project_id="engineering-ai",
+                started_at="2026-09-20T22:00:10Z",
+                completed_at="2026-09-20T22:00:09Z",
+                stop_reason="TEST",
+                claims=0,
+                touched_job_ids=(),
+                recovered_interrupted_job_ids=(),
+                counts={
+                    "PASS": 0,
+                    "FAIL": 0,
+                    "BLOCKED": 0,
+                    "WAITING_FOR_APPROVAL": 0,
+                    "CANCELLED": 0,
+                    "QUEUED": 0,
+                },
+                evidence_refs=(),
+            )
+
     def test_cancelled_schedule_never_runs(self) -> None:
         self.store.schedule(definition("schedule-cancel", self.clock))
         self.store.cancel(
