@@ -2688,3 +2688,45 @@ validation of the hardened runtime.
 Next:
 freeze documentation, re-run CI, then repeat the short primary-workstation
 persistence/reopen smoke on the hardened runtime before final acceptance.
+
+
+---
+
+## 2026-09-20 — Gate 019 repeat primary-workstation smoke passed on hardened runtime
+
+Exact Engineering AI head:
+`165e85404e42f1db457572842cf21fc80d08f4da`.
+
+Local result:
+`PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`.
+
+Observed:
+- database created: `true`;
+- database reopened: `true`;
+- FIFO retry tail preserved: `true`;
+- retry attempts preserved after reopen: `1`;
+- retry final state: `PASS`;
+- WAITING_FOR_APPROVAL survived reopen: `true`;
+- explicitly approved job final state: `PASS`;
+- interrupted RUNNING recovery event: `INTERRUPTED_RECOVERY`;
+- interrupted job final state: `BLOCKED`;
+- queue events checked: `13`;
+- queue jobs checked: `3`;
+- queue integrity: `PASS`;
+- automatic approval: `false`;
+- scheduled execution: `false`;
+- distributed workers: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+This repeat smoke validates the post-hardening runtime that performs full
+predecessor-chain integrity validation during current-state reads.
+
+Gate 019 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record final local evidence, run final acceptance CI and scope review, prepare
+the final documentation-only acceptance head, then stop at explicit exact-SHA
+human squash-merge approval.

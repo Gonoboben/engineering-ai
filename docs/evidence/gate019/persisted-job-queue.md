@@ -131,3 +131,44 @@ Runtime scope review confirmed absent:
 
 Because this is a runtime change after the first Windows smoke, one repeat
 primary-workstation smoke is required before final Gate 019 acceptance.
+
+
+## Repeat primary-workstation smoke on hardened runtime
+
+Exact head:
+`165e85404e42f1db457572842cf21fc80d08f4da`
+
+Result:
+`PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`
+
+Observed:
+- database_created = `true`
+- database_reopened = `true`
+- fifo_retry_tail_preserved = `true`
+- retry_attempts_preserved = `1`
+- retry_final_state = `PASS`
+- approval_wait_survived_reopen = `true`
+- approval_final_state = `PASS`
+- interrupted_run_recovery = `INTERRUPTED_RECOVERY`
+- interrupted_final_state = `BLOCKED`
+- queue_events_checked = `13`
+- queue_jobs_checked = `3`
+- queue_integrity = `true`
+- automatic_approval = `false`
+- scheduled_execution = `false`
+- distributed_workers = `false`
+- physical_validation = `PHYSICAL_NOT_EXECUTED`
+- EXIT = `0`
+- working tree remained clean and branch head unchanged.
+
+This repeat validates the hardened runtime including full predecessor-chain
+validation on current-state reads.
+
+## Remaining acceptance evidence
+
+Run final generic and strict exact-head CI on the post-repeat-smoke evidence/status
+head and complete final scope review. Then prepare and validate the final
+documentation-only acceptance head.
+
+ADR-0018 remains `PROPOSED_GATE_019` until explicit exact-SHA human approval
+and squash merge.
