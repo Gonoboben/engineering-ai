@@ -61,7 +61,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `025 — Non-authoritative image-generation worker`
 - Issue: `#49`
-- PR: `#50 (DRAFT / FINAL_ACCEPTANCE_PREPARATION)`
+- PR: `#50 (READY FOR REVIEW)`
 - Branch: `gate-025-non-authoritative-image-generation-worker`
 - Base: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
@@ -782,12 +782,10 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 025
-documentation/evidence head. If green, mark PR #50 ready for review,
-synchronize ready-state documentation if required, re-run exact-head CI on the
-resulting final head, freeze the branch, and stop at explicit human exact-SHA
-squash-merge approval. ADR-0024 remains `PROPOSED_GATE_025` until accepted
-merge.
+Run generic and strict exact-head CI on the final ready-state Gate 025
+documentation-only head. If both remain green, freeze PR #50 and stop at
+explicit human exact-SHA squash-merge approval. ADR-0024 remains
+`PROPOSED_GATE_025` until that approval and accepted merge.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -845,7 +843,7 @@ merge.
 ## Gate 025 validation state
 - base: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
 - Issue #49: `OPEN`
-- PR #50: `DRAFT / FINAL_ACCEPTANCE_PREPARATION`
+- PR #50: `READY FOR REVIEW`
 - task class `IMAGE_GENERATION`: `IMPLEMENTED`
 - explicit capability requirement `supports_image_generation=true`: `ENFORCED`
 - accepted production image-generation route: `NO_ROUTE`
@@ -874,5 +872,6 @@ merge.
 - release authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 - ADR-0024: `PROPOSED_GATE_025`
-- final documentation/evidence exact-head CI: `REQUIRED`
+- pre-ready documentation/evidence head `81fc9256b737a9110037f5f9695e76d40634ff0c`: generic CI `35531984785 PASS`, strict exact-head CI `35531984758 PASS`
+- final ready-state exact-head CI: `REQUIRED_ON_FINAL_HEAD`
 - human exact-SHA squash-merge approval: `PENDING`
