@@ -53,15 +53,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 022 merge commit: `3111a1d793c05ead0292839500e698a9c5fe2c56`
 - Gate 023: `ACCEPTED_MERGED`
 - Gate 023 merge commit: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
+- Gate 024: `ACCEPTED_MERGED`
+- Gate 024 merge commit: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `024 — Controlled parametric CAD worker`
-- Issue: `#47`
-- PR: `#48 (READY FOR REVIEW)`
-- Branch: `gate-024-controlled-parametric-cad-worker`
-- Base: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
+- Gate: `025 — Non-authoritative image-generation worker`
+- Issue: `#49`
+- PR: `#50 (READY FOR REVIEW)`
+- Branch: `gate-025-non-authoritative-image-generation-worker`
+- Base: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -101,8 +103,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Accepted production Vision model: `NOT_QUALIFIED`
 - Accepted registry Vision route: `NO_ROUTE_UNTIL_MEASURED_QUALIFICATION`
 - Visual model observations: `ADVISORY_ONLY / evidence_eligible=false`
-- CAD worker: `IMPLEMENTED_VALIDATED_GATE_024_PENDING_ACCEPTANCE`
-- Image-generation worker: `DEFERRED_GATE_025`
+- CAD worker: `IMPLEMENTED_VALIDATED_GATE_024_ACCEPTED`
+- Image-generation worker: `IMPLEMENTED_VALIDATED_GATE_025_PENDING_ACCEPTANCE`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
@@ -780,10 +782,10 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final ready-state Gate 024
-documentation-only head. If both remain green, freeze PR #48 and stop at
-explicit human exact-SHA squash-merge approval. ADR-0023 remains
-`PROPOSED_GATE_024` until that approval and accepted merge.
+Run generic and strict exact-head CI on the final ready-state Gate 025
+documentation-only head. If both remain green, freeze PR #50 and stop at
+explicit human exact-SHA squash-merge approval. ADR-0024 remains
+`PROPOSED_GATE_025` until that approval and accepted merge.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -832,7 +834,44 @@ explicit human exact-SHA squash-merge approval. ADR-0023 remains
 - fabrication authorization: `NOT_GRANTED`
 - release authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
-- ADR-0023: `PROPOSED_GATE_024`
+- ADR-0023: `ACCEPTED_GATE_024`
 - pre-ready documentation/evidence head `a3f979ce4035a64981af911807b7f6fdfcd1c7f3`: generic CI `35531115705 PASS`, strict exact-head CI `35531115699 PASS`
+- final ready-state exact-head CI: `REQUIRED_ON_FINAL_HEAD`
+- human exact-SHA squash-merge approval: `PENDING`
+
+
+## Gate 025 validation state
+- base: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
+- Issue #49: `OPEN`
+- PR #50: `READY FOR REVIEW`
+- task class `IMAGE_GENERATION`: `IMPLEMENTED`
+- explicit capability requirement `supports_image_generation=true`: `ENFORCED`
+- accepted production image-generation route: `NO_ROUTE`
+- local-only provider contract: `ENFORCED`
+- external/cloud provider: `NOT_IMPLEMENTED_GATE_025`
+- Supervisor authority: `EXISTING_PROPOSE_PATCH_ONLY`
+- policy-denied provider calls: `ZERO / PASS`
+- deterministic PNG validation: `SIGNATURE_CHUNKS_CRC_IHDR_IDAT_ZLIB_RASTER_FILTERS_IEND_DIMENSIONS`
+- root-bounded atomic PNG publication: `IMPLEMENTED_VALIDATED`
+- arbitrary file/URL/reference-image input: `ABSENT`
+- image editing: `NOT_IMPLEMENTED_GATE_025`
+- deterministic regression: `301/301 PASS`
+- smoke head: `a5bb614a430a0d5b00d3adab57c4a62fd1b41e7f`
+- generic workflow `35531846754`: `PASS`
+- strict exact-head workflow `35531846777`: `PASS`
+- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`
+- PNG hardening head: `93991af1b5b7505ce0546dd58297daf810d6409e`
+- PNG hardening generic workflow `35531878630`: `PASS`
+- PNG hardening strict exact-head workflow `35531878735`: `PASS`
+- production image-generation model/provider: `NOT_RUN / NOT_QUALIFIED`
+- real local image-generation provider call: `NOT_RUN`
+- artifact authority: `ADVISORY_CONCEPT_ONLY`
+- evidence eligibility: `false`
+- engineering drawing: `false`
+- fabrication authorization: `NOT_GRANTED`
+- release authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+- ADR-0024: `PROPOSED_GATE_025`
+- pre-ready documentation/evidence head `81fc9256b737a9110037f5f9695e76d40634ff0c`: generic CI `35531984785 PASS`, strict exact-head CI `35531984758 PASS`
 - final ready-state exact-head CI: `REQUIRED_ON_FINAL_HEAD`
 - human exact-SHA squash-merge approval: `PENDING`

@@ -17,6 +17,7 @@ class ModelTaskClass(str, Enum):
     CODE_REPOSITORY = "CODE_REPOSITORY"
     BASELINE_REASONING = "BASELINE_REASONING"
     VISION_ANALYSIS = "VISION_ANALYSIS"
+    IMAGE_GENERATION = "IMAGE_GENERATION"
 
 
 class RouteStatus(str, Enum):
@@ -35,6 +36,7 @@ class ModelCapability:
     reasoning_effort: str | None
     supports_native_tool_proposals: bool
     supports_vision_inputs: bool = False
+    supports_image_generation: bool = False
     limitations: tuple[str, ...] = ()
     evidence_refs: tuple[str, ...] = ()
     priority: int = 100
@@ -63,6 +65,7 @@ class RouteRequest:
     max_output_tokens: int = 2048
     requires_native_tool_proposals: bool = False
     requires_vision_inputs: bool = False
+    requires_image_generation: bool = False
 
     def __post_init__(self) -> None:
         if not isinstance(self.task_class, ModelTaskClass):
@@ -146,6 +149,12 @@ class DeterministicModelRouter:
             )
             if vision_required and not entry.supports_vision_inputs:
                 reasons.append("vision inputs not qualified")
+            image_generation_required = (
+                request.requires_image_generation
+                or request.task_class is ModelTaskClass.IMAGE_GENERATION
+            )
+            if image_generation_required and not entry.supports_image_generation:
+                reasons.append("image generation not qualified")
 
             if reasons:
                 rejected.append(f"{entry.model}: " + "; ".join(reasons))

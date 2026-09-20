@@ -18,6 +18,13 @@ from engineering_ai.tools.cad import (
     geometry_report_for_design,
 )
 from engineering_ai.tools.common import ToolAccessError, ToolExecutionError, ToolResult
+from engineering_ai.tools.image_artifact import (
+    PngArtifactPublisher,
+    PngInfo,
+    PngValidationError,
+    PublishedImageArtifact,
+    validate_png,
+)
 from engineering_ai.tools.filesystem import FileEntry, ReadOnlyFilesystemAdapter
 from engineering_ai.tools.git import GitReadOnlyAdapter
 from engineering_ai.tools.process import AllowListedProcessRunner, CommandSpec
@@ -48,6 +55,10 @@ __all__ = [
     "FreeCadRuntime",
     "GitReadOnlyAdapter",
     "PatchApplication",
+    "PngArtifactPublisher",
+    "PngInfo",
+    "PngValidationError",
+    "PublishedImageArtifact",
     "ParametricCadAdapter",
     "PatchProposal",
     "ReadOnlyFilesystemAdapter",
@@ -56,4 +67,5 @@ __all__ = [
     "ToolResult",
     "WorktreeSession",
     "geometry_report_for_design",
+    "validate_png",
 ]

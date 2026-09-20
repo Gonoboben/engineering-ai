@@ -3888,3 +3888,201 @@ ADR-0023 remains:
 
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-20 — Gate 024 accepted and merged
+
+Final approved PR head:
+`8330aa62964ec2f9b38873b69a7591a44e1fa5a4`.
+
+Final validation:
+- deterministic regression: `289/289 PASS`;
+- generic workflow `35531166350`: `PASS`;
+- strict exact-head workflow `35531166349`: `PASS`;
+- smoke: `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`99a8e216dc2c8ec7b98c445f0e1909479bff6b52`.
+
+PR #48:
+`MERGED`.
+
+Issue #47:
+`CLOSED / COMPLETED`.
+
+ADR-0023 state:
+`ACCEPTED_GATE_024`.
+
+Real FreeCAD workstation smoke:
+`NOT_RUN`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 025 non-authoritative image-generation worker opened
+
+Issue:
+`#49 — Gate 025 — Non-authoritative image-generation worker`.
+
+Branch:
+`gate-025-non-authoritative-image-generation-worker`.
+
+Base:
+Gate 024 squash merge
+`99a8e216dc2c8ec7b98c445f0e1909479bff6b52`.
+
+Declared scope:
+- provider-neutral typed text-to-image request/response;
+- explicit evidence-qualified IMAGE_GENERATION routing;
+- no unmeasured production route in accepted registry;
+- bounded PNG output only;
+- deterministic PNG signature/IHDR/CRC/dimension validation;
+- existing Supervisor `propose_patch` authority before provider call/publication;
+- root-bounded PNG publication with SHA-256 identity;
+- result fixed to `ADVISORY_CONCEPT_ONLY`, `evidence_eligible=false`,
+  `engineering_drawing=false`;
+- synthetic-provider CI smoke without requiring a real image model.
+
+Explicitly out of scope:
+- image editing/reference-image transformation;
+- arbitrary filesystem/URL acquisition;
+- external/cloud generation API;
+- automatic production model qualification;
+- generated imagery as drawing/CAD/schematic/measurement/evidence;
+- shell/Git/tool authority;
+- fabrication/release/physical-validation authority expansion.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+publish the synchronization checkpoint, open one draft PR for Issue #49, then
+implement and validate the bounded Gate 025 runtime.
+
+
+---
+
+## 2026-09-20 — Gate 025 non-authoritative image-generation implementation checkpoint
+
+Implemented:
+- explicit `IMAGE_GENERATION` deterministic task class;
+- evidence-qualified image-generation capability flag;
+- no unmeasured production route in accepted registry;
+- provider-neutral local-only text-to-image protocol;
+- bounded prompt, dimensions, seed and provider/model identity;
+- existing Supervisor `propose_patch` as the sole publication authority;
+- zero provider calls when accepted route is absent;
+- zero provider calls when current policy denies `propose_patch`;
+- deterministic PNG signature/chunk/CRC/IHDR/IDAT/IEND validation;
+- zlib raster decoding and scanline filter validation;
+- exact requested dimension enforcement;
+- root-bounded forward-slash PNG target paths;
+- symlink/traversal rejection;
+- atomic publication only after deterministic PNG PASS;
+- SHA-256 identity for prompt and generated PNG;
+- fixed result authority `ADVISORY_CONCEPT_ONLY`;
+- `evidence_eligible=false`;
+- `engineering_drawing=false`;
+- `PHYSICAL_NOT_EXECUTED`.
+
+Full smoke checkpoint:
+`a5bb614a430a0d5b00d3adab57c4a62fd1b41e7f`.
+
+Validation:
+- deterministic regression: `301/301 PASS`;
+- generic workflow `35531846754`: `PASS`;
+- strict exact-head workflow `35531846777`: `PASS`;
+- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`.
+
+PNG hardening head:
+`93991af1b5b7505ce0546dd58297daf810d6409e`.
+
+Additional hardening:
+- provider PNG must be 8-bit RGB/RGBA;
+- interlaced output rejected;
+- IDAT zlib stream must decode;
+- decompressed raster length must match exact dimensions/channels;
+- each scanline filter byte must be valid;
+- ambiguous backslash target paths rejected.
+
+Hardening validation:
+- generic workflow `35531878630`: `PASS`;
+- strict exact-head workflow `35531878735`: `PASS`.
+
+Architecture:
+- section 4.23 records the non-authoritative image-generation boundary;
+- ADR-0024 added as `PROPOSED_GATE_025`.
+
+Production image-generation model/provider:
+`NOT_QUALIFIED`.
+
+Default accepted route:
+`NO_ROUTE`.
+
+Real local image-generation provider call:
+`NOT_RUN`.
+
+External/cloud generation:
+`NOT_RUN / OUT_OF_SCOPE`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+run final exact-head CI on the documentation/evidence head, mark PR #50 ready
+for review if green, synchronize any ready-state documentation, freeze the
+branch, and stop at explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 025 ready-for-review checkpoint
+
+Final documentation/evidence head before ready transition:
+`81fc9256b737a9110037f5f9695e76d40634ff0c`.
+
+Validation:
+- deterministic regression remains `301/301 PASS`;
+- generic workflow `35531984785`: `PASS`;
+- strict exact-head workflow `35531984758`: `PASS`;
+- smoke remains `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`.
+
+PR #50 was marked:
+`READY FOR REVIEW`.
+
+No runtime, routing, provider, PNG validation, artifact authority,
+fabrication/release state or physical-validation state changed by the ready
+transition.
+
+A final documentation-only source-of-truth consistency commit now requires one
+last generic + strict exact-head CI before branch freeze and explicit human
+exact-SHA squash-merge approval.
+
+ADR-0024 remains:
+`PROPOSED_GATE_025`.
+
+Production image-generation model/provider remains:
+`NOT_QUALIFIED`.
+
+Default accepted image-generation route remains:
+`NO_ROUTE`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.

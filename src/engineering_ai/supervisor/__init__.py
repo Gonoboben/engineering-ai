@@ -73,6 +73,14 @@ from engineering_ai.supervisor.scheduled_runs import (
     ScheduledRunSnapshot,
     ScheduledRunSummary,
 )
+from engineering_ai.supervisor.image_generation import (
+    ImageGenerationProtocolError,
+    ImageGenerationRoutingError,
+    ImageGenerationWorker,
+    ImageGenerationWorkerError,
+    ImageGenerationWorkerRequest,
+    ImageGenerationWorkerResult,
+)
 from engineering_ai.supervisor.job_queue import (
     JobQueueConflictError,
     JobQueueError,
@@ -169,6 +177,12 @@ __all__ = [
     "ScheduledRunPolicyError",
     "ScheduledRunSnapshot",
     "ScheduledRunSummary",
+    "ImageGenerationProtocolError",
+    "ImageGenerationRoutingError",
+    "ImageGenerationWorker",
+    "ImageGenerationWorkerError",
+    "ImageGenerationWorkerRequest",
+    "ImageGenerationWorkerResult",
     "JobQueueConflictError",
     "JobQueueError",
     "JobQueueIntegrityError",
