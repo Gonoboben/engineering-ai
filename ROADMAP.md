@@ -345,22 +345,25 @@ Accepted merge commit:
 Delivered a provider-neutral, policy-controlled external advisory-review bridge with explicit bounded disclosure manifests, named approval enforcement, metadata-only append-only audit, zero local tool authority and ADVISORY-only response semantics.
 
 ### Gate 022 — Controlled MCP/tool exposure
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#43`
+Accepted merge commit:
+`3111a1d793c05ead0292839500e698a9c5fe2c56`
 
-Branch: `gate-022-controlled-mcp-tool-exposure`
-
-Base: Gate 021 squash merge `992b2ac07ea1a192919be286eef026a2fa255e73`.
-
-Expose selected existing local capabilities through a typed, policy-gated bridge. Initial acceptance remains deliberately narrow: registered capabilities only, current Supervisor/PolicyEngine re-authorization on every invocation, named approval where current policy requires it, append-only invocation audit, and no generic shell/filesystem-write/Git-mutation surface.
+Delivered a transport-neutral immutable registered-capability broker with dual `external_disclosure` + mapped-action policy checks, explicit file allow-lists, named approvals, bounded schemas/budgets, metadata-only append-only audit, and no generic shell/filesystem-write/Git-mutation authority.
 
 ## Phase 7 — Multimodal engineering
 
 ### Gate 023 — Vision worker
-Status: `NOT_STARTED`
+Status: `IN_PROGRESS`
 
-Support schematics/photos/screenshots/plots as structured observations while retaining source provenance.
+Issue: `#45`
+
+Branch: `gate-023-provenance-preserving-vision-worker`
+
+Base: Gate 022 squash merge `3111a1d793c05ead0292839500e698a9c5fe2c56`.
+
+Support explicit schematics/photos/screenshots/plots as bounded provenance-preserving model inputs and structured ADVISORY observations. Gate 023 must not treat visual model interpretation as deterministic/physical evidence and must fail closed when no evidence-qualified Vision route exists.
 
 ### Gate 024 — CAD worker
 Status: `NOT_STARTED`
