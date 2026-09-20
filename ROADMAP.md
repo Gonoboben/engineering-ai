@@ -308,7 +308,7 @@ Accepted merge commit:
 Delivered deterministic provenance-preserving lexical retrieval over Gate 016 memory. The measured primary-workstation benchmark improved mean recall@3 from `0.25` to `1.0` while preserving safety/provenance. Semantic/vector retrieval remains `DEFERRED_NOT_JUSTIFIED`.
 
 ### Gate 018 — Knowledge lifecycle
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 Issue: `#35`
 

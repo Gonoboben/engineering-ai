@@ -47,10 +47,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `018 — Knowledge lifecycle`
 - Issue: `#35`
-- PR: `NOT_OPEN_YET`
+- PR: `#36 (DRAFT)`
 - Branch: `gate-018-knowledge-lifecycle`
 - Base: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
-- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -516,17 +516,34 @@ Historical CI note:
 
 ## Gate 018 validation state
 - Issue #35: `OPEN`
+- PR #36: `OPEN / DRAFT`
 - branch: `gate-018-knowledge-lifecycle`
 - branch base equals Gate 017 squash merge `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`: `PASS`
-- knowledge lifecycle implementation: `NOT_IMPLEMENTED_YET`
-- observation -> evidence promotion: `NOT_IMPLEMENTED_YET`
-- evidence -> accepted knowledge promotion: `NOT_IMPLEMENTED_YET`
-- source-revision drift staleness/invalidation: `NOT_IMPLEMENTED_YET`
+- lifecycle storage: `SEPARATE_APPEND_ONLY_LOCAL_SQLITE_LEDGER`
+- Gate 016 memory migration/mutation: `NONE`
+- lifecycle stages: `OBSERVATION / EVIDENCE / ACCEPTED / INVALIDATED`
+- exact memory revision/SHA binding: `IMPLEMENTED`
+- observation input: `ADVISORY_ONLY`
+- lifecycle transition authority: `HUMAN_OR_SUPERVISOR_ONLY`
+- MODEL-owned lifecycle transitions: `PROHIBITED`
+- evidence promotion: `CURRENT_NON_MODEL_EVIDENCE_QUALIFIED_ONLY`
+- CONTROL/ADR evidence promotion: `PROHIBITED`
+- source revision drift: `STALE_SOURCE_REVISION`
+- evidence revision drift: `STALE_EVIDENCE_REVISION`
+- stale invalidation: `APPEND_ONLY`
+- requalification after invalidation: `IMPLEMENTED_CURRENT_EVIDENCE_REQUIRED`
+- project isolation: `ENFORCED_BY_MEMORY_AND_SUPERVISOR_PROJECT_SCOPE`
+- lifecycle integrity SHA-256: `IMPLEMENTED_FAIL_CLOSED`
 - automatic model/advisory promotion: `PROHIBITED`
 - automatic physical validation synthesis: `PROHIBITED`
+- automatic model/Blackboard context injection: `NOT_IMPLEMENTED_PROHIBITED`
 - semantic/vector retrieval: `OUT_OF_SCOPE_DEFERRED_NOT_JUSTIFIED`
 - Gate 019 queue: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
 - Gate 023 vision worker/Qwen3-VL integration: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE_018`
+- implementation head `e679067ca060d3182d4c51b18229c5c0d780a02e`: deterministic regression `191/191 PASS`, generic CI run `35513495763 PASS`, strict exact-head CI run `35513495762 PASS`
+- lifecycle-gap correction head `72569edf34af12b78c0d3f04f6905c61e1d310d6`: deterministic regression `193/193 PASS`, generic CI run `35513601561 PASS`, strict exact-head CI run `35513601565 PASS`
+- primary-workstation local lifecycle smoke: `PENDING`
+- ADR-0017: `PROPOSED_GATE_018`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -565,4 +582,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Implement Gate 018 deterministic knowledge-lifecycle semantics on branch `gate-018-knowledge-lifecycle`: typed lifecycle states, policy-qualified promotion, append-only history, source-revision staleness/invalidation, schemas/tests/evidence, and Supervisor-controlled read/evaluation APIs. Open one draft PR for Issue #35 after the initial checkpoint commit. Do not add semantic/vector retrieval, automatic model-context injection, model-owned promotion, Gate 019 queueing, or Gate 023 vision integration.
+Run the Gate 018 primary-workstation local lifecycle smoke on the exact stable branch head after documentation/evidence synchronization. If the smoke passes with append-only history, source-drift invalidation, requalification semantics, integrity checks, no automatic context injection and no physical-validation inference, record the evidence and proceed to final acceptance-state CI/scope review. Do not add semantic/vector retrieval, Gate 019 queueing or Gate 023 vision integration.

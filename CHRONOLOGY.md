@@ -2307,3 +2307,71 @@ Explicitly out of scope:
 Next:
 create the initial synchronization checkpoint commit, open one draft PR for Issue #35,
 then implement and validate the deterministic knowledge lifecycle.
+
+
+---
+
+## 2026-09-20 — Gate 018 deterministic knowledge lifecycle implemented
+
+Initial implementation head:
+`e679067ca060d3182d4c51b18229c5c0d780a02e`.
+
+Implemented:
+- separate append-only local SQLite lifecycle ledger;
+- exact binding to immutable Gate 016 memory record/revision/SHA identities;
+- lifecycle stages OBSERVATION / EVIDENCE / ACCEPTED / INVALIDATED;
+- advisory-only observation inputs;
+- HUMAN/SUPERVISOR lifecycle transition authority;
+- current non-model evidence qualification;
+- CONTROL/ADR excluded from lifecycle evidence promotion;
+- source/evidence revision drift assessment;
+- append-only invalidation;
+- Supervisor-owned project-scoped lifecycle API;
+- lifecycle-record and assessment JSON Schemas;
+- deterministic local smoke script;
+- no automatic model/Blackboard context injection;
+- no physical-validation inference.
+
+Validation:
+- deterministic regression: `191/191 PASS`;
+- generic workflow run `35513495763`: `PASS`;
+- strict exact-head workflow run `35513495762`: `PASS`.
+
+Scope review found one lifecycle completeness gap:
+after INVALIDATED there was no path to re-qualify the same knowledge identity
+when updated evidence became available.
+
+---
+
+## 2026-09-20 — Gate 018 requalification gap closed
+
+Corrected implementation head:
+`72569edf34af12b78c0d3f04f6905c61e1d310d6`.
+
+Correction:
+- INVALIDATED knowledge may be re-qualified only with current evidence/source
+  revisions;
+- requalification appends a new EVIDENCE revision;
+- acceptance then appends a new ACCEPTED revision;
+- complete history remains intact;
+- no old acceptance or invalidation is rewritten.
+
+Additional boundary test:
+an accepted human CONTROL/ADR memory record cannot be supplied as lifecycle
+evidence, so the lifecycle cannot bypass human control authority.
+
+Gate 023 isolation:
+model-name strings in lifecycle fixtures were changed to generic vision fixtures;
+no Qwen3-VL runtime, model route or vision worker is implemented in Gate 018.
+
+Validation:
+- deterministic regression: `193/193 PASS`;
+- generic workflow run `35513601561`: `PASS`;
+- strict exact-head workflow run `35513601565`: `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+ADR-0017 added as `PROPOSED_GATE_018`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then perform one primary-workstation local lifecycle smoke.
