@@ -407,22 +407,53 @@ Final validation:
 ADR-0023: `ACCEPTED_GATE_024`.
 
 ### Gate 025 — Image-generation worker
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Issue: `#49`
+
+PR: `#50`
 
 Branch: `gate-025-non-authoritative-image-generation-worker`
 
 Base: Gate 024 squash merge `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`.
 
-Implement bounded text-to-image concept generation as a non-authoritative design
-aid. Gate 025 must use explicit measured capability routing, existing Supervisor
-`propose_patch` authority, deterministic PNG validation and root-bounded
-publication. Generated imagery is never an engineering drawing, CAD, schematic,
-measurement or physical evidence by itself.
+Implemented bounded local text-to-image concept generation with:
+- distinct evidence-qualified `IMAGE_GENERATION` routing;
+- no unmeasured production image-generation route;
+- local-only provider contract;
+- current Supervisor `propose_patch` authorization before provider execution;
+- deterministic PNG structure/CRC/raster/dimension validation;
+- root-bounded atomic PNG publication;
+- fixed non-authoritative result semantics:
+  `ADVISORY_CONCEPT_ONLY`, `evidence_eligible=false`,
+  `engineering_drawing=false`.
 
-Production image-generation models/providers remain unqualified until separate
-measured evidence exists.
+Validated smoke head:
+`a5bb614a430a0d5b00d3adab57c4a62fd1b41e7f`.
+
+Validation:
+- deterministic regression: `301/301 PASS`;
+- generic CI `35531846754`: `PASS`;
+- strict exact-head CI `35531846777`: `PASS`;
+- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`.
+
+PNG hardening head:
+`93991af1b5b7505ce0546dd58297daf810d6409e`.
+
+Hardening validation:
+- generic CI `35531878630`: `PASS`;
+- strict exact-head CI `35531878735`: `PASS`.
+
+Production image-generation model/provider:
+`NOT_QUALIFIED`; default accepted route remains `NO_ROUTE`.
+
+Real image-generation provider call:
+`NOT_RUN`.
+
+ADR-0024 remains `PROPOSED_GATE_025` until explicit exact-SHA squash merge.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
 
 ## Phase 8 — Stable engineering platform
 
