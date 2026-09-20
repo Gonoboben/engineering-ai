@@ -63,11 +63,11 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `027 — Offline continuation boundary for connected projects`
 - Issue: `#53`
-- PR: `#54 (DRAFT; IMPLEMENTATION VALIDATED)`
+- PR: `#54 (READY FOR REVIEW)`
 - Branch: `gate-027-offline-continuation-boundary`
 - Base: `d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
 - Validated implementation/architecture head: `323b2db90c1470634ea816a4a96eb1f9dcc47ed9`
-- State: `IMPLEMENTED_VALIDATED_PENDING_READY_CHECKPOINT`
+- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -787,13 +787,12 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic, strict exact-head, Gate 026 install and Gate 027 offline-continuation
-validation on the documentation/evidence checkpoint. If all remain green, mark
-PR #54 ready for review, synchronize the ready-state source of truth, freeze
-the branch, run the final exact-head validation set, and stop at explicit human
-exact-SHA squash-merge approval.
+Freeze Gate 027 content at the ready-state synchronization head. Run generic,
+strict exact-head, Gate 027 offline-continuation and inherited Gate 026
+cross-platform install validation on that exact head. If all remain green, stop
+at explicit human exact-SHA squash-merge approval for PR #54.
 
-Do not reinterpret an offline-blocked network-required validator as PASS.
+Do not infer OS-level packet isolation or physical/release evidence from Gate 027.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
