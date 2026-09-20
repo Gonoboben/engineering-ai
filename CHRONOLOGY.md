@@ -3017,3 +3017,71 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #40 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 020 accepted and merged
+
+Final approved PR head:
+`ea05b8625c93cacbadca5a20c9a8126dc590dff9`.
+
+Final validation:
+- deterministic regression: `227/227 PASS`;
+- generic workflow run `35523817968`: `PASS`;
+- strict exact-head workflow run `35523817970`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation smoke:
+  `PASS_SCHEDULED_UNATTENDED_RUN_SESSION`;
+- final runtime scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`.
+
+Issue #39 closed as completed.
+
+ADR-0019 state:
+`ACCEPTED_GATE_020`.
+
+Gate 020 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 021 external controlled reasoning/review bridge opened
+
+Issue:
+`#41 — Gate 021 — External controlled reasoning/review bridge`.
+
+Branch:
+`gate-021-external-controlled-review-bridge`.
+
+Base:
+Gate 020 squash merge
+`5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`.
+
+Declared scope:
+- provider-neutral external consultation interface;
+- explicit bounded outbound context manifest only;
+- current Supervisor/PolicyEngine external_disclosure authorization;
+- named human approval where current policy requires it;
+- request/response identity, provider metadata and SHA-256 audit;
+- external response classified ADVISORY only;
+- fail-closed provider error/malformed response/budget behavior;
+- local core remains fully functional offline and without bridge.
+
+Explicitly out of scope:
+- real OpenAI/ChatGPT credential setup or production network call;
+- automatic external disclosure approval;
+- Gate 022 MCP/tool exposure;
+- unrestricted file upload/shell/filesystem/Git authority;
+- semantic/vector retrieval;
+- Vision/CAD/image workers;
+- architecture/physics/fabrication/release authority changes.
+
+Next:
+publish synchronization checkpoint and open one draft PR for Gate 021.

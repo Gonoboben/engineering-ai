@@ -434,7 +434,7 @@ duplicate side effects.
 ---
 
 ## ADR-0019 — Use persisted one-shot schedules with Supervisor re-authorization
-Status: `PROPOSED_GATE_020`
+Status: `ACCEPTED_GATE_020`
 
 ### Decision
 Gate 020 scheduled/unattended work is represented by explicit persisted one-shot

@@ -45,16 +45,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 018 merge commit: `75ee907446e952fbfc8a53006c1fd65f1257faea`
 - Gate 019: `ACCEPTED_MERGED`
 - Gate 019 merge commit: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
+- Gate 020: `ACCEPTED_MERGED`
+- Gate 020 merge commit: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `020 — Scheduled/overnight engineering runs`
-- Issue: `#39`
-- PR: `#40 (DRAFT)`
-- Branch: `gate-020-scheduled-overnight-runs`
-- Base: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `021 — External controlled reasoning/review bridge`
+- Issue: `#41`
+- PR: `NOT_OPEN_YET`
+- Branch: `gate-021-external-controlled-review-bridge`
+- Base: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
+- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -640,7 +642,28 @@ Historical CI note:
 - primary-workstation scheduled/overnight smoke: `PASS_SCHEDULED_UNATTENDED_RUN_SESSION`; exact head `82ead2e02f381a9ce988263058662c2614b23428`, due_schedule_executed=true, future_schedule_remained_scheduled=true, autonomous_allowed_final_state=PASS, approval_final_state=WAITING_FOR_APPROVAL, forbidden_final_state=BLOCKED, unlisted_autonomous_final_state=QUEUED, interrupted_final_state=BLOCKED, summary PASS=1/BLOCKED=2/WAITING_FOR_APPROVAL=1/FAIL=0/CANCELLED=0/QUEUED=0, summary evidence `ev-gate020-read`, approval/forbidden/unlisted tool calls empty, schedule database created/reopened, schedule integrity=true, queue integrity=true, automatic_approval=false, os_scheduler_installation=false, daemon_service=false, distributed_workers=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - post-smoke evidence head `42e9fd0fe6ea9db05751a78e2a0ecd5327fe32d1`: deterministic regression `227/227 PASS`, generic CI run `35523735071 PASS`, strict exact-head CI run `35523735159 PASS`
 - final runtime scope review: `PASS`; no OS scheduler installation, daemon/service, automatic approval API, unrestricted shell, distributed workers, external/cloud scheduler, semantic/vector backend, vision runtime, PHYSICAL_PASS synthesis, or generic SQL write API
-- ADR-0019: `PROPOSED_GATE_020`
+- final approved PR head: `ea05b8625c93cacbadca5a20c9a8126dc590dff9`
+- final deterministic regression: `227/227 PASS`
+- final generic CI run `35523817968`: `PASS`
+- final strict exact-head CI run `35523817970`: `PASS`
+- exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
+- Issue #39: `CLOSED / COMPLETED`
+- Gate 020 state: `ACCEPTED_MERGED`
+- ADR-0019: `ACCEPTED_GATE_020`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 021 validation state
+- Issue #41: `OPEN`
+- branch: `gate-021-external-controlled-review-bridge`
+- branch base equals Gate 020 squash merge `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`: `PASS`
+- provider-neutral external consultation bridge: `NOT_IMPLEMENTED_YET`
+- explicit outbound context manifest: `NOT_IMPLEMENTED_YET`
+- external_disclosure policy/approval enforcement: `NOT_IMPLEMENTED_YET`
+- external result authority: `ADVISORY_ONLY_REQUIRED`
+- provider tool/filesystem/shell authority: `PROHIBITED`
+- real external network call: `NOT_REQUIRED_OUT_OF_SCOPE_ACCEPTANCE`
+- local offline core dependency on external bridge: `PROHIBITED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -679,4 +702,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on this final documentation-only Gate 020 head. If green, mark PR #40 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0019 remains PROPOSED_GATE_020 until that approval and squash merge.
+Publish the Gate 021 synchronization checkpoint, open one draft PR for Issue #41, then implement a provider-neutral explicit-context external consultation bridge. Require current Supervisor/PolicyEngine authorization for external_disclosure, preserve named human approval where policy requires it, classify all external output as ADVISORY, audit request/response hashes, expose no local tools/filesystem/shell to providers, and keep the local core fully functional without the bridge.

@@ -327,20 +327,23 @@ Accepted merge commit:
 Delivered a persisted append-only Supervisor-owned job queue with deterministic FIFO claim, bounded retry persistence, explicit timeout/deadline handling, WAITING_FOR_APPROVAL persistence, fail-closed interrupted-run recovery and full predecessor-chain integrity.
 
 ### Gate 020 — Scheduled/overnight engineering runs
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#39`
+Accepted merge commit:
+`5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
 
-Branch: `gate-020-scheduled-overnight-runs`
-
-Base: Gate 019 squash merge `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`.
-
-Allow unattended processing only for current pre-authorized autonomous action classes. Persist explicit UTC due schedules and bounded one-shot run sessions; produce deterministic summaries with PASS/FAIL/BLOCKED/WAITING_FOR_APPROVAL/CANCELLED counts and evidence links. OS scheduler/service installation remains out of scope.
+Delivered persisted one-shot due schedules and bounded unattended sessions with current-policy re-authorization, no automatic approvals, fail-closed restart behavior and deterministic summaries.
 
 ## Phase 6 — Optional external consultation and control
 
 ### Gate 021 — External controlled reasoning/review bridge
-Status: `NOT_STARTED`
+Status: `IN_PROGRESS`
+
+Issue: `#41`
+
+Branch: `gate-021-external-controlled-review-bridge`
+
+Base: Gate 020 squash merge `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`.
 
 Add a policy-controlled optional bridge for ChatGPT/OpenAI or another external reviewer/architect.
 
