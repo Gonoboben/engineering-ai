@@ -58,7 +58,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#44 (DRAFT)`
 - Branch: `gate-022-controlled-mcp-tool-exposure`
 - Base: `992b2ac07ea1a192919be286eef026a2fa255e73`
-- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+- State: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -729,7 +729,7 @@ Historical CI note:
 - initial implementation head `cc7a315fa58aa1be34daada3530305b6a918840c`: deterministic regression `266/266 PASS`, generic CI run `35525960611 PASS`, strict exact-head CI run `35525960343 PASS`
 - disclosure/path-allowlist hardening head `6a51beef91b1396a0afe816d4852287e95b4079b`: deterministic regression `268/268 PASS`, generic CI run `35526184987 PASS`, strict exact-head CI run `35526184994 PASS`
 - runtime scope review: `PASS`; no public listener, dynamic import/eval, generic shell/process, project filesystem write, Git mutation, automatic approval, credentials, concrete MCP transport or PHYSICAL_PASS synthesis
-- primary-workstation fake-transport smoke: `PENDING`
+- primary-workstation fake-transport smoke: `PASS_CONTROLLED_MCP_TOOL_EXPOSURE`; exact head `2d48e3cde3c2536565b90f65e39af2490fa8d53f`, registered_capability_count=3, handler_objects_exposed_in_listing=false, external_disclosure_missing_status=NEEDS_HUMAN_APPROVAL, external_disclosure_missing_handler_called=false, read_only_capability_status=PASS, read_only_result_exact=true, unregistered_status=BLOCKED, unregistered_handler_called=false, approval_missing_status=NEEDS_HUMAN_APPROVAL, approval_missing_handler_called=false, approval_named_status=PASS, approval_named_handler_call_count=1, forbidden_status=BLOCKED, forbidden_handler_called=false, request_or_result_payload_persisted=false, ledger database created/reopened, ledger events checked 12/12, ledger invocations checked=6, ledger_integrity=true, generic_shell_surface=false, filesystem_write_surface=false, git_mutation_surface=false, dynamic_import_eval_surface=false, public_network_listener=false, automatic_approval=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - ADR-0021: `PROPOSED_GATE_022`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -769,4 +769,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the Gate 022 architecture/evidence documentation head. If green, run one primary-workstation Windows fake-transport smoke using `scripts/gate022_controlled_tool_smoke.py`. No real MCP server/network listener is required. The smoke must prove external-disclosure gating, exact registered read-only execution, unregistered/forbidden zero-call behavior, named-approval enforcement, payload-free persisted audit, reopen integrity, absence of generic write/shell surfaces, and `PHYSICAL_NOT_EXECUTED`.
+Run final generic and strict exact-head CI on the post-smoke Gate 022 evidence/status head, perform final runtime scope review, then prepare one documentation-only acceptance checkpoint. Run one last exact-head CI on that final head, mark PR #44 ready for review, and stop at explicit human exact-SHA squash-merge approval. ADR-0021 remains PROPOSED_GATE_022 until approval and merge.

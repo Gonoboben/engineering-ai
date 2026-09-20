@@ -89,25 +89,51 @@ Disclosure/path hardening head:
 Runtime scope review:
 `PASS`
 
-## Remaining acceptance evidence
-Run one primary-workstation Windows/Python 3.12 fake-transport smoke on a stable
-post-documentation Gate 022 head using:
-`scripts/gate022_controlled_tool_smoke.py`
+## Primary-workstation Windows fake-transport smoke
 
-Required observations:
-- state = PASS_CONTROLLED_MCP_TOOL_EXPOSURE;
-- external_disclosure_missing_status = NEEDS_HUMAN_APPROVAL;
-- external_disclosure_missing_handler_called = false;
-- registered read-only capability = PASS after named approval;
-- unregistered = BLOCKED / zero handler calls;
-- approval-missing = NEEDS_HUMAN_APPROVAL / zero handler calls;
-- named approval executes only the registered fake capability once;
-- forbidden = BLOCKED / zero handler calls;
-- request/result payload persisted = false;
-- ledger reopen/integrity PASS;
-- generic shell/write/Git-mutation/dynamic-eval/public-listener surfaces = false;
-- automatic_approval = false;
-- physical_validation = PHYSICAL_NOT_EXECUTED.
+Exact head:
+`2d48e3cde3c2536565b90f65e39af2490fa8d53f`
+
+Result:
+`PASS_CONTROLLED_MCP_TOOL_EXPOSURE`
+
+Observed:
+- registered_capability_count = `3`
+- handler_objects_exposed_in_listing = `false`
+- external_disclosure_missing_status = `NEEDS_HUMAN_APPROVAL`
+- external_disclosure_missing_handler_called = `false`
+- read_only_capability_status = `PASS`
+- read_only_result_exact = `true`
+- unregistered_status = `BLOCKED`
+- unregistered_handler_called = `false`
+- approval_missing_status = `NEEDS_HUMAN_APPROVAL`
+- approval_missing_handler_called = `false`
+- approval_named_status = `PASS`
+- approval_named_handler_call_count = `1`
+- forbidden_status = `BLOCKED`
+- forbidden_handler_called = `false`
+- request_or_result_payload_persisted = `false`
+- ledger_database_created = `true`
+- ledger_database_reopened = `true`
+- ledger_events_checked_before_reopen = `12`
+- ledger_events_checked_after_reopen = `12`
+- ledger_invocations_checked = `6`
+- ledger_integrity = `true`
+- generic_shell_surface = `false`
+- filesystem_write_surface = `false`
+- git_mutation_surface = `false`
+- dynamic_import_eval_surface = `false`
+- public_network_listener = `false`
+- automatic_approval = `false`
+- physical_validation = `PHYSICAL_NOT_EXECUTED`
+- EXIT = `0`
+- working tree remained clean and exact head unchanged.
+
+## Remaining acceptance evidence
+
+Run final generic and strict exact-head CI on the post-smoke evidence/status
+head and complete final runtime scope review. Then prepare and validate one
+final documentation-only acceptance head.
 
 ADR-0021 remains `PROPOSED_GATE_022` until explicit exact-SHA human approval
 and squash merge.

@@ -345,7 +345,7 @@ Accepted merge commit:
 Delivered a provider-neutral, policy-controlled external advisory-review bridge with explicit bounded disclosure manifests, named approval enforcement, metadata-only append-only audit, zero local tool authority and ADVISORY-only response semantics.
 
 ### Gate 022 — Controlled MCP/tool exposure
-Status: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
+Status: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
 
 Issue: `#43`
 

@@ -3393,3 +3393,55 @@ ADR-0021 added as `PROPOSED_GATE_022`.
 Next:
 synchronize architecture/status/evidence documentation, re-run exact-head CI,
 then perform one primary-workstation fake-transport smoke.
+
+
+---
+
+## 2026-09-20 — Gate 022 primary-workstation fake-transport smoke passed
+
+Exact Engineering AI head:
+`2d48e3cde3c2536565b90f65e39af2490fa8d53f`.
+
+Local result:
+`PASS_CONTROLLED_MCP_TOOL_EXPOSURE`.
+
+Observed:
+- registered capability count: `3`;
+- handler objects exposed in listing: `false`;
+- external-disclosure missing status: `NEEDS_HUMAN_APPROVAL`;
+- external-disclosure missing handler called: `false`;
+- registered read-only capability status: `PASS`;
+- registered read-only result exact: `true`;
+- unregistered status: `BLOCKED`;
+- unregistered handler called: `false`;
+- approval-missing status: `NEEDS_HUMAN_APPROVAL`;
+- approval-missing handler called: `false`;
+- named-approval status: `PASS`;
+- named-approval handler call count: `1`;
+- forbidden status: `BLOCKED`;
+- forbidden handler called: `false`;
+- request/result payload persisted: `false`;
+- ledger database created and reopened: `true`;
+- ledger events checked before/after reopen: `12 / 12`;
+- ledger invocations checked: `6`;
+- ledger integrity: `PASS`;
+- generic shell surface: `false`;
+- filesystem-write surface: `false`;
+- Git-mutation surface: `false`;
+- dynamic import/eval surface: `false`;
+- public network listener: `false`;
+- automatic approval: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+This smoke validates the hardened Gate 022 runtime on the primary Windows
+workstation without a real MCP server, network listener or credential setup.
+
+Gate 022 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record local smoke evidence, run final acceptance CI and runtime scope review,
+prepare the final documentation-only acceptance head, then stop at explicit
+exact-SHA human squash-merge approval.
