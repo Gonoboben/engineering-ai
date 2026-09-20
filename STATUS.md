@@ -49,16 +49,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 020 merge commit: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
 - Gate 021: `ACCEPTED_MERGED`
 - Gate 021 merge commit: `992b2ac07ea1a192919be286eef026a2fa255e73`
+- Gate 022: `ACCEPTED_MERGED`
+- Gate 022 merge commit: `3111a1d793c05ead0292839500e698a9c5fe2c56`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `022 — Controlled MCP/tool exposure`
-- Issue: `#43`
-- PR: `#44 (DRAFT)`
-- Branch: `gate-022-controlled-mcp-tool-exposure`
-- Base: `992b2ac07ea1a192919be286eef026a2fa255e73`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `023 — Provenance-preserving Vision worker`
+- Issue: `#45`
+- PR: `NOT_OPENED_YET`
+- Branch: `gate-023-provenance-preserving-vision-worker`
+- Base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
+- State: `OPENED_PENDING_IMPLEMENTATION`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
