@@ -50,7 +50,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#36 (DRAFT)`
 - Branch: `gate-018-knowledge-lifecycle`
 - Base: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
-- State: `IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -543,6 +543,8 @@ Historical CI note:
 - implementation head `e679067ca060d3182d4c51b18229c5c0d780a02e`: deterministic regression `191/191 PASS`, generic CI run `35513495763 PASS`, strict exact-head CI run `35513495762 PASS`
 - lifecycle-gap correction head `72569edf34af12b78c0d3f04f6905c61e1d310d6`: deterministic regression `193/193 PASS`, generic CI run `35513601561 PASS`, strict exact-head CI run `35513601565 PASS`
 - primary-workstation local lifecycle smoke: `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`; exact head `7d23cfd62e616659a793d21c7cb22ee7af0ca388`, accepted state before source change `ACCEPTED_CURRENT`, source revision `1 -> 2`, stale state `STALE_SOURCE_REVISION`, final state `INVALIDATED`, history revisions `1/2/3/4`, memory integrity=true, lifecycle integrity=true, automatic_context_injection=false, physical_validation_inferred=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
+- post-smoke evidence head `6e02671de1d774f679372419ef24ba6d7db4b278`: deterministic regression `193/193 PASS`, generic CI run `35513857456 PASS`, strict exact-head CI run `35513857442 PASS`
+- final scope review: `PASS`; no Qwen3-VL/vision runtime, embeddings/vector backend, automatic context injection, PHYSICAL_PASS synthesis, generic SQL mutation API, Gate 019 implementation, Gate 023 implementation, architecture/physics/fabrication/release authority expansion; UPDATE/DELETE occurrences limited to append-only SQLite prohibition triggers and tamper tests
 - ADR-0017: `PROPOSED_GATE_018`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
@@ -582,4 +584,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final generic and strict exact-head CI on the post-smoke Gate 018 evidence/status head, perform final scope review, and if green mark PR #36 ready for review. Then stop at explicit human exact-SHA squash-merge approval. ADR-0017 remains PROPOSED_GATE_018 until that approval and squash merge.
+Run one final generic and strict exact-head CI on the final documentation-only Gate 018 head. If green, mark PR #36 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0017 remains PROPOSED_GATE_018 until that approval and squash merge.

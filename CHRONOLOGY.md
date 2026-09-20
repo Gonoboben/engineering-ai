@@ -2413,3 +2413,46 @@ Next:
 record the smoke evidence, run final generic + strict exact-head CI on the
 post-smoke documentation head, complete final scope review, then stop at
 explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 018 final acceptance checkpoint passed
+
+Post-smoke evidence head:
+`6e02671de1d774f679372419ef24ba6d7db4b278`.
+
+Validation:
+- deterministic regression: `193/193 PASS`;
+- generic workflow run `35513857456`: `PASS`;
+- strict exact-head workflow run `35513857442`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation lifecycle smoke:
+  `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`.
+
+Final scope review:
+`PASS`.
+
+Confirmed absent from Gate 018 runtime:
+- Qwen3-VL/vision worker routing or model integration;
+- embeddings/vector/semantic backend;
+- automatic model or Blackboard context injection;
+- PHYSICAL_PASS synthesis;
+- generic SQL mutation API;
+- Gate 019 queue implementation;
+- Gate 023 vision implementation;
+- architecture/physics/fabrication/release authority expansion.
+
+SQLite UPDATE/DELETE occurrences are limited to append-only prohibition triggers
+and tamper/fail-closed tests.
+
+Gate 018 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0017 remains:
+`PROPOSED_GATE_018`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #36 ready for review if green, then stop at human approval.

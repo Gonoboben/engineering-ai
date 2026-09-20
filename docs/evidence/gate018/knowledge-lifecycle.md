@@ -100,3 +100,30 @@ head and complete final scope review.
 
 ADR-0017 remains `PROPOSED_GATE_018` until final exact-SHA human approval and
 squash merge.
+
+
+## Final acceptance checkpoint
+
+Post-smoke evidence head:
+`6e02671de1d774f679372419ef24ba6d7db4b278`
+
+Validation:
+- deterministic tests: `193/193 PASS`
+- generic CI run: `35513857456 PASS`
+- strict exact-head CI run: `35513857442 PASS`
+- primary-workstation smoke: `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`
+
+Final scope review:
+`PASS`
+
+Confirmed absent:
+- Qwen3-VL/vision runtime integration
+- vector/semantic backend
+- automatic context injection
+- physical PASS synthesis
+- generic SQL mutation API
+- Gate 019/Gate 023 implementation
+- architecture/physics/fabrication/release authority expansion
+
+ADR-0017 remains `PROPOSED_GATE_018` until explicit exact-SHA human approval
+and squash merge.
