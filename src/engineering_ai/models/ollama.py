@@ -6,6 +6,7 @@ not execute tool calls and has no authority to alter Supervisor policy/state.
 
 from __future__ import annotations
 
+import base64
 import json
 import socket
 from typing import Any, Mapping
@@ -169,6 +170,12 @@ class OllamaProvider:
         payload: dict[str, Any] = {"role": message.role, "content": message.content}
         if message.name is not None:
             payload["name"] = message.name
+        if message.images:
+            # Inline base64 only: no source path/URL/filesystem handle is exposed.
+            payload["images"] = [
+                base64.b64encode(image.data).decode("ascii")
+                for image in message.images
+            ]
         return payload
 
     @staticmethod
