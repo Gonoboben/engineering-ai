@@ -476,6 +476,11 @@ class DecisionEvidenceMemoryTests(unittest.TestCase):
         with self.assertRaises(MemorySchemaError):
             make_store(self.path)
 
+        # A failed constructor must not retain a Windows file handle.
+        renamed = self.path.with_name("memory-after-schema-failure.sqlite3")
+        self.path.replace(renamed)
+        renamed.replace(self.path)
+
     def test_local_persistent_reopen_smoke_harness(self) -> None:
         root = Path(__file__).resolve().parents[1]
         result = subprocess.run(
