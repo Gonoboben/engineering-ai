@@ -47,15 +47,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 019 merge commit: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
 - Gate 020: `ACCEPTED_MERGED`
 - Gate 020 merge commit: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
+- Gate 021: `ACCEPTED_MERGED`
+- Gate 021 merge commit: `992b2ac07ea1a192919be286eef026a2fa255e73`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `021 — External controlled reasoning/review bridge`
-- Issue: `#41`
-- PR: `#42 (DRAFT)`
-- Branch: `gate-021-external-controlled-review-bridge`
-- Base: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
+- Gate: `022 — Controlled MCP/tool exposure`
+- Issue: `#43`
+- PR: `#44 (DRAFT)`
+- Branch: `gate-022-controlled-mcp-tool-exposure`
+- Base: `992b2ac07ea1a192919be286eef026a2fa255e73`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -97,7 +99,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
 - BuoyCalc strict read-only adapter: `IMPLEMENTED_VALIDATED_GATE_014`
 - BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
-- External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_PENDING_ACCEPTANCE`
+- External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
+- Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -687,7 +690,49 @@ Historical CI note:
 - primary-workstation fake-provider smoke: `PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`; exact head `306466507f5ead228b4efd7194df9a85512d80cf`, unapproved_status=NEEDS_HUMAN_APPROVAL, unapproved_provider_called=false, approved_status=PASS, approved_provider_called=true, provider_call_count=1, exact_explicit_context_sent=true, outbound_content_persisted=false, request_manifest_hash_recorded=true, response_hash_recorded=true, review_authority=ADVISORY, review_evidence_eligible=false, tool_surface_exposed=false, ledger database created/reopened, ledger events checked 4/4, ledger_integrity=true, real_external_network_call=false, automatic_external_approval=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - post-smoke evidence head `cf57c13890637d3e1d072e0d83e66f97cb13e365`: deterministic regression `247/247 PASS`, generic CI run `35525232870 PASS`, strict exact-head CI run `35525232786 PASS`
 - final runtime scope review: `PASS`; no concrete external network client, local tool surface, shell/subprocess, automatic approval, credentials/API-key handling, MCP runtime, semantic/vector backend, PHYSICAL_PASS synthesis, or architecture/physics/fabrication/release authority expansion
-- ADR-0020: `PROPOSED_GATE_021`
+- final approved PR head: `75a87489affac650455a4456d3b982d1a3f1496a`
+- final deterministic regression: `247/247 PASS`
+- final generic CI run `35525309946`: `PASS`
+- final strict exact-head CI run `35525309947`: `PASS`
+- exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `992b2ac07ea1a192919be286eef026a2fa255e73`
+- Issue #41: `CLOSED / COMPLETED`
+- Gate 021 state: `ACCEPTED_MERGED`
+- ADR-0020: `ACCEPTED_GATE_021`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 022 validation state
+- Issue #43: `OPEN`
+- PR #44: `OPEN / DRAFT`
+- branch: `gate-022-controlled-mcp-tool-exposure`
+- branch base equals Gate 021 squash merge `992b2ac07ea1a192919be286eef026a2fa255e73`: `PASS`
+- immutable typed capability registry: `IMPLEMENTED`
+- public capability listing exposes handler objects: `NO`
+- accepted side-effect class: `READ_ONLY_ONLY`
+- real binding `filesystem.read_text`: `IMPLEMENTED_ROOT_BOUNDED_PLUS_EXPLICIT_PATH_ALLOWLIST`
+- real binding `git.status`: `IMPLEMENTED_EXISTING_READ_ONLY_ADAPTER`
+- external_disclosure policy check before registered handler call: `ENFORCED`
+- mapped action policy check before registered handler call: `ENFORCED`
+- named human approval where either policy boundary requires it: `ENFORCED`
+- unregistered/project-mismatch/schema/budget rejection local handler calls: `ZERO`
+- generic shell/process command surface: `ABSENT`
+- project filesystem write/delete surface: `ABSENT`
+- Git mutation/push/merge surface: `ABSENT`
+- dynamic import/eval/reflection-selected callables: `ABSENT`
+- automatic approval granting: `ABSENT`
+- concrete MCP server/listener/public endpoint: `ABSENT_GATE022_ACCEPTANCE`
+- invocation audit: `LOCAL_SQLITE_APPEND_ONLY_METADATA_LEDGER`
+- request/result payload persisted in audit: `NO_HASH_METADATA_ONLY`
+- handler exception text persisted: `NO_FAILURE_CLASS_ONLY`
+- request/output JSON Schema and size bounds: `ENFORCED`
+- timeout indication/handler exception/invalid output/oversize behavior: `FAIL_CLOSED`
+- initial implementation head `cc7a315fa58aa1be34daada3530305b6a918840c`: deterministic regression `266/266 PASS`, generic CI run `35525960611 PASS`, strict exact-head CI run `35525960343 PASS`
+- disclosure/path-allowlist hardening head `6a51beef91b1396a0afe816d4852287e95b4079b`: deterministic regression `268/268 PASS`, generic CI run `35526184987 PASS`, strict exact-head CI run `35526184994 PASS`
+- runtime scope review: `PASS`; no public listener, dynamic import/eval, generic shell/process, project filesystem write, Git mutation, automatic approval, credentials, concrete MCP transport or PHYSICAL_PASS synthesis
+- primary-workstation fake-transport smoke: `PASS_CONTROLLED_MCP_TOOL_EXPOSURE`; exact head `2d48e3cde3c2536565b90f65e39af2490fa8d53f`, registered_capability_count=3, handler_objects_exposed_in_listing=false, external_disclosure_missing_status=NEEDS_HUMAN_APPROVAL, external_disclosure_missing_handler_called=false, read_only_capability_status=PASS, read_only_result_exact=true, unregistered_status=BLOCKED, unregistered_handler_called=false, approval_missing_status=NEEDS_HUMAN_APPROVAL, approval_missing_handler_called=false, approval_named_status=PASS, approval_named_handler_call_count=1, forbidden_status=BLOCKED, forbidden_handler_called=false, request_or_result_payload_persisted=false, ledger database created/reopened, ledger events checked 12/12, ledger invocations checked=6, ledger_integrity=true, generic_shell_surface=false, filesystem_write_surface=false, git_mutation_surface=false, dynamic_import_eval_surface=false, public_network_listener=false, automatic_approval=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
+- post-smoke evidence head `4a341253e2adcf74beeda2d01fe75b023178e0b7`: deterministic regression `268/268 PASS`, generic CI run `35526705661 PASS`, strict exact-head CI run `35526705659 PASS`
+- final runtime scope review: `PASS`; no public network listener, dynamic import/eval, generic shell/process, project filesystem write/delete, Git mutation, automatic approval, credentials/API-key relay, concrete MCP transport, PHYSICAL_PASS synthesis, or architecture/physics/fabrication/release authority expansion
+- ADR-0021: `PROPOSED_GATE_022`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -726,4 +771,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on this final documentation-only Gate 021 head. If green, mark PR #42 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0020 remains PROPOSED_GATE_021 until that approval and squash merge.
+Run one final generic and strict exact-head CI on this final documentation-only Gate 022 head. If green, mark PR #44 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0021 remains PROPOSED_GATE_022 until that approval and squash merge.

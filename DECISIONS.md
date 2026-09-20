@@ -485,7 +485,7 @@ automatic replay after process failure and keep audit history reconstructable.
 ---
 
 ## ADR-0020 — External review uses explicit disclosure manifests and remains advisory
-Status: `PROPOSED_GATE_021`
+Status: `ACCEPTED_GATE_021`
 
 ### Decision
 Gate 021 implements external reasoning/review as an optional provider-neutral
@@ -532,3 +532,54 @@ a second copy of disclosed project content.
   by itself;
 - no credentials or concrete network client are required for Gate 021;
 - external local-tool exposure remains separately gated by Gate 022.
+
+
+---
+
+## ADR-0021 — MCP/tool exposure uses an immutable registered-capability broker
+Status: `PROPOSED_GATE_022`
+
+### Decision
+Gate 022 exposes local capabilities only through an immutable registry of typed
+bindings. A transport may list public capability descriptors and submit typed
+invocation requests, but it never receives local adapter/callable objects.
+
+Initial accepted capability side effects are READ_ONLY only. Real bindings reuse
+existing bounded read-only filesystem/Git adapters; file reads require an
+explicit per-binding path allow-list.
+
+Every invocation re-evaluates both:
+- `external_disclosure`, because tool output can leave the local control plane;
+- the capability's own mapped project action.
+
+Both must return ALLOW before the local handler can run. Current policy-required
+approval must include a named approver. Registration or transport metadata never
+grants permission.
+
+Inputs and outputs are JSON-Schema validated and bounded. Handler exception,
+timeout indication, invalid result, output-schema failure or oversized output
+fails closed. Request/result payloads are returned transiently but are not
+duplicated into the append-only audit database; hashes and metadata are stored.
+
+### Rationale
+MCP/tool protocols are useful only if protocol-level discoverability does not
+turn into ambient workstation authority. Mapping remote tool names directly to
+Python functions, shell commands or adapters would bypass the accepted
+Supervisor architecture.
+
+A fixed registry plus dual disclosure/action policy checks keeps transport
+concerns separate from authority. Explicit file allow-lists prevent the new
+external tool surface from converting the previously accepted root-bounded
+filesystem reader into an unrestricted project-data exfiltration API.
+
+### Consequence
+- only pre-registered capabilities are invocable;
+- external-disclosure approval is required independently of read permission;
+- unregistered/denied/unapproved requests make zero local calls;
+- path-level exposure is explicit for file reads;
+- local handler objects are not part of transport-visible metadata;
+- no generic shell/process/file-write/Git-mutation surface is added;
+- invocation audit is append-only and tamper-evident;
+- no concrete MCP listener/server is required for Gate 022 acceptance;
+- future MCP transport binding must preserve this broker contract;
+- physical validation remains explicit and separate.

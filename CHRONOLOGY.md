@@ -3244,3 +3244,251 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #42 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 021 accepted and merged
+
+Final approved PR head:
+`75a87489affac650455a4456d3b982d1a3f1496a`.
+
+Final validation:
+- deterministic regression: `247/247 PASS`;
+- generic workflow run `35525309946`: `PASS`;
+- strict exact-head workflow run `35525309947`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation fake-provider smoke:
+  `PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`;
+- final runtime scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`992b2ac07ea1a192919be286eef026a2fa255e73`.
+
+Issue #41 closed as completed.
+
+ADR-0020 state:
+`ACCEPTED_GATE_021`.
+
+Gate 021 state:
+`ACCEPTED_MERGED`.
+
+Real external network call:
+`NOT_RUN / NOT_REQUIRED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 022 controlled MCP/tool exposure opened
+
+Issue:
+`#43 — Gate 022 — Controlled MCP/tool exposure`.
+
+Branch:
+`gate-022-controlled-mcp-tool-exposure`.
+
+Base:
+Gate 021 squash merge
+`992b2ac07ea1a192919be286eef026a2fa255e73`.
+
+Declared scope:
+- typed explicit local capability registry;
+- existing narrow local capability implementations only;
+- explicit action mapping and project binding;
+- current Supervisor/PolicyEngine authorization for every invocation;
+- named approval when the mapped action currently requires it;
+- zero tool calls for denied/missing-approval/unregistered capability requests;
+- bounded request/response/timeout behavior;
+- append-only invocation audit with request/response hashes;
+- fake/in-process transport acceptance before any concrete MCP transport binding.
+
+Explicitly out of scope:
+- unrestricted MCP server exposing the workstation;
+- generic shell/process command surface;
+- arbitrary filesystem write/delete;
+- generic Git mutation/push/merge;
+- automatic human approval;
+- credentials/secrets relay;
+- public internet listener;
+- semantic/vector retrieval;
+- Vision/CAD/image workers;
+- architecture/physics/fabrication/release authority expansion.
+
+Next:
+publish the Gate 022 synchronization checkpoint and open one draft PR for
+Issue #43.
+
+
+---
+
+## 2026-09-20 — Gate 022 controlled registered tool exposure implemented
+
+Initial implementation head:
+`cc7a315fa58aa1be34daada3530305b6a918840c`.
+
+Implemented:
+- immutable project-scoped capability registry;
+- deep-immutable public capability descriptors;
+- JSON Schema input/output contracts;
+- READ_ONLY-only side-effect acceptance;
+- real `filesystem.read_text` binding over the accepted root-bounded adapter;
+- real `git.status` binding over the accepted read-only Git adapter;
+- current Supervisor/PolicyEngine action re-evaluation;
+- named approval enforcement;
+- zero-call unregistered/project/schema/budget rejection;
+- bounded request/result serialization;
+- fail-closed handler exception/timeout/invalid-output behavior;
+- append-only SQLite invocation metadata ledger;
+- request/result hashes without persisting request/result payloads;
+- tamper-detection regression;
+- fake-transport smoke harness.
+
+Validation:
+- deterministic regression: `266/266 PASS`;
+- generic workflow run `35525960611`: `PASS`;
+- strict exact-head workflow run `35525960343`: `PASS`.
+
+Security review identified two authority/exposure gaps before local smoke:
+1. returning local tool output through an external/MCP transport is itself
+   `external_disclosure`; checking only `read_repository` was insufficient;
+2. root-bounded arbitrary relative file reads were too broad for an external
+   tool surface.
+
+Hardening head:
+`6a51beef91b1396a0afe816d4852287e95b4079b`.
+
+Corrections:
+- every registered invocation now requires both current
+  `external_disclosure` ALLOW and mapped-action ALLOW;
+- named approval metadata is preserved for the combined policy boundary;
+- audit records a combined disclosure/action decision string;
+- `filesystem.read_text` now requires an explicit configured relative-path
+  allow-list reflected directly in its input schema;
+- regression and smoke coverage prove disclosure-missing zero-call behavior and
+  path allow-list rejection.
+
+Validation:
+- deterministic regression: `268/268 PASS`;
+- generic workflow run `35526184987`: `PASS`;
+- strict exact-head workflow run `35526184994`: `PASS`.
+
+Runtime scope review:
+`PASS`.
+
+Confirmed absent:
+- public network listener/concrete MCP server;
+- dynamic import/eval/reflection-selected callables;
+- generic shell/process command exposure;
+- project filesystem write/delete exposure;
+- Git mutation/push/merge exposure;
+- automatic approval granting;
+- credential/API-key relay;
+- PHYSICAL_PASS synthesis.
+
+ADR-0021 added as `PROPOSED_GATE_022`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then perform one primary-workstation fake-transport smoke.
+
+
+---
+
+## 2026-09-20 — Gate 022 primary-workstation fake-transport smoke passed
+
+Exact Engineering AI head:
+`2d48e3cde3c2536565b90f65e39af2490fa8d53f`.
+
+Local result:
+`PASS_CONTROLLED_MCP_TOOL_EXPOSURE`.
+
+Observed:
+- registered capability count: `3`;
+- handler objects exposed in listing: `false`;
+- external-disclosure missing status: `NEEDS_HUMAN_APPROVAL`;
+- external-disclosure missing handler called: `false`;
+- registered read-only capability status: `PASS`;
+- registered read-only result exact: `true`;
+- unregistered status: `BLOCKED`;
+- unregistered handler called: `false`;
+- approval-missing status: `NEEDS_HUMAN_APPROVAL`;
+- approval-missing handler called: `false`;
+- named-approval status: `PASS`;
+- named-approval handler call count: `1`;
+- forbidden status: `BLOCKED`;
+- forbidden handler called: `false`;
+- request/result payload persisted: `false`;
+- ledger database created and reopened: `true`;
+- ledger events checked before/after reopen: `12 / 12`;
+- ledger invocations checked: `6`;
+- ledger integrity: `PASS`;
+- generic shell surface: `false`;
+- filesystem-write surface: `false`;
+- Git-mutation surface: `false`;
+- dynamic import/eval surface: `false`;
+- public network listener: `false`;
+- automatic approval: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+This smoke validates the hardened Gate 022 runtime on the primary Windows
+workstation without a real MCP server, network listener or credential setup.
+
+Gate 022 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record local smoke evidence, run final acceptance CI and runtime scope review,
+prepare the final documentation-only acceptance head, then stop at explicit
+exact-SHA human squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 022 final acceptance checkpoint passed
+
+Post-smoke evidence head:
+`4a341253e2adcf74beeda2d01fe75b023178e0b7`.
+
+Validation:
+- deterministic regression: `268/268 PASS`;
+- generic workflow run `35526705661`: `PASS`;
+- strict exact-head workflow run `35526705659`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation fake-transport smoke:
+  `PASS_CONTROLLED_MCP_TOOL_EXPOSURE`.
+
+Final runtime scope review:
+`PASS`.
+
+Confirmed absent from Gate 022 runtime:
+- public network listener/concrete MCP transport;
+- dynamic import/eval/reflection-selected callables;
+- generic shell/process command surface;
+- project filesystem write/delete surface;
+- Git mutation/push/merge surface;
+- automatic approval granting;
+- credentials/API-key relay;
+- PHYSICAL_PASS synthesis;
+- architecture/physics/fabrication/release authority expansion.
+
+Confirmed present:
+- current `external_disclosure` policy check before registered handler execution;
+- mapped-action current policy check;
+- explicit file path allow-list for `filesystem.read_text`;
+- payload-free append-only invocation metadata audit.
+
+Gate 022 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0021 remains:
+`PROPOSED_GATE_022`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #44 ready for review if green, then stop at human approval.
