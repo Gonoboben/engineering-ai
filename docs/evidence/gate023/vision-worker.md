@@ -82,6 +82,23 @@ Corrected hardening and smoke checkpoint:
 - production Vision model qualified: `false`;
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
+## Final hardening checkpoint
+
+Exact head:
+`82ca772902738de0670fab84bbd28914d0684e44`.
+
+Additional hardening:
+- raw `VisionInput.data` hidden from normal object `repr`;
+- returned provider identity must match the deterministic routed provider;
+- explicit regression coverage for provider-identity mismatch and transient
+  request representation.
+
+Validation:
+- deterministic regression: `280/280 PASS`;
+- generic workflow run `35527817840`: `PASS`;
+- strict exact-head workflow run `35527817828`: `PASS`;
+- smoke state: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`.
+
 ## Scope review
 
 Review of the PR diff confirms no Gate 023 runtime addition of:
