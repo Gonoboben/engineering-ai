@@ -36,6 +36,11 @@ from engineering_ai.supervisor.tool_bridge import (
     filesystem_read_text_binding,
     git_status_binding,
 )
+from engineering_ai.supervisor.cad import (
+    CadWorker,
+    CadWorkerRequest,
+    CadWorkerResult,
+)
 from engineering_ai.supervisor.external_review import (
     ExternalAdvisoryReview,
     ExternalConsultationEventType,
@@ -114,6 +119,9 @@ from engineering_ai.supervisor.vision import (
 )
 
 __all__ = [
+    "CadWorker",
+    "CadWorkerRequest",
+    "CadWorkerResult",
     "CapabilityBinding",
     "CapabilityDefinition",
     "CapabilityRegistry",

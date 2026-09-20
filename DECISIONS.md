@@ -588,7 +588,7 @@ filesystem reader into an unrestricted project-data exfiltration API.
 ---
 
 ## ADR-0022 — Visual model observations preserve source identity and remain advisory
-Status: `PROPOSED_GATE_023`
+Status: `ACCEPTED_GATE_023`
 
 ### Decision
 Gate 023 introduces a bounded local Vision-worker path for explicit images.
@@ -634,3 +634,53 @@ authority.
 - image generation remains Gate 025;
 - software/synthetic Vision PASS does not imply physical validation;
 - physical validation remains explicit and separate.
+
+
+---
+
+## ADR-0023 — CAD generation is a Supervisor-controlled proposed patch with deterministic geometry checks
+Status: `PROPOSED_GATE_024`
+
+### Decision
+Gate 024 introduces a bounded parametric CAD worker that may publish an FCStd
+artifact only as an existing `propose_patch` action authorized by the current
+Supervisor/PolicyEngine.
+
+The accepted Gate 024 parameter surface is data-only and intentionally narrow:
+axis-aligned boxes and cylinders, millimetre dimensions, and translation. The
+CAD runtime never accepts model-provided Python, macros, shell commands,
+arbitrary executable names, dynamic evaluation, sketches/constraints, booleans,
+assemblies or other unrestricted CAD programs.
+
+Before runtime execution the control plane computes a canonical design SHA-256
+and deterministic analytical geometry. The trusted FreeCAD helper must return
+the same entity identities, primitive kinds, volumes and axis-aligned bounding
+boxes. Runtime mismatch fails closed before publication of the requested target
+artifact.
+
+A matching CAD artifact is evidence that the checked generated geometry matches
+the typed parametric specification. It is not evidence that the engineering
+design is correct, safe, manufacturable or physically validated.
+
+### Rationale
+CAD runtimes are programmable environments. Passing arbitrary model-generated
+scripts into FreeCAD would effectively create a code-execution surface and
+bypass the accepted Supervisor/tool architecture. Conversely, treating a
+generated solid as self-validating would confuse geometric consistency with
+engineering evidence.
+
+A small typed parameter language plus independent deterministic geometry
+comparison allows useful parametric generation/regeneration while preserving
+the existing authority and evidence hierarchy.
+
+### Consequence
+- Gate 024 grants no new autonomous CAD/write permission;
+- policy denial of `propose_patch` produces zero CAD-backend calls;
+- output paths are root-bounded and FCStd-only in the Gate 024 baseline;
+- the FreeCAD bridge executes only the fixed repository-owned helper;
+- runtime artifacts are temporary until deterministic geometry matches;
+- geometry evidence is eligible only for specification/geometry consistency;
+- engineering-design correctness remains unproven by the CAD worker alone;
+- fabrication and release remain separate human-approval boundaries;
+- production CAD-specialist model qualification is not implied;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`.

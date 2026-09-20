@@ -3710,3 +3710,181 @@ Next:
 the exact PR head after this documentation-only consistency checkpoint must pass
 both generic and strict exact-head CI. If green, freeze the branch and stop at
 explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 023 accepted and merged
+
+Final approved PR head:
+`880a8d4fce352e5c614254119192d7bf7d283e27`.
+
+Final validation:
+- deterministic regression: `280/280 PASS`;
+- generic workflow run `35529619290`: `PASS`;
+- strict exact-head workflow run `35529619244`: `PASS`;
+- deterministic smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`f3c826a434eca8e5d7163f5cf4166560717bdbc2`.
+
+PR #46:
+`MERGED`.
+
+Issue #45:
+`CLOSED / COMPLETED`.
+
+ADR-0022 state:
+`ACCEPTED_GATE_023`.
+
+Production Vision model:
+`NOT_QUALIFIED`; default accepted Vision route remains `NO_ROUTE`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 024 controlled parametric CAD worker opened
+
+Issue:
+`#47 — Gate 024 — Controlled parametric CAD worker`.
+
+Branch:
+`gate-024-controlled-parametric-cad-worker`.
+
+Base:
+Gate 023 squash merge
+`f3c826a434eca8e5d7163f5cf4166560717bdbc2`.
+
+Declared scope:
+- immutable bounded parametric CAD specification;
+- axis-aligned box/cylinder baseline with explicit millimetre parameters;
+- deterministic per-entity and assembly geometry checks;
+- canonical design SHA-256;
+- trusted data-only FreeCAD bridge with fixed repository-owned helper;
+- root-bounded proposal artifact publication;
+- existing Supervisor `propose_patch` policy authority only;
+- zero backend calls on policy denial;
+- deterministic post-runtime geometry/report verification;
+- CI-capable fake-backend smoke without requiring FreeCAD installation.
+
+Explicitly out of scope:
+- new autonomous CAD/write authority;
+- model-supplied Python/CAD scripts;
+- shell/eval/exec/dynamic command execution;
+- arbitrary filesystem writes;
+- boolean/CSG/sketch/assembly/FEM expansion;
+- production CAD-specialist model qualification;
+- fabrication/release authorization;
+- Gate 025 image generation.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+publish the synchronization checkpoint, open one draft PR for Issue #47, then
+implement and validate the bounded Gate 024 runtime.
+
+
+---
+
+## 2026-09-20 — Gate 024 controlled parametric CAD worker implementation checkpoint
+
+Implemented:
+- immutable bounded millimetre CAD specification;
+- axis-aligned box/cylinder primitives with translation-only placement;
+- canonical design SHA-256;
+- analytical primitive volume and per-entity/assembly AABB calculation;
+- existing Supervisor `propose_patch` authority as the only CAD publication gate;
+- zero CAD backend calls when current policy denies the proposal;
+- fixed repository-owned FreeCADCmd helper with data-only JSON and `shell=False`;
+- no model-supplied Python/macros/shell/eval/exec/dynamic command surface;
+- root-bounded FCStd candidate publication;
+- temporary candidate/report staging;
+- deterministic runtime geometry comparison before target publication;
+- artifact/design/geometry SHA-256 preservation;
+- result authority `PROPOSED_PATCH_ONLY`;
+- geometry consistency evidence separated from engineering-design correctness;
+- physical state fixed to `PHYSICAL_NOT_EXECUTED`.
+
+Deterministic smoke:
+`PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`.
+
+Corrected full-suite checkpoint:
+`bd9ebd15206be83f012e4ddd5625257247d37653`.
+
+Validation:
+- deterministic regression: `289/289 PASS`;
+- generic workflow `35530909113`: `PASS`;
+- strict exact-head workflow `35530909124`: `PASS`.
+
+Earlier test-fixture-only failures were caused by an invalid synthetic Git SHA
+that violated the pre-existing project-state schema. The fixture was corrected
+without weakening any schema, validator, policy or CAD check.
+
+Hardened runtime head:
+`a02822fdecb8573fb20b33fb70b94e6ca5ac16cc`.
+
+Additional hardening:
+- primitive kind cannot be caller-overridden;
+- placement and entity objects are explicitly typed;
+- temporary artifact/report symlinks are rejected;
+- artifact publication failures fail closed;
+- trusted FreeCAD helper requires positive dimensions.
+
+Validation:
+- generic workflow `35530942168`: `PASS`;
+- strict exact-head workflow `35530942160`: `PASS`.
+
+Architecture:
+- section 4.22 records the proposal-only CAD authority/evidence boundary;
+- ADR-0023 added as `PROPOSED_GATE_024`.
+
+Real FreeCAD workstation runtime:
+`NOT_RUN`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+run final exact-head CI on the documentation/evidence head, mark PR #48 ready
+for review if green, synchronize any ready-state documentation, freeze the
+branch, and stop at explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 024 ready-for-review checkpoint
+
+Final documentation/evidence head before ready transition:
+`a3f979ce4035a64981af911807b7f6fdfcd1c7f3`.
+
+Validation:
+- generic workflow `35531115705`: `PASS`;
+- strict exact-head workflow `35531115699`: `PASS`;
+- deterministic regression remains `289/289 PASS`;
+- smoke remains `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`.
+
+PR #48 was marked:
+`READY FOR REVIEW`.
+
+No runtime, CAD authority, geometry semantics, fabrication/release state or
+physical-validation state changed by the ready transition.
+
+A final documentation-only source-of-truth consistency commit now requires one
+last generic + strict exact-head CI before branch freeze and explicit human
+exact-SHA squash-merge approval.
+
+ADR-0023 remains:
+`PROPOSED_GATE_024`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.

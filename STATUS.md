@@ -51,15 +51,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 021 merge commit: `992b2ac07ea1a192919be286eef026a2fa255e73`
 - Gate 022: `ACCEPTED_MERGED`
 - Gate 022 merge commit: `3111a1d793c05ead0292839500e698a9c5fe2c56`
+- Gate 023: `ACCEPTED_MERGED`
+- Gate 023 merge commit: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `023 — Provenance-preserving Vision worker`
-- Issue: `#45`
-- PR: `#46 (READY FOR REVIEW)`
-- Branch: `gate-023-provenance-preserving-vision-worker`
-- Base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
+- Gate: `024 — Controlled parametric CAD worker`
+- Issue: `#47`
+- PR: `#48 (READY FOR REVIEW)`
+- Branch: `gate-024-controlled-parametric-cad-worker`
+- Base: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -95,11 +97,11 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Candidate Qwen3.5-9B qualification: `QUALIFIED_GENERAL_PLANNER`
 - Candidate Qwen2.5-Coder-7B qualification: `QUALIFIED_WITH_LIMITATIONS_CODE_REPOSITORY`; native tool transport repeatedly fails under current Ollama contract, so role must be no-native-tool-proposal until separately requalified
 - Electronics/PCB/KiCad qualification: `NOT_RUN_OUT_OF_SCOPE_GATE_008`
-- Vision worker boundary: `IMPLEMENTED_VALIDATED_GATE_023_PENDING_ACCEPTANCE`
+- Vision worker boundary: `IMPLEMENTED_VALIDATED_GATE_023_ACCEPTED`
 - Accepted production Vision model: `NOT_QUALIFIED`
 - Accepted registry Vision route: `NO_ROUTE_UNTIL_MEASURED_QUALIFICATION`
 - Visual model observations: `ADVISORY_ONLY / evidence_eligible=false`
-- CAD worker: `DEFERRED_GATE_024`
+- CAD worker: `IMPLEMENTED_VALIDATED_GATE_024_PENDING_ACCEPTANCE`
 - Image-generation worker: `DEFERRED_GATE_025`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
@@ -778,7 +780,10 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run final generic and strict exact-head CI on the final Gate 023 documentation-only PR head. If both remain green, freeze the branch and stop at explicit human exact-SHA squash-merge approval for PR #46. ADR-0022 remains PROPOSED_GATE_023 until that approval and squash merge.
+Run generic and strict exact-head CI on the final ready-state Gate 024
+documentation-only head. If both remain green, freeze PR #48 and stop at
+explicit human exact-SHA squash-merge approval. ADR-0023 remains
+`PROPOSED_GATE_024` until that approval and accepted merge.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -795,6 +800,39 @@ Run final generic and strict exact-head CI on the final Gate 023 documentation-o
 - external/cloud Vision call: `NOT_RUN / NOT_IMPLEMENTED`
 - automatic evidence promotion: `false`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
-- ADR-0022: `PROPOSED_GATE_023`
-- final exact-head documentation CI: `REQUIRED_ON_FINAL_HEAD / PR_CHECKS_AUTHORITATIVE`
+- ADR-0022: `ACCEPTED_GATE_023`
+- final exact-head documentation CI: `35529619290 PASS / 35529619244 PASS`
+- human exact-SHA squash-merge approval: `PASS`; merge `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
+
+
+## Gate 024 validation state
+- base: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
+- Issue #47: `OPEN`
+- PR #48: `READY FOR REVIEW`
+- bounded typed box/cylinder CAD specification: `IMPLEMENTED`
+- deterministic design SHA-256, analytical volume and AABB: `IMPLEMENTED_VALIDATED`
+- CAD policy authority: `EXISTING_SUPERVISOR_PROPOSE_PATCH_ONLY`
+- policy-denied CAD backend calls: `ZERO / PASS`
+- arbitrary model script/macro/eval/exec surface: `ABSENT`
+- FreeCAD invocation: `FIXED_REPOSITORY_HELPER / DATA_ONLY_JSON / SHELL_FALSE`
+- root-bounded FCStd publication after deterministic runtime geometry match: `IMPLEMENTED_VALIDATED`
+- mismatched runtime geometry target publication: `BLOCKED / PASS`
+- deterministic regression: `289/289 PASS`
+- corrected full-suite generic workflow `35530909113`: `PASS`
+- corrected full-suite strict exact-head workflow `35530909124`: `PASS`
+- hardened runtime head: `a02822fdecb8573fb20b33fb70b94e6ca5ac16cc`
+- hardened runtime generic workflow `35530942168`: `PASS`
+- hardened runtime strict exact-head workflow `35530942160`: `PASS`
+- smoke: `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`
+- real FreeCAD workstation smoke: `NOT_RUN`
+- production CAD-specialist model qualification: `NOT_RUN / NOT_REQUIRED_GATE_024`
+- artifact authority: `PROPOSED_PATCH_ONLY`
+- deterministic geometry evidence eligibility: `TRUE_FOR_DEFINED_GEOMETRY_SCOPE`
+- engineering-design correctness evidence eligibility: `FALSE`
+- fabrication authorization: `NOT_GRANTED`
+- release authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+- ADR-0023: `PROPOSED_GATE_024`
+- pre-ready documentation/evidence head `a3f979ce4035a64981af911807b7f6fdfcd1c7f3`: generic CI `35531115705 PASS`, strict exact-head CI `35531115699 PASS`
+- final ready-state exact-head CI: `REQUIRED_ON_FINAL_HEAD`
 - human exact-SHA squash-merge approval: `PENDING`

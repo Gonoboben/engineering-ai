@@ -575,6 +575,52 @@ Raw image bytes are not part of the returned observation record.
 Vision/software/synthetic PASS never implies physical validation. Physical
 validation remains `PHYSICAL_NOT_EXECUTED` unless independently established.
 
+### 4.22 Controlled parametric CAD worker boundary
+
+Gate 024 adds a bounded proposal-only CAD path without granting any new
+autonomous write, fabrication, release, or physical-validation authority.
+
+The CAD input is an immutable typed parametric design. The Gate 024 baseline is
+deliberately narrow:
+- units are millimetres;
+- supported primitives are axis-aligned boxes and cylinders;
+- placement is translation only;
+- entity count, dimensions and coordinates are bounded;
+- entity identifiers are unique and ASCII-safe;
+- arbitrary sketches, constraints, rotations, booleans/CSG, assemblies and FEM
+  are outside this Gate.
+
+Before a CAD runtime is called, deterministic Python geometry derives:
+- the canonical design SHA-256;
+- each primitive's analytical volume;
+- each primitive's axis-aligned bounding box;
+- the assembly axis-aligned bounding box;
+- the sum of primitive volumes, explicitly not boolean-union volume.
+
+CAD generation/manipulation maps only to the already accepted Supervisor action
+`propose_patch`. The CAD worker calls the existing Supervisor/PolicyEngine for
+that action and makes zero CAD-backend calls when current policy denies it. Gate
+024 does not introduce a `cad_write` permission or reinterpret fabrication or
+release authority.
+
+The concrete FreeCAD bridge is data-driven. It invokes a fixed repository-owned
+helper through `FreeCADCmd` with `shell=False` and passes only canonical JSON
+plus temporary artifact/report paths. Model-provided Python, macros, shell
+commands, arbitrary executables, dynamic imports, `eval`, and `exec` are not
+part of the interface.
+
+The runtime writes a temporary FCStd candidate and a structured geometry report.
+The control plane compares runtime entity identity, primitive kind, volume and
+AABB against the deterministic expected geometry. A mismatch fails closed and
+the requested target artifact is not published. Only after all checks pass is
+the root-bounded FCStd proposal atomically moved to its target path.
+
+A successful Gate 024 result establishes only that the generated proposal
+matches the bounded parametric specification for the checked geometry. It does
+not establish design intent, structural adequacy, manufacturability,
+fabrication authorization, release authorization or physical validation.
+Physical state therefore remains `PHYSICAL_NOT_EXECUTED`.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control

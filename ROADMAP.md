@@ -355,17 +355,12 @@ Delivered a transport-neutral immutable registered-capability broker with dual `
 ## Phase 7 — Multimodal engineering
 
 ### Gate 023 — Vision worker
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#45`
+Accepted merge commit:
+`f3c826a434eca8e5d7163f5cf4166560717bdbc2`
 
-PR: `#46`
-
-Branch: `gate-023-provenance-preserving-vision-worker`
-
-Base: Gate 022 squash merge `3111a1d793c05ead0292839500e698a9c5fe2c56`.
-
-Implemented a bounded provenance-preserving Vision-worker boundary for explicit
+Delivered a bounded provenance-preserving Vision-worker boundary for explicit
 PNG/JPEG/WebP inputs, inline-only loopback transport, deterministic
 qualification-gated Vision routing, exact source-ref constrained structured
 observations and ADVISORY-only result semantics.
@@ -374,22 +369,52 @@ The accepted registry intentionally contains no production Vision model until
 separate measured local qualification evidence exists; therefore the default
 Vision route is `NO_ROUTE`.
 
-Validated hardening head:
-`82ca772902738de0670fab84bbd28914d0684e44`.
+Final approved PR head:
+`880a8d4fce352e5c614254119192d7bf7d283e27`.
 
-Validation:
+Final validation:
 - deterministic regression: `280/280 PASS`;
-- generic CI `35527817840`: `PASS`;
-- strict exact-head CI `35527817828`: `PASS`;
+- generic CI `35529619290`: `PASS`;
+- strict exact-head CI `35529619244`: `PASS`;
 - smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-ADR-0022 remains `PROPOSED_GATE_023` until explicit exact-SHA squash merge.
+ADR-0022: `ACCEPTED_GATE_023`.
 
 ### Gate 024 — CAD worker
-Status: `NOT_STARTED`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
-Integrate controlled parametric CAD generation/manipulation with deterministic geometry checks.
+Issue: `#47`
+
+PR: `#48`
+
+Branch: `gate-024-controlled-parametric-cad-worker`
+
+Base: Gate 023 squash merge `f3c826a434eca8e5d7163f5cf4166560717bdbc2`.
+
+Implemented a bounded proposal-only parametric CAD worker:
+- millimetre box/cylinder primitives with translation-only placement;
+- canonical design SHA-256;
+- deterministic analytical primitive volume and AABB checks;
+- Supervisor-owned `propose_patch` authorization with zero backend calls on denial;
+- fixed repository-owned FreeCADCmd helper using data-only JSON and `shell=False`;
+- root-bounded FCStd publication only after runtime geometry matches deterministic expected geometry;
+- no model-supplied scripts, new autonomous CAD permission, fabrication/release authority or physical-validation promotion.
+
+Validated runtime hardening head:
+`a02822fdecb8573fb20b33fb70b94e6ca5ac16cc`.
+
+Validation:
+- deterministic regression with CAD smoke: `289/289 PASS`;
+- corrected full-suite generic CI `35530909113`: `PASS`;
+- corrected full-suite strict exact-head CI `35530909124`: `PASS`;
+- hardened runtime generic CI `35530942168`: `PASS`;
+- hardened runtime strict exact-head CI `35530942160`: `PASS`;
+- smoke: `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`;
+- real FreeCAD workstation smoke: `NOT_RUN`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+ADR-0023 remains `PROPOSED_GATE_024` until explicit exact-SHA squash merge.
 
 ### Gate 025 — Image-generation worker
 Status: `NOT_STARTED`
