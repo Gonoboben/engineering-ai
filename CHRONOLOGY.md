@@ -3888,3 +3888,84 @@ ADR-0023 remains:
 
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-20 — Gate 024 accepted and merged
+
+Final approved PR head:
+`8330aa62964ec2f9b38873b69a7591a44e1fa5a4`.
+
+Final validation:
+- deterministic regression: `289/289 PASS`;
+- generic workflow `35531166350`: `PASS`;
+- strict exact-head workflow `35531166349`: `PASS`;
+- smoke: `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`99a8e216dc2c8ec7b98c445f0e1909479bff6b52`.
+
+PR #48:
+`MERGED`.
+
+Issue #47:
+`CLOSED / COMPLETED`.
+
+ADR-0023 state:
+`ACCEPTED_GATE_024`.
+
+Real FreeCAD workstation smoke:
+`NOT_RUN`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 025 non-authoritative image-generation worker opened
+
+Issue:
+`#49 — Gate 025 — Non-authoritative image-generation worker`.
+
+Branch:
+`gate-025-non-authoritative-image-generation-worker`.
+
+Base:
+Gate 024 squash merge
+`99a8e216dc2c8ec7b98c445f0e1909479bff6b52`.
+
+Declared scope:
+- provider-neutral typed text-to-image request/response;
+- explicit evidence-qualified IMAGE_GENERATION routing;
+- no unmeasured production route in accepted registry;
+- bounded PNG output only;
+- deterministic PNG signature/IHDR/CRC/dimension validation;
+- existing Supervisor `propose_patch` authority before provider call/publication;
+- root-bounded PNG publication with SHA-256 identity;
+- result fixed to `ADVISORY_CONCEPT_ONLY`, `evidence_eligible=false`,
+  `engineering_drawing=false`;
+- synthetic-provider CI smoke without requiring a real image model.
+
+Explicitly out of scope:
+- image editing/reference-image transformation;
+- arbitrary filesystem/URL acquisition;
+- external/cloud generation API;
+- automatic production model qualification;
+- generated imagery as drawing/CAD/schematic/measurement/evidence;
+- shell/Git/tool authority;
+- fabrication/release/physical-validation authority expansion.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+publish the synchronization checkpoint, open one draft PR for Issue #49, then
+implement and validate the bounded Gate 025 runtime.
