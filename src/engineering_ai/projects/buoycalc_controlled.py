@@ -20,6 +20,7 @@ from engineering_ai.tools import (
     CommandSpec,
     ControlledWorktreeAdapter,
     GitReadOnlyAdapter,
+    NetworkRequirement,
     PatchApplication,
     PatchProposal,
     ToolAccessError,
@@ -68,6 +69,9 @@ class ValidationStepEvidence:
     truncated: bool
     stdout_sha256: str
     stderr_sha256: str
+    network_requirement: str
+    blocked: bool = False
+    block_reason: str | None = None
     validation_class: str = "SOFTWARE_DETERMINISTIC"
 
 
@@ -85,6 +89,7 @@ class BuoyCalcValidationResult:
     profiles: tuple[ValidationProfileEvidence, ...]
     tracked_state_unchanged: bool
     release_state: str
+    offline: bool = False
     physical_validation: str = "PHYSICAL_NOT_EXECUTED"
 
 
@@ -101,6 +106,7 @@ def _pwsh_spec(command_id: str, script: str, *, timeout: float = 90.0) -> Comman
         ),
         timeout_seconds=timeout,
         max_output_bytes=262_144,
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
     )
 
 
@@ -108,6 +114,7 @@ def _dotnet_spec(
     command_id: str,
     args: tuple[str, ...],
     *,
+    network_requirement: NetworkRequirement,
     timeout: float = 300.0,
 ) -> CommandSpec:
     return CommandSpec(
@@ -116,6 +123,7 @@ def _dotnet_spec(
         fixed_args=args,
         timeout_seconds=timeout,
         max_output_bytes=524_288,
+        network_requirement=network_requirement,
     )
 
 
