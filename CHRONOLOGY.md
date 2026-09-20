@@ -4231,3 +4231,35 @@ run the documentation/evidence exact-head validation checkpoint. If green, mark
 PR #52 ready for review, synchronize ready-state documentation, freeze the
 branch, run final exact-head validation, and stop for explicit human exact-SHA
 squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 026 ready-for-review checkpoint
+
+Documentation/evidence checkpoint head before ready transition:
+`a04337bbfbc0d9306b4f9a8a2f4d93dbc62bfb5b`.
+
+Validation:
+- generic workflow `35535865183`: `PASS`;
+- strict exact-head workflow `35535865222`: `PASS`;
+- Gate 026 install workflow `35535865187`: `PASS`;
+- Ubuntu clean non-editable install: `PASS`;
+- Windows clean non-editable install: `PASS`.
+
+PR #52 was marked:
+`READY FOR REVIEW`.
+
+No architecture, model-routing, Supervisor authority, offline-continuation,
+publication, release, fabrication or physical-validation state changed by the
+ready transition.
+
+A final source-of-truth consistency head now requires one last generic + strict
+exact-head + Gate 026 cross-platform install validation before branch freeze and
+explicit human exact-SHA squash-merge approval.
+
+Offline continuation remains:
+`NOT_CLAIMED_GATE_026`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
