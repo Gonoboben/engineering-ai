@@ -4049,3 +4049,40 @@ Next:
 run final exact-head CI on the documentation/evidence head, mark PR #50 ready
 for review if green, synchronize any ready-state documentation, freeze the
 branch, and stop at explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 025 ready-for-review checkpoint
+
+Final documentation/evidence head before ready transition:
+`81fc9256b737a9110037f5f9695e76d40634ff0c`.
+
+Validation:
+- deterministic regression remains `301/301 PASS`;
+- generic workflow `35531984785`: `PASS`;
+- strict exact-head workflow `35531984758`: `PASS`;
+- smoke remains `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`.
+
+PR #50 was marked:
+`READY FOR REVIEW`.
+
+No runtime, routing, provider, PNG validation, artifact authority,
+fabrication/release state or physical-validation state changed by the ready
+transition.
+
+A final documentation-only source-of-truth consistency commit now requires one
+last generic + strict exact-head CI before branch freeze and explicit human
+exact-SHA squash-merge approval.
+
+ADR-0024 remains:
+`PROPOSED_GATE_025`.
+
+Production image-generation model/provider remains:
+`NOT_QUALIFIED`.
+
+Default accepted image-generation route remains:
+`NO_ROUTE`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
