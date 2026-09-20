@@ -27,7 +27,7 @@ from engineering_ai.tools.image_artifact import (
 )
 from engineering_ai.tools.filesystem import FileEntry, ReadOnlyFilesystemAdapter
 from engineering_ai.tools.git import GitReadOnlyAdapter
-from engineering_ai.tools.process import AllowListedProcessRunner, CommandSpec
+from engineering_ai.tools.process import AllowListedProcessRunner, CommandSpec, NetworkRequirement
 from engineering_ai.tools.worktree import (
     ControlledWorktreeAdapter,
     PatchApplication,
@@ -50,6 +50,7 @@ __all__ = [
     "CadRuntimeReport",
     "CadSpecError",
     "CommandSpec",
+    "NetworkRequirement",
     "ControlledWorktreeAdapter",
     "FileEntry",
     "FreeCadRuntime",
