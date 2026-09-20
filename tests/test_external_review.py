@@ -287,7 +287,7 @@ class ExternalReviewBridgeTests(unittest.TestCase):
             project_id="engineering-ai",
             consultation_id=req.consultation_id,
         )
-        manifest_text = json.dumps(dict(latest.request_manifest))
+        manifest_text = json.dumps(latest.as_dict()["request_manifest"])
         self.assertNotIn(secretish_but_explicit, manifest_text)
         self.assertNotIn(purpose, manifest_text)
         self.assertIn(item.content_sha256, manifest_text)
