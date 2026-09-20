@@ -382,22 +382,39 @@ Final validation:
 ADR-0022: `ACCEPTED_GATE_023`.
 
 ### Gate 024 — CAD worker
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Issue: `#47`
+
+PR: `#48`
 
 Branch: `gate-024-controlled-parametric-cad-worker`
 
 Base: Gate 023 squash merge `f3c826a434eca8e5d7163f5cf4166560717bdbc2`.
 
-Implement controlled proposal-only parametric CAD generation/manipulation with
-deterministic geometry checks. Gate 024 must reuse the existing Supervisor
-`propose_patch` authority rather than grant a new autonomous write permission.
+Implemented a bounded proposal-only parametric CAD worker:
+- millimetre box/cylinder primitives with translation-only placement;
+- canonical design SHA-256;
+- deterministic analytical primitive volume and AABB checks;
+- Supervisor-owned `propose_patch` authorization with zero backend calls on denial;
+- fixed repository-owned FreeCADCmd helper using data-only JSON and `shell=False`;
+- root-bounded FCStd publication only after runtime geometry matches deterministic expected geometry;
+- no model-supplied scripts, new autonomous CAD permission, fabrication/release authority or physical-validation promotion.
 
-Acceptance scope is bounded to trusted data-driven CAD operations, root-bounded
-artifact publication, deterministic geometry verification and explicit
-`PHYSICAL_NOT_EXECUTED`. Arbitrary model-supplied scripts, fabrication/release
-authority and Gate 025 image generation remain out of scope.
+Validated runtime hardening head:
+`a02822fdecb8573fb20b33fb70b94e6ca5ac16cc`.
+
+Validation:
+- deterministic regression with CAD smoke: `289/289 PASS`;
+- corrected full-suite generic CI `35530909113`: `PASS`;
+- corrected full-suite strict exact-head CI `35530909124`: `PASS`;
+- hardened runtime generic CI `35530942168`: `PASS`;
+- hardened runtime strict exact-head CI `35530942160`: `PASS`;
+- smoke: `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`;
+- real FreeCAD workstation smoke: `NOT_RUN`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+ADR-0023 remains `PROPOSED_GATE_024` until explicit exact-SHA squash merge.
 
 ### Gate 025 — Image-generation worker
 Status: `NOT_STARTED`
