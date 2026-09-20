@@ -15,6 +15,25 @@ from engineering_ai.supervisor.blackboard import (
 )
 from engineering_ai.supervisor.core import ExecutionResult, ProposalExecutionResult, Supervisor, ToolOutcome
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
+from engineering_ai.supervisor.external_review import (
+    ExternalAdvisoryReview,
+    ExternalConsultationEventType,
+    ExternalConsultationIntegrityReport,
+    ExternalConsultationLedger,
+    ExternalConsultationOutcome,
+    ExternalConsultationRequest,
+    ExternalConsultationSnapshot,
+    ExternalConsultationStatus,
+    ExternalContextItem,
+    ExternalProviderRequest,
+    ExternalProviderResponse,
+    ExternalReviewAuthority,
+    ExternalReviewBridge,
+    ExternalReviewError,
+    ExternalReviewIntegrityError,
+    ExternalReviewPolicyError,
+    ExternalReviewProtocolError,
+)
 from engineering_ai.supervisor.scheduled_runs import (
     PersistedScheduledRunStore,
     ScheduleEventType,
@@ -61,6 +80,23 @@ from engineering_ai.supervisor.review import (
 from engineering_ai.supervisor.stubs import StubTool
 
 __all__ = [
+    "ExternalAdvisoryReview",
+    "ExternalConsultationEventType",
+    "ExternalConsultationIntegrityReport",
+    "ExternalConsultationLedger",
+    "ExternalConsultationOutcome",
+    "ExternalConsultationRequest",
+    "ExternalConsultationSnapshot",
+    "ExternalConsultationStatus",
+    "ExternalContextItem",
+    "ExternalProviderRequest",
+    "ExternalProviderResponse",
+    "ExternalReviewAuthority",
+    "ExternalReviewBridge",
+    "ExternalReviewError",
+    "ExternalReviewIntegrityError",
+    "ExternalReviewPolicyError",
+    "ExternalReviewProtocolError",
     "PersistedScheduledRunStore",
     "ScheduleEventType",
     "ScheduledRunConflictError",

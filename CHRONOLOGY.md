@@ -3017,3 +3017,230 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #40 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 020 accepted and merged
+
+Final approved PR head:
+`ea05b8625c93cacbadca5a20c9a8126dc590dff9`.
+
+Final validation:
+- deterministic regression: `227/227 PASS`;
+- generic workflow run `35523817968`: `PASS`;
+- strict exact-head workflow run `35523817970`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation smoke:
+  `PASS_SCHEDULED_UNATTENDED_RUN_SESSION`;
+- final runtime scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`.
+
+Issue #39 closed as completed.
+
+ADR-0019 state:
+`ACCEPTED_GATE_020`.
+
+Gate 020 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 021 external controlled reasoning/review bridge opened
+
+Issue:
+`#41 — Gate 021 — External controlled reasoning/review bridge`.
+
+Branch:
+`gate-021-external-controlled-review-bridge`.
+
+Base:
+Gate 020 squash merge
+`5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`.
+
+Declared scope:
+- provider-neutral external consultation interface;
+- explicit bounded outbound context manifest only;
+- current Supervisor/PolicyEngine external_disclosure authorization;
+- named human approval where current policy requires it;
+- request/response identity, provider metadata and SHA-256 audit;
+- external response classified ADVISORY only;
+- fail-closed provider error/malformed response/budget behavior;
+- local core remains fully functional offline and without bridge.
+
+Explicitly out of scope:
+- real OpenAI/ChatGPT credential setup or production network call;
+- automatic external disclosure approval;
+- Gate 022 MCP/tool exposure;
+- unrestricted file upload/shell/filesystem/Git authority;
+- semantic/vector retrieval;
+- Vision/CAD/image workers;
+- architecture/physics/fabrication/release authority changes.
+
+Next:
+publish synchronization checkpoint and open one draft PR for Gate 021.
+
+
+---
+
+## 2026-09-20 — Gate 021 controlled external advisory bridge implemented
+
+Initial implementation head:
+`8ed0f345ef7f2904041f1b14a08403b846f7141b`.
+
+Implemented:
+- provider-neutral external review protocol;
+- explicit project-scoped outbound context items;
+- exact source refs, context SHA-256 and character counts;
+- current external_disclosure policy check through Supervisor/PolicyEngine;
+- named approval enforcement where required;
+- zero provider calls on missing approval or policy denial;
+- provider request surface with no local tools/filesystem/shell/Git/queue/scheduler;
+- ADVISORY-only external review result;
+- evidence_eligible=false and PHYSICAL_NOT_EXECUTED;
+- append-only SQLite consultation metadata ledger;
+- request/response hashes and provider/model identity audit;
+- no outbound context or purpose text persisted;
+- provider exception text omitted from persistent audit;
+- malformed/oversized/provider failures fail closed;
+- fake-provider smoke harness, no real network dependency.
+
+Validation:
+- deterministic regression: `245/245 PASS`;
+- generic workflow run `35524343520`: `PASS`;
+- strict exact-head workflow run `35524343416`: `PASS`.
+
+Hardening head:
+`bca9381cf10462cc66e0b92c324fb0225acaada7`.
+
+Added:
+- hard bounds for purpose/source_ref/kind outbound text;
+- deeply immutable persisted manifest snapshots;
+- corresponding regression tests.
+
+Hardening CI exposed one test-only defect:
+- generic run `35524431902`: `FAIL`;
+- strict run `35524431903`: `FAIL`;
+- deterministic suite ran 247 tests with one error;
+- the new test attempted `json.dumps(dict(mappingproxy))` instead of using the
+  public serializable snapshot representation;
+- no runtime bridge failure was indicated.
+
+Corrected head:
+`f6ed7a9a36c75f08248efe6fbe8148b5fa75a2c8`.
+
+Correction:
+- regression now validates the public `as_dict()` audit representation.
+
+Validation:
+- deterministic regression: `247/247 PASS`;
+- generic workflow run `35524489887`: `PASS`;
+- strict exact-head workflow run `35524489903`: `PASS`.
+
+Runtime scope review:
+`PASS`.
+
+Confirmed absent:
+- concrete external network client;
+- credentials/API-key handling;
+- local tool/filesystem/shell/Git authority exposed to provider;
+- automatic approval;
+- MCP runtime;
+- semantic/vector backend;
+- PHYSICAL_PASS synthesis.
+
+ADR-0020 added as `PROPOSED_GATE_021`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then perform one primary-workstation fake-provider smoke.
+
+
+---
+
+## 2026-09-20 — Gate 021 primary-workstation fake-provider smoke passed
+
+Exact Engineering AI head:
+`306466507f5ead228b4efd7194df9a85512d80cf`.
+
+Local result:
+`PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`.
+
+Observed:
+- unapproved status: `NEEDS_HUMAN_APPROVAL`;
+- unapproved provider called: `false`;
+- approved status: `PASS`;
+- approved provider called: `true`;
+- provider call count: `1`;
+- exact explicit context sent: `true`;
+- outbound context persisted: `false`;
+- request manifest hash recorded: `true`;
+- response hash recorded: `true`;
+- review authority: `ADVISORY`;
+- review evidence eligible: `false`;
+- tool surface exposed: `false`;
+- ledger database created and reopened: `true`;
+- ledger events checked before/after reopen: `4 / 4`;
+- ledger integrity: `PASS`;
+- real external network call: `false`;
+- automatic external approval: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+This smoke validates the actual Gate 021 runtime on the primary Windows
+workstation without any real external disclosure or network dependency.
+
+Gate 021 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record local smoke evidence, run final acceptance CI and runtime scope review,
+prepare the final documentation-only acceptance head, then stop at explicit
+exact-SHA human squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 021 final acceptance checkpoint passed
+
+Post-smoke evidence head:
+`cf57c13890637d3e1d072e0d83e66f97cb13e365`.
+
+Validation:
+- deterministic regression: `247/247 PASS`;
+- generic workflow run `35525232870`: `PASS`;
+- strict exact-head workflow run `35525232786`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation fake-provider smoke:
+  `PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE`.
+
+Final runtime scope review:
+`PASS`.
+
+Confirmed absent from Gate 021 runtime:
+- concrete external network client;
+- credentials/API-key handling;
+- local tool/filesystem/shell/Git authority exposed to provider;
+- automatic approval granting;
+- MCP runtime;
+- semantic/vector backend;
+- PHYSICAL_PASS synthesis;
+- architecture/physics/fabrication/release authority expansion.
+
+Gate 021 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0020 remains:
+`PROPOSED_GATE_021`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #42 ready for review if green, then stop at human approval.
