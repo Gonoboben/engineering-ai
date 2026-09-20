@@ -57,15 +57,18 @@ class PlataVMControlledEngineeringLoop:
         *,
         python_executable: str,
         git_executable: str = "git",
+        offline: bool = False,
     ) -> None:
         self._repository_root = Path(repository_root).resolve(strict=True)
         self._worktree_parent = Path(worktree_parent).resolve(strict=True)
         self._python = python_executable
         self._git_executable = git_executable
+        self._offline = offline
         self._readonly = PlataVMReadOnlyAdapter(
             self._repository_root,
             python_executable=python_executable,
             git_executable=git_executable,
+            offline=offline,
         )
         self._worktrees = ControlledWorktreeAdapter(
             self._repository_root,
@@ -126,6 +129,7 @@ class PlataVMControlledEngineeringLoop:
             session.worktree_root,
             python_executable=self._python,
             git_executable=self._git_executable,
+            offline=self._offline,
         )
         results = tuple(
             adapter.run_validator(profile_id)
