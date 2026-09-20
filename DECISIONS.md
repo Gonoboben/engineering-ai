@@ -639,7 +639,7 @@ authority.
 ---
 
 ## ADR-0023 — CAD generation is a Supervisor-controlled proposed patch with deterministic geometry checks
-Status: `PROPOSED_GATE_024`
+Status: `ACCEPTED_GATE_024`
 
 ### Decision
 Gate 024 introduces a bounded parametric CAD worker that may publish an FCStd
