@@ -4322,3 +4322,59 @@ rejected before subprocess execution when offline mode is active.
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-20 — Gate 027 offline continuation implementation validated
+
+Validated implementation/architecture checkpoint:
+`323b2db90c1470634ea816a4a96eb1f9dcc47ed9`.
+
+Implemented:
+- mandatory explicit `NetworkRequirement` for every `CommandSpec`;
+- `LOCAL_ONLY` and `NETWORK_CAPABLE` process classifications;
+- offline process mode that blocks `NETWORK_CAPABLE` before executable
+  resolution/subprocess creation;
+- PlataVM read-only and controlled offline propagation;
+- BuoyCalc restore classification as network-capable;
+- structured BuoyCalc
+  `BLOCKED_RUNTIME_PREREQUISITE / OFFLINE_NETWORK_REQUIRED` evidence;
+- local-only classification for static scans and no-restore/no-build steps;
+- cross-platform synthetic connected-project offline smoke.
+
+Validation:
+- deterministic regression: `312/312 PASS`;
+- generic workflow `35537733809`: `PASS`;
+- strict exact-head workflow `35537733812`: `PASS`;
+- Gate 027 offline workflow `35537733811`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35537733819`:
+  Ubuntu `PASS`, Windows `PASS`;
+- installed-package regression: `312/312 PASS` on Ubuntu and Windows.
+
+Gate 027 smoke:
+- state: `PASS_OFFLINE_CONTINUATION_BOUNDARY`;
+- external network intentionally exercised: false;
+- PlataVM controlled offline state: `READY_FOR_HUMAN_APPROVAL`;
+- BuoyCalc network block state: `BLOCKED_RUNTIME_PREREQUISITE`;
+- blocked reason: `OFFLINE_NETWORK_REQUIRED`;
+- primary synthetic repositories unchanged.
+
+Evidence limitation:
+this proves the Engineering AI control-plane network boundary and local-resource
+smoke path. It does not claim OS-level packet filtering or formal proof that
+arbitrary project-owned script internals can never open a socket.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+run documentation/evidence exact-head validation. If green, mark PR #54 ready
+for review, synchronize ready-state source-of-truth, freeze the branch and stop
+at explicit human exact-SHA squash-merge approval after final validation.
