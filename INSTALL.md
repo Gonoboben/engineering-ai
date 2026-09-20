@@ -78,10 +78,12 @@ The bootstrap:
    `SOURCE_DATE_EPOCH`;
 6. requires both wheel filenames and SHA-256 hashes to match;
 7. installs the wheel non-editably with `--no-deps`;
-8. runs `pip check`;
-9. verifies installed versions and confirms `engineering_ai` is imported from
-   the installed environment, not from `src/`;
-10. optionally runs the full deterministic unittest regression.
+8. verifies the authoritative JSON Schema set is present in the installed wheel
+   data and is not being read back from the source checkout;
+9. runs `pip check`;
+10. verifies installed versions and confirms `engineering_ai` is imported from
+    the installed environment, not from `src/`;
+11. optionally runs the full deterministic unittest regression.
 
 A Gate 026 PASS establishes reproducibility of this defined software install
 path for the recorded source revision and dependency/toolchain versions. It does
