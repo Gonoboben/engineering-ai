@@ -84,7 +84,7 @@ def make_state(*, allow_propose_patch: bool) -> dict:
     state["active_job_id"] = None
     state["repository_ref"] = {
         "branch": "gate-024-controlled-parametric-cad-worker",
-        "head_sha": "synthetic-gate024-smoke",
+        "head_sha": "f3c826a434eca8e5d7163f5cf4166560717bdbc2",
     }
     state["pending_checks"] = []
     state["blockers"] = []
