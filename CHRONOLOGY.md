@@ -4086,3 +4086,85 @@ Default accepted image-generation route remains:
 
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-20 — Gate 025 accepted and merged
+
+Final approved PR head:
+`eca63b5c28ea908c6cb43900aa97909d0fb289bc`.
+
+Final validation:
+- deterministic regression: `301/301 PASS`;
+- generic workflow `35532035872`: `PASS`;
+- strict exact-head workflow `35532035537`: `PASS`;
+- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`171ff20125389d2d953576a0d3340c13dc1dc53f`.
+
+PR #50:
+`MERGED`.
+
+Issue #49:
+`CLOSED / COMPLETED`.
+
+ADR-0024 state:
+`ACCEPTED_GATE_025`.
+
+Production image-generation model/provider:
+`NOT_QUALIFIED`.
+
+Default accepted image-generation route:
+`NO_ROUTE`.
+
+Real image-generation provider call:
+`NOT_RUN`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 026 reproducible local installation opened
+
+Issue:
+`#51 — Gate 026 — Reproducible local installation`.
+
+Branch:
+`gate-026-reproducible-local-installation`.
+
+Base:
+Gate 025 squash merge
+`171ff20125389d2d953576a0d3340c13dc1dc53f`.
+
+Objective:
+close the first Phase 8 / v1.0 criterion, reproducible local installation,
+without changing Engineering AI runtime authority or feature architecture.
+
+Measured runtime dependency closure from accepted Gate 025 CI
+`35532035872`:
+- `jsonschema==4.26.0`;
+- `attrs==26.1.0`;
+- `jsonschema-specifications==2025.9.1`;
+- `referencing==0.37.0`;
+- `rpds-py==2026.6.3`;
+- `typing-extensions==4.16.0`.
+
+Build/install tool versions remain to be measured before freezing.
+
+Explicitly out of scope:
+- offline wheelhouse/dependency packaging;
+- model/routing changes;
+- new tool/permission authority;
+- connected-project behavioral changes;
+- containerization requirement;
+- package publication;
+- fabrication/release;
+- validator weakening.
+
+Next:
+publish the Gate 026 synchronization checkpoint, open one draft PR for Issue
+#51, then add and validate the clean-install contract.
