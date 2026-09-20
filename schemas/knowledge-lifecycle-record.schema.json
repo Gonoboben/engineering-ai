@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/knowledge-lifecycle-record.schema.json",
+  "title": "Engineering AI Knowledge Lifecycle Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "lifecycle_record_id",
+    "project_id",
+    "knowledge_id",
+    "revision",
+    "stage",
+    "authority",
+    "claim",
+    "observation_record_ids",
+    "evidence_bindings",
+    "source_bindings",
+    "provenance",
+    "reason",
+    "supersedes_lifecycle_record_id",
+    "created_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "lifecycle_record_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "knowledge_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "revision": {"type": "integer", "minimum": 1},
+    "stage": {"type": "string", "enum": ["OBSERVATION", "EVIDENCE", "ACCEPTED", "INVALIDATED"]},
+    "authority": {"type": "string", "enum": ["HUMAN", "SUPERVISOR"]},
+    "claim": {"type": "object"},
+    "observation_record_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+      "uniqueItems": true
+    },
+    "evidence_bindings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/binding"}
+    },
+    "source_bindings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/binding"}
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "reason": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "null"}
+      ]
+    },
+    "supersedes_lifecycle_record_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        {"type": "null"}
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "memory_id",
+        "record_id",
+        "revision",
+        "content_sha256",
+        "kind",
+        "authority",
+        "validation_class"
+      ],
+      "properties": {
+        "memory_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        "record_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        "revision": {"type": "integer", "minimum": 1},
+        "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "kind": {
+          "type": "string",
+          "enum": ["ADR", "CALCULATION", "TEST_RESULT", "FAILURE_LESSON", "SOURCE_REFERENCE"]
+        },
+        "authority": {
+          "type": "string",
+          "enum": ["HUMAN", "SUPERVISOR", "MODEL", "DETERMINISTIC_TOOL", "IMPORTED_SOURCE"]
+        },
+        "validation_class": {
+          "type": "string",
+          "enum": ["CONTROL", "ADVISORY", "SOURCE", "CALCULATION", "SIMULATION", "DETERMINISTIC_TEST", "PHYSICAL"]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"stage": {"const": "OBSERVATION"}}},
+      "then": {
+        "properties": {
+          "observation_record_ids": {"minItems": 1},
+          "evidence_bindings": {"maxItems": 0},
+          "source_bindings": {"maxItems": 0},
+          "reason": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"stage": {"enum": ["EVIDENCE", "ACCEPTED"]}}},
+      "then": {
+        "properties": {
+          "evidence_bindings": {"minItems": 1},
+          "reason": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"stage": {"const": "INVALIDATED"}}},
+      "then": {
+        "properties": {
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  ]
+}

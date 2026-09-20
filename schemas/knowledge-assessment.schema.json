@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/knowledge-assessment.schema.json",
+  "title": "Engineering AI Knowledge Assessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "knowledge_id",
+    "lifecycle_record_id",
+    "lifecycle_revision",
+    "stage",
+    "state",
+    "stale_evidence_record_ids",
+    "stale_source_record_ids",
+    "physical_validation_inferred"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "knowledge_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "lifecycle_record_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "lifecycle_revision": {"type": "integer", "minimum": 1},
+    "stage": {"type": "string", "enum": ["OBSERVATION", "EVIDENCE", "ACCEPTED", "INVALIDATED"]},
+    "state": {
+      "type": "string",
+      "enum": [
+        "OBSERVATION",
+        "EVIDENCE_CURRENT",
+        "ACCEPTED_CURRENT",
+        "STALE_SOURCE_REVISION",
+        "STALE_EVIDENCE_REVISION",
+        "INVALIDATED"
+      ]
+    },
+    "stale_evidence_record_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+      "uniqueItems": true
+    },
+    "stale_source_record_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+      "uniqueItems": true
+    },
+    "physical_validation_inferred": {"const": false}
+  }
+}
