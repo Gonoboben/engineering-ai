@@ -436,11 +436,11 @@ ADR-0024: `ACCEPTED_GATE_025`.
 ## Phase 8 — Stable engineering platform
 
 ### Gate 026 — Reproducible local installation
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
 
 Issue: `#51`
 
-PR: `#52 (DRAFT; implementation validated)`
+PR: `#52 (READY FOR REVIEW)`
 
 Branch: `gate-026-reproducible-local-installation`
 
@@ -474,6 +474,14 @@ Implementation validation:
 Gate 026 establishes the reproducible-local-installation criterion only.
 Offline dependency acquisition and offline continuation remain separate Phase 8
 criteria and are not inferred from this PASS.
+
+Ready-for-review checkpoint:
+- documentation/evidence head:
+  `a04337bbfbc0d9306b4f9a8a2f4d93dbc62bfb5b`;
+- generic workflow `35535865183`: `PASS`;
+- strict exact-head workflow `35535865222`: `PASS`;
+- Gate 026 install workflow `35535865187`:
+  Ubuntu `PASS`, Windows `PASS`.
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
