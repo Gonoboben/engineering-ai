@@ -64,6 +64,8 @@ def validate_png(
     width = height = None
     seen_idat = False
     seen_iend = False
+    idat_parts: list[bytes] = []
+    channels: int | None = None
 
     while offset < len(data):
         if len(data) - offset < 12:
@@ -97,22 +99,21 @@ def validate_png(
                 raise PngValidationError("PNG dimensions must be positive")
             if width > MAX_PNG_DIMENSION or height > MAX_PNG_DIMENSION:
                 raise PngValidationError("PNG dimensions exceed Gate 025 bound")
-            valid_depths = {
-                0: {1, 2, 4, 8, 16},
-                2: {8, 16},
-                3: {1, 2, 4, 8},
-                4: {8, 16},
-                6: {8, 16},
-            }
-            if color_type not in valid_depths or bit_depth not in valid_depths[color_type]:
-                raise PngValidationError("PNG IHDR bit-depth/color-type combination is invalid")
-            if compression != 0 or filter_method != 0 or interlace not in (0, 1):
-                raise PngValidationError("PNG IHDR method fields are invalid")
+            if bit_depth != 8 or color_type not in (2, 6):
+                raise PngValidationError(
+                    "Gate 025 PNG baseline accepts only 8-bit RGB or RGBA"
+                )
+            channels = 3 if color_type == 2 else 4
+            if compression != 0 or filter_method != 0 or interlace != 0:
+                raise PngValidationError(
+                    "Gate 025 PNG baseline requires standard compression/filter and no interlace"
+                )
         elif chunk_type == b"IHDR":
             raise PngValidationError("PNG contains duplicate IHDR")
 
         if chunk_type == b"IDAT":
             seen_idat = True
+            idat_parts.append(chunk_data)
         if chunk_type == b"IEND":
             if length != 0:
                 raise PngValidationError("PNG IEND must have zero length")
@@ -124,8 +125,20 @@ def validate_png(
         offset = crc_end
         chunk_index += 1
 
-    if width is None or height is None or not seen_idat or not seen_iend:
+    if width is None or height is None or channels is None or not seen_idat or not seen_iend:
         raise PngValidationError("PNG is missing required IHDR/IDAT/IEND structure")
+    try:
+        raster = zlib.decompress(b"".join(idat_parts))
+    except zlib.error as exc:
+        raise PngValidationError("PNG IDAT zlib stream is invalid") from exc
+    row_bytes = width * channels
+    expected_raster_bytes = height * (1 + row_bytes)
+    if len(raster) != expected_raster_bytes:
+        raise PngValidationError("PNG decompressed raster length is invalid")
+    stride = 1 + row_bytes
+    for row_start in range(0, len(raster), stride):
+        if raster[row_start] not in (0, 1, 2, 3, 4):
+            raise PngValidationError("PNG scanline filter type is invalid")
     if expected_width is not None and width != expected_width:
         raise PngValidationError("PNG width does not match requested width")
     if expected_height is not None and height != expected_height:
@@ -216,6 +229,8 @@ class PngArtifactPublisher:
 
     def _resolve_target(self, relative_path: str) -> Path:
         value = relative_path.strip()
+        if "\\" in value:
+            raise ToolAccessError("PNG artifact path must use forward slashes")
         if not value or len(value) > 512:
             raise ToolAccessError("PNG artifact path must contain 1..512 characters")
         relative = Path(value)
