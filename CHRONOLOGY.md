@@ -2772,3 +2772,93 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #38 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 019 accepted and merged
+
+Final approved PR head:
+`a12dc51c7022ce218efb571fa7d34f06ea6753b1`.
+
+Final validation:
+- deterministic regression: `210/210 PASS`;
+- generic workflow run `35521603454`: `PASS`;
+- strict exact-head workflow run `35521603447`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation hardened-runtime smoke:
+  `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`;
+- final runtime scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`.
+
+Issue #37 closed as completed.
+
+Accepted capability:
+- local append-only persisted Supervisor job queue;
+- deterministic FIFO claim ordering;
+- bounded retry/attempt persistence;
+- timeout/deadline state;
+- WAITING_FOR_APPROVAL persistence;
+- Supervisor-only named-approval resume;
+- fail-closed interrupted/expired RUNNING recovery to BLOCKED;
+- terminal-state preservation;
+- project isolation;
+- exact predecessor-chain and SHA-256 integrity.
+
+ADR-0018 state:
+`ACCEPTED_GATE_019`.
+
+Gate 019 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 020 scheduled/overnight engineering runs opened
+
+Issue:
+`#39 — Gate 020 — Scheduled/overnight engineering runs`.
+
+Branch:
+`gate-020-scheduled-overnight-runs`.
+
+Base:
+Gate 019 squash merge
+`f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`.
+
+Declared scope:
+- typed local persisted one-shot schedules with explicit UTC due times;
+- deterministic due-run selection;
+- bounded unattended sessions over the accepted Gate 019 queue;
+- unattended execution only for current Supervisor/PolicyEngine autonomous
+  actions and explicitly supplied narrow tools;
+- approval-required jobs preserved WAITING_FOR_APPROVAL without tool execution;
+- forbidden/non-autonomous work blocked without execution;
+- bounded max-jobs and max-session-duration budgets;
+- Gate 019 interrupted RUNNING recovery before new unattended claims;
+- append-only scheduled-run/session history;
+- deterministic summary counts for PASS / FAIL / BLOCKED /
+  WAITING_FOR_APPROVAL / CANCELLED plus evidence references;
+- one-shot local CLI/harness suitable for later invocation by a user-selected
+  OS scheduler.
+
+Explicitly out of scope:
+- installing/configuring Windows Task Scheduler/systemd/launchd;
+- long-lived daemon/service;
+- remote/cloud scheduler;
+- automatic approval acquisition;
+- parallel/distributed workers;
+- unrestricted shell;
+- external AI bridge;
+- semantic/vector retrieval;
+- Vision/CAD/image workers;
+- architecture/physics/fabrication/release authority changes.
+
+Next:
+publish the initial synchronization checkpoint, open one draft PR for Issue #39,
+then implement Gate 020 without broadening Supervisor authority.

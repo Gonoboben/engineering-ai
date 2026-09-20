@@ -319,20 +319,23 @@ Delivered a deterministic append-only lifecycle over Gate 016 memory:
 ## Phase 5 — Unattended local operation
 
 ### Gate 019 — Job queue
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#37`
+Accepted merge commit:
+`f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
 
-Branch: `gate-019-persisted-job-queue`
-
-Base: Gate 018 squash merge `75ee907446e952fbfc8a53006c1fd65f1257faea`.
-
-Add persisted queued jobs with retry/timeout/approval semantics while preserving existing Supervisor policy authority. Scheduling/overnight execution remains Gate 020.
+Delivered a persisted append-only Supervisor-owned job queue with deterministic FIFO claim, bounded retry persistence, explicit timeout/deadline handling, WAITING_FOR_APPROVAL persistence, fail-closed interrupted-run recovery and full predecessor-chain integrity.
 
 ### Gate 020 — Scheduled/overnight engineering runs
-Status: `NOT_STARTED`
+Status: `IN_PROGRESS`
 
-Allow unattended processing only for pre-authorized action classes. Produce summaries with PASS/FAIL/BLOCKED/WAITING_FOR_APPROVAL counts and evidence links.
+Issue: `#39`
+
+Branch: `gate-020-scheduled-overnight-runs`
+
+Base: Gate 019 squash merge `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`.
+
+Allow unattended processing only for current pre-authorized autonomous action classes. Persist explicit UTC due schedules and bounded one-shot run sessions; produce deterministic summaries with PASS/FAIL/BLOCKED/WAITING_FOR_APPROVAL/CANCELLED counts and evidence links. OS scheduler/service installation remains out of scope.
 
 ## Phase 6 — Optional external consultation and control
 

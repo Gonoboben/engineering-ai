@@ -387,7 +387,7 @@ was known, accepted, invalidated and later re-qualified.
 ---
 
 ## ADR-0018 — Persist job control state as an append-only local queue ledger
-Status: `PROPOSED_GATE_019`
+Status: `ACCEPTED_GATE_019`
 
 ### Decision
 Engineering AI Gate 019 persists bounded job queue state in a local SQLite

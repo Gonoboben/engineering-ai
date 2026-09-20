@@ -43,16 +43,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 017 merge commit: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
 - Gate 018: `ACCEPTED_MERGED`
 - Gate 018 merge commit: `75ee907446e952fbfc8a53006c1fd65f1257faea`
+- Gate 019: `ACCEPTED_MERGED`
+- Gate 019 merge commit: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `019 — Persisted job queue`
-- Issue: `#37`
-- PR: `#38 (DRAFT)`
-- Branch: `gate-019-persisted-job-queue`
-- Base: `75ee907446e952fbfc8a53006c1fd65f1257faea`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `020 — Scheduled/overnight engineering runs`
+- Issue: `#39`
+- PR: `NOT_OPEN_YET`
+- Branch: `gate-020-scheduled-overnight-runs`
+- Base: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
+- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -593,7 +595,29 @@ Historical CI note:
 - primary-workstation repeat smoke on post-hardening runtime: `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`; exact head `165e85404e42f1db457572842cf21fc80d08f4da`, database_created=true, database_reopened=true, fifo_retry_tail_preserved=true, retry_attempts_preserved=1, retry_final_state=PASS, approval_wait_survived_reopen=true, approval_final_state=PASS, interrupted_run_recovery=INTERRUPTED_RECOVERY, interrupted_final_state=BLOCKED, queue_events_checked=13, queue_jobs_checked=3, queue_integrity=true, automatic_approval=false, scheduled_execution=false, distributed_workers=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - post-repeat-smoke evidence head `1248e2a1fd13f7d1aeb12ee3b523848d3e9dc503`: deterministic regression `210/210 PASS`, generic CI run `35521519407 PASS`, strict exact-head CI run `35521519425 PASS`
 - final runtime scope review: `PASS`; no scheduler/cron/daemon, automatic approval API, queue-owned tool execution, distributed workers, semantic/vector backend, vision/Qwen runtime, PHYSICAL_PASS synthesis, or generic SQL write API
-- ADR-0018: `PROPOSED_GATE_019`
+- final approved PR head: `a12dc51c7022ce218efb571fa7d34f06ea6753b1`
+- final deterministic regression: `210/210 PASS`
+- final generic CI run `35521603454`: `PASS`
+- final strict exact-head CI run `35521603447`: `PASS`
+- exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
+- Issue #37: `CLOSED / COMPLETED`
+- Gate 019 state: `ACCEPTED_MERGED`
+- ADR-0018: `ACCEPTED_GATE_019`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 020 validation state
+- Issue #39: `OPEN`
+- branch: `gate-020-scheduled-overnight-runs`
+- branch base equals Gate 019 squash merge `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`: `PASS`
+- scheduled run store: `NOT_IMPLEMENTED_YET`
+- due-run selection: `NOT_IMPLEMENTED_YET`
+- unattended autonomous execution: `NOT_IMPLEMENTED_YET`
+- approval-required unattended execution: `PROHIBITED`
+- automatic approval acquisition: `PROHIBITED`
+- bounded run/session budgets: `NOT_IMPLEMENTED_YET`
+- deterministic summary counts/evidence links: `NOT_IMPLEMENTED_YET`
+- OS scheduler/service installation: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -632,4 +656,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on this final documentation-only Gate 019 head. If green, mark PR #38 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0018 remains PROPOSED_GATE_019 until that approval and squash merge.
+Publish the Gate 020 synchronization checkpoint, open one draft PR for Issue #39, then implement a local persisted one-shot scheduled-run layer over Gate 019. The unattended runner may execute only current Supervisor/PolicyEngine autonomous actions through explicitly supplied narrow tools. Approval-required work must remain WAITING_FOR_APPROVAL without tool execution. Do not install/configure Windows Task Scheduler/systemd/launchd, add a daemon/service, remote/cloud scheduler, distributed workers, automatic approvals or broader authority.
