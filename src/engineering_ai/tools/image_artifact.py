@@ -150,6 +150,10 @@ class PngArtifactPublisher:
             raise ValueError("max_bytes must be positive")
         self._max_bytes = max_bytes
 
+    def validate_target(self, relative_path: str) -> None:
+        """Validate the target boundary without creating files or directories."""
+        self._resolve_target(relative_path)
+
     def publish(
         self,
         *,
