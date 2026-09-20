@@ -15,6 +15,16 @@ from engineering_ai.supervisor.blackboard import (
 )
 from engineering_ai.supervisor.core import ExecutionResult, ProposalExecutionResult, Supervisor, ToolOutcome
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
+from engineering_ai.supervisor.job_queue import (
+    JobQueueConflictError,
+    JobQueueError,
+    JobQueueIntegrityError,
+    JobQueueIntegrityReport,
+    JobQueuePolicyError,
+    JobQueueSnapshot,
+    PersistedJobQueue,
+    QueueEventType,
+)
 from engineering_ai.supervisor.role_loop import (
     EngineeringRole,
     ExecutionResult as RoleExecutionResult,
@@ -38,6 +48,14 @@ from engineering_ai.supervisor.review import (
 from engineering_ai.supervisor.stubs import StubTool
 
 __all__ = [
+    "JobQueueConflictError",
+    "JobQueueError",
+    "JobQueueIntegrityError",
+    "JobQueueIntegrityReport",
+    "JobQueuePolicyError",
+    "JobQueueSnapshot",
+    "PersistedJobQueue",
+    "QueueEventType",
     "AuditEmitter",
     "BlackboardAuthority",
     "BlackboardRecord",

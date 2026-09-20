@@ -42,6 +42,11 @@ from engineering_ai.supervisor.review import (
     plan_disagreement,
 )
 from engineering_ai.supervisor.audit import AuditEmitter
+from engineering_ai.supervisor.job_queue import (
+    JobQueuePolicyError,
+    JobQueueSnapshot,
+    PersistedJobQueue,
+)
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
 from engineering_ai.validation import SemanticValidationError, validate_instance
 
@@ -99,6 +104,7 @@ class Supervisor:
         blackboard: TaskBlackboard | None = None,
         memory_retriever: PolicyControlledMemoryRetriever | None = None,
         knowledge_lifecycle: KnowledgeLifecycle | None = None,
+        job_queue: PersistedJobQueue | None = None,
     ) -> None:
         self._policy = deepcopy(policy)
         self._state = deepcopy(state)
@@ -108,6 +114,7 @@ class Supervisor:
         self._blackboard = blackboard
         self._memory_retriever = memory_retriever
         self._knowledge_lifecycle = knowledge_lifecycle
+        self._job_queue = job_queue
         self._audit_events: list[dict[str, Any]] = []
 
     @property
@@ -244,6 +251,144 @@ class Supervisor:
         if self._knowledge_lifecycle is None:
             raise RuntimeError("Supervisor has no knowledge lifecycle configured")
         return self._knowledge_lifecycle
+
+    def enqueue_persisted_job(
+        self,
+        job: dict[str, Any],
+        *,
+        timeout_seconds: int = 3600,
+    ) -> JobQueueSnapshot:
+        """Persist one validated bounded job without executing it."""
+
+        validate_instance("job.schema.json", job)
+        self._validate_job_context(job)
+        if job["status"] != "QUEUED":
+            raise SemanticValidationError("persisted job must be QUEUED at enqueue")
+        return self._require_job_queue().enqueue(
+            job,
+            timeout_seconds=timeout_seconds,
+        )
+
+    def persisted_job(
+        self,
+        *,
+        job_id: str,
+    ) -> JobQueueSnapshot:
+        return self._require_job_queue().get(
+            project_id=self._state["project_id"],
+            job_id=job_id,
+        )
+
+    def persisted_jobs(self) -> tuple[JobQueueSnapshot, ...]:
+        return self._require_job_queue().list_current(
+            project_id=self._state["project_id"],
+        )
+
+    def claim_next_persisted_job(self) -> JobQueueSnapshot | None:
+        """Claim the deterministic next QUEUED job.
+
+        Claiming does not evaluate or execute the requested action. The caller
+        must still route the claimed job through Supervisor.execute().
+        """
+
+        return self._require_job_queue().claim_next(
+            project_id=self._state["project_id"],
+        )
+
+    def claim_approved_persisted_job(
+        self,
+        *,
+        job_id: str,
+        action: str,
+        approver: str,
+    ) -> JobQueueSnapshot:
+        """Resume a persisted WAITING_FOR_APPROVAL job after explicit approval.
+
+        The queue itself does not grant approval. This method re-evaluates the
+        current Supervisor policy and only opens a new RUNNING event when the
+        named action is still approval-required and the supplied human identity
+        satisfies that boundary.
+        """
+
+        if not approver.strip():
+            raise ValueError("approver must be non-empty")
+        queue = self._require_job_queue()
+        snapshot = queue.get(
+            project_id=self._state["project_id"],
+            job_id=job_id,
+        )
+        if snapshot.status != "WAITING_FOR_APPROVAL":
+            raise JobQueuePolicyError(
+                "approved resume requires WAITING_FOR_APPROVAL queue state"
+            )
+        job = snapshot.job_dict()
+        if action not in job["requested_actions"]:
+            raise SemanticValidationError(
+                "approved resume action was not declared by persisted job"
+            )
+        expected_blocker = f"human approval required for action: {action}"
+        if job.get("blocker") != expected_blocker:
+            raise JobQueuePolicyError(
+                "persisted approval blocker does not match requested action"
+            )
+        decision = self._policy_engine.evaluate(
+            action,
+            approval_obtained=True,
+            approver=approver,
+        )
+        if (
+            decision.decision is not Decision.ALLOW
+            or not decision.approval_required
+            or not decision.approval_obtained
+        ):
+            raise JobQueuePolicyError(
+                "current policy does not accept the explicit approval"
+            )
+        return queue._begin_waiting_run(
+            project_id=self._state["project_id"],
+            job_id=job_id,
+            expected_event_id=snapshot.event_id,
+        )
+
+    def persist_persisted_job_result(
+        self,
+        *,
+        job_id: str,
+        result_job: dict[str, Any],
+    ) -> JobQueueSnapshot:
+        """Persist the result of an existing Supervisor execution."""
+
+        validate_instance("job.schema.json", result_job)
+        self._validate_job_context(result_job)
+        return self._require_job_queue().persist_execution_result(
+            project_id=self._state["project_id"],
+            job_id=job_id,
+            result_job=result_job,
+        )
+
+    def recover_interrupted_persisted_jobs(
+        self,
+        *,
+        reason: str = "process restart interrupted RUNNING job",
+    ) -> tuple[JobQueueSnapshot, ...]:
+        """Fail closed any persisted RUNNING jobs after sole-owner restart."""
+
+        return self._require_job_queue().recover_interrupted_runs(
+            project_id=self._state["project_id"],
+            reason=reason,
+        )
+
+    def recover_expired_persisted_jobs(self) -> tuple[JobQueueSnapshot, ...]:
+        """Fail closed RUNNING jobs whose persisted run deadline has expired."""
+
+        return self._require_job_queue().recover_expired_runs(
+            project_id=self._state["project_id"],
+        )
+
+    def _require_job_queue(self) -> PersistedJobQueue:
+        if self._job_queue is None:
+            raise RuntimeError("Supervisor has no persisted job queue configured")
+        return self._job_queue
 
     def blackboard_view(
         self,

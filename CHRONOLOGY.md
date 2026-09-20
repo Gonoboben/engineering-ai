@@ -2456,3 +2456,319 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #36 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 018 accepted and merged
+
+Final approved PR head:
+`294bf424061102b4ee82c2f6e760ca9135330e94`.
+
+Final validation:
+- deterministic regression: `193/193 PASS`;
+- generic workflow run `35513932000`: `PASS`;
+- strict exact-head workflow run `35513931970`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation lifecycle smoke:
+  `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`;
+- final scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`75ee907446e952fbfc8a53006c1fd65f1257faea`.
+
+Issue #35 closed as completed.
+
+Accepted capability:
+- separate append-only knowledge lifecycle ledger;
+- exact immutable Gate 016 memory revision/SHA bindings;
+- OBSERVATION / EVIDENCE / ACCEPTED / INVALIDATED stages;
+- deterministic source/evidence staleness detection;
+- append-only invalidation;
+- current-evidence requalification after invalidation;
+- model observations remain ADVISORY;
+- CONTROL/ADR lifecycle evidence bypass prohibited;
+- no physical validation inference;
+- no automatic context injection.
+
+ADR-0017 state:
+`ACCEPTED_GATE_018`.
+
+Gate 018 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 019 persisted job queue opened
+
+Issue:
+`#37 — Gate 019 — Persisted job queue`.
+
+Branch:
+`gate-019-persisted-job-queue`.
+
+Base:
+Gate 018 squash merge
+`75ee907446e952fbfc8a53006c1fd65f1257faea`.
+
+Declared scope:
+- local persistent Supervisor-owned job queue;
+- deterministic FIFO claim ordering;
+- persistence across process close/reopen;
+- bounded retry/attempt state persistence;
+- explicit timeout/run-deadline metadata;
+- fail-closed recovery for interrupted RUNNING jobs;
+- WAITING_FOR_APPROVAL persistence without automatic execution;
+- terminal-state preservation;
+- project isolation, integrity checks, schemas/tests/evidence;
+- one primary-workstation reopen/recovery smoke.
+
+Explicitly out of scope:
+- Gate 020 scheduled/overnight runner;
+- automatic approval acquisition;
+- daemon/service lifecycle;
+- parallel/distributed workers;
+- external/cloud queue;
+- external AI bridge;
+- semantic/vector retrieval;
+- Vision/CAD workers;
+- architecture/physics/fabrication/release authority changes.
+
+Next:
+publish the initial synchronization checkpoint, open one draft PR for Issue #37,
+then implement the persisted queue without broadening execution authority.
+
+
+---
+
+## 2026-09-20 — Gate 019 persisted job queue implemented
+
+Initial implementation head:
+`63b612fd64e7317cf4dad218bce63f130f966ae8`.
+
+Implemented:
+- local SQLite append-only queue-event ledger;
+- complete schema-valid job snapshot per event;
+- deterministic FIFO claim ordering;
+- retry results re-entering at queue tail;
+- persisted attempts/retry state;
+- per-run timeout/deadline metadata;
+- late-result deadline rejection to BLOCKED;
+- fail-closed interrupted/expired RUNNING recovery;
+- WAITING_FOR_APPROVAL persistence;
+- terminal-state preservation;
+- project isolation;
+- SHA-256 event integrity and exact supersession chain;
+- Supervisor queue surface;
+- JSON Schema and deterministic smoke harness.
+
+Validation:
+- deterministic regression: `208/208 PASS`;
+- generic workflow run `35516817721`: `PASS`;
+- strict exact-head workflow run `35516817717`: `PASS`.
+
+API scope review tightened the approval boundary: low-level queue code should
+not expose a public option that can resume WAITING_FOR_APPROVAL.
+
+---
+
+## 2026-09-20 — Gate 019 approval-resume boundary tightened
+
+Corrected head:
+`f65ca9c7cce403511a2e685dd6baf8b0fbc70a0e`.
+
+Correction:
+- public queue begin_run accepts QUEUED only;
+- approval-waiting resume moved to an internal queue primitive;
+- Supervisor claim_approved_persisted_job requires the exact waiting action,
+  a named human approver, and a fresh current PolicyEngine ALLOW decision;
+- queue still performs no tool execution or approval granting.
+
+Validation:
+- deterministic regression: `208/208 PASS`;
+- generic workflow run `35516884394`: `PASS`;
+- strict exact-head workflow run `35516884392`: `PASS`.
+
+Final acceptance-test head:
+`983dafc9da4df41094961d4ce438cec7f4c8623e`.
+
+Additional tests:
+- direct low-level resume of WAITING_FOR_APPROVAL is rejected;
+- Gate 019 smoke script executes under regression CI.
+
+Validation:
+- deterministic regression: `209/209 PASS`;
+- generic workflow run `35516965090`: `PASS`;
+- strict exact-head workflow run `35516965135`: `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+ADR-0018 added as `PROPOSED_GATE_019`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then execute one primary-workstation persistence/reopen/recovery smoke.
+
+
+---
+
+## 2026-09-20 — Gate 019 primary-workstation persistence/reopen smoke passed
+
+Exact Engineering AI head:
+`f423f16d4895049121026386f37a9c9c68b8bf89`.
+
+Local result:
+`PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`.
+
+Observed:
+- database created: `true`;
+- database reopened: `true`;
+- FIFO retry tail preserved: `true`;
+- retry attempts preserved after reopen: `1`;
+- retry final state: `PASS`;
+- WAITING_FOR_APPROVAL survived reopen: `true`;
+- explicitly approved job final state: `PASS`;
+- interrupted RUNNING recovery event: `INTERRUPTED_RECOVERY`;
+- interrupted job final state: `BLOCKED`;
+- queue events checked: `13`;
+- queue jobs checked: `3`;
+- queue integrity: `PASS`;
+- automatic approval: `false`;
+- scheduled execution: `false`;
+- distributed workers: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+Gate 019 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record smoke evidence, run final generic + strict exact-head CI on the
+post-smoke documentation head, complete final scope review, then stop at
+explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 019 post-smoke predecessor-integrity hardening
+
+The first primary-workstation smoke passed on:
+`f423f16d4895049121026386f37a9c9c68b8bf89`.
+
+Subsequent final scope review identified one fail-closed robustness gap:
+`list_current()` validated each latest event hash, while full predecessor-chain
+validation occurred through get()/history()/verify_integrity() and again before
+a claim. A control-state listing should itself fail closed if an older queue
+event has been corrupted.
+
+Hardening head:
+`5f1f3a480042180b31b75df50a8736f3386e1ac7`.
+
+Correction:
+- list_current() now validates the complete append-only history for every
+  returned job before exposing current control state;
+- a regression test tampers an old ENQUEUED predecessor while leaving the latest
+  event untouched and requires list_current() to fail closed.
+
+Validation:
+- deterministic regression: `210/210 PASS`;
+- generic workflow run `35519588215`: `PASS`;
+- strict exact-head workflow run `35519588222`: `PASS`;
+- runtime scope review: `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Because runtime code changed after the first primary-workstation smoke, that
+smoke is retained as valid historical evidence but is not presented as exact
+validation of the hardened runtime.
+
+Next:
+freeze documentation, re-run CI, then repeat the short primary-workstation
+persistence/reopen smoke on the hardened runtime before final acceptance.
+
+
+---
+
+## 2026-09-20 — Gate 019 repeat primary-workstation smoke passed on hardened runtime
+
+Exact Engineering AI head:
+`165e85404e42f1db457572842cf21fc80d08f4da`.
+
+Local result:
+`PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`.
+
+Observed:
+- database created: `true`;
+- database reopened: `true`;
+- FIFO retry tail preserved: `true`;
+- retry attempts preserved after reopen: `1`;
+- retry final state: `PASS`;
+- WAITING_FOR_APPROVAL survived reopen: `true`;
+- explicitly approved job final state: `PASS`;
+- interrupted RUNNING recovery event: `INTERRUPTED_RECOVERY`;
+- interrupted job final state: `BLOCKED`;
+- queue events checked: `13`;
+- queue jobs checked: `3`;
+- queue integrity: `PASS`;
+- automatic approval: `false`;
+- scheduled execution: `false`;
+- distributed workers: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+This repeat smoke validates the post-hardening runtime that performs full
+predecessor-chain integrity validation during current-state reads.
+
+Gate 019 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record final local evidence, run final acceptance CI and scope review, prepare
+the final documentation-only acceptance head, then stop at explicit exact-SHA
+human squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 019 final acceptance checkpoint passed
+
+Post-repeat-smoke evidence head:
+`1248e2a1fd13f7d1aeb12ee3b523848d3e9dc503`.
+
+Validation:
+- deterministic regression: `210/210 PASS`;
+- generic workflow run `35521519407`: `PASS`;
+- strict exact-head workflow run `35521519425`: `PASS`;
+- exact revision verification: `PASS`;
+- repeat primary-workstation persistence/reopen smoke:
+  `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`.
+
+Final runtime scope review:
+`PASS`.
+
+Confirmed absent from Gate 019 runtime:
+- scheduler/cron/time-of-day runner;
+- daemon/service lifecycle;
+- automatic approval granting;
+- queue-owned tool execution;
+- distributed workers;
+- semantic/vector backend;
+- vision/Qwen runtime integration;
+- PHYSICAL_PASS synthesis;
+- generic SQL write API;
+- architecture/physics/fabrication/release authority expansion.
+
+Gate 019 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0018 remains:
+`PROPOSED_GATE_019`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #38 ready for review if green, then stop at human approval.

@@ -329,7 +329,7 @@ a vector database.
 ---
 
 ## ADR-0017 — Use a separate append-only ledger for knowledge lifecycle
-Status: `PROPOSED_GATE_018`
+Status: `ACCEPTED_GATE_018`
 
 ### Decision
 Engineering AI knowledge promotion/invalidation is represented in a separate
@@ -382,3 +382,50 @@ was known, accepted, invalidated and later re-qualified.
 - Gate 017 retrieval does not itself promote lifecycle state;
 - Gate 019 queueing and Gate 023 vision integration remain separate future
   Gates.
+
+
+---
+
+## ADR-0018 — Persist job control state as an append-only local queue ledger
+Status: `PROPOSED_GATE_019`
+
+### Decision
+Engineering AI Gate 019 persists bounded job queue state in a local SQLite
+append-only event ledger owned through the deterministic Supervisor boundary.
+
+A queue event stores the complete validated job snapshot together with event
+type, exact predecessor, timeout/deadline metadata, timestamp and canonical
+SHA-256 integrity hash. Queue history is linear per project/job and immutable
+job-definition fields cannot change across transitions.
+
+The low-level queue does not execute tools, schedule work or grant approval.
+Normal queued work may be claimed deterministically. An approval-waiting job
+can resume only through a Supervisor method that re-evaluates current policy
+with an explicit named human approver.
+
+RUNNING work interrupted by process restart or exceeding its persisted run
+deadline is recovered fail-closed to BLOCKED. It is never silently marked PASS
+or automatically retried because the external action may have partially
+executed.
+
+### Rationale
+Gate 003 already defines deterministic job states and bounded retries, but those
+states were process-local. Gate 019 must survive restart without weakening
+policy or guessing whether an interrupted external action completed.
+
+An append-only event ledger preserves a reconstructable history and avoids a
+mutable queue row silently rewriting prior state. Fail-closed interrupted-run
+recovery is deliberately conservative because replaying an uncertain action can
+duplicate side effects.
+
+### Consequence
+- job state and attempts survive process close/reopen;
+- FIFO claim order is deterministic;
+- bounded retry results can return to the queue tail;
+- WAITING_FOR_APPROVAL persists without automatic claim;
+- explicit approval still belongs to the existing Supervisor/PolicyEngine;
+- timeout/interrupt recovery produces BLOCKED, not PASS;
+- queue integrity and exact event supersession are verifiable;
+- scheduling and overnight operation remain Gate 020;
+- queue persistence does not imply physical validation or broaden project
+  permissions.

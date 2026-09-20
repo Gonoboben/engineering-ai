@@ -41,15 +41,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 016 merge commit: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
 - Gate 017: `ACCEPTED_MERGED`
 - Gate 017 merge commit: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
+- Gate 018: `ACCEPTED_MERGED`
+- Gate 018 merge commit: `75ee907446e952fbfc8a53006c1fd65f1257faea`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `018 — Knowledge lifecycle`
-- Issue: `#35`
-- PR: `#36 (DRAFT)`
-- Branch: `gate-018-knowledge-lifecycle`
-- Base: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
+- Gate: `019 — Persisted job queue`
+- Issue: `#37`
+- PR: `#38 (DRAFT)`
+- Branch: `gate-019-persisted-job-queue`
+- Base: `75ee907446e952fbfc8a53006c1fd65f1257faea`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -545,7 +547,53 @@ Historical CI note:
 - primary-workstation local lifecycle smoke: `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`; exact head `7d23cfd62e616659a793d21c7cb22ee7af0ca388`, accepted state before source change `ACCEPTED_CURRENT`, source revision `1 -> 2`, stale state `STALE_SOURCE_REVISION`, final state `INVALIDATED`, history revisions `1/2/3/4`, memory integrity=true, lifecycle integrity=true, automatic_context_injection=false, physical_validation_inferred=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - post-smoke evidence head `6e02671de1d774f679372419ef24ba6d7db4b278`: deterministic regression `193/193 PASS`, generic CI run `35513857456 PASS`, strict exact-head CI run `35513857442 PASS`
 - final scope review: `PASS`; no Qwen3-VL/vision runtime, embeddings/vector backend, automatic context injection, PHYSICAL_PASS synthesis, generic SQL mutation API, Gate 019 implementation, Gate 023 implementation, architecture/physics/fabrication/release authority expansion; UPDATE/DELETE occurrences limited to append-only SQLite prohibition triggers and tamper tests
-- ADR-0017: `PROPOSED_GATE_018`
+- final approved PR head: `294bf424061102b4ee82c2f6e760ca9135330e94`
+- final deterministic regression: `193/193 PASS`
+- final generic CI run `35513932000`: `PASS`
+- final strict exact-head CI run `35513931970`: `PASS`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `75ee907446e952fbfc8a53006c1fd65f1257faea`
+- Issue #35: `CLOSED / COMPLETED`
+- Gate 018 state: `ACCEPTED_MERGED`
+- ADR-0017: `ACCEPTED_GATE_018`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 019 validation state
+- Issue #37: `OPEN`
+- PR #38: `OPEN / DRAFT`
+- branch: `gate-019-persisted-job-queue`
+- branch base equals Gate 018 squash merge `75ee907446e952fbfc8a53006c1fd65f1257faea`: `PASS`
+- storage: `LOCAL_SQLITE_APPEND_ONLY_EVENT_LEDGER`
+- persisted queue events: `ENQUEUED / RUN_STARTED / EXECUTION_RESULT / INTERRUPTED_RECOVERY / TIMEOUT_RECOVERY`
+- job schema validation before enqueue/result: `ENFORCED`
+- immutable job scope/action/validator/retry definition across events: `ENFORCED`
+- deterministic FIFO claim: `IMPLEMENTED`
+- retry returns to queue tail: `IMPLEMENTED`
+- retry/attempt persistence across reopen: `IMPLEMENTED`
+- per-run timeout/deadline metadata: `IMPLEMENTED_1..86400_SECONDS`
+- late result after deadline -> PASS: `PROHIBITED_BLOCKED`
+- interrupted RUNNING reopen recovery: `BLOCKED_FAIL_CLOSED`
+- expired RUNNING recovery: `BLOCKED_FAIL_CLOSED`
+- WAITING_FOR_APPROVAL persistence: `IMPLEMENTED`
+- low-level queue approval resume: `PROHIBITED`
+- Supervisor approved resume: `CURRENT_POLICY_RECHECK_PLUS_NAMED_APPROVER`
+- terminal job automatic requeue: `PROHIBITED`
+- project isolation: `IMPLEMENTED`
+- event SHA-256 integrity + exact supersession chain: `IMPLEMENTED_FAIL_CLOSED`
+- tool execution inside queue: `ABSENT`
+- automatic approval acquisition: `PROHIBITED`
+- scheduling/cron/overnight execution: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE_020`
+- daemon/service/distributed workers: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- implementation head `63b612fd64e7317cf4dad218bce63f130f966ae8`: deterministic regression `208/208 PASS`, generic CI run `35516817721 PASS`, strict exact-head CI run `35516817717 PASS`
+- Supervisor-only approval-resume head `f65ca9c7cce403511a2e685dd6baf8b0fbc70a0e`: deterministic regression `208/208 PASS`, generic CI run `35516884394 PASS`, strict exact-head CI run `35516884392 PASS`
+- smoke/approval-boundary test head `983dafc9da4df41094961d4ce438cec7f4c8623e`: deterministic regression `209/209 PASS`, generic CI run `35516965090 PASS`, strict exact-head CI run `35516965135 PASS`
+- primary-workstation persistent/reopen smoke: `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`; exact head `f423f16d4895049121026386f37a9c9c68b8bf89`, database_created=true, database_reopened=true, fifo_retry_tail_preserved=true, retry_attempts_preserved=1, retry_final_state=PASS, approval_wait_survived_reopen=true, approval_final_state=PASS, interrupted_run_recovery=INTERRUPTED_RECOVERY, interrupted_final_state=BLOCKED, queue_events_checked=13, queue_jobs_checked=3, queue_integrity=true, automatic_approval=false, scheduled_execution=false, distributed_workers=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
+- post-smoke runtime hardening head `5f1f3a480042180b31b75df50a8736f3386e1ac7`: `list_current()` now validates each job's complete predecessor chain; predecessor-tamper regression added; deterministic regression `210/210 PASS`, generic CI run `35519588215 PASS`, strict exact-head CI run `35519588222 PASS`
+- runtime scope review after hardening: `PASS`; changed runtime contains no scheduler/cron/daemon, automatic approval API, tool-execution surface inside queue, semantic/vector backend, vision integration, PHYSICAL_PASS synthesis, or generic SQL write API
+- primary-workstation repeat smoke on post-hardening runtime: `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`; exact head `165e85404e42f1db457572842cf21fc80d08f4da`, database_created=true, database_reopened=true, fifo_retry_tail_preserved=true, retry_attempts_preserved=1, retry_final_state=PASS, approval_wait_survived_reopen=true, approval_final_state=PASS, interrupted_run_recovery=INTERRUPTED_RECOVERY, interrupted_final_state=BLOCKED, queue_events_checked=13, queue_jobs_checked=3, queue_integrity=true, automatic_approval=false, scheduled_execution=false, distributed_workers=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
+- post-repeat-smoke evidence head `1248e2a1fd13f7d1aeb12ee3b523848d3e9dc503`: deterministic regression `210/210 PASS`, generic CI run `35521519407 PASS`, strict exact-head CI run `35521519425 PASS`
+- final runtime scope review: `PASS`; no scheduler/cron/daemon, automatic approval API, queue-owned tool execution, distributed workers, semantic/vector backend, vision/Qwen runtime, PHYSICAL_PASS synthesis, or generic SQL write API
+- ADR-0018: `PROPOSED_GATE_019`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -584,4 +632,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on the final documentation-only Gate 018 head. If green, mark PR #36 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0017 remains PROPOSED_GATE_018 until that approval and squash merge.
+Run one final generic and strict exact-head CI on this final documentation-only Gate 019 head. If green, mark PR #38 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0018 remains PROPOSED_GATE_019 until that approval and squash merge.

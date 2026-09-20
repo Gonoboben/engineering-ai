@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/job-queue-snapshot.schema.json",
+  "title": "Engineering AI Persisted Job Queue Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "queue_sequence",
+    "event_id",
+    "project_id",
+    "job_id",
+    "event_type",
+    "job",
+    "timeout_seconds",
+    "run_started_at",
+    "run_deadline_at",
+    "reason",
+    "supersedes_event_id",
+    "created_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "queue_sequence": {"type": "integer", "minimum": 1},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "job_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{3,96}$"},
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "ENQUEUED",
+        "RUN_STARTED",
+        "EXECUTION_RESULT",
+        "INTERRUPTED_RECOVERY",
+        "TIMEOUT_RECOVERY"
+      ]
+    },
+    "job": {"$ref": "#/$defs/job"},
+    "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+    "run_started_at": {
+      "oneOf": [
+        {"type": "string", "format": "date-time"},
+        {"type": "null"}
+      ]
+    },
+    "run_deadline_at": {
+      "oneOf": [
+        {"type": "string", "format": "date-time"},
+        {"type": "null"}
+      ]
+    },
+    "reason": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "null"}
+      ]
+    },
+    "supersedes_event_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        {"type": "null"}
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "job": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "job_id",
+        "project_id",
+        "objective",
+        "scope",
+        "out_of_scope",
+        "requested_actions",
+        "required_validators",
+        "retry_limit",
+        "attempts",
+        "status"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0"},
+        "job_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{3,96}$"},
+        "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+        "gate_id": {"type": ["string", "null"]},
+        "objective": {"type": "string", "minLength": 1},
+        "scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "out_of_scope": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "requested_actions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "required_validators": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "retry_limit": {"type": "integer", "minimum": 0, "maximum": 20},
+        "attempts": {"type": "integer", "minimum": 0},
+        "status": {
+          "type": "string",
+          "enum": ["QUEUED", "RUNNING", "BLOCKED", "WAITING_FOR_APPROVAL", "PASS", "FAIL", "CANCELLED"]
+        },
+        "blocker": {"type": ["string", "null"]}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "ENQUEUED"}}},
+      "then": {
+        "properties": {
+          "supersedes_event_id": {"type": "null"},
+          "run_started_at": {"type": "null"},
+          "run_deadline_at": {"type": "null"},
+          "reason": {"type": "null"},
+          "job": {"properties": {"status": {"const": "QUEUED"}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "RUN_STARTED"}}},
+      "then": {
+        "properties": {
+          "supersedes_event_id": {"type": "string"},
+          "run_started_at": {"type": "string"},
+          "run_deadline_at": {"type": "string"},
+          "reason": {"type": "null"},
+          "job": {"properties": {"status": {"const": "RUNNING"}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": ["INTERRUPTED_RECOVERY", "TIMEOUT_RECOVERY"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "supersedes_event_id": {"type": "string"},
+          "reason": {"type": "string", "minLength": 1},
+          "job": {"properties": {"status": {"const": "BLOCKED"}}}
+        }
+      }
+    }
+  ]
+}
