@@ -3492,3 +3492,79 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #44 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 022 accepted and merged
+
+Final approved PR head:
+`e3d3d6e67dbd782fc7df1e420424ec1fedf32c02`.
+
+Final validation:
+- deterministic regression: `268/268 PASS`;
+- generic workflow run `35526813486`: `PASS`;
+- strict exact-head workflow run `35526813470`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation fake-transport smoke: `PASS_CONTROLLED_MCP_TOOL_EXPOSURE`;
+- final runtime scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`3111a1d793c05ead0292839500e698a9c5fe2c56`.
+
+PR #44:
+`MERGED`.
+
+Issue #43:
+`CLOSED / COMPLETED`.
+
+ADR-0021 state:
+`ACCEPTED_GATE_022`.
+
+Gate 022 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 023 provenance-preserving Vision worker opened
+
+Issue:
+`#45 — Gate 023 — Provenance-preserving Vision worker`.
+
+Branch:
+`gate-023-provenance-preserving-vision-worker`.
+
+Base:
+Gate 022 squash merge
+`3111a1d793c05ead0292839500e698a9c5fe2c56`.
+
+Declared scope:
+- explicit bounded image inputs with project/source provenance and SHA-256;
+- transient image payload transport only;
+- loopback-only Ollama multimodal request support;
+- deterministic Vision routing/capability requirement;
+- structured model observations tied to supplied source refs;
+- ADVISORY-only result semantics with `evidence_eligible=false`;
+- fail-closed media/hash/size/source/provider/schema handling;
+- no automatic Blackboard evidence promotion.
+
+Explicitly out of scope:
+- deterministic-evidence OCR promotion;
+- unmeasured production qualification of a new Vision model;
+- live camera/video ingestion;
+- external/cloud vision APIs;
+- arbitrary filesystem/URL loading;
+- CAD manipulation;
+- image generation;
+- architecture/physics/fabrication/release authority expansion.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+implement the bounded Vision input/worker boundary and deterministic regression,
+then run generic + strict exact-head CI.
