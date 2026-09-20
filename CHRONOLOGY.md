@@ -4168,3 +4168,66 @@ Explicitly out of scope:
 Next:
 publish the Gate 026 synchronization checkpoint, open one draft PR for Issue
 #51, then add and validate the clean-install contract.
+
+
+---
+
+## 2026-09-20 — Gate 026 cross-platform installation implementation validated
+
+Validated implementation head:
+`6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`.
+
+Implemented:
+- Python 3.12.x canonical install contract;
+- exact install-tool lock:
+  `packaging==26.3`, `pip==26.2.1`, `setuptools==84.0.0`,
+  `wheel==0.48.0`;
+- exact runtime dependency closure;
+- clean fresh-venv bootstrap;
+- double wheel build with repeated SHA-256 equality requirement;
+- non-editable wheel installation;
+- installed package/version verification;
+- 14 installed JSON Schema documents verified independently of source checkout;
+- `pip check`;
+- full deterministic regression from the installed package;
+- Ubuntu + Windows Gate 026 acceptance workflow.
+
+The stricter install path exposed and corrected:
+- missing schema data in built wheels;
+- SQLite handle retention after failed memory initialization;
+- Windows CRLF assumptions in exact-byte controlled-worktree tests;
+- incomplete Windows timeout-process cleanup.
+
+Production exact-byte stale-patch protection, Supervisor authority and existing
+validator semantics were not weakened.
+
+Validation:
+- generic workflow `35535616430`: `PASS`;
+- strict exact-head workflow `35535616425`: `PASS`;
+- Gate 026 install workflow `35535616417`: `PASS`;
+- Ubuntu installed-package regression: `306/306 PASS`;
+- Windows installed-package regression: `306/306 PASS`;
+- Ubuntu repeated wheel SHA-256 match: `PASS`;
+- Windows repeated wheel SHA-256 match: `PASS`.
+
+Ubuntu and Windows wheel hashes are distinct from each other. Gate 026 claims
+repeated deterministic wheel identity within each validated platform, not
+byte-identical cross-platform wheel artifacts.
+
+Offline dependency acquisition:
+`NOT_CLAIMED_GATE_026`.
+
+Offline continuation of connected projects:
+`NOT_CLAIMED_GATE_026`.
+
+Package publication:
+`NOT_RUN / OUT_OF_SCOPE`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+run the documentation/evidence exact-head validation checkpoint. If green, mark
+PR #52 ready for review, synchronize ready-state documentation, freeze the
+branch, run final exact-head validation, and stop for explicit human exact-SHA
+squash-merge approval.
