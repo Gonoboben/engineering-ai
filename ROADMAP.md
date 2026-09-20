@@ -407,55 +407,84 @@ Final validation:
 ADR-0023: `ACCEPTED_GATE_024`.
 
 ### Gate 025 — Image-generation worker
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#49`
+Accepted merge commit:
+`171ff20125389d2d953576a0d3340c13dc1dc53f`
 
-PR: `#50`
+Final approved PR head:
+`eca63b5c28ea908c6cb43900aa97909d0fb289bc`
 
-Branch: `gate-025-non-authoritative-image-generation-worker`
+Delivered bounded local text-to-image concept generation with explicit
+evidence-qualified routing, existing Supervisor `propose_patch` authority,
+deterministic PNG validation and root-bounded publication. Generated imagery
+remains `ADVISORY_CONCEPT_ONLY`, `evidence_eligible=false`,
+`engineering_drawing=false`.
 
-Base: Gate 024 squash merge `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`.
-
-Implemented bounded local text-to-image concept generation with:
-- distinct evidence-qualified `IMAGE_GENERATION` routing;
-- no unmeasured production image-generation route;
-- local-only provider contract;
-- current Supervisor `propose_patch` authorization before provider execution;
-- deterministic PNG structure/CRC/raster/dimension validation;
-- root-bounded atomic PNG publication;
-- fixed non-authoritative result semantics:
-  `ADVISORY_CONCEPT_ONLY`, `evidence_eligible=false`,
-  `engineering_drawing=false`.
-
-Validated smoke head:
-`a5bb614a430a0d5b00d3adab57c4a62fd1b41e7f`.
-
-Validation:
+Final validation:
 - deterministic regression: `301/301 PASS`;
-- generic CI `35531846754`: `PASS`;
-- strict exact-head CI `35531846777`: `PASS`;
-- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`.
+- generic workflow `35532035872`: `PASS`;
+- strict exact-head workflow `35532035537`: `PASS`;
+- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`;
+- production image-generation model/provider: `NOT_QUALIFIED`;
+- default accepted route: `NO_ROUTE`;
+- real provider call: `NOT_RUN`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-PNG hardening head:
-`93991af1b5b7505ce0546dd58297daf810d6409e`.
+ADR-0024: `ACCEPTED_GATE_025`.
 
-Hardening validation:
-- generic CI `35531878630`: `PASS`;
-- strict exact-head CI `35531878735`: `PASS`.
+## Phase 8 — Stable engineering platform
 
-Production image-generation model/provider:
-`NOT_QUALIFIED`; default accepted route remains `NO_ROUTE`.
+### Gate 026 — Reproducible local installation
+Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
 
-Real image-generation provider call:
-`NOT_RUN`.
+Issue: `#51`
 
-ADR-0024 remains `PROPOSED_GATE_025` until explicit exact-SHA squash merge.
+PR: `#52 (READY FOR REVIEW)`
+
+Branch: `gate-026-reproducible-local-installation`
+
+Base: Gate 025 squash merge
+`171ff20125389d2d953576a0d3340c13dc1dc53f`.
+
+Validated implementation head:
+`6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`.
+
+Delivered:
+- documented Python 3.12.x install contract;
+- exact frozen runtime and install-tool dependency sets;
+- clean fresh-venv bootstrap;
+- non-editable wheel install;
+- repeated wheel SHA-256 equality check per platform;
+- installed package/version/schema verification;
+- `pip check`;
+- full installed-package deterministic regression;
+- Ubuntu and Windows acceptance workflow.
+
+Implementation validation:
+- deterministic installed-package regression:
+  `306/306 PASS` on Ubuntu;
+- deterministic installed-package regression:
+  `306/306 PASS` on Windows;
+- generic workflow `35535616430`: `PASS`;
+- strict exact-head workflow `35535616425`: `PASS`;
+- Gate 026 install workflow `35535616417`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+Gate 026 establishes the reproducible-local-installation criterion only.
+Offline dependency acquisition and offline continuation remain separate Phase 8
+criteria and are not inferred from this PASS.
+
+Ready-for-review checkpoint:
+- documentation/evidence head:
+  `a04337bbfbc0d9306b4f9a8a2f4d93dbc62bfb5b`;
+- generic workflow `35535865183`: `PASS`;
+- strict exact-head workflow `35535865222`: `PASS`;
+- Gate 026 install workflow `35535865187`:
+  Ubuntu `PASS`, Windows `PASS`.
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
-
-## Phase 8 — Stable engineering platform
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:

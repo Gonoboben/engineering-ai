@@ -106,7 +106,7 @@ class PlataVMControlledLoopTests(unittest.TestCase):
         for relative, content in docs.items():
             path = self.root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content, encoding="utf-8")
+            path.write_bytes(content.encode("utf-8"))
 
     def _git(self, *args: str) -> str:
         return subprocess.run(
@@ -143,9 +143,11 @@ class PlataVMControlledLoopTests(unittest.TestCase):
         self.assertEqual(prep.source_conflicts, ())
         assert prep.session is not None
 
+        worktree_target = Path(prep.session.worktree_root) / "Docs" / "safe.txt"
+        original_worktree_content = worktree_target.read_bytes().decode("utf-8")
         proposal = PatchProposal(
             relative_path="Docs/safe.txt",
-            expected_sha256=sha256_text("before\n"),
+            expected_sha256=hashlib.sha256(worktree_target.read_bytes()).hexdigest(),
             new_content="after\n",
             rationale="bounded synthetic Gate 013 fixture change",
         )
@@ -170,8 +172,8 @@ class PlataVMControlledLoopTests(unittest.TestCase):
         rollback = PatchProposal(
             relative_path="Docs/safe.txt",
             expected_sha256=applied.application.after_sha256,
-            new_content="before\n",
-            rationale="restore synthetic fixture before controlled cleanup",
+            new_content=original_worktree_content,
+            rationale="restore exact synthetic fixture bytes before controlled cleanup",
         )
         loop.apply_patch(
             session=prep.session,

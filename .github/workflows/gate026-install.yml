@@ -1,0 +1,52 @@
+name: Gate 026 install validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  reproducible-clean-install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify exact revision
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          actual="$(git rev-parse HEAD)"
+          expected="${{ github.event.pull_request.head.sha }}"
+          echo "expected=$expected"
+          echo "actual=$actual"
+          test "$actual" = "$expected"
+
+      - name: Verify exact revision on Windows
+        shell: pwsh
+        if: runner.os == 'Windows'
+        run: |
+          $actual = (git rev-parse HEAD).Trim()
+          $expected = "${{ github.event.pull_request.head.sha }}"
+          Write-Host "expected=$expected"
+          Write-Host "actual=$actual"
+          if ($actual -ne $expected) { throw "exact PR head mismatch" }
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run canonical non-editable clean install and deterministic regression
+        run: >-
+          python scripts/bootstrap_reproducible.py
+          --venv "${{ runner.temp }}/engineering-ai-gate026"
+          --run-tests

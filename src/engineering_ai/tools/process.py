@@ -54,21 +54,26 @@ class AllowListedProcessRunner:
         argv = [str(executable), *spec.fixed_args]
 
         with tempfile.TemporaryFile() as stdout_file, tempfile.TemporaryFile() as stderr_file:
-            process = subprocess.Popen(
-                argv,
-                cwd=workdir,
-                stdin=subprocess.DEVNULL,
-                stdout=stdout_file,
-                stderr=stderr_file,
-                shell=False,
-            )
             timed_out = False
+            exit_code: int | None = None
             try:
-                exit_code = process.wait(timeout=spec.timeout_seconds)
+                completed = subprocess.run(
+                    argv,
+                    cwd=workdir,
+                    stdin=subprocess.DEVNULL,
+                    stdout=stdout_file,
+                    stderr=stderr_file,
+                    shell=False,
+                    timeout=spec.timeout_seconds,
+                    check=False,
+                )
+                exit_code = completed.returncode
             except subprocess.TimeoutExpired:
+                # subprocess.run owns the Popen lifecycle and, on timeout,
+                # kills and fully reaps the child before returning control.
+                # This matters on Windows where an incompletely reaped child
+                # can retain its current-directory handle and block cleanup.
                 timed_out = True
-                process.kill()
-                exit_code = process.wait()
 
             stdout, stdout_truncated = self._read_bounded(stdout_file, spec.max_output_bytes)
             stderr, stderr_truncated = self._read_bounded(stderr_file, spec.max_output_bytes)

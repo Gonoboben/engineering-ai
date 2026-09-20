@@ -689,7 +689,7 @@ the existing authority and evidence hierarchy.
 ---
 
 ## ADR-0024 — Generated imagery is concept-only until deterministically reconstructed
-Status: `PROPOSED_GATE_025`
+Status: `ACCEPTED_GATE_025`
 
 ### Decision
 Gate 025 introduces a bounded local text-to-image worker for visual ideation.

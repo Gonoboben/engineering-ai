@@ -55,16 +55,19 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 023 merge commit: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
 - Gate 024: `ACCEPTED_MERGED`
 - Gate 024 merge commit: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
+- Gate 025: `ACCEPTED_MERGED`
+- Gate 025 merge commit: `171ff20125389d2d953576a0d3340c13dc1dc53f`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `025 — Non-authoritative image-generation worker`
-- Issue: `#49`
-- PR: `#50 (READY FOR REVIEW)`
-- Branch: `gate-025-non-authoritative-image-generation-worker`
-- Base: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `026 — Reproducible local installation`
+- Issue: `#51`
+- PR: `#52 (READY FOR REVIEW)`
+- Branch: `gate-026-reproducible-local-installation`
+- Base: `171ff20125389d2d953576a0d3340c13dc1dc53f`
+- Validated implementation head: `6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`
+- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -104,7 +107,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Accepted registry Vision route: `NO_ROUTE_UNTIL_MEASURED_QUALIFICATION`
 - Visual model observations: `ADVISORY_ONLY / evidence_eligible=false`
 - CAD worker: `IMPLEMENTED_VALIDATED_GATE_024_ACCEPTED`
-- Image-generation worker: `IMPLEMENTED_VALIDATED_GATE_025_PENDING_ACCEPTANCE`
+- Image-generation worker: `IMPLEMENTED_VALIDATED_GATE_025_ACCEPTED`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
 - PlataVM controlled worktree loop: `IMPLEMENTED_VALIDATED_GATE_013`
@@ -112,6 +115,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
 - External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
 - Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
+- Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -782,10 +786,12 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final ready-state Gate 025
-documentation-only head. If both remain green, freeze PR #50 and stop at
-explicit human exact-SHA squash-merge approval. ADR-0024 remains
-`PROPOSED_GATE_025` until that approval and accepted merge.
+Freeze Gate 026 content at the ready-state synchronization head. Run generic,
+strict exact-head and Gate 026 Ubuntu/Windows install validation on that exact
+head. If all remain green, stop at explicit human exact-SHA squash-merge
+approval for PR #52.
+
+Do not infer the separate Phase 8 offline-continuation criterion from Gate 026.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -871,7 +877,7 @@ explicit human exact-SHA squash-merge approval. ADR-0024 remains
 - fabrication authorization: `NOT_GRANTED`
 - release authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
-- ADR-0024: `PROPOSED_GATE_025`
+- ADR-0024: `ACCEPTED_GATE_025`
 - pre-ready documentation/evidence head `81fc9256b737a9110037f5f9695e76d40634ff0c`: generic CI `35531984785 PASS`, strict exact-head CI `35531984758 PASS`
 - final ready-state exact-head CI: `REQUIRED_ON_FINAL_HEAD`
 - human exact-SHA squash-merge approval: `PENDING`

@@ -4086,3 +4086,180 @@ Default accepted image-generation route remains:
 
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-20 — Gate 025 accepted and merged
+
+Final approved PR head:
+`eca63b5c28ea908c6cb43900aa97909d0fb289bc`.
+
+Final validation:
+- deterministic regression: `301/301 PASS`;
+- generic workflow `35532035872`: `PASS`;
+- strict exact-head workflow `35532035537`: `PASS`;
+- smoke: `PASS_NON_AUTHORITATIVE_IMAGE_GENERATION_BOUNDARY`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`171ff20125389d2d953576a0d3340c13dc1dc53f`.
+
+PR #50:
+`MERGED`.
+
+Issue #49:
+`CLOSED / COMPLETED`.
+
+ADR-0024 state:
+`ACCEPTED_GATE_025`.
+
+Production image-generation model/provider:
+`NOT_QUALIFIED`.
+
+Default accepted image-generation route:
+`NO_ROUTE`.
+
+Real image-generation provider call:
+`NOT_RUN`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 026 reproducible local installation opened
+
+Issue:
+`#51 — Gate 026 — Reproducible local installation`.
+
+Branch:
+`gate-026-reproducible-local-installation`.
+
+Base:
+Gate 025 squash merge
+`171ff20125389d2d953576a0d3340c13dc1dc53f`.
+
+Objective:
+close the first Phase 8 / v1.0 criterion, reproducible local installation,
+without changing Engineering AI runtime authority or feature architecture.
+
+Measured runtime dependency closure from accepted Gate 025 CI
+`35532035872`:
+- `jsonschema==4.26.0`;
+- `attrs==26.1.0`;
+- `jsonschema-specifications==2025.9.1`;
+- `referencing==0.37.0`;
+- `rpds-py==2026.6.3`;
+- `typing-extensions==4.16.0`.
+
+Build/install tool versions remain to be measured before freezing.
+
+Explicitly out of scope:
+- offline wheelhouse/dependency packaging;
+- model/routing changes;
+- new tool/permission authority;
+- connected-project behavioral changes;
+- containerization requirement;
+- package publication;
+- fabrication/release;
+- validator weakening.
+
+Next:
+publish the Gate 026 synchronization checkpoint, open one draft PR for Issue
+#51, then add and validate the clean-install contract.
+
+
+---
+
+## 2026-09-20 — Gate 026 cross-platform installation implementation validated
+
+Validated implementation head:
+`6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`.
+
+Implemented:
+- Python 3.12.x canonical install contract;
+- exact install-tool lock:
+  `packaging==26.3`, `pip==26.2.1`, `setuptools==84.0.0`,
+  `wheel==0.48.0`;
+- exact runtime dependency closure;
+- clean fresh-venv bootstrap;
+- double wheel build with repeated SHA-256 equality requirement;
+- non-editable wheel installation;
+- installed package/version verification;
+- 14 installed JSON Schema documents verified independently of source checkout;
+- `pip check`;
+- full deterministic regression from the installed package;
+- Ubuntu + Windows Gate 026 acceptance workflow.
+
+The stricter install path exposed and corrected:
+- missing schema data in built wheels;
+- SQLite handle retention after failed memory initialization;
+- Windows CRLF assumptions in exact-byte controlled-worktree tests;
+- incomplete Windows timeout-process cleanup.
+
+Production exact-byte stale-patch protection, Supervisor authority and existing
+validator semantics were not weakened.
+
+Validation:
+- generic workflow `35535616430`: `PASS`;
+- strict exact-head workflow `35535616425`: `PASS`;
+- Gate 026 install workflow `35535616417`: `PASS`;
+- Ubuntu installed-package regression: `306/306 PASS`;
+- Windows installed-package regression: `306/306 PASS`;
+- Ubuntu repeated wheel SHA-256 match: `PASS`;
+- Windows repeated wheel SHA-256 match: `PASS`.
+
+Ubuntu and Windows wheel hashes are distinct from each other. Gate 026 claims
+repeated deterministic wheel identity within each validated platform, not
+byte-identical cross-platform wheel artifacts.
+
+Offline dependency acquisition:
+`NOT_CLAIMED_GATE_026`.
+
+Offline continuation of connected projects:
+`NOT_CLAIMED_GATE_026`.
+
+Package publication:
+`NOT_RUN / OUT_OF_SCOPE`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+run the documentation/evidence exact-head validation checkpoint. If green, mark
+PR #52 ready for review, synchronize ready-state documentation, freeze the
+branch, run final exact-head validation, and stop for explicit human exact-SHA
+squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 026 ready-for-review checkpoint
+
+Documentation/evidence checkpoint head before ready transition:
+`a04337bbfbc0d9306b4f9a8a2f4d93dbc62bfb5b`.
+
+Validation:
+- generic workflow `35535865183`: `PASS`;
+- strict exact-head workflow `35535865222`: `PASS`;
+- Gate 026 install workflow `35535865187`: `PASS`;
+- Ubuntu clean non-editable install: `PASS`;
+- Windows clean non-editable install: `PASS`.
+
+PR #52 was marked:
+`READY FOR REVIEW`.
+
+No architecture, model-routing, Supervisor authority, offline-continuation,
+publication, release, fabrication or physical-validation state changed by the
+ready transition.
+
+A final source-of-truth consistency head now requires one last generic + strict
+exact-head + Gate 026 cross-platform install validation before branch freeze and
+explicit human exact-SHA squash-merge approval.
+
+Offline continuation remains:
+`NOT_CLAIMED_GATE_026`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
