@@ -382,44 +382,47 @@ Final validation:
 ADR-0022: `ACCEPTED_GATE_023`.
 
 ### Gate 024 — CAD worker
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#47`
+Accepted merge commit:
+`99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
 
-PR: `#48`
+Delivered a bounded proposal-only parametric CAD worker with typed millimetre
+box/cylinder primitives, deterministic design SHA-256, analytical volume/AABB
+checks, Supervisor-owned `propose_patch` authority, fixed data-only
+FreeCADCmd helper and root-bounded FCStd publication only after deterministic
+runtime geometry agreement.
 
-Branch: `gate-024-controlled-parametric-cad-worker`
+Final approved PR head:
+`8330aa62964ec2f9b38873b69a7591a44e1fa5a4`.
 
-Base: Gate 023 squash merge `f3c826a434eca8e5d7163f5cf4166560717bdbc2`.
-
-Implemented a bounded proposal-only parametric CAD worker:
-- millimetre box/cylinder primitives with translation-only placement;
-- canonical design SHA-256;
-- deterministic analytical primitive volume and AABB checks;
-- Supervisor-owned `propose_patch` authorization with zero backend calls on denial;
-- fixed repository-owned FreeCADCmd helper using data-only JSON and `shell=False`;
-- root-bounded FCStd publication only after runtime geometry matches deterministic expected geometry;
-- no model-supplied scripts, new autonomous CAD permission, fabrication/release authority or physical-validation promotion.
-
-Validated runtime hardening head:
-`a02822fdecb8573fb20b33fb70b94e6ca5ac16cc`.
-
-Validation:
-- deterministic regression with CAD smoke: `289/289 PASS`;
-- corrected full-suite generic CI `35530909113`: `PASS`;
-- corrected full-suite strict exact-head CI `35530909124`: `PASS`;
-- hardened runtime generic CI `35530942168`: `PASS`;
-- hardened runtime strict exact-head CI `35530942160`: `PASS`;
+Final validation:
+- deterministic regression: `289/289 PASS`;
+- generic CI `35531166350`: `PASS`;
+- strict exact-head CI `35531166349`: `PASS`;
 - smoke: `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`;
 - real FreeCAD workstation smoke: `NOT_RUN`;
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-ADR-0023 remains `PROPOSED_GATE_024` until explicit exact-SHA squash merge.
+ADR-0023: `ACCEPTED_GATE_024`.
 
 ### Gate 025 — Image-generation worker
-Status: `NOT_STARTED`
+Status: `IN_PROGRESS`
 
-Add concept/visual generation as a non-authoritative design aid. Generated imagery is never treated as an engineering drawing without deterministic reconstruction/validation.
+Issue: `#49`
+
+Branch: `gate-025-non-authoritative-image-generation-worker`
+
+Base: Gate 024 squash merge `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`.
+
+Implement bounded text-to-image concept generation as a non-authoritative design
+aid. Gate 025 must use explicit measured capability routing, existing Supervisor
+`propose_patch` authority, deterministic PNG validation and root-bounded
+publication. Generated imagery is never an engineering drawing, CAD, schematic,
+measurement or physical evidence by itself.
+
+Production image-generation models/providers remain unqualified until separate
+measured evidence exists.
 
 ## Phase 8 — Stable engineering platform
 
