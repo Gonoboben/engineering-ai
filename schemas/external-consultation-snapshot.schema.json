@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/external-consultation-snapshot.schema.json",
+  "title": "Engineering AI External Consultation Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sequence",
+    "event_id",
+    "project_id",
+    "consultation_id",
+    "event_type",
+    "request_manifest",
+    "provider_name",
+    "model",
+    "approval_required",
+    "approval_obtained",
+    "approver",
+    "response_sha256",
+    "response_chars",
+    "failure_reason",
+    "supersedes_event_id",
+    "created_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "consultation_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "event_type": {
+      "type": "string",
+      "enum": ["REQUEST_RECORDED", "POLICY_BLOCKED", "PROVIDER_FAILED", "RESPONSE_ACCEPTED"]
+    },
+    "request_manifest": {"$ref": "#/$defs/manifest"},
+    "provider_name": {"type": "string", "minLength": 1},
+    "model": {"type": "string", "minLength": 1},
+    "approval_required": {"type": "boolean"},
+    "approval_obtained": {"type": "boolean"},
+    "approver": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "null"}
+      ]
+    },
+    "response_sha256": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "response_chars": {
+      "oneOf": [
+        {"type": "integer", "minimum": 0},
+        {"type": "null"}
+      ]
+    },
+    "failure_reason": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "null"}
+      ]
+    },
+    "supersedes_event_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        {"type": "null"}
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "context_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_id",
+        "project_id",
+        "source_ref",
+        "kind",
+        "char_count",
+        "content_sha256",
+        "contains_secrets"
+      ],
+      "properties": {
+        "context_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+        "source_ref": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "char_count": {"type": "integer", "minimum": 1},
+        "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "contains_secrets": {"const": false}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consultation_id",
+        "project_id",
+        "gate_id",
+        "job_id",
+        "purpose_sha256",
+        "purpose_char_count",
+        "provider_name",
+        "model",
+        "context_items",
+        "total_context_chars",
+        "max_context_chars",
+        "max_output_chars",
+        "timeout_seconds",
+        "contains_secrets"
+      ],
+      "properties": {
+        "consultation_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+        "gate_id": {"type": ["string", "null"]},
+        "job_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        "purpose_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "purpose_char_count": {"type": "integer", "minimum": 1},
+        "provider_name": {"type": "string", "minLength": 1},
+        "model": {"type": "string", "minLength": 1},
+        "context_items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/context_item"}
+        },
+        "total_context_chars": {"type": "integer", "minimum": 1},
+        "max_context_chars": {"type": "integer", "minimum": 1, "maximum": 200000},
+        "max_output_chars": {"type": "integer", "minimum": 1, "maximum": 50000},
+        "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 600},
+        "contains_secrets": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "REQUEST_RECORDED"}}},
+      "then": {
+        "properties": {
+          "response_sha256": {"type": "null"},
+          "response_chars": {"type": "null"},
+          "failure_reason": {"type": "null"},
+          "supersedes_event_id": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "RESPONSE_ACCEPTED"}}},
+      "then": {
+        "properties": {
+          "response_sha256": {"type": "string"},
+          "response_chars": {"type": "integer"},
+          "failure_reason": {"type": "null"},
+          "supersedes_event_id": {"type": "string"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {"enum": ["POLICY_BLOCKED", "PROVIDER_FAILED"]}
+        }
+      },
+      "then": {
+        "properties": {
+          "response_sha256": {"type": "null"},
+          "response_chars": {"type": "null"},
+          "failure_reason": {"type": "string"},
+          "supersedes_event_id": {"type": "string"}
+        }
+      }
+    }
+  ]
+}

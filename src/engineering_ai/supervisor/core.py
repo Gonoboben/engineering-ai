@@ -125,6 +125,21 @@ class Supervisor:
     def audit_events(self) -> tuple[dict[str, Any], ...]:
         return tuple(deepcopy(self._audit_events))
 
+    def inspect_project_action(
+        self,
+        *,
+        action: str,
+        approval_obtained: bool = False,
+        approver: str | None = None,
+    ) -> PolicyDecision:
+        """Evaluate current project policy without executing or mutating anything."""
+
+        return self._policy_engine.evaluate(
+            action,
+            approval_obtained=approval_obtained,
+            approver=approver,
+        )
+
     def route_model(self, request: RouteRequest) -> RouteDecision:
         """Route an explicit task class through the configured deterministic router.
 
