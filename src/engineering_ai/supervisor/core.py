@@ -284,6 +284,73 @@ class Supervisor:
             project_id=self._state["project_id"],
         )
 
+    def inspect_job_action(
+        self,
+        *,
+        job: dict[str, Any],
+        action: str,
+    ) -> PolicyDecision:
+        """Evaluate current policy for a persisted job without executing a tool."""
+
+        working_job = deepcopy(job)
+        validate_instance("job.schema.json", working_job)
+        self._validate_job_context(working_job)
+        if working_job["status"] in self.TERMINAL_JOB_STATES:
+            raise SemanticValidationError(
+                f"terminal job cannot be inspected for execution: {working_job['status']}"
+            )
+        return self._decision_for_request(
+            job=working_job,
+            action=action,
+            approval_obtained=False,
+            approver=None,
+        )
+
+    def claim_persisted_job(
+        self,
+        *,
+        job_id: str,
+        expected_event_id: str | None = None,
+    ) -> JobQueueSnapshot:
+        """Claim one exact QUEUED persisted job without evaluating/executing it."""
+
+        return self._require_job_queue().begin_run(
+            project_id=self._state["project_id"],
+            job_id=job_id,
+            expected_event_id=expected_event_id,
+        )
+
+    def block_running_persisted_job(
+        self,
+        *,
+        job_id: str,
+        blocker: str,
+    ) -> JobQueueSnapshot:
+        """Fail closed a currently RUNNING persisted job without a tool call."""
+
+        if not blocker.strip():
+            raise ValueError("blocker must be non-empty")
+        snapshot = self.persisted_job(job_id=job_id)
+        if snapshot.status != "RUNNING":
+            raise JobQueuePolicyError(
+                "control block requires RUNNING persisted job state"
+            )
+        job = snapshot.job_dict()
+        job["status"] = "BLOCKED"
+        job["blocker"] = blocker.strip()
+        self._apply_state_blocker(job, blocker.strip(), next_action=None)
+        self._record_transition(
+            job=job,
+            action="scheduled_run_control",
+            status="BLOCKED",
+            summary=blocker.strip(),
+            before_ref=self._repository_ref(),
+        )
+        return self.persist_persisted_job_result(
+            job_id=job_id,
+            result_job=job,
+        )
+
     def claim_next_persisted_job(self) -> JobQueueSnapshot | None:
         """Claim the deterministic next QUEUED job.
 
