@@ -82,8 +82,8 @@ def main() -> int:
             f"engineering_ai imported from source tree instead of installed wheel: {package_file}"
         )
 
-    if len(args.expected-wheel-sha256) != 64 or any(
-        ch not in "0123456789abcdef" for ch in args.expected-wheel-sha256.lower()
+    if len(args.expected_wheel_sha256) != 64 or any(
+        ch not in "0123456789abcdef" for ch in args.expected_wheel_sha256.lower()
     ):
         mismatches.append("expected wheel SHA-256 is not a 64-character hex digest")
 
