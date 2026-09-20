@@ -21,7 +21,7 @@ class ModelImageAttachment:
 
     source_ref: str
     media_type: str
-    data: bytes
+    data: bytes = field(repr=False)
     content_sha256: str = field(init=False)
 
     def __post_init__(self) -> None:
@@ -36,6 +36,16 @@ class ModelImageAttachment:
             raise ValueError("image data must be non-empty bytes")
         if len(self.data) > 16 * 1024 * 1024:
             raise ValueError("individual image exceeds 16 MiB transport bound")
+        if self.media_type == "image/png" and not self.data.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValueError("image/png payload has invalid PNG signature")
+        if self.media_type == "image/jpeg" and not self.data.startswith(b"\xff\xd8\xff"):
+            raise ValueError("image/jpeg payload has invalid JPEG signature")
+        if self.media_type == "image/webp" and not (
+            len(self.data) >= 12
+            and self.data.startswith(b"RIFF")
+            and self.data[8:12] == b"WEBP"
+        ):
+            raise ValueError("image/webp payload has invalid WebP signature")
         object.__setattr__(self, "source_ref", source_ref)
         object.__setattr__(self, "content_sha256", hashlib.sha256(self.data).hexdigest())
 
