@@ -131,6 +131,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
     _dotnet_spec(
         "buoycalc.restore_app",
         ("restore", "BuoyCalc.Windows.csproj"),
+        network_requirement=NetworkRequirement.NETWORK_CAPABLE,
     ),
     _dotnet_spec(
         "buoycalc.restore_engineering_regression",
@@ -138,6 +139,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "restore",
             "validation/BuoyCalc.EngineeringRegression/BuoyCalc.EngineeringRegression.csproj",
         ),
+        network_requirement=NetworkRequirement.NETWORK_CAPABLE,
     ),
     _dotnet_spec(
         "buoycalc.build_release",
@@ -148,6 +150,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "Release",
             "--no-restore",
         ),
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
     ),
     _pwsh_spec("buoycalc.check_reportbuilder_usage", "tools/check-reportbuilder-usage.ps1"),
     _pwsh_spec("buoycalc.check_technical_report_path", "tools/check-technical-report-path.ps1"),
@@ -200,6 +203,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "--verify",
             "validation/BuoyCalc.EngineeringRegression/baselines/engineering-baseline.json",
         ),
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
         timeout=300.0,
     ),
     _pwsh_spec(
@@ -216,6 +220,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "restore",
             "validation/BuoyCalc.PhysicalRejectionValidation/BuoyCalc.PhysicalRejectionValidation.csproj",
         ),
+        network_requirement=NetworkRequirement.NETWORK_CAPABLE,
     ),
     _dotnet_spec(
         "buoycalc.build_validation_601",
@@ -226,6 +231,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "Release",
             "--no-restore",
         ),
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
     ),
     _dotnet_spec(
         "buoycalc.run_validation_601",
@@ -240,6 +246,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "--output",
             "artifacts/validation-601-physical-rejection",
         ),
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
         timeout=300.0,
     ),
 )
