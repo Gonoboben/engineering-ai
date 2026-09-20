@@ -436,19 +436,47 @@ ADR-0024: `ACCEPTED_GATE_025`.
 ## Phase 8 — Stable engineering platform
 
 ### Gate 026 — Reproducible local installation
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Issue: `#51`
+
+PR: `#52 (DRAFT; implementation validated)`
 
 Branch: `gate-026-reproducible-local-installation`
 
 Base: Gate 025 squash merge
 `171ff20125389d2d953576a0d3340c13dc1dc53f`.
 
-Close the first v1.0 readiness criterion by defining and validating a
-cross-platform, non-editable clean-install path with measured/frozen dependency
-and build-tool versions. This Gate does not claim offline continuation; offline
-dependency acquisition remains a separate Phase 8 criterion.
+Validated implementation head:
+`6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`.
+
+Delivered:
+- documented Python 3.12.x install contract;
+- exact frozen runtime and install-tool dependency sets;
+- clean fresh-venv bootstrap;
+- non-editable wheel install;
+- repeated wheel SHA-256 equality check per platform;
+- installed package/version/schema verification;
+- `pip check`;
+- full installed-package deterministic regression;
+- Ubuntu and Windows acceptance workflow.
+
+Implementation validation:
+- deterministic installed-package regression:
+  `306/306 PASS` on Ubuntu;
+- deterministic installed-package regression:
+  `306/306 PASS` on Windows;
+- generic workflow `35535616430`: `PASS`;
+- strict exact-head workflow `35535616425`: `PASS`;
+- Gate 026 install workflow `35535616417`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+Gate 026 establishes the reproducible-local-installation criterion only.
+Offline dependency acquisition and offline continuation remain separate Phase 8
+criteria and are not inferred from this PASS.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
