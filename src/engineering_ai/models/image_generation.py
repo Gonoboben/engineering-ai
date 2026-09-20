@@ -60,6 +60,7 @@ class ImageGenerationProviderResponse:
 
 class ImageGenerationProvider(Protocol):
     provider_name: str
+    local_only: bool
 
     def generate(
         self,
