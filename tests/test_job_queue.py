@@ -3,6 +3,8 @@ from __future__ import annotations
 import itertools
 import json
 import sqlite3
+import subprocess
+import sys
 import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
@@ -219,6 +221,12 @@ class PersistedJobQueueTests(unittest.TestCase):
         self.assertEqual(tool.calls, [])
 
         self.reopen()
+        with self.assertRaises(JobQueuePolicyError):
+            self.queue.begin_run(
+                project_id="engineering-ai",
+                job_id="job-approval",
+            )
+
         resumed_supervisor = Supervisor(
             policy=make_policy(),
             state=make_state(),
@@ -407,6 +415,35 @@ class PersistedJobQueueTests(unittest.TestCase):
         self.assertTrue(report.ok)
         self.assertEqual(report.events_checked, 3)
         self.assertEqual(report.jobs_checked, 1)
+
+    def test_gate019_smoke_script(self) -> None:
+        result = subprocess.run(
+            [sys.executable, "scripts/gate019_job_queue_smoke.py"],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr or result.stdout)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["gate"], "019")
+        self.assertEqual(
+            payload["state"],
+            "PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY",
+        )
+        self.assertTrue(payload["database_reopened"])
+        self.assertEqual(payload["retry_attempts_preserved"], 1)
+        self.assertEqual(payload["retry_final_state"], "PASS")
+        self.assertTrue(payload["approval_wait_survived_reopen"])
+        self.assertEqual(payload["approval_final_state"], "PASS")
+        self.assertEqual(payload["interrupted_final_state"], "BLOCKED")
+        self.assertTrue(payload["queue_integrity"])
+        self.assertFalse(payload["automatic_approval"])
+        self.assertFalse(payload["scheduled_execution"])
+        self.assertEqual(
+            payload["physical_validation"],
+            "PHYSICAL_NOT_EXECUTED",
+        )
 
     def test_queue_exposes_no_execution_or_scheduling_surface(self) -> None:
         for name in (
