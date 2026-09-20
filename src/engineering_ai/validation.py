@@ -4,13 +4,18 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import sys
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-SCHEMA_DIR = REPOSITORY_ROOT / "schemas"
+SOURCE_SCHEMA_DIR = REPOSITORY_ROOT / "schemas"
+INSTALLED_SCHEMA_DIR = Path(sys.prefix) / "engineering-ai" / "schemas"
+SCHEMA_DIR = (
+    SOURCE_SCHEMA_DIR if SOURCE_SCHEMA_DIR.is_dir() else INSTALLED_SCHEMA_DIR
+)
 
 GLOBAL_APPROVAL_OR_FORBID_ACTIONS = {
     "architecture_change",
