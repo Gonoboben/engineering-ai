@@ -59,10 +59,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `024 — Controlled parametric CAD worker`
 - Issue: `#47`
-- PR: `NOT_OPEN_YET / BRANCH_SYNCHRONIZATION_IN_PROGRESS`
+- PR: `#48 (DRAFT / FINAL_ACCEPTANCE_PREPARATION)`
 - Branch: `gate-024-controlled-parametric-cad-worker`
 - Base: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
-- State: `IN_PROGRESS`
+- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -101,7 +101,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Accepted production Vision model: `NOT_QUALIFIED`
 - Accepted registry Vision route: `NO_ROUTE_UNTIL_MEASURED_QUALIFICATION`
 - Visual model observations: `ADVISORY_ONLY / evidence_eligible=false`
-- CAD worker: `IN_PROGRESS_GATE_024`
+- CAD worker: `IMPLEMENTED_VALIDATED_GATE_024_PENDING_ACCEPTANCE`
 - Image-generation worker: `DEFERRED_GATE_025`
 - Independent disagreement review: `IMPLEMENTED_VALIDATED_GATE_011`
 - PlataVM read-only adapter: `IMPLEMENTED_VALIDATED_GATE_012`
@@ -780,10 +780,11 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Implement the bounded Gate 024 CAD worker on Issue #47 / branch
-`gate-024-controlled-parametric-cad-worker`, validate deterministic geometry
-and proposal-only Supervisor control, then run generic + strict exact-head CI.
-Stop at any authority expansion or final exact-SHA squash-merge boundary.
+Run generic and strict exact-head CI on the final Gate 024 documentation/evidence
+head. If green, mark PR #48 ready for review, synchronize the ready state if
+needed, re-run exact-head CI on any resulting documentation-only head, freeze
+the branch, and stop at explicit human exact-SHA squash-merge approval.
+ADR-0023 remains `PROPOSED_GATE_024` until that approval and accepted merge.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -803,3 +804,35 @@ Stop at any authority expansion or final exact-SHA squash-merge boundary.
 - ADR-0022: `ACCEPTED_GATE_023`
 - final exact-head documentation CI: `35529619290 PASS / 35529619244 PASS`
 - human exact-SHA squash-merge approval: `PASS`; merge `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
+
+
+## Gate 024 validation state
+- base: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
+- Issue #47: `OPEN`
+- PR #48: `DRAFT / FINAL_ACCEPTANCE_PREPARATION`
+- bounded typed box/cylinder CAD specification: `IMPLEMENTED`
+- deterministic design SHA-256, analytical volume and AABB: `IMPLEMENTED_VALIDATED`
+- CAD policy authority: `EXISTING_SUPERVISOR_PROPOSE_PATCH_ONLY`
+- policy-denied CAD backend calls: `ZERO / PASS`
+- arbitrary model script/macro/eval/exec surface: `ABSENT`
+- FreeCAD invocation: `FIXED_REPOSITORY_HELPER / DATA_ONLY_JSON / SHELL_FALSE`
+- root-bounded FCStd publication after deterministic runtime geometry match: `IMPLEMENTED_VALIDATED`
+- mismatched runtime geometry target publication: `BLOCKED / PASS`
+- deterministic regression: `289/289 PASS`
+- corrected full-suite generic workflow `35530909113`: `PASS`
+- corrected full-suite strict exact-head workflow `35530909124`: `PASS`
+- hardened runtime head: `a02822fdecb8573fb20b33fb70b94e6ca5ac16cc`
+- hardened runtime generic workflow `35530942168`: `PASS`
+- hardened runtime strict exact-head workflow `35530942160`: `PASS`
+- smoke: `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`
+- real FreeCAD workstation smoke: `NOT_RUN`
+- production CAD-specialist model qualification: `NOT_RUN / NOT_REQUIRED_GATE_024`
+- artifact authority: `PROPOSED_PATCH_ONLY`
+- deterministic geometry evidence eligibility: `TRUE_FOR_DEFINED_GEOMETRY_SCOPE`
+- engineering-design correctness evidence eligibility: `FALSE`
+- fabrication authorization: `NOT_GRANTED`
+- release authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+- ADR-0023: `PROPOSED_GATE_024`
+- final documentation/evidence exact-head CI: `REQUIRED`
+- human exact-SHA squash-merge approval: `PENDING`
