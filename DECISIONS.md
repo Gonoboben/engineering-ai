@@ -480,3 +480,55 @@ automatic replay after process failure and keep audit history reconstructable.
 - no long-lived daemon, remote queue, distributed workers or automatic approval
   is introduced;
 - scheduled software PASS never implies physical validation.
+
+
+---
+
+## ADR-0020 — External review uses explicit disclosure manifests and remains advisory
+Status: `PROPOSED_GATE_021`
+
+### Decision
+Gate 021 implements external reasoning/review as an optional provider-neutral
+consultation bridge controlled by the existing deterministic Supervisor.
+
+No provider call occurs until current policy evaluates `external_disclosure`.
+Where policy requires human approval, a named approver is mandatory.
+
+Outbound context is caller-explicit and project-scoped. Every disclosed item has
+a source reference, kind, exact content SHA-256 and character count. Cross-project
+mixing and items explicitly marked as containing secrets are rejected.
+Purpose/context/output/timeout dimensions are bounded.
+
+The external provider receives no local tool, shell, filesystem, Git, queue,
+scheduler, approval or MCP authority.
+
+External responses are returned only as `ADVISORY`,
+`evidence_eligible=false`, with no physical-validation inference.
+
+A separate append-only SQLite ledger records metadata and hashes for each
+consultation, but deliberately does not persist outbound context or purpose
+text. Provider exception strings are not persisted.
+
+### Rationale
+External reasoning can be useful for difficult independent review, but sending
+project data outside the workstation is itself a controlled disclosure event.
+Treating an external model as stronger authority would violate the accepted
+local-first Supervisor architecture.
+
+Explicit manifests make the disclosed payload reviewable and bounded. Current
+policy re-evaluation prevents a stale consultation request from bypassing later
+permission changes. Metadata-only audit retains accountability without creating
+a second copy of disclosed project content.
+
+### Consequence
+- local operation remains independent of any external service;
+- missing approval yields zero provider calls;
+- external disclosure is attributable to an explicit named approver when
+  required by policy;
+- only explicitly selected context is sent;
+- request/response hashes and provider identity remain auditable;
+- malformed, oversized or failed provider responses fail closed;
+- external text is advisory and cannot become deterministic/physical evidence
+  by itself;
+- no credentials or concrete network client are required for Gate 021;
+- external local-tool exposure remains separately gated by Gate 022.

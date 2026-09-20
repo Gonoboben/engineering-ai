@@ -3085,3 +3085,78 @@ Explicitly out of scope:
 
 Next:
 publish synchronization checkpoint and open one draft PR for Gate 021.
+
+
+---
+
+## 2026-09-20 — Gate 021 controlled external advisory bridge implemented
+
+Initial implementation head:
+`8ed0f345ef7f2904041f1b14a08403b846f7141b`.
+
+Implemented:
+- provider-neutral external review protocol;
+- explicit project-scoped outbound context items;
+- exact source refs, context SHA-256 and character counts;
+- current external_disclosure policy check through Supervisor/PolicyEngine;
+- named approval enforcement where required;
+- zero provider calls on missing approval or policy denial;
+- provider request surface with no local tools/filesystem/shell/Git/queue/scheduler;
+- ADVISORY-only external review result;
+- evidence_eligible=false and PHYSICAL_NOT_EXECUTED;
+- append-only SQLite consultation metadata ledger;
+- request/response hashes and provider/model identity audit;
+- no outbound context or purpose text persisted;
+- provider exception text omitted from persistent audit;
+- malformed/oversized/provider failures fail closed;
+- fake-provider smoke harness, no real network dependency.
+
+Validation:
+- deterministic regression: `245/245 PASS`;
+- generic workflow run `35524343520`: `PASS`;
+- strict exact-head workflow run `35524343416`: `PASS`.
+
+Hardening head:
+`bca9381cf10462cc66e0b92c324fb0225acaada7`.
+
+Added:
+- hard bounds for purpose/source_ref/kind outbound text;
+- deeply immutable persisted manifest snapshots;
+- corresponding regression tests.
+
+Hardening CI exposed one test-only defect:
+- generic run `35524431902`: `FAIL`;
+- strict run `35524431903`: `FAIL`;
+- deterministic suite ran 247 tests with one error;
+- the new test attempted `json.dumps(dict(mappingproxy))` instead of using the
+  public serializable snapshot representation;
+- no runtime bridge failure was indicated.
+
+Corrected head:
+`f6ed7a9a36c75f08248efe6fbe8148b5fa75a2c8`.
+
+Correction:
+- regression now validates the public `as_dict()` audit representation.
+
+Validation:
+- deterministic regression: `247/247 PASS`;
+- generic workflow run `35524489887`: `PASS`;
+- strict exact-head workflow run `35524489903`: `PASS`.
+
+Runtime scope review:
+`PASS`.
+
+Confirmed absent:
+- concrete external network client;
+- credentials/API-key handling;
+- local tool/filesystem/shell/Git authority exposed to provider;
+- automatic approval;
+- MCP runtime;
+- semantic/vector backend;
+- PHYSICAL_PASS synthesis.
+
+ADR-0020 added as `PROPOSED_GATE_021`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then perform one primary-workstation fake-provider smoke.

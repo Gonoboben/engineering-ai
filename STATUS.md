@@ -53,10 +53,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `021 — External controlled reasoning/review bridge`
 - Issue: `#41`
-- PR: `NOT_OPEN_YET`
+- PR: `#42 (DRAFT)`
 - Branch: `gate-021-external-controlled-review-bridge`
 - Base: `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`
-- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -655,15 +655,37 @@ Historical CI note:
 
 ## Gate 021 validation state
 - Issue #41: `OPEN`
+- PR #42: `OPEN / DRAFT`
 - branch: `gate-021-external-controlled-review-bridge`
 - branch base equals Gate 020 squash merge `5e4fb761ed4f7c8730b1ddf9acc3d0a842751e35`: `PASS`
-- provider-neutral external consultation bridge: `NOT_IMPLEMENTED_YET`
-- explicit outbound context manifest: `NOT_IMPLEMENTED_YET`
-- external_disclosure policy/approval enforcement: `NOT_IMPLEMENTED_YET`
-- external result authority: `ADVISORY_ONLY_REQUIRED`
-- provider tool/filesystem/shell authority: `PROHIBITED`
-- real external network call: `NOT_REQUIRED_OUT_OF_SCOPE_ACCEPTANCE`
-- local offline core dependency on external bridge: `PROHIBITED`
+- provider-neutral external consultation bridge: `IMPLEMENTED`
+- explicit caller-supplied context only: `ENFORCED`
+- implicit repository/file/memory scraping: `ABSENT`
+- cross-project context mixing: `REJECTED`
+- context marked contains_secrets=true: `REJECTED`
+- purpose/source_ref/kind/context/output/timeout bounds: `ENFORCED`
+- external_disclosure current Supervisor/PolicyEngine check: `ENFORCED`
+- policy-required named human approval: `ENFORCED`
+- missing approval provider calls: `ZERO`
+- denied disclosure provider calls: `ZERO`
+- external result authority: `ADVISORY_ONLY`
+- external result deterministic evidence eligibility: `FALSE`
+- external physical validation inference: `PROHIBITED`
+- provider local tool/filesystem/shell/Git/queue/scheduler/MCP handles: `ABSENT`
+- consultation audit storage: `LOCAL_SQLITE_APPEND_ONLY_METADATA_LEDGER`
+- outbound context/purpose text persisted in ledger: `NO_HASH_METADATA_ONLY`
+- provider exception text persisted: `NO`
+- request/response SHA-256 and provider/model identity audit: `IMPLEMENTED`
+- malformed/oversized/provider error behavior: `FAIL_CLOSED`
+- concrete external network client: `ABSENT_GATE021_ACCEPTANCE`
+- credentials/API keys in runtime/evidence: `ABSENT`
+- local core functional without bridge/provider: `PASS_BY_DESIGN_AND_REGRESSION`
+- initial implementation head `8ed0f345ef7f2904041f1b14a08403b846f7141b`: deterministic regression `245/245 PASS`, generic CI run `35524343520 PASS`, strict exact-head CI run `35524343416 PASS`
+- outbound-bound/immutability hardening head `bca9381cf10462cc66e0b92c324fb0225acaada7`: CI `FAIL_TEST_ONLY`; one new regression attempted direct JSON serialization of deep immutable mappingproxy; runtime defect not indicated
+- corrected hardened head `f6ed7a9a36c75f08248efe6fbe8148b5fa75a2c8`: deterministic regression `247/247 PASS`, generic CI run `35524489887 PASS`, strict exact-head CI run `35524489903 PASS`
+- runtime scope review: `PASS`; no concrete network client, local tool surface, shell/subprocess, automatic approval, credentials, MCP, vector backend or PHYSICAL_PASS synthesis
+- primary-workstation fake-provider smoke: `PENDING`
+- ADR-0020: `PROPOSED_GATE_021`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -702,4 +724,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Publish the Gate 021 synchronization checkpoint, open one draft PR for Issue #41, then implement a provider-neutral explicit-context external consultation bridge. Require current Supervisor/PolicyEngine authorization for external_disclosure, preserve named human approval where policy requires it, classify all external output as ADVISORY, audit request/response hashes, expose no local tools/filesystem/shell to providers, and keep the local core fully functional without the bridge.
+Run generic and strict exact-head CI on the Gate 021 architecture/evidence documentation head. If green, run one primary-workstation Windows fake-provider smoke using `scripts/gate021_external_review_smoke.py`. No real external network call or credentials are required. The smoke must prove zero provider calls without approval, exact explicit context on named approval, advisory-only response semantics, metadata-only persisted audit, reopen integrity, no tool surface and `PHYSICAL_NOT_EXECUTED`.

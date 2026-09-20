@@ -421,6 +421,63 @@ invoked by a user-selected operating-system scheduler. It does not install or
 configure Windows Task Scheduler/systemd/launchd, does not run a long-lived
 daemon/service, and does not add remote/cloud or distributed execution.
 
+### 4.19 External controlled advisory bridge
+
+Gate 021 adds an optional provider-neutral external reasoning/review bridge. It
+does not change local project authority and it is not a tool bridge.
+
+Outbound disclosure is explicit:
+- callers construct individual context items with project_id, context_id,
+  source_ref, kind and exact text;
+- context items cannot mix project identities;
+- items marked as containing secrets are rejected;
+- purpose, source_ref, kind, total context and output all have deterministic
+  character bounds;
+- there is no implicit repository/file/memory crawl or automatic context
+  injection.
+
+Before any provider call, the bridge evaluates the current
+`external_disclosure` action through the deterministic Supervisor/PolicyEngine.
+If current policy requires human approval, a named approver is required. A
+missing approval produces `NEEDS_HUMAN_APPROVAL` and zero provider calls.
+A denied disclosure produces `BLOCKED` and zero provider calls.
+
+The provider-neutral call surface contains only:
+- consultation identity;
+- model identity;
+- purpose;
+- the exact explicitly supplied context tuples;
+- max output size;
+- timeout.
+
+It carries no shell, filesystem, Git, job-queue, scheduler, local tool, approval
+or MCP handle.
+
+External consultation history is stored in a separate append-only SQLite
+metadata ledger:
+`REQUEST_RECORDED -> POLICY_BLOCKED | PROVIDER_FAILED | RESPONSE_ACCEPTED`.
+
+The ledger stores request manifest metadata, source refs, character counts,
+SHA-256 hashes, provider/model identity, policy approval metadata, response
+hash/size and terminal status. It does not store the outbound context text or
+purpose text. Provider exception text is not persisted because a remote runtime
+may echo disclosed project data in an error string.
+
+Accepted external output is always:
+- authority = `ADVISORY`;
+- evidence_eligible = `false`;
+- physical_validation = `PHYSICAL_NOT_EXECUTED`.
+
+An external review therefore cannot satisfy deterministic evidence, approve a
+policy boundary, execute a local tool, mutate project truth, or establish
+physical validation.
+
+Gate 021 contains no concrete external network client or credentials. A real
+OpenAI/ChatGPT/other provider adapter may be connected later under the same
+bridge contract and explicit disclosure approval. The Engineering AI local core
+remains fully functional when the bridge/provider is absent or unavailable.
+Controlled MCP/tool exposure remains Gate 022.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control
