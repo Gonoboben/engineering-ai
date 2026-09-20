@@ -147,6 +147,7 @@ def main() -> int:
                     filesystem_read_text_binding(
                         project_id="engineering-ai",
                         adapter=ReadOnlyFilesystemAdapter(project),
+                        allowed_paths=("note.txt",),
                     ),
                     fake_binding(
                         "test.approval",
@@ -171,13 +172,26 @@ def main() -> int:
         )
         assert all("handler" not in item for item in listed)
 
+        read_without_disclosure = bridge.invoke(
+            ToolInvocationRequest(
+                invocation_id="invoke-read-no-disclosure",
+                project_id="engineering-ai",
+                capability_id="filesystem.read_text",
+                arguments={"path": "note.txt"},
+            )
+        )
+        assert read_without_disclosure.status is ToolBridgeStatus.NEEDS_HUMAN_APPROVAL
+        assert read_without_disclosure.handler_called is False
+
         read = bridge.invoke(
             ToolInvocationRequest(
                 invocation_id="invoke-read",
                 project_id="engineering-ai",
                 capability_id="filesystem.read_text",
                 arguments={"path": "note.txt"},
-            )
+            ),
+            approval_obtained=True,
+            approver="human-owner",
         )
         assert read.status is ToolBridgeStatus.PASS
         assert read.handler_called is True
@@ -252,6 +266,8 @@ def main() -> int:
             "state": "PASS_CONTROLLED_MCP_TOOL_EXPOSURE",
             "registered_capability_count": len(listed),
             "handler_objects_exposed_in_listing": False,
+            "external_disclosure_missing_status": read_without_disclosure.status.value,
+            "external_disclosure_missing_handler_called": read_without_disclosure.handler_called,
             "read_only_capability_status": read.status.value,
             "read_only_result_exact": read.result.payload == {"text": payload_text},
             "unregistered_status": unregistered.status.value,

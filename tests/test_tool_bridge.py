@@ -209,6 +209,7 @@ class ControlledToolBridgeTests(unittest.TestCase):
         binding = filesystem_read_text_binding(
             project_id="engineering-ai",
             adapter=ReadOnlyFilesystemAdapter(project),
+            allowed_paths=("note.txt",),
         )
         bridge = self.bridge(binding)
         req = ToolInvocationRequest(
@@ -218,7 +219,11 @@ class ControlledToolBridgeTests(unittest.TestCase):
             arguments={"path": "note.txt"},
         )
 
-        outcome = bridge.invoke(req)
+        outcome = bridge.invoke(
+            req,
+            approval_obtained=True,
+            approver="human-owner",
+        )
 
         self.assertEqual(outcome.status, ToolBridgeStatus.PASS)
         self.assertTrue(outcome.handler_called)
@@ -244,6 +249,35 @@ class ControlledToolBridgeTests(unittest.TestCase):
         raw = self.db.read_bytes()
         self.assertNotIn(secret_payload.encode("utf-8"), raw)
         self.assertIsNotNone(history[-1].response_sha256)
+
+    def test_filesystem_capability_rejects_non_allowlisted_path_before_adapter(self) -> None:
+        project = self.root / "allowlist-project"
+        project.mkdir()
+        (project / "allowed.txt").write_text("allowed", encoding="utf-8")
+        (project / "not-allowed.txt").write_text("sensitive", encoding="utf-8")
+        binding = filesystem_read_text_binding(
+            project_id="engineering-ai",
+            adapter=ReadOnlyFilesystemAdapter(project),
+            allowed_paths=("allowed.txt",),
+        )
+        bridge = self.bridge(binding)
+        outcome = bridge.invoke(
+            ToolInvocationRequest(
+                invocation_id="invoke-non-allowlisted-path",
+                project_id="engineering-ai",
+                capability_id="filesystem.read_text",
+                arguments={"path": "not-allowed.txt"},
+            ),
+            approval_obtained=True,
+            approver="human-owner",
+        )
+        self.assertEqual(outcome.status, ToolBridgeStatus.BLOCKED)
+        self.assertFalse(outcome.handler_called)
+        latest = self.ledger.get(
+            project_id="engineering-ai",
+            invocation_id="invoke-non-allowlisted-path",
+        )
+        self.assertEqual(latest.failure_class, "INPUT_SCHEMA_REJECTED")
 
     def test_unregistered_capability_is_blocked_and_audited(self) -> None:
         handler = CountingHandler()
@@ -278,6 +312,31 @@ class ControlledToolBridgeTests(unittest.TestCase):
         self.assertEqual(outcome.status, ToolBridgeStatus.BLOCKED)
         self.assertFalse(outcome.handler_called)
         self.assertEqual(handler.calls, [])
+
+    def test_external_disclosure_boundary_blocks_autonomous_read_without_approval(self) -> None:
+        handler = CountingHandler()
+        bridge = self.bridge(
+            fake_binding("test.disclosure", "read_repository", handler)
+        )
+        outcome = bridge.invoke(
+            self.request("invoke-disclosure-missing", "test.disclosure")
+        )
+        self.assertEqual(
+            outcome.status,
+            ToolBridgeStatus.NEEDS_HUMAN_APPROVAL,
+        )
+        self.assertFalse(outcome.handler_called)
+        self.assertEqual(handler.calls, [])
+        latest = self.ledger.get(
+            project_id="engineering-ai",
+            invocation_id="invoke-disclosure-missing",
+        )
+        self.assertEqual(
+            latest.failure_class,
+            "EXTERNAL_DISCLOSURE_NEEDS_HUMAN_APPROVAL",
+        )
+        self.assertIn("external_disclosure:NEEDS_HUMAN_APPROVAL", latest.policy_decision)
+        self.assertIn("read_repository:ALLOW", latest.policy_decision)
 
     def test_approval_required_capability_needs_named_approval(self) -> None:
         no_approval_handler = CountingHandler()
@@ -412,7 +471,9 @@ class ControlledToolBridgeTests(unittest.TestCase):
             fake_binding("test.exception", "read_repository", handler)
         )
         outcome = bridge.invoke(
-            self.request("invoke-handler-error", "test.exception")
+            self.request("invoke-handler-error", "test.exception"),
+            approval_obtained=True,
+            approver="human-owner",
         )
         self.assertEqual(outcome.status, ToolBridgeStatus.FAIL)
         self.assertTrue(outcome.handler_called)
@@ -432,7 +493,9 @@ class ControlledToolBridgeTests(unittest.TestCase):
             fake_binding("test.timeout", "read_repository", handler)
         )
         outcome = bridge.invoke(
-            self.request("invoke-timeout", "test.timeout")
+            self.request("invoke-timeout", "test.timeout"),
+            approval_obtained=True,
+            approver="human-owner",
         )
         self.assertEqual(outcome.status, ToolBridgeStatus.FAIL)
         latest = self.ledger.get(
@@ -460,7 +523,9 @@ class ControlledToolBridgeTests(unittest.TestCase):
             )
         )
         bad = bridge.invoke(
-            self.request("invoke-bad-output", "test.bad-output")
+            self.request("invoke-bad-output", "test.bad-output"),
+            approval_obtained=True,
+            approver="human-owner",
         )
         self.assertEqual(bad.status, ToolBridgeStatus.FAIL)
 
@@ -480,7 +545,9 @@ class ControlledToolBridgeTests(unittest.TestCase):
             )
         )
         large = large_bridge.invoke(
-            self.request("invoke-large-output", "test.large-output")
+            self.request("invoke-large-output", "test.large-output"),
+            approval_obtained=True,
+            approver="human-owner",
         )
         self.assertEqual(large.status, ToolBridgeStatus.FAIL)
 
@@ -493,9 +560,20 @@ class ControlledToolBridgeTests(unittest.TestCase):
             "invoke-duplicate",
             "test.duplicate-call",
         )
-        self.assertEqual(bridge.invoke(req).status, ToolBridgeStatus.PASS)
+        self.assertEqual(
+            bridge.invoke(
+                req,
+                approval_obtained=True,
+                approver="human-owner",
+            ).status,
+            ToolBridgeStatus.PASS,
+        )
         with self.assertRaises(ControlledToolBridgePolicyError):
-            bridge.invoke(req)
+            bridge.invoke(
+                req,
+                approval_obtained=True,
+                approver="human-owner",
+            )
 
     def test_ledger_reopen_integrity_and_tamper_detection(self) -> None:
         handler = CountingHandler()
@@ -504,7 +582,9 @@ class ControlledToolBridgeTests(unittest.TestCase):
         )
         self.assertEqual(
             bridge.invoke(
-                self.request("invoke-integrity", "test.integrity")
+                self.request("invoke-integrity", "test.integrity"),
+                approval_obtained=True,
+                approver="human-owner",
             ).status,
             ToolBridgeStatus.PASS,
         )
@@ -581,6 +661,13 @@ class ControlledToolBridgeTests(unittest.TestCase):
             payload["state"],
             "PASS_CONTROLLED_MCP_TOOL_EXPOSURE",
         )
+        self.assertEqual(
+            payload["external_disclosure_missing_status"],
+            "NEEDS_HUMAN_APPROVAL",
+        )
+        self.assertFalse(
+            payload["external_disclosure_missing_handler_called"]
+        )
         self.assertEqual(payload["read_only_capability_status"], "PASS")
         self.assertTrue(payload["read_only_result_exact"])
         self.assertEqual(payload["unregistered_status"], "BLOCKED")
@@ -643,7 +730,11 @@ class ControlledToolBridgeTests(unittest.TestCase):
             capability_id="git.status",
             arguments={},
         )
-        outcome = bridge.invoke(req)
+        outcome = bridge.invoke(
+            req,
+            approval_obtained=True,
+            approver="human-owner",
+        )
         self.assertEqual(outcome.status, ToolBridgeStatus.PASS)
         assert outcome.result is not None
         self.assertEqual(outcome.result.payload["operation"], "git.status")

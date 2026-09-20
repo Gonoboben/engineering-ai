@@ -998,46 +998,105 @@ class ControlledToolBridge:
                 summary="capability input schema rejected request",
             )
 
-        decision = self._supervisor.inspect_project_action(
+        # Tool exposure may return local project data to an external transport.
+        # Therefore every registered invocation must satisfy BOTH the explicit
+        # external-disclosure boundary and the capability's own project action.
+        disclosure_decision = self._supervisor.inspect_project_action(
+            action="external_disclosure",
+            approval_obtained=approval_obtained,
+            approver=approver,
+        )
+        action_decision = self._supervisor.inspect_project_action(
             action=definition.action,
             approval_obtained=approval_obtained,
             approver=approver,
         )
+        combined_policy = (
+            f"external_disclosure:{disclosure_decision.decision.value}|"
+            f"{definition.action}:{action_decision.decision.value}"
+        )
+        approval_required_effective = (
+            disclosure_decision.approval_required
+            or action_decision.approval_required
+        )
+        approval_obtained_effective = (
+            (
+                not disclosure_decision.approval_required
+                or disclosure_decision.approval_obtained
+            )
+            and (
+                not action_decision.approval_required
+                or action_decision.approval_obtained
+            )
+        )
+        effective_approver = (
+            approver
+            if approval_required_effective and approval_obtained_effective
+            else None
+        )
         self._ledger.record_request(
             request,
             definition=definition,
-            policy_decision=decision.decision.value,
-            approval_required=decision.approval_required,
-            approval_obtained=decision.approval_obtained,
-            approver=decision.approver,
+            policy_decision=combined_policy,
+            approval_required=approval_required_effective,
+            approval_obtained=approval_obtained_effective,
+            approver=effective_approver,
         )
 
-        if decision.decision is not Decision.ALLOW:
+        if disclosure_decision.decision is not Decision.ALLOW:
             self._ledger.record_terminal(
                 request=request,
                 definition=definition,
                 event_type=ToolInvocationEventType.POLICY_BLOCKED,
-                policy_decision=decision.decision.value,
-                approval_required=decision.approval_required,
-                approval_obtained=decision.approval_obtained,
-                approver=decision.approver,
+                policy_decision=combined_policy,
+                approval_required=approval_required_effective,
+                approval_obtained=approval_obtained_effective,
+                approver=effective_approver,
                 failure_class=(
-                    "NEEDS_HUMAN_APPROVAL"
-                    if decision.decision is Decision.NEEDS_HUMAN_APPROVAL
-                    else "POLICY_DENIED"
+                    "EXTERNAL_DISCLOSURE_NEEDS_HUMAN_APPROVAL"
+                    if disclosure_decision.decision is Decision.NEEDS_HUMAN_APPROVAL
+                    else "EXTERNAL_DISCLOSURE_DENIED"
                 ),
             )
             return ToolBridgeOutcome(
                 status=(
                     ToolBridgeStatus.NEEDS_HUMAN_APPROVAL
-                    if decision.decision is Decision.NEEDS_HUMAN_APPROVAL
+                    if disclosure_decision.decision is Decision.NEEDS_HUMAN_APPROVAL
                     else ToolBridgeStatus.BLOCKED
                 ),
                 capability_id=request.capability_id,
-                decision=decision,
+                decision=disclosure_decision,
                 result=None,
                 handler_called=False,
-                summary=decision.reason,
+                summary=disclosure_decision.reason,
+            )
+
+        if action_decision.decision is not Decision.ALLOW:
+            self._ledger.record_terminal(
+                request=request,
+                definition=definition,
+                event_type=ToolInvocationEventType.POLICY_BLOCKED,
+                policy_decision=combined_policy,
+                approval_required=approval_required_effective,
+                approval_obtained=approval_obtained_effective,
+                approver=effective_approver,
+                failure_class=(
+                    "ACTION_NEEDS_HUMAN_APPROVAL"
+                    if action_decision.decision is Decision.NEEDS_HUMAN_APPROVAL
+                    else "ACTION_POLICY_DENIED"
+                ),
+            )
+            return ToolBridgeOutcome(
+                status=(
+                    ToolBridgeStatus.NEEDS_HUMAN_APPROVAL
+                    if action_decision.decision is Decision.NEEDS_HUMAN_APPROVAL
+                    else ToolBridgeStatus.BLOCKED
+                ),
+                capability_id=request.capability_id,
+                decision=action_decision,
+                result=None,
+                handler_called=False,
+                summary=action_decision.reason,
             )
 
         try:
@@ -1065,16 +1124,16 @@ class ControlledToolBridge:
                 request=request,
                 definition=definition,
                 event_type=ToolInvocationEventType.TOOL_FAILED,
-                policy_decision=decision.decision.value,
-                approval_required=decision.approval_required,
-                approval_obtained=decision.approval_obtained,
-                approver=decision.approver,
+                policy_decision=combined_policy,
+                approval_required=approval_required_effective,
+                approval_obtained=approval_obtained_effective,
+                approver=effective_approver,
                 failure_class=failure_class,
             )
             return ToolBridgeOutcome(
                 status=ToolBridgeStatus.FAIL,
                 capability_id=request.capability_id,
-                decision=decision,
+                decision=action_decision,
                 result=None,
                 handler_called=True,
                 summary=f"registered capability failed: {failure_class}",
@@ -1085,16 +1144,16 @@ class ControlledToolBridge:
                 request=request,
                 definition=definition,
                 event_type=ToolInvocationEventType.TOOL_FAILED,
-                policy_decision=decision.decision.value,
-                approval_required=decision.approval_required,
-                approval_obtained=decision.approval_obtained,
-                approver=decision.approver,
+                policy_decision=combined_policy,
+                approval_required=approval_required_effective,
+                approval_obtained=approval_obtained_effective,
+                approver=effective_approver,
                 failure_class="CAPABILITY_REPORTED_FAILURE",
             )
             return ToolBridgeOutcome(
                 status=ToolBridgeStatus.FAIL,
                 capability_id=request.capability_id,
-                decision=decision,
+                decision=action_decision,
                 result=result,
                 handler_called=True,
                 summary=result.summary,
@@ -1104,17 +1163,17 @@ class ControlledToolBridge:
             request=request,
             definition=definition,
             event_type=ToolInvocationEventType.RESULT_ACCEPTED,
-            policy_decision=decision.decision.value,
-            approval_required=decision.approval_required,
-            approval_obtained=decision.approval_obtained,
-            approver=decision.approver,
+            policy_decision=combined_policy,
+            approval_required=approval_required_effective,
+            approval_obtained=approval_obtained_effective,
+            approver=effective_approver,
             response_payload=_thaw(result.payload),
             evidence_refs=result.evidence_refs,
         )
         return ToolBridgeOutcome(
             status=ToolBridgeStatus.PASS,
             capability_id=request.capability_id,
-            decision=decision,
+            decision=action_decision,
             result=result,
             handler_called=True,
             summary=result.summary,
@@ -1202,13 +1261,27 @@ def filesystem_read_text_binding(
     *,
     project_id: str,
     adapter: ReadOnlyFilesystemAdapter,
+    allowed_paths: tuple[str, ...],
     capability_id: str = "filesystem.read_text",
 ) -> CapabilityBinding:
+    if not allowed_paths:
+        raise ValueError("allowed_paths must be non-empty")
+    normalized_paths = tuple(Path(path).as_posix() for path in allowed_paths)
+    if len(set(normalized_paths)) != len(normalized_paths):
+        raise ValueError("allowed_paths must be unique")
+    if any(
+        not path
+        or Path(path).is_absolute()
+        or ".." in Path(path).parts
+        for path in normalized_paths
+    ):
+        raise ValueError("allowed_paths must be safe relative paths")
+
     definition = CapabilityDefinition(
         capability_id=capability_id,
         project_id=project_id,
         action="read_repository",
-        description="Read one UTF-8 text file inside the configured project root.",
+        description="Read one explicitly allow-listed UTF-8 text file inside the configured project root.",
         input_schema={
             "type": "object",
             "additionalProperties": False,
@@ -1218,6 +1291,7 @@ def filesystem_read_text_binding(
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 1024,
+                    "enum": list(normalized_paths),
                 }
             },
         },
