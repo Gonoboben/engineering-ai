@@ -98,6 +98,8 @@ class CadBox:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "entity_id", _validate_entity_id(self.entity_id))
+        if not isinstance(self.placement, CadPlacement):
+            raise CadSpecError("box placement must be CadPlacement")
         object.__setattr__(
             self, "length_mm", _bounded_number(self.length_mm, name="length_mm", positive=True)
         )
@@ -130,6 +132,8 @@ class CadCylinder:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "entity_id", _validate_entity_id(self.entity_id))
+        if not isinstance(self.placement, CadPlacement):
+            raise CadSpecError("cylinder placement must be CadPlacement")
         object.__setattr__(
             self, "radius_mm", _bounded_number(self.radius_mm, name="radius_mm", positive=True)
         )
@@ -171,6 +175,8 @@ class CadDesignSpec:
             raise CadSpecError("CAD design requires at least one entity")
         if len(entities) > MAX_ENTITIES:
             raise CadSpecError("CAD entity count exceeds Gate 024 bound")
+        if any(not isinstance(entity, (CadBox, CadCylinder)) for entity in entities):
+            raise CadSpecError("Gate 024 accepts only typed box/cylinder entities")
         ids = [entity.entity_id for entity in entities]
         if len(ids) != len(set(ids)):
             raise CadSpecError("CAD entity_id values must be unique")
@@ -459,8 +465,11 @@ class ParametricCadAdapter:
 
             artifact_bytes = temp_artifact.read_bytes()
             artifact_sha = hashlib.sha256(artifact_bytes).hexdigest()
-            target.parent.mkdir(parents=True, exist_ok=True)
-            os.replace(temp_artifact, target)
+            try:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(temp_artifact, target)
+            except OSError as exc:
+                raise CadBackendError("CAD artifact publication failed") from exc
 
         return CadArtifactResult(
             relative_path=relative_path.replace("\\", "/"),
