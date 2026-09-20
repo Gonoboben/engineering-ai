@@ -344,11 +344,10 @@ class Supervisor:
             raise JobQueuePolicyError(
                 "current policy does not accept the explicit approval"
             )
-        return queue.begin_run(
+        return queue._begin_waiting_run(
             project_id=self._state["project_id"],
             job_id=job_id,
             expected_event_id=snapshot.event_id,
-            allow_waiting_for_approval=True,
         )
 
     def persist_persisted_job_result(

@@ -353,16 +353,44 @@ class PersistedJobQueue:
         project_id: str,
         job_id: str,
         expected_event_id: str | None = None,
-        allow_waiting_for_approval: bool = False,
+    ) -> JobQueueSnapshot:
+        """Begin a normal run only from QUEUED state."""
+
+        return self._begin_run_from_states(
+            project_id=project_id,
+            job_id=job_id,
+            expected_event_id=expected_event_id,
+            allowed_states={"QUEUED"},
+        )
+
+    def _begin_waiting_run(
+        self,
+        *,
+        project_id: str,
+        job_id: str,
+        expected_event_id: str,
+    ) -> JobQueueSnapshot:
+        """Internal Supervisor-only resume path after policy-approved human approval."""
+
+        return self._begin_run_from_states(
+            project_id=project_id,
+            job_id=job_id,
+            expected_event_id=expected_event_id,
+            allowed_states={"WAITING_FOR_APPROVAL"},
+        )
+
+    def _begin_run_from_states(
+        self,
+        *,
+        project_id: str,
+        job_id: str,
+        expected_event_id: str | None,
+        allowed_states: set[str],
     ) -> JobQueueSnapshot:
         latest = self.get(project_id=project_id, job_id=job_id)
         if expected_event_id is not None and latest.event_id != expected_event_id:
             raise JobQueueConflictError("queue head changed before run claim")
-
-        allowed = {"QUEUED"}
-        if allow_waiting_for_approval:
-            allowed.add("WAITING_FOR_APPROVAL")
-        if latest.status not in allowed:
+        if latest.status not in allowed_states:
             raise JobQueuePolicyError(
                 f"job cannot begin run from state {latest.status}"
             )
