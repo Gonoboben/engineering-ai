@@ -65,6 +65,7 @@ class ProcessRunnerTests(unittest.TestCase):
             spec = CommandSpec(
                 command_id="python-smoke",
                 executable=sys.executable,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
                 fixed_args=("-c", "print('tool-pass')"),
             )
             runner = AllowListedProcessRunner({"python-smoke": spec}, root=tmp)
@@ -115,6 +116,7 @@ class ProcessRunnerTests(unittest.TestCase):
             spec = CommandSpec(
                 command_id="timeout-test",
                 executable=sys.executable,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
                 fixed_args=("-c", "import time; time.sleep(2)"),
                 timeout_seconds=0.05,
             )
@@ -128,6 +130,7 @@ class ProcessRunnerTests(unittest.TestCase):
             spec = CommandSpec(
                 command_id="bounded-output",
                 executable=sys.executable,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
                 fixed_args=("-c", "print('x' * 1000)"),
                 max_output_bytes=32,
             )
@@ -142,6 +145,7 @@ class ProcessRunnerTests(unittest.TestCase):
             spec = CommandSpec(
                 command_id="cwd-test",
                 executable=sys.executable,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
                 fixed_args=("-c", "print('ok')"),
             )
             runner = AllowListedProcessRunner({"cwd-test": spec}, root=tmp)
