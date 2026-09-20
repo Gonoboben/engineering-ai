@@ -33,6 +33,14 @@ class Gate026InstallContractTests(unittest.TestCase):
             ["setuptools==84.0.0"],
         )
 
+    def test_wheel_packages_authoritative_schema_data(self) -> None:
+        with (ROOT / "pyproject.toml").open("rb") as handle:
+            project = tomllib.load(handle)
+        self.assertEqual(
+            project["tool"]["setuptools"]["data-files"],
+            {"engineering-ai/schemas": ["schemas/*.schema.json"]},
+        )
+
     def test_toolchain_lock_is_exact_measured_contract(self) -> None:
         self.assertEqual(
             exact_lock(ROOT / "requirements" / "toolchain.lock"),
