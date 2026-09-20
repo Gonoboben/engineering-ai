@@ -117,11 +117,12 @@ class PlataVMControlledLoopTests(unittest.TestCase):
             text=True,
         ).stdout
 
-    def loop(self) -> PlataVMControlledEngineeringLoop:
+    def loop(self, *, offline: bool = False) -> PlataVMControlledEngineeringLoop:
         return PlataVMControlledEngineeringLoop(
             self.root,
             self.worktree_parent,
             python_executable=sys.executable,
+            offline=offline,
         )
 
     def prepare(self):
@@ -191,6 +192,25 @@ class PlataVMControlledLoopTests(unittest.TestCase):
         self.assertNotEqual(branch.returncode, 0)
         self.assertEqual(self._git("rev-parse", "HEAD").strip(), self.base_sha)
         self.assertEqual(self._git("status", "--porcelain").strip(), "")
+
+    def test_offline_controlled_validation_uses_local_only_profiles(self) -> None:
+        loop = self.loop(offline=True)
+        prep = loop.prepare(
+            worktree_name="offline-pass",
+            branch="engineering-ai/offline-pass",
+            base_ref="HEAD",
+        )
+        self.assertEqual(prep.state, ControlledLoopState.WORKTREE_READY)
+        assert prep.session is not None
+
+        validated = loop.validate(session=prep.session)
+        self.assertEqual(
+            validated.state,
+            ControlledLoopState.READY_FOR_HUMAN_APPROVAL,
+        )
+        self.assertTrue(all(item.state.value == "PASS" for item in validated.validators))
+
+        loop.cleanup(prep.session)
 
     def test_wrong_branch_prefix_is_rejected(self) -> None:
         with self.assertRaises(ToolAccessError):
