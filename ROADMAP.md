@@ -308,22 +308,26 @@ Accepted merge commit:
 Delivered deterministic provenance-preserving lexical retrieval over Gate 016 memory. The measured primary-workstation benchmark improved mean recall@3 from `0.25` to `1.0` while preserving safety/provenance. Semantic/vector retrieval remains `DEFERRED_NOT_JUSTIFIED`.
 
 ### Gate 018 — Knowledge lifecycle
-Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#35`
+Accepted merge commit:
+`75ee907446e952fbfc8a53006c1fd65f1257faea`
 
-Branch: `gate-018-knowledge-lifecycle`
-
-Base: Gate 017 squash merge `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`.
-
-Define promotion rules for observations -> evidence -> accepted project knowledge, including deterministic staleness/invalidation when bound source revisions change.
+Delivered a deterministic append-only lifecycle over Gate 016 memory:
+`OBSERVATION -> EVIDENCE -> ACCEPTED -> INVALIDATED`, with exact source/evidence revision binding, stale detection and requalification while preserving history.
 
 ## Phase 5 — Unattended local operation
 
 ### Gate 019 — Job queue
-Status: `NOT_STARTED`
+Status: `IN_PROGRESS`
 
-Add persisted queued jobs with retry/timeout/approval semantics.
+Issue: `#37`
+
+Branch: `gate-019-persisted-job-queue`
+
+Base: Gate 018 squash merge `75ee907446e952fbfc8a53006c1fd65f1257faea`.
+
+Add persisted queued jobs with retry/timeout/approval semantics while preserving existing Supervisor policy authority. Scheduling/overnight execution remains Gate 020.
 
 ### Gate 020 — Scheduled/overnight engineering runs
 Status: `NOT_STARTED`

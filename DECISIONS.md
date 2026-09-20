@@ -329,7 +329,7 @@ a vector database.
 ---
 
 ## ADR-0017 — Use a separate append-only ledger for knowledge lifecycle
-Status: `PROPOSED_GATE_018`
+Status: `ACCEPTED_GATE_018`
 
 ### Decision
 Engineering AI knowledge promotion/invalidation is represented in a separate

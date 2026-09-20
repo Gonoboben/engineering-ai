@@ -41,16 +41,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 016 merge commit: `a71c084078ae7c12361555eaed2f3d7c887d61d6`
 - Gate 017: `ACCEPTED_MERGED`
 - Gate 017 merge commit: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
+- Gate 018: `ACCEPTED_MERGED`
+- Gate 018 merge commit: `75ee907446e952fbfc8a53006c1fd65f1257faea`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `018 — Knowledge lifecycle`
-- Issue: `#35`
-- PR: `#36 (DRAFT)`
-- Branch: `gate-018-knowledge-lifecycle`
-- Base: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
-- State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
+- Gate: `019 — Persisted job queue`
+- Issue: `#37`
+- PR: `NOT_OPEN_YET`
+- Branch: `gate-019-persisted-job-queue`
+- Base: `75ee907446e952fbfc8a53006c1fd65f1257faea`
+- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -545,7 +547,27 @@ Historical CI note:
 - primary-workstation local lifecycle smoke: `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`; exact head `7d23cfd62e616659a793d21c7cb22ee7af0ca388`, accepted state before source change `ACCEPTED_CURRENT`, source revision `1 -> 2`, stale state `STALE_SOURCE_REVISION`, final state `INVALIDATED`, history revisions `1/2/3/4`, memory integrity=true, lifecycle integrity=true, automatic_context_injection=false, physical_validation_inferred=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - post-smoke evidence head `6e02671de1d774f679372419ef24ba6d7db4b278`: deterministic regression `193/193 PASS`, generic CI run `35513857456 PASS`, strict exact-head CI run `35513857442 PASS`
 - final scope review: `PASS`; no Qwen3-VL/vision runtime, embeddings/vector backend, automatic context injection, PHYSICAL_PASS synthesis, generic SQL mutation API, Gate 019 implementation, Gate 023 implementation, architecture/physics/fabrication/release authority expansion; UPDATE/DELETE occurrences limited to append-only SQLite prohibition triggers and tamper tests
-- ADR-0017: `PROPOSED_GATE_018`
+- final approved PR head: `294bf424061102b4ee82c2f6e760ca9135330e94`
+- final deterministic regression: `193/193 PASS`
+- final generic CI run `35513932000`: `PASS`
+- final strict exact-head CI run `35513931970`: `PASS`
+- explicit exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `75ee907446e952fbfc8a53006c1fd65f1257faea`
+- Issue #35: `CLOSED / COMPLETED`
+- Gate 018 state: `ACCEPTED_MERGED`
+- ADR-0017: `ACCEPTED_GATE_018`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 019 validation state
+- Issue #37: `OPEN`
+- branch: `gate-019-persisted-job-queue`
+- branch base equals Gate 018 squash merge `75ee907446e952fbfc8a53006c1fd65f1257faea`: `PASS`
+- persisted queue implementation: `NOT_IMPLEMENTED_YET`
+- retry persistence: `NOT_IMPLEMENTED_YET`
+- timeout/crash recovery: `NOT_IMPLEMENTED_YET`
+- WAITING_FOR_APPROVAL persistence: `NOT_IMPLEMENTED_YET`
+- automatic approval acquisition: `PROHIBITED`
+- scheduled/overnight execution: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE_020`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -584,4 +606,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on the final documentation-only Gate 018 head. If green, mark PR #36 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0017 remains PROPOSED_GATE_018 until that approval and squash merge.
+Implement Gate 019 persisted Supervisor-owned job queue on branch `gate-019-persisted-job-queue`: local SQLite persistence, deterministic claim/order, bounded retry persistence, fail-closed RUNNING recovery, timeout metadata/recovery, WAITING_FOR_APPROVAL persistence, terminal-state preservation, schemas/tests/evidence and local reopen smoke. Do not implement scheduling/overnight execution, automatic approvals, distributed workers, external queues, Gate 020 behavior or broader authority.

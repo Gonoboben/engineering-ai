@@ -2456,3 +2456,88 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #36 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 018 accepted and merged
+
+Final approved PR head:
+`294bf424061102b4ee82c2f6e760ca9135330e94`.
+
+Final validation:
+- deterministic regression: `193/193 PASS`;
+- generic workflow run `35513932000`: `PASS`;
+- strict exact-head workflow run `35513931970`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation lifecycle smoke:
+  `PASS_APPEND_ONLY_KNOWLEDGE_LIFECYCLE`;
+- final scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`75ee907446e952fbfc8a53006c1fd65f1257faea`.
+
+Issue #35 closed as completed.
+
+Accepted capability:
+- separate append-only knowledge lifecycle ledger;
+- exact immutable Gate 016 memory revision/SHA bindings;
+- OBSERVATION / EVIDENCE / ACCEPTED / INVALIDATED stages;
+- deterministic source/evidence staleness detection;
+- append-only invalidation;
+- current-evidence requalification after invalidation;
+- model observations remain ADVISORY;
+- CONTROL/ADR lifecycle evidence bypass prohibited;
+- no physical validation inference;
+- no automatic context injection.
+
+ADR-0017 state:
+`ACCEPTED_GATE_018`.
+
+Gate 018 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 019 persisted job queue opened
+
+Issue:
+`#37 — Gate 019 — Persisted job queue`.
+
+Branch:
+`gate-019-persisted-job-queue`.
+
+Base:
+Gate 018 squash merge
+`75ee907446e952fbfc8a53006c1fd65f1257faea`.
+
+Declared scope:
+- local persistent Supervisor-owned job queue;
+- deterministic FIFO claim ordering;
+- persistence across process close/reopen;
+- bounded retry/attempt state persistence;
+- explicit timeout/run-deadline metadata;
+- fail-closed recovery for interrupted RUNNING jobs;
+- WAITING_FOR_APPROVAL persistence without automatic execution;
+- terminal-state preservation;
+- project isolation, integrity checks, schemas/tests/evidence;
+- one primary-workstation reopen/recovery smoke.
+
+Explicitly out of scope:
+- Gate 020 scheduled/overnight runner;
+- automatic approval acquisition;
+- daemon/service lifecycle;
+- parallel/distributed workers;
+- external/cloud queue;
+- external AI bridge;
+- semantic/vector retrieval;
+- Vision/CAD workers;
+- architecture/physics/fabrication/release authority changes.
+
+Next:
+publish the initial synchronization checkpoint, open one draft PR for Issue #37,
+then implement the persisted queue without broadening execution authority.
