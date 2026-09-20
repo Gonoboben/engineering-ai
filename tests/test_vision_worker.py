@@ -27,9 +27,10 @@ from engineering_ai.supervisor import (
 class FakeVisionProvider:
     provider_name = "fake"
 
-    def __init__(self, payload: dict, *, tool_calls=()) -> None:
+    def __init__(self, payload: dict, *, tool_calls=(), response_provider="fake") -> None:
         self.payload = payload
         self.tool_calls = tuple(tool_calls)
+        self.response_provider = response_provider
         self.calls = []
 
     def runtime_version(self):
@@ -41,7 +42,7 @@ class FakeVisionProvider:
     def chat(self, request, *, timeout_seconds=300.0):
         self.calls.append((request, timeout_seconds))
         return ModelResponse(
-            provider="fake",
+            provider=self.response_provider,
             runtime_version="fake-vision-1",
             model=request.model,
             content=json.dumps(self.payload),
@@ -89,6 +90,7 @@ class VisionInputTests(unittest.TestCase):
         self.assertEqual(item.size_bytes, len(b"\x89PNG\r\n\x1a\npng-image-payload"))
         self.assertEqual(len(item.content_sha256), 64)
         self.assertEqual(item.content_sha256, item.as_attachment().content_sha256)
+        self.assertNotIn("png-image-payload", repr(request()))
 
     def test_unsupported_media_and_control_source_ref_fail_closed(self) -> None:
         with self.assertRaises(ValueError):
@@ -152,6 +154,15 @@ class VisionWorkerTests(unittest.TestCase):
                     }
                 ],
             }
+        )
+        worker = VisionWorker(provider=provider, router=qualified_router())
+        with self.assertRaises(VisionProtocolError):
+            worker.observe(request())
+
+    def test_response_provider_identity_mismatch_fails_closed(self) -> None:
+        provider = FakeVisionProvider(
+            {"summary": "provider mismatch", "observations": []},
+            response_provider="unexpected-provider",
         )
         worker = VisionWorker(provider=provider, router=qualified_router())
         with self.assertRaises(VisionProtocolError):
