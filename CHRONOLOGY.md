@@ -3639,3 +3639,42 @@ Next:
 run final documentation/evidence exact-head validation, update PR #46 to ready
 for review when green, then stop at explicit exact-SHA human squash-merge
 approval.
+
+
+---
+
+## 2026-09-20 — Gate 023 final hardening checkpoint passed
+
+Validated hardening head:
+`82ca772902738de0670fab84bbd28914d0684e44`.
+
+Additional hardening:
+- raw Vision input bytes hidden from normal object representation;
+- provider response identity must match the deterministic routed provider;
+- explicit negative regression for provider mismatch.
+
+Validation:
+- deterministic regression: `280/280 PASS`;
+- generic workflow run `35527817840`: `PASS`;
+- strict exact-head workflow run `35527817828`: `PASS`;
+- smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
+- production Vision model qualification: `NOT_RUN / NOT_QUALIFIED`;
+- default accepted Vision route: `NO_ROUTE`;
+- model result authority: `ADVISORY`;
+- evidence eligible: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Final runtime scope review:
+`PASS`.
+
+Gate 023 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0022 remains:
+`PROPOSED_GATE_023`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run final generic + strict exact-head CI on the final documentation head, mark
+PR #46 ready for review if green, freeze the branch, and stop at explicit human
+exact-SHA squash-merge approval.
