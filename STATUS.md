@@ -49,10 +49,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `019 — Persisted job queue`
 - Issue: `#37`
-- PR: `NOT_OPEN_YET`
+- PR: `#38 (DRAFT)`
 - Branch: `gate-019-persisted-job-queue`
 - Base: `75ee907446e952fbfc8a53006c1fd65f1257faea`
-- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -560,14 +560,35 @@ Historical CI note:
 
 ## Gate 019 validation state
 - Issue #37: `OPEN`
+- PR #38: `OPEN / DRAFT`
 - branch: `gate-019-persisted-job-queue`
 - branch base equals Gate 018 squash merge `75ee907446e952fbfc8a53006c1fd65f1257faea`: `PASS`
-- persisted queue implementation: `NOT_IMPLEMENTED_YET`
-- retry persistence: `NOT_IMPLEMENTED_YET`
-- timeout/crash recovery: `NOT_IMPLEMENTED_YET`
-- WAITING_FOR_APPROVAL persistence: `NOT_IMPLEMENTED_YET`
+- storage: `LOCAL_SQLITE_APPEND_ONLY_EVENT_LEDGER`
+- persisted queue events: `ENQUEUED / RUN_STARTED / EXECUTION_RESULT / INTERRUPTED_RECOVERY / TIMEOUT_RECOVERY`
+- job schema validation before enqueue/result: `ENFORCED`
+- immutable job scope/action/validator/retry definition across events: `ENFORCED`
+- deterministic FIFO claim: `IMPLEMENTED`
+- retry returns to queue tail: `IMPLEMENTED`
+- retry/attempt persistence across reopen: `IMPLEMENTED`
+- per-run timeout/deadline metadata: `IMPLEMENTED_1..86400_SECONDS`
+- late result after deadline -> PASS: `PROHIBITED_BLOCKED`
+- interrupted RUNNING reopen recovery: `BLOCKED_FAIL_CLOSED`
+- expired RUNNING recovery: `BLOCKED_FAIL_CLOSED`
+- WAITING_FOR_APPROVAL persistence: `IMPLEMENTED`
+- low-level queue approval resume: `PROHIBITED`
+- Supervisor approved resume: `CURRENT_POLICY_RECHECK_PLUS_NAMED_APPROVER`
+- terminal job automatic requeue: `PROHIBITED`
+- project isolation: `IMPLEMENTED`
+- event SHA-256 integrity + exact supersession chain: `IMPLEMENTED_FAIL_CLOSED`
+- tool execution inside queue: `ABSENT`
 - automatic approval acquisition: `PROHIBITED`
-- scheduled/overnight execution: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE_020`
+- scheduling/cron/overnight execution: `NOT_IMPLEMENTED_OUT_OF_SCOPE_GATE_020`
+- daemon/service/distributed workers: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- implementation head `63b612fd64e7317cf4dad218bce63f130f966ae8`: deterministic regression `208/208 PASS`, generic CI run `35516817721 PASS`, strict exact-head CI run `35516817717 PASS`
+- Supervisor-only approval-resume head `f65ca9c7cce403511a2e685dd6baf8b0fbc70a0e`: deterministic regression `208/208 PASS`, generic CI run `35516884394 PASS`, strict exact-head CI run `35516884392 PASS`
+- smoke/approval-boundary test head `983dafc9da4df41094961d4ce438cec7f4c8623e`: deterministic regression `209/209 PASS`, generic CI run `35516965090 PASS`, strict exact-head CI run `35516965135 PASS`
+- primary-workstation persistent/reopen smoke: `PENDING`
+- ADR-0018: `PROPOSED_GATE_019`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -606,4 +627,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Implement Gate 019 persisted Supervisor-owned job queue on branch `gate-019-persisted-job-queue`: local SQLite persistence, deterministic claim/order, bounded retry persistence, fail-closed RUNNING recovery, timeout metadata/recovery, WAITING_FOR_APPROVAL persistence, terminal-state preservation, schemas/tests/evidence and local reopen smoke. Do not implement scheduling/overnight execution, automatic approvals, distributed workers, external queues, Gate 020 behavior or broader authority.
+Run generic and strict exact-head CI on the Gate 019 architecture/evidence documentation head. If green, run one primary-workstation Windows persistence/reopen/recovery smoke using `scripts/gate019_job_queue_smoke.py`. The smoke must preserve retry state and WAITING_FOR_APPROVAL across reopen, require explicit Supervisor approval resume, recover an interrupted RUNNING job to BLOCKED, retain queue integrity, and keep scheduled execution/automatic approval disabled.

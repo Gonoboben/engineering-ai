@@ -333,6 +333,48 @@ has current policy-qualified evidence. It does not authorize architecture,
 physics, fabrication, release, destructive actions or any other action that
 already requires human approval.
 
+### 4.17 Persisted job queue boundary
+
+Gate 019 persists bounded Supervisor job control state in a separate local
+SQLite append-only event ledger. It does not execute tools or schedule work.
+
+Each queue transition stores a complete schema-valid job snapshot plus:
+- project/job identity;
+- deterministic append sequence;
+- queue event type;
+- per-run timeout/deadline metadata;
+- exact predecessor event;
+- timestamp and canonical SHA-256 integrity hash.
+
+Accepted queue transitions include:
+- `ENQUEUED`;
+- `RUN_STARTED`;
+- `EXECUTION_RESULT`;
+- `INTERRUPTED_RECOVERY`;
+- `TIMEOUT_RECOVERY`.
+
+Control rules:
+- queueing never grants new action authority;
+- immutable job scope, requested actions, validators and retry limit cannot
+  change through a queue result;
+- retries use the existing Supervisor job semantics and remain bounded;
+- a retry returning to `QUEUED` re-enters deterministic FIFO order at the tail;
+- `WAITING_FOR_APPROVAL` is persisted and is not claimable by the low-level
+  queue API;
+- resume from `WAITING_FOR_APPROVAL` is Supervisor-only and requires a fresh
+  PolicyEngine check with explicit named human approval;
+- a persisted `RUNNING` job found after process restart is recovered
+  fail-closed to `BLOCKED`, never automatically retried or passed;
+- an expired run deadline also recovers to `BLOCKED`;
+- a result arriving after its persisted deadline cannot become queue `PASS`;
+- terminal `PASS/FAIL/CANCELLED` jobs are not automatically requeued;
+- project isolation and append-history integrity fail closed;
+- the queue exposes no tool execution, scheduling, daemon, distributed-worker,
+  or approval-granting surface.
+
+Gate 019 is persistence and recovery only. Time-of-day scheduling, overnight
+operation, unattended runner lifecycle and run summaries remain Gate 020.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control

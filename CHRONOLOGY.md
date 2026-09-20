@@ -2541,3 +2541,73 @@ Explicitly out of scope:
 Next:
 publish the initial synchronization checkpoint, open one draft PR for Issue #37,
 then implement the persisted queue without broadening execution authority.
+
+
+---
+
+## 2026-09-20 — Gate 019 persisted job queue implemented
+
+Initial implementation head:
+`63b612fd64e7317cf4dad218bce63f130f966ae8`.
+
+Implemented:
+- local SQLite append-only queue-event ledger;
+- complete schema-valid job snapshot per event;
+- deterministic FIFO claim ordering;
+- retry results re-entering at queue tail;
+- persisted attempts/retry state;
+- per-run timeout/deadline metadata;
+- late-result deadline rejection to BLOCKED;
+- fail-closed interrupted/expired RUNNING recovery;
+- WAITING_FOR_APPROVAL persistence;
+- terminal-state preservation;
+- project isolation;
+- SHA-256 event integrity and exact supersession chain;
+- Supervisor queue surface;
+- JSON Schema and deterministic smoke harness.
+
+Validation:
+- deterministic regression: `208/208 PASS`;
+- generic workflow run `35516817721`: `PASS`;
+- strict exact-head workflow run `35516817717`: `PASS`.
+
+API scope review tightened the approval boundary: low-level queue code should
+not expose a public option that can resume WAITING_FOR_APPROVAL.
+
+---
+
+## 2026-09-20 — Gate 019 approval-resume boundary tightened
+
+Corrected head:
+`f65ca9c7cce403511a2e685dd6baf8b0fbc70a0e`.
+
+Correction:
+- public queue begin_run accepts QUEUED only;
+- approval-waiting resume moved to an internal queue primitive;
+- Supervisor claim_approved_persisted_job requires the exact waiting action,
+  a named human approver, and a fresh current PolicyEngine ALLOW decision;
+- queue still performs no tool execution or approval granting.
+
+Validation:
+- deterministic regression: `208/208 PASS`;
+- generic workflow run `35516884394`: `PASS`;
+- strict exact-head workflow run `35516884392`: `PASS`.
+
+Final acceptance-test head:
+`983dafc9da4df41094961d4ce438cec7f4c8623e`.
+
+Additional tests:
+- direct low-level resume of WAITING_FOR_APPROVAL is rejected;
+- Gate 019 smoke script executes under regression CI.
+
+Validation:
+- deterministic regression: `209/209 PASS`;
+- generic workflow run `35516965090`: `PASS`;
+- strict exact-head workflow run `35516965135`: `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+ADR-0018 added as `PROPOSED_GATE_019`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then execute one primary-workstation persistence/reopen/recovery smoke.
