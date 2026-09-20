@@ -6,10 +6,16 @@ import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
 from typing import Mapping
 
 from engineering_ai.tools.common import ToolAccessError, ToolExecutionError, ToolResult
+
+
+class NetworkRequirement(str, Enum):
+    LOCAL_ONLY = "LOCAL_ONLY"
+    NETWORK_CAPABLE = "NETWORK_CAPABLE"
 
 
 @dataclass(frozen=True)
@@ -19,6 +25,7 @@ class CommandSpec:
     fixed_args: tuple[str, ...] = ()
     timeout_seconds: float = 10.0
     max_output_bytes: int = 65_536
+    network_requirement: NetworkRequirement = NetworkRequirement.LOCAL_ONLY
 
     def __post_init__(self) -> None:
         if not self.command_id:
@@ -37,11 +44,13 @@ class AllowListedProcessRunner:
         specs: Mapping[str, CommandSpec],
         *,
         root: str | Path,
+        offline: bool = False,
     ) -> None:
         self._root = Path(root).resolve(strict=True)
         if not self._root.is_dir():
             raise ValueError("process root must be a directory")
         self._specs = dict(specs)
+        self._offline = offline
         if set(self._specs) != {spec.command_id for spec in self._specs.values()}:
             raise ValueError("spec mapping keys must match command_id")
 
@@ -49,6 +58,10 @@ class AllowListedProcessRunner:
         spec = self._specs.get(command_id)
         if spec is None:
             raise ToolAccessError(f"command is not allow-listed: {command_id}")
+        if self._offline and spec.network_requirement is NetworkRequirement.NETWORK_CAPABLE:
+            raise ToolAccessError(
+                f"offline mode blocks network-capable command: {command_id}"
+            )
         executable = self._resolve_executable(spec.executable)
         workdir = self._resolve_cwd(cwd)
         argv = [str(executable), *spec.fixed_args]
