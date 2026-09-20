@@ -78,7 +78,7 @@ class KnowledgeLifecycleTests(unittest.TestCase):
                 title="Visual observation",
                 summary="Model sees a potentially unusual joint.",
                 content={"observation": "inspect joint"},
-                provenance=("model:qwen3-vl:test",),
+                provenance=("model:vision-fixture",),
             )
         )
 
@@ -345,6 +345,95 @@ class KnowledgeLifecycleTests(unittest.TestCase):
             KnowledgeAssessmentState.INVALIDATED,
         )
         self.assertTrue(self.ledger.verify_integrity().ok)
+
+    def test_invalidated_knowledge_can_be_requalified_with_current_evidence(self):
+        _, source_v1, test_v1, _, _, _ = self.build_accepted()
+        source_v2 = self.append_source(
+            supersedes_record_id=source_v1.record_id,
+            summary="Revised source revision.",
+        )
+        invalidated = self.lifecycle.invalidate_if_stale(
+            project_id="engineering-ai",
+            knowledge_id="knowledge-joint-001",
+            provenance=("supervisor:source-drift",),
+        )
+        self.assertEqual(invalidated.stage, KnowledgeStage.INVALIDATED)
+
+        test_v2 = self.append_test(
+            supersedes_record_id=test_v1.record_id,
+            result="PASS",
+        )
+        requalified = self.lifecycle.promote_to_evidence(
+            project_id="engineering-ai",
+            knowledge_id="knowledge-joint-001",
+            evidence_record_ids=(source_v2.record_id, test_v2.record_id),
+            source_record_ids=(source_v2.record_id,),
+            provenance=("supervisor:requalified-current-evidence",),
+        )
+        self.assertEqual(requalified.stage, KnowledgeStage.EVIDENCE)
+        self.assertEqual(
+            self.lifecycle.assess(
+                project_id="engineering-ai",
+                knowledge_id="knowledge-joint-001",
+            ).state,
+            KnowledgeAssessmentState.EVIDENCE_CURRENT,
+        )
+
+        accepted_again = self.lifecycle.accept(
+            project_id="engineering-ai",
+            knowledge_id="knowledge-joint-001",
+            provenance=("supervisor:reaccepted-after-requalification",),
+        )
+        self.assertEqual(accepted_again.stage, KnowledgeStage.ACCEPTED)
+        history = self.lifecycle.history(
+            project_id="engineering-ai",
+            knowledge_id="knowledge-joint-001",
+        )
+        self.assertEqual(
+            tuple(record.stage for record in history),
+            (
+                KnowledgeStage.OBSERVATION,
+                KnowledgeStage.EVIDENCE,
+                KnowledgeStage.ACCEPTED,
+                KnowledgeStage.INVALIDATED,
+                KnowledgeStage.EVIDENCE,
+                KnowledgeStage.ACCEPTED,
+            ),
+        )
+
+    def test_control_adr_cannot_be_used_as_evidence_to_bypass_human_authority(self):
+        observation = self.append_observation()
+        self.lifecycle.record_observation(
+            project_id="engineering-ai",
+            knowledge_id="knowledge-control-bypass",
+            claim={"claim": "do not bypass control authority"},
+            observation_record_ids=(observation.record_id,),
+            provenance=("supervisor:test",),
+        )
+        from engineering_ai.memory import DecisionStatus
+
+        accepted_adr = self.memory.append(
+            MemoryRecordDraft(
+                project_id="engineering-ai",
+                memory_id="ADR-G18-CONTROL",
+                kind=MemoryKind.ADR,
+                authority=MemoryAuthority.HUMAN,
+                validation_class=MemoryValidationClass.CONTROL,
+                title="Human control decision",
+                summary="Control records are not evidence records.",
+                content={"decision": "retain human authority"},
+                provenance=("human:approval",),
+                decision_status=DecisionStatus.ACCEPTED,
+                physical_validation_state=PhysicalValidationState.NOT_APPLICABLE,
+            )
+        )
+        with self.assertRaises(KnowledgeLifecyclePolicyError):
+            self.lifecycle.promote_to_evidence(
+                project_id="engineering-ai",
+                knowledge_id="knowledge-control-bypass",
+                evidence_record_ids=(accepted_adr.record_id,),
+                provenance=("supervisor:forbidden-control-promotion",),
+            )
 
     def test_current_accepted_knowledge_cannot_be_invalidated_as_stale(self):
         self.build_accepted()

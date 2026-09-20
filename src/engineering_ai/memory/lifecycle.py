@@ -695,9 +695,15 @@ class KnowledgeLifecycle:
             project_id=project_id,
             knowledge_id=knowledge_id,
         )
-        if latest.stage is not KnowledgeStage.OBSERVATION:
+        # An invalidated claim may be re-qualified only from fresh current
+        # evidence. This preserves one append-only knowledge identity instead
+        # of silently replacing or forking its history.
+        if latest.stage not in {
+            KnowledgeStage.OBSERVATION,
+            KnowledgeStage.INVALIDATED,
+        }:
             raise KnowledgeLifecyclePolicyError(
-                "evidence promotion requires latest OBSERVATION stage"
+                "evidence qualification requires latest OBSERVATION or INVALIDATED stage"
             )
         if len(set(evidence_record_ids)) != len(evidence_record_ids):
             raise ValueError("evidence_record_ids must be unique")

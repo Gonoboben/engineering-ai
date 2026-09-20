@@ -33,7 +33,7 @@ def main() -> int:
                     title="Visual engineering observation",
                     summary="Model observation remains advisory.",
                     content={"observation": "inspect connector alignment"},
-                    provenance=("model:qwen3-vl:smoke",),
+                    provenance=("model:vision-fixture",),
                 )
             )
             source_v1 = memory.append(
