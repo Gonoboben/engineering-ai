@@ -478,6 +478,64 @@ bridge contract and explicit disclosure approval. The Engineering AI local core
 remains fully functional when the bridge/provider is absent or unavailable.
 Controlled MCP/tool exposure remains Gate 022.
 
+### 4.20 Controlled registered tool exposure boundary
+
+Gate 022 adds a transport-neutral registered-capability broker suitable for a
+later MCP transport binding. The broker, not the transport/model, owns the
+local capability map and policy path.
+
+A capability definition is immutable and declares:
+- capability_id and project_id;
+- the existing project policy action it maps to;
+- JSON Schema input/output contracts;
+- side-effect class;
+- timeout contract;
+- request/response character budgets.
+
+Gate 022 acceptance permits `READ_ONLY` capability metadata only. Initial real
+bindings reuse previously accepted narrow adapters:
+- `filesystem.read_text`, restricted to an explicit configured allow-list of
+  relative paths in addition to the existing root-bounded filesystem adapter;
+- `git.status`, using the existing fixed read-only Git adapter.
+
+Every registered invocation must satisfy two independent policy checks:
+1. `external_disclosure` must be currently ALLOW, because returning local tool
+   output to an external/MCP transport is itself project-data disclosure;
+2. the capability's mapped project action must also be currently ALLOW.
+
+Where either boundary requires approval, a named approver is required.
+Missing approval, policy denial, project mismatch, unregistered capability,
+schema rejection or request-budget rejection produces zero local handler calls.
+
+The registry is immutable after construction and public capability listing
+returns only deep-immutable metadata/schema descriptors. Handler/adapter objects
+are private to the local process. There is no dynamic import, eval/exec,
+reflection-selected callable, generic shell/process command, filesystem-write,
+Git mutation, approval-granting or public network-listener API in the Gate 022
+bridge.
+
+The capability handler receives a fixed timeout contract. Existing adapters
+retain their own deterministic bounds; a handler-reported timeout, exception,
+invalid result type, invalid output schema or oversized output fails closed.
+Gate 022 does not create killable arbitrary-thread execution as a substitute for
+adapter-native safety.
+
+Each invocation is audited in a separate append-only SQLite metadata ledger:
+`REQUEST_RECORDED -> POLICY_BLOCKED | TOOL_FAILED | RESULT_ACCEPTED`.
+
+The ledger records project/invocation/capability identity, mapped action,
+combined disclosure+action policy decisions, approval metadata, request/result
+SHA-256 hashes, byte/character sizes, evidence refs and failure class. It does
+not persist request arguments or result payloads, and exception text is not
+persisted.
+
+Gate 022 contains no concrete MCP server, stdio/SSE/HTTP listener or public
+network endpoint. A future MCP transport can bind to `list_capabilities()`
+and `invoke()`, but cannot obtain broader authority than the accepted broker.
+
+Tool/software PASS never implies physical validation. Physical validation
+remains `PHYSICAL_NOT_EXECUTED` unless independently established.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control

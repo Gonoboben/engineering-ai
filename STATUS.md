@@ -55,10 +55,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `022 — Controlled MCP/tool exposure`
 - Issue: `#43`
-- PR: `NOT_OPEN_YET`
+- PR: `#44 (DRAFT)`
 - Branch: `gate-022-controlled-mcp-tool-exposure`
 - Base: `992b2ac07ea1a192919be286eef026a2fa255e73`
-- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -100,6 +100,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - BuoyCalc strict read-only adapter: `IMPLEMENTED_VALIDATED_GATE_014`
 - BuoyCalc controlled engineering loop: `IMPLEMENTED_VALIDATED_GATE_015`
 - External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
+- Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -702,16 +703,34 @@ Historical CI note:
 
 ## Gate 022 validation state
 - Issue #43: `OPEN`
+- PR #44: `OPEN / DRAFT`
 - branch: `gate-022-controlled-mcp-tool-exposure`
 - branch base equals Gate 021 squash merge `992b2ac07ea1a192919be286eef026a2fa255e73`: `PASS`
-- typed capability registry: `NOT_IMPLEMENTED_YET`
-- current Supervisor/PolicyEngine check per invocation: `REQUIRED`
-- named human approval where mapped action requires it: `REQUIRED`
-- unregistered capability invocation: `PROHIBITED`
-- generic shell/process/filesystem-write/Git-mutation surface: `PROHIBITED`
-- dynamic import/eval/reflection execution: `PROHIBITED`
-- append-only invocation audit: `NOT_IMPLEMENTED_YET`
-- public internet listener: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- immutable typed capability registry: `IMPLEMENTED`
+- public capability listing exposes handler objects: `NO`
+- accepted side-effect class: `READ_ONLY_ONLY`
+- real binding `filesystem.read_text`: `IMPLEMENTED_ROOT_BOUNDED_PLUS_EXPLICIT_PATH_ALLOWLIST`
+- real binding `git.status`: `IMPLEMENTED_EXISTING_READ_ONLY_ADAPTER`
+- external_disclosure policy check before registered handler call: `ENFORCED`
+- mapped action policy check before registered handler call: `ENFORCED`
+- named human approval where either policy boundary requires it: `ENFORCED`
+- unregistered/project-mismatch/schema/budget rejection local handler calls: `ZERO`
+- generic shell/process command surface: `ABSENT`
+- project filesystem write/delete surface: `ABSENT`
+- Git mutation/push/merge surface: `ABSENT`
+- dynamic import/eval/reflection-selected callables: `ABSENT`
+- automatic approval granting: `ABSENT`
+- concrete MCP server/listener/public endpoint: `ABSENT_GATE022_ACCEPTANCE`
+- invocation audit: `LOCAL_SQLITE_APPEND_ONLY_METADATA_LEDGER`
+- request/result payload persisted in audit: `NO_HASH_METADATA_ONLY`
+- handler exception text persisted: `NO_FAILURE_CLASS_ONLY`
+- request/output JSON Schema and size bounds: `ENFORCED`
+- timeout indication/handler exception/invalid output/oversize behavior: `FAIL_CLOSED`
+- initial implementation head `cc7a315fa58aa1be34daada3530305b6a918840c`: deterministic regression `266/266 PASS`, generic CI run `35525960611 PASS`, strict exact-head CI run `35525960343 PASS`
+- disclosure/path-allowlist hardening head `6a51beef91b1396a0afe816d4852287e95b4079b`: deterministic regression `268/268 PASS`, generic CI run `35526184987 PASS`, strict exact-head CI run `35526184994 PASS`
+- runtime scope review: `PASS`; no public listener, dynamic import/eval, generic shell/process, project filesystem write, Git mutation, automatic approval, credentials, concrete MCP transport or PHYSICAL_PASS synthesis
+- primary-workstation fake-transport smoke: `PENDING`
+- ADR-0021: `PROPOSED_GATE_022`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -750,4 +769,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Publish the Gate 022 synchronization checkpoint, open one draft PR for Issue #43, then implement a typed registered-capability bridge over existing narrow local tools. Every invocation must re-evaluate current Supervisor/PolicyEngine policy; approval-required actions need named approval; unregistered or denied capabilities make zero tool calls. Do not add generic shell/process/file-write/Git-mutation access, automatic approvals, public network listeners, dynamic imports/eval or broader project authority.
+Run generic and strict exact-head CI on the Gate 022 architecture/evidence documentation head. If green, run one primary-workstation Windows fake-transport smoke using `scripts/gate022_controlled_tool_smoke.py`. No real MCP server/network listener is required. The smoke must prove external-disclosure gating, exact registered read-only execution, unregistered/forbidden zero-call behavior, named-approval enforcement, payload-free persisted audit, reopen integrity, absence of generic write/shell surfaces, and `PHYSICAL_NOT_EXECUTED`.

@@ -3320,3 +3320,76 @@ Explicitly out of scope:
 Next:
 publish the Gate 022 synchronization checkpoint and open one draft PR for
 Issue #43.
+
+
+---
+
+## 2026-09-20 — Gate 022 controlled registered tool exposure implemented
+
+Initial implementation head:
+`cc7a315fa58aa1be34daada3530305b6a918840c`.
+
+Implemented:
+- immutable project-scoped capability registry;
+- deep-immutable public capability descriptors;
+- JSON Schema input/output contracts;
+- READ_ONLY-only side-effect acceptance;
+- real `filesystem.read_text` binding over the accepted root-bounded adapter;
+- real `git.status` binding over the accepted read-only Git adapter;
+- current Supervisor/PolicyEngine action re-evaluation;
+- named approval enforcement;
+- zero-call unregistered/project/schema/budget rejection;
+- bounded request/result serialization;
+- fail-closed handler exception/timeout/invalid-output behavior;
+- append-only SQLite invocation metadata ledger;
+- request/result hashes without persisting request/result payloads;
+- tamper-detection regression;
+- fake-transport smoke harness.
+
+Validation:
+- deterministic regression: `266/266 PASS`;
+- generic workflow run `35525960611`: `PASS`;
+- strict exact-head workflow run `35525960343`: `PASS`.
+
+Security review identified two authority/exposure gaps before local smoke:
+1. returning local tool output through an external/MCP transport is itself
+   `external_disclosure`; checking only `read_repository` was insufficient;
+2. root-bounded arbitrary relative file reads were too broad for an external
+   tool surface.
+
+Hardening head:
+`6a51beef91b1396a0afe816d4852287e95b4079b`.
+
+Corrections:
+- every registered invocation now requires both current
+  `external_disclosure` ALLOW and mapped-action ALLOW;
+- named approval metadata is preserved for the combined policy boundary;
+- audit records a combined disclosure/action decision string;
+- `filesystem.read_text` now requires an explicit configured relative-path
+  allow-list reflected directly in its input schema;
+- regression and smoke coverage prove disclosure-missing zero-call behavior and
+  path allow-list rejection.
+
+Validation:
+- deterministic regression: `268/268 PASS`;
+- generic workflow run `35526184987`: `PASS`;
+- strict exact-head workflow run `35526184994`: `PASS`.
+
+Runtime scope review:
+`PASS`.
+
+Confirmed absent:
+- public network listener/concrete MCP server;
+- dynamic import/eval/reflection-selected callables;
+- generic shell/process command exposure;
+- project filesystem write/delete exposure;
+- Git mutation/push/merge exposure;
+- automatic approval granting;
+- credential/API-key relay;
+- PHYSICAL_PASS synthesis.
+
+ADR-0021 added as `PROPOSED_GATE_022`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then perform one primary-workstation fake-transport smoke.
