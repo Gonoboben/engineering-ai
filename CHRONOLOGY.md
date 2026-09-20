@@ -3710,3 +3710,79 @@ Next:
 the exact PR head after this documentation-only consistency checkpoint must pass
 both generic and strict exact-head CI. If green, freeze the branch and stop at
 explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 023 accepted and merged
+
+Final approved PR head:
+`880a8d4fce352e5c614254119192d7bf7d283e27`.
+
+Final validation:
+- deterministic regression: `280/280 PASS`;
+- generic workflow run `35529619290`: `PASS`;
+- strict exact-head workflow run `35529619244`: `PASS`;
+- deterministic smoke: `PASS_PROVENANCE_PRESERVING_VISION_BOUNDARY`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`f3c826a434eca8e5d7163f5cf4166560717bdbc2`.
+
+PR #46:
+`MERGED`.
+
+Issue #45:
+`CLOSED / COMPLETED`.
+
+ADR-0022 state:
+`ACCEPTED_GATE_023`.
+
+Production Vision model:
+`NOT_QUALIFIED`; default accepted Vision route remains `NO_ROUTE`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 024 controlled parametric CAD worker opened
+
+Issue:
+`#47 — Gate 024 — Controlled parametric CAD worker`.
+
+Branch:
+`gate-024-controlled-parametric-cad-worker`.
+
+Base:
+Gate 023 squash merge
+`f3c826a434eca8e5d7163f5cf4166560717bdbc2`.
+
+Declared scope:
+- immutable bounded parametric CAD specification;
+- axis-aligned box/cylinder baseline with explicit millimetre parameters;
+- deterministic per-entity and assembly geometry checks;
+- canonical design SHA-256;
+- trusted data-only FreeCAD bridge with fixed repository-owned helper;
+- root-bounded proposal artifact publication;
+- existing Supervisor `propose_patch` policy authority only;
+- zero backend calls on policy denial;
+- deterministic post-runtime geometry/report verification;
+- CI-capable fake-backend smoke without requiring FreeCAD installation.
+
+Explicitly out of scope:
+- new autonomous CAD/write authority;
+- model-supplied Python/CAD scripts;
+- shell/eval/exec/dynamic command execution;
+- arbitrary filesystem writes;
+- boolean/CSG/sketch/assembly/FEM expansion;
+- production CAD-specialist model qualification;
+- fabrication/release authorization;
+- Gate 025 image generation.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+publish the synchronization checkpoint, open one draft PR for Issue #47, then
+implement and validate the bounded Gate 024 runtime.
