@@ -143,9 +143,10 @@ class PlataVMControlledLoopTests(unittest.TestCase):
         self.assertEqual(prep.source_conflicts, ())
         assert prep.session is not None
 
+        worktree_target = Path(prep.session.worktree_root) / "Docs" / "safe.txt"
         proposal = PatchProposal(
             relative_path="Docs/safe.txt",
-            expected_sha256=sha256_text("before\n"),
+            expected_sha256=hashlib.sha256(worktree_target.read_bytes()).hexdigest(),
             new_content="after\n",
             rationale="bounded synthetic Gate 013 fixture change",
         )
