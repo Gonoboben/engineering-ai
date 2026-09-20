@@ -137,6 +137,44 @@ class ModelRoutingTests(unittest.TestCase):
         self.assertEqual(decision.model, "measured-vision")
         self.assertEqual(decision.evidence_refs, ("ev-vision-local",))
 
+    def test_image_generation_task_has_no_unmeasured_default_route(self) -> None:
+        names = {item.value for item in ModelTaskClass}
+        self.assertIn("IMAGE_GENERATION", names)
+        decision = self.router.route(
+            RouteRequest(
+                task_class=ModelTaskClass.IMAGE_GENERATION,
+                requires_image_generation=True,
+            )
+        )
+        self.assertEqual(decision.status, RouteStatus.NO_ROUTE)
+        self.assertEqual(decision.considered_models, ())
+        self.assertIsNone(decision.model)
+
+    def test_image_generation_route_requires_explicit_measured_capability(self) -> None:
+        candidate = ModelCapability(
+            model="measured-image-generator",
+            provider="fake-image",
+            task_classes=(ModelTaskClass.IMAGE_GENERATION,),
+            qualification="QUALIFIED_IMAGE_GENERATION_TEST",
+            max_qualified_context_tokens=8192,
+            max_qualified_output_tokens=2048,
+            reasoning_effort=None,
+            supports_native_tool_proposals=False,
+            supports_image_generation=True,
+            evidence_refs=("ev-image-local",),
+            priority=10,
+        )
+        router = DeterministicModelRouter(ModelCapabilityRegistry((candidate,)))
+        decision = router.route(
+            RouteRequest(
+                task_class=ModelTaskClass.IMAGE_GENERATION,
+                requires_image_generation=True,
+            )
+        )
+        self.assertEqual(decision.status, RouteStatus.ROUTE)
+        self.assertEqual(decision.model, "measured-image-generator")
+        self.assertEqual(decision.evidence_refs, ("ev-image-local",))
+
     def test_registry_rejects_duplicate_model_identity(self) -> None:
         entry = self.registry.entries[0]
         with self.assertRaises(ValueError):
