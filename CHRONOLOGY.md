@@ -4263,3 +4263,62 @@ Offline continuation remains:
 
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-20 — Gate 026 accepted and merged
+
+Final approved PR head:
+`8e27641c250a0b3f0061c9de41e9ecdd13d17f20`.
+
+Final exact-head validation:
+- generic workflow `35536044039`: `PASS`;
+- strict exact-head workflow `35536043981`: `PASS`;
+- Gate 026 install workflow `35536044021`: `PASS`;
+- Ubuntu installed-package regression: `306/306 PASS`;
+- Windows installed-package regression: `306/306 PASS`.
+
+Squash merge on `main`:
+`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`.
+
+PR #52:
+`MERGED`.
+
+Issue #51:
+`CLOSED / COMPLETED`.
+
+Phase 8 reproducible-local-installation criterion:
+`CLOSED_BY_GATE_026`.
+
+Offline continuation:
+`NOT_CLAIMED_GATE_026`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 027 offline continuation boundary opened
+
+Issue:
+`#53 — Gate 027 — Offline continuation boundary for connected projects`.
+
+Branch:
+`gate-027-offline-continuation-boundary`.
+
+Base:
+Gate 026 squash merge
+`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`.
+
+Objective:
+close the next Phase 8 criterion by making process-step network requirements
+explicit and proving connected-project local continuation in a fail-closed
+offline mode.
+
+The Gate will not emulate an OS firewall or claim that arbitrary project-owned
+scripts are network-free. Commands classified as network-capable must be
+rejected before subprocess execution when offline mode is active.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
