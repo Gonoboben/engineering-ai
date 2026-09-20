@@ -4378,3 +4378,31 @@ Next:
 run documentation/evidence exact-head validation. If green, mark PR #54 ready
 for review, synchronize ready-state source-of-truth, freeze the branch and stop
 at explicit human exact-SHA squash-merge approval after final validation.
+
+
+---
+
+## 2026-09-21 — Gate 027 ready-for-review checkpoint
+
+Implementation/evidence head before ready transition:
+`25401cdd3b15b5979d22ca44603e56425876b5e6`.
+
+Validation:
+- deterministic regression: `312/312 PASS`;
+- generic workflow `35537939691`: `PASS`;
+- strict exact-head workflow `35537939692`: `PASS`;
+- Gate 027 offline workflow `35537939698`: `PASS`;
+- inherited Gate 026 install workflow `35537939708`: `PASS`.
+
+PR #54 was marked:
+`READY FOR REVIEW`.
+
+No architecture/physics, remote Git mutation, package-download, external-model,
+release, fabrication or physical-validation authority changed by the ready
+transition.
+
+A final source-of-truth consistency head now requires one last exact-head
+validation set before branch freeze and explicit human squash-merge approval.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
