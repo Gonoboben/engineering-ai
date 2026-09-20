@@ -59,7 +59,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `024 — Controlled parametric CAD worker`
 - Issue: `#47`
-- PR: `#48 (DRAFT / FINAL_ACCEPTANCE_PREPARATION)`
+- PR: `#48 (READY FOR REVIEW)`
 - Branch: `gate-024-controlled-parametric-cad-worker`
 - Base: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
@@ -780,11 +780,10 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run generic and strict exact-head CI on the final Gate 024 documentation/evidence
-head. If green, mark PR #48 ready for review, synchronize the ready state if
-needed, re-run exact-head CI on any resulting documentation-only head, freeze
-the branch, and stop at explicit human exact-SHA squash-merge approval.
-ADR-0023 remains `PROPOSED_GATE_024` until that approval and accepted merge.
+Run generic and strict exact-head CI on the final ready-state Gate 024
+documentation-only head. If both remain green, freeze PR #48 and stop at
+explicit human exact-SHA squash-merge approval. ADR-0023 remains
+`PROPOSED_GATE_024` until that approval and accepted merge.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -809,7 +808,7 @@ ADR-0023 remains `PROPOSED_GATE_024` until that approval and accepted merge.
 ## Gate 024 validation state
 - base: `f3c826a434eca8e5d7163f5cf4166560717bdbc2`
 - Issue #47: `OPEN`
-- PR #48: `DRAFT / FINAL_ACCEPTANCE_PREPARATION`
+- PR #48: `READY FOR REVIEW`
 - bounded typed box/cylinder CAD specification: `IMPLEMENTED`
 - deterministic design SHA-256, analytical volume and AABB: `IMPLEMENTED_VALIDATED`
 - CAD policy authority: `EXISTING_SUPERVISOR_PROPOSE_PATCH_ONLY`
@@ -834,5 +833,6 @@ ADR-0023 remains `PROPOSED_GATE_024` until that approval and accepted merge.
 - release authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 - ADR-0023: `PROPOSED_GATE_024`
-- final documentation/evidence exact-head CI: `REQUIRED`
+- pre-ready documentation/evidence head `a3f979ce4035a64981af911807b7f6fdfcd1c7f3`: generic CI `35531115705 PASS`, strict exact-head CI `35531115699 PASS`
+- final ready-state exact-head CI: `REQUIRED_ON_FINAL_HEAD`
 - human exact-SHA squash-merge approval: `PENDING`
