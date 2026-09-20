@@ -2224,3 +2224,86 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run generic and strict exact-head CI on the final documentation-only head. If green,
 mark PR #34 ready for review and request exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 017 accepted and merged
+
+Final approved PR head:
+`ee9f5ad0861a5188f8aa4086098f6f14a4fb74c3`.
+
+Final validation:
+- deterministic tests: `178/178 PASS`;
+- final generic workflow run `35464391333`: `PASS`;
+- final strict exact-head workflow run `35464391322`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation retrieval benchmark: `PASS_DETERMINISTIC_RETRIEVAL_BENCHMARK`;
+- baseline mean recall@3: `0.25`;
+- retrieval mean recall@3: `1.0`;
+- safety/not-worse checks: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`.
+
+Issue #33 closed.
+
+Accepted capability:
+- deterministic project-scoped lexical retrieval over Gate 016 memory;
+- latest revisions by default;
+- MODEL/ADVISORY and PROPOSED ADR records excluded by default;
+- explicit labelled opt-in for advisory/proposed/history;
+- bounded candidate/result/context budgets with no per-record truncation;
+- provenance/evidence/source references and integrity SHA preserved;
+- Supervisor-owned retrieval boundary;
+- no automatic Blackboard/model context injection;
+- semantic/vector backend remains `DEFERRED_NOT_JUSTIFIED`.
+
+ADR-0016 state:
+`ACCEPTED_GATE_017`.
+
+Gate 017 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 018 knowledge lifecycle opened
+
+Issue:
+`#35 — Gate 018 — Knowledge lifecycle`.
+
+Branch:
+`gate-018-knowledge-lifecycle`.
+
+Base:
+Gate 017 squash merge
+`f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`.
+
+Declared scope:
+- typed lifecycle states for observations/evidence/accepted knowledge/stale or invalid knowledge;
+- deterministic policy-qualified promotion;
+- source/evidence/provenance/integrity preservation;
+- append-only lifecycle history/supersession;
+- deterministic source-revision drift detection;
+- Supervisor-controlled lifecycle evaluation;
+- schemas/tests/evidence and regression validation.
+
+Explicitly out of scope:
+- semantic/vector retrieval;
+- automatic model/Blackboard context injection;
+- model-owned promotion/permissions;
+- silent Gate 016 UPDATE/DELETE;
+- physical validation inference;
+- online learning/fine-tuning;
+- Gate 019 job queue;
+- Gate 023 vision worker/Qwen3-VL integration;
+- architecture/physics changes;
+- external/cloud bridge.
+
+Next:
+create the initial synchronization checkpoint commit, open one draft PR for Issue #35,
+then implement and validate the deterministic knowledge lifecycle.

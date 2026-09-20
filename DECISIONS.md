@@ -282,7 +282,7 @@ decision.
 ---
 
 ## ADR-0016 — Use deterministic provenance-preserving retrieval as the baseline
-Status: `PROPOSED_GATE_017`
+Status: `ACCEPTED_GATE_017`
 
 ### Decision
 Engineering AI retrieval starts with a deterministic lexical layer over the
