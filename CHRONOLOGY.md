@@ -3858,3 +3858,33 @@ Next:
 run final exact-head CI on the documentation/evidence head, mark PR #48 ready
 for review if green, synchronize any ready-state documentation, freeze the
 branch, and stop at explicit human exact-SHA squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 024 ready-for-review checkpoint
+
+Final documentation/evidence head before ready transition:
+`a3f979ce4035a64981af911807b7f6fdfcd1c7f3`.
+
+Validation:
+- generic workflow `35531115705`: `PASS`;
+- strict exact-head workflow `35531115699`: `PASS`;
+- deterministic regression remains `289/289 PASS`;
+- smoke remains `PASS_CONTROLLED_PARAMETRIC_CAD_BOUNDARY`.
+
+PR #48 was marked:
+`READY FOR REVIEW`.
+
+No runtime, CAD authority, geometry semantics, fabrication/release state or
+physical-validation state changed by the ready transition.
+
+A final documentation-only source-of-truth consistency commit now requires one
+last generic + strict exact-head CI before branch freeze and explicit human
+exact-SHA squash-merge approval.
+
+ADR-0023 remains:
+`PROPOSED_GATE_024`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
