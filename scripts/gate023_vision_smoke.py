@@ -64,7 +64,7 @@ def make_request() -> VisionWorkerRequest:
             VisionInput(
                 source_ref="smoke:schematic-1",
                 media_type="image/png",
-                data=b"GATE023-SYNTHETIC-IMAGE-PAYLOAD",
+                data=b"\x89PNG\r\n\x1a\nGATE023-SYNTHETIC-IMAGE-PAYLOAD",
             ),
         ),
     )
