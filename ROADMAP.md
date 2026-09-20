@@ -459,20 +459,47 @@ Gate 026 closes the reproducible-local-installation criterion only. Offline
 continuation remains a separate Phase 8 criterion.
 
 ### Gate 027 — Offline continuation boundary for connected projects
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 Issue: `#53`
+
+PR: `#54 (DRAFT; implementation validated)`
 
 Branch: `gate-027-offline-continuation-boundary`
 
 Base:
 `d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
 
-Objective:
-close the next v1.0 criterion by making network requirements explicit in
-allow-listed process commands and proving that connected-project local
-operations continue in an offline fail-closed mode without hidden
-network-capable subprocess execution.
+Validated implementation/architecture checkpoint:
+`323b2db90c1470634ea816a4a96eb1f9dcc47ed9`
+
+Delivered:
+- mandatory explicit `NetworkRequirement` on every `CommandSpec`;
+- fail-closed `offline=True` process mode;
+- pre-subprocess rejection of `NETWORK_CAPABLE` commands;
+- PlataVM read-only and controlled local offline continuation;
+- BuoyCalc local snapshot/worktree continuation;
+- explicit `NETWORK_CAPABLE` classification for all `dotnet restore` steps;
+- structured `BLOCKED_RUNTIME_PREREQUISITE / OFFLINE_NETWORK_REQUIRED`
+  evidence for blocked offline restore;
+- local-only classification for static scans and no-restore/no-build steps;
+- Ubuntu and Windows offline-continuation smoke.
+
+Implementation validation:
+- deterministic regression: `312/312 PASS`;
+- generic workflow `35537733809`: `PASS`;
+- strict exact-head workflow `35537733812`: `PASS`;
+- Gate 027 offline workflow `35537733811`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35537733819`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+Gate 027 proves the Engineering AI control-plane offline boundary. It does not
+claim OS-level packet filtering or formal network-freedom of arbitrary
+project-owned script internals.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
