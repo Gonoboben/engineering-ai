@@ -7,7 +7,7 @@ or evidence-promotion authority.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 import hashlib
 import json
@@ -81,7 +81,7 @@ class VisionAuthority(str, Enum):
 class VisionInput:
     source_ref: str
     media_type: str
-    data: bytes
+    data: bytes = field(repr=False)
 
     def __post_init__(self) -> None:
         attachment = self.as_attachment()
@@ -256,6 +256,8 @@ class VisionWorker:
         response = self._provider.chat(model_request, timeout_seconds=timeout_seconds)
         if response.tool_calls:
             raise VisionProtocolError("Vision provider returned tool calls; tool surface is forbidden")
+        if response.provider != route.provider:
+            raise VisionProtocolError("Vision provider response identity does not match routed provider")
         if response.model != route.model:
             raise VisionProtocolError("Vision provider response model does not match routed model")
 
