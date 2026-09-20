@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/controlled-tool-invocation-snapshot.schema.json",
+  "title": "Engineering AI Controlled Tool Invocation Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sequence",
+    "event_id",
+    "project_id",
+    "invocation_id",
+    "capability_id",
+    "action",
+    "side_effect",
+    "event_type",
+    "policy_decision",
+    "approval_required",
+    "approval_obtained",
+    "approver",
+    "request_sha256",
+    "request_chars",
+    "response_sha256",
+    "response_chars",
+    "evidence_refs",
+    "failure_class",
+    "supersedes_event_id",
+    "created_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+    "invocation_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "capability_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+    "action": {"type": ["string", "null"]},
+    "side_effect": {
+      "oneOf": [
+        {"const": "READ_ONLY"},
+        {"type": "null"}
+      ]
+    },
+    "event_type": {
+      "type": "string",
+      "enum": ["REQUEST_RECORDED", "POLICY_BLOCKED", "TOOL_FAILED", "RESULT_ACCEPTED"]
+    },
+    "policy_decision": {"type": "string", "minLength": 1},
+    "approval_required": {"type": "boolean"},
+    "approval_obtained": {"type": "boolean"},
+    "approver": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "null"}
+      ]
+    },
+    "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "request_chars": {"type": "integer", "minimum": 1},
+    "response_sha256": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "response_chars": {
+      "oneOf": [
+        {"type": "integer", "minimum": 0},
+        {"type": "null"}
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "failure_class": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "null"}
+      ]
+    },
+    "supersedes_event_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+        {"type": "null"}
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "REQUEST_RECORDED"}}},
+      "then": {
+        "properties": {
+          "response_sha256": {"type": "null"},
+          "response_chars": {"type": "null"},
+          "evidence_refs": {"maxItems": 0},
+          "failure_class": {"type": "null"},
+          "supersedes_event_id": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "RESULT_ACCEPTED"}}},
+      "then": {
+        "properties": {
+          "response_sha256": {"type": "string"},
+          "response_chars": {"type": "integer"},
+          "failure_class": {"type": "null"},
+          "supersedes_event_id": {"type": "string"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {"enum": ["POLICY_BLOCKED", "TOOL_FAILED"]}
+        }
+      },
+      "then": {
+        "properties": {
+          "response_sha256": {"type": "null"},
+          "response_chars": {"type": "null"},
+          "evidence_refs": {"maxItems": 0},
+          "failure_class": {"type": "string"},
+          "supersedes_event_id": {"type": "string"}
+        }
+      }
+    }
+  ]
+}

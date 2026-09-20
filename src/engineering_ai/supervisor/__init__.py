@@ -15,6 +15,27 @@ from engineering_ai.supervisor.blackboard import (
 )
 from engineering_ai.supervisor.core import ExecutionResult, ProposalExecutionResult, Supervisor, ToolOutcome
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
+from engineering_ai.supervisor.tool_bridge import (
+    CapabilityBinding,
+    CapabilityDefinition,
+    CapabilityRegistry,
+    CapabilityResult,
+    CapabilitySideEffect,
+    ControlledToolBridge,
+    ControlledToolBridgeError,
+    ControlledToolBridgeIntegrityError,
+    ControlledToolBridgePolicyError,
+    ControlledToolBridgeProtocolError,
+    ToolBridgeOutcome,
+    ToolBridgeStatus,
+    ToolInvocationEventType,
+    ToolInvocationIntegrityReport,
+    ToolInvocationLedger,
+    ToolInvocationRequest,
+    ToolInvocationSnapshot,
+    filesystem_read_text_binding,
+    git_status_binding,
+)
 from engineering_ai.supervisor.external_review import (
     ExternalAdvisoryReview,
     ExternalConsultationEventType,
@@ -80,6 +101,25 @@ from engineering_ai.supervisor.review import (
 from engineering_ai.supervisor.stubs import StubTool
 
 __all__ = [
+    "CapabilityBinding",
+    "CapabilityDefinition",
+    "CapabilityRegistry",
+    "CapabilityResult",
+    "CapabilitySideEffect",
+    "ControlledToolBridge",
+    "ControlledToolBridgeError",
+    "ControlledToolBridgeIntegrityError",
+    "ControlledToolBridgePolicyError",
+    "ControlledToolBridgeProtocolError",
+    "ToolBridgeOutcome",
+    "ToolBridgeStatus",
+    "ToolInvocationEventType",
+    "ToolInvocationIntegrityReport",
+    "ToolInvocationLedger",
+    "ToolInvocationRequest",
+    "ToolInvocationSnapshot",
+    "filesystem_read_text_binding",
+    "git_status_binding",
     "ExternalAdvisoryReview",
     "ExternalConsultationEventType",
     "ExternalConsultationIntegrityReport",
