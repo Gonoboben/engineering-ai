@@ -181,7 +181,7 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         for relative, content in files.items():
             path = self.root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content, encoding="utf-8")
+            path.write_bytes(content.encode("utf-8"))
 
         subprocess.run(["git", "add", "."], cwd=self.root, check=True)
         subprocess.run(
