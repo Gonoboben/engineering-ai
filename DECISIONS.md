@@ -537,7 +537,7 @@ a second copy of disclosed project content.
 ---
 
 ## ADR-0021 — MCP/tool exposure uses an immutable registered-capability broker
-Status: `PROPOSED_GATE_022`
+Status: `ACCEPTED_GATE_022`
 
 ### Decision
 Gate 022 exposes local capabilities only through an immutable registry of typed
