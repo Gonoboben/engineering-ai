@@ -429,3 +429,54 @@ duplicate side effects.
 - scheduling and overnight operation remain Gate 020;
 - queue persistence does not imply physical validation or broaden project
   permissions.
+
+
+---
+
+## ADR-0019 — Use persisted one-shot schedules with Supervisor re-authorization
+Status: `PROPOSED_GATE_020`
+
+### Decision
+Gate 020 scheduled/unattended work is represented by explicit persisted one-shot
+UTC schedules plus append-only session history. A schedule records only a
+bounded unattended allow-list and execution budgets; it never grants project
+authority.
+
+Before every queued job is executed, the current deterministic
+Supervisor/PolicyEngine is evaluated again. Tool execution is possible only
+when both conditions are true:
+1. current policy returns `ALLOW`;
+2. the action is present in the schedule's `allowed_actions`.
+
+Approval-required work transitions to persisted `WAITING_FOR_APPROVAL`
+without a tool call. Denied/forbidden work transitions to `BLOCKED` without a
+tool call. Autonomous actions not listed by the schedule remain `QUEUED`.
+
+Each session has explicit max-job and max-duration limits. Interrupted prior
+queue jobs are recovered using Gate 019 fail-closed semantics before new work.
+An interrupted scheduled session is blocked on reopen and is never silently
+replayed.
+
+Session summaries record deterministic final counts for touched jobs, evidence
+references, recovery information and `PHYSICAL_NOT_EXECUTED`.
+
+### Rationale
+Gate 019 makes job state durable but intentionally provides no scheduler.
+Unattended/overnight operation requires due-time selection and run budgeting
+without turning elapsed time or schedule membership into authorization.
+
+Rechecking policy at execution time prevents stale schedules from bypassing a
+later tightened project policy. One-shot append-only sessions avoid ambiguous
+automatic replay after process failure and keep audit history reconstructable.
+
+### Consequence
+- due schedules survive process restart;
+- not-due schedules do not execute;
+- schedule membership cannot elevate approval-required or forbidden actions;
+- explicit current policy remains authoritative;
+- unattended sessions are bounded by job count and duration;
+- summaries are deterministic and evidence-linked;
+- OS scheduler/service installation remains external/out of scope;
+- no long-lived daemon, remote queue, distributed workers or automatic approval
+  is introduced;
+- scheduled software PASS never implies physical validation.

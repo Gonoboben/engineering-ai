@@ -375,6 +375,52 @@ Control rules:
 Gate 019 is persistence and recovery only. Time-of-day scheduling, overnight
 operation, unattended runner lifecycle and run summaries remain Gate 020.
 
+### 4.18 Scheduled/unattended run boundary
+
+Gate 020 adds persisted one-shot UTC schedules and bounded unattended sessions
+on top of the accepted Gate 019 queue. A schedule is not a permission grant.
+
+A schedule definition binds:
+- schedule/project identity;
+- explicit due_at timestamp with timezone;
+- a bounded list of action names pre-authorized for this unattended session;
+- max job claims;
+- max session duration.
+
+The current Supervisor/PolicyEngine is still evaluated for every queued job.
+Gate 020 rules are:
+- only actions that are currently `ALLOW` and also listed in the schedule's
+  allowed_actions may invoke a supplied tool unattended;
+- `NEEDS_HUMAN_APPROVAL` jobs may be claimed only to persist
+  `WAITING_FOR_APPROVAL`; their tool is never called;
+- denied/forbidden jobs may be claimed only to persist `BLOCKED`; their tool
+  is never called;
+- autonomous actions omitted from the schedule remain `QUEUED` and are not
+  silently broadened into the unattended session;
+- jobs with ambiguous multi-action scope are blocked without a tool call;
+- missing or malformed unattended tool bindings fail closed;
+- Gate 019 retry/timeout/deadline semantics remain authoritative;
+- interrupted prior `RUNNING` queue jobs are recovered fail-closed before new
+  unattended work;
+- an interrupted scheduled session is terminally blocked on next invocation
+  instead of being silently replayed;
+- session max-jobs and max-duration budgets prevent unbounded overnight loops;
+- summary counts are derived from persisted queue state for touched jobs and
+  preserve deterministic evidence references;
+- scheduled-run summaries always retain
+  `physical_validation = PHYSICAL_NOT_EXECUTED` unless separate physical
+  evidence exists outside this scheduler.
+
+Schedule/session state is a separate append-only SQLite event ledger:
+`SCHEDULED -> SESSION_STARTED -> SESSION_COMPLETED | SESSION_BLOCKED`,
+or `SCHEDULED -> CANCELLED`.
+Every event carries exact predecessor linkage and SHA-256 integrity.
+
+Gate 020 provides a deterministic one-shot runner API/harness that can later be
+invoked by a user-selected operating-system scheduler. It does not install or
+configure Windows Task Scheduler/systemd/launchd, does not run a long-lived
+daemon/service, and does not add remote/cloud or distributed execution.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control

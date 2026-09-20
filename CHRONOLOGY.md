@@ -2862,3 +2862,69 @@ Explicitly out of scope:
 Next:
 publish the initial synchronization checkpoint, open one draft PR for Issue #39,
 then implement Gate 020 without broadening Supervisor authority.
+
+
+---
+
+## 2026-09-20 — Gate 020 scheduled/unattended run layer implemented
+
+Initial implementation head:
+`d455738ee9522aa7c1c2671cc3cd9bf6f1e567e5`.
+
+Implemented:
+- local append-only SQLite one-shot schedule/session ledger;
+- explicit timezone-aware due_at;
+- deterministic due selection by due_at then append sequence;
+- schedule allowed_actions as a narrowing constraint only;
+- current Supervisor/PolicyEngine re-authorization before every unattended
+  execution;
+- unattended tool execution only for current ALLOW plus schedule allow-list;
+- approval-required jobs -> WAITING_FOR_APPROVAL with no tool call;
+- denied/forbidden jobs -> BLOCKED with no tool call;
+- autonomous schedule-unlisted jobs remain QUEUED;
+- ambiguous multi-action jobs block without tool execution;
+- missing tool bindings block fail-closed;
+- bounded max-job and max-session-duration budgets;
+- Gate 019 interrupted RUNNING recovery before new work;
+- interrupted scheduled sessions terminally block on next invocation;
+- deterministic session summaries with state counts and evidence refs;
+- physical validation summary fixed to PHYSICAL_NOT_EXECUTED;
+- JSON Schema, deterministic tests and local smoke harness.
+
+Validation:
+- deterministic regression: `226/226 PASS`;
+- generic workflow run `35522348903`: `PASS`;
+- strict exact-head workflow run `35522348911`: `PASS`.
+
+Follow-up chronology hardening head:
+`a61a3e1fa16341265396b66a9db73700bfaabc7c`.
+
+Added:
+- completed_at cannot precede started_at;
+- regression coverage for invalid summary chronology.
+
+Validation:
+- deterministic regression: `227/227 PASS`;
+- generic workflow run `35522438419`: `PASS`;
+- strict exact-head workflow run `35522438328`: `PASS`.
+
+Runtime scope review:
+`PASS`.
+
+Confirmed absent:
+- Windows Task Scheduler/systemd/launchd installation;
+- daemon/service implementation;
+- automatic approval API;
+- unrestricted shell;
+- remote/cloud scheduler;
+- distributed workers;
+- semantic/vector backend;
+- vision runtime;
+- PHYSICAL_PASS synthesis;
+- generic SQL write API.
+
+ADR-0019 added as `PROPOSED_GATE_020`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then perform one primary-workstation scheduled/unattended smoke.

@@ -51,10 +51,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `020 — Scheduled/overnight engineering runs`
 - Issue: `#39`
-- PR: `NOT_OPEN_YET`
+- PR: `#40 (DRAFT)`
 - Branch: `gate-020-scheduled-overnight-runs`
 - Base: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
-- State: `IN_PROGRESS_INITIAL_CHECKPOINT`
+- State: `IMPLEMENTED_CI_VALIDATED_PENDING_LOCAL_SMOKE`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -608,16 +608,37 @@ Historical CI note:
 
 ## Gate 020 validation state
 - Issue #39: `OPEN`
+- PR #40: `OPEN / DRAFT`
 - branch: `gate-020-scheduled-overnight-runs`
 - branch base equals Gate 019 squash merge `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`: `PASS`
-- scheduled run store: `NOT_IMPLEMENTED_YET`
-- due-run selection: `NOT_IMPLEMENTED_YET`
-- unattended autonomous execution: `NOT_IMPLEMENTED_YET`
-- approval-required unattended execution: `PROHIBITED`
-- automatic approval acquisition: `PROHIBITED`
-- bounded run/session budgets: `NOT_IMPLEMENTED_YET`
-- deterministic summary counts/evidence links: `NOT_IMPLEMENTED_YET`
-- OS scheduler/service installation: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- schedule/session storage: `LOCAL_SQLITE_APPEND_ONLY_ONE_SHOT_LEDGER`
+- persisted schedule events: `SCHEDULED / SESSION_STARTED / SESSION_COMPLETED / SESSION_BLOCKED / CANCELLED`
+- explicit UTC/timezone due_at: `IMPLEMENTED`
+- deterministic due ordering: `DUE_AT_THEN_APPEND_SEQUENCE`
+- schedule allowed_actions grants authority: `PROHIBITED`
+- current Supervisor/PolicyEngine recheck before execution: `ENFORCED`
+- unattended tool execution: `ALLOW_AND_SCHEDULE_ALLOWED_ONLY`
+- approval-required tool execution unattended: `PROHIBITED_WAITING_FOR_APPROVAL`
+- forbidden/denied tool execution unattended: `PROHIBITED_BLOCKED`
+- autonomous but schedule-unlisted action: `LEFT_QUEUED`
+- ambiguous multi-action unattended job: `BLOCKED_NO_TOOL_CALL`
+- missing unattended tool: `BLOCKED_FAIL_CLOSED`
+- existing Gate 019 retry/timeout/deadline semantics: `PRESERVED`
+- interrupted prior RUNNING jobs: `RECOVERED_BLOCKED_BEFORE_NEW_WORK`
+- interrupted scheduled session replay: `PROHIBITED_SESSION_BLOCKED`
+- max jobs per session: `IMPLEMENTED_1..100`
+- max session duration: `IMPLEMENTED_1..86400_SECONDS`
+- deterministic summary counts: `PASS / FAIL / BLOCKED / WAITING_FOR_APPROVAL / CANCELLED / QUEUED`
+- evidence refs in summary: `IMPLEMENTED`
+- scheduled summary physical state: `PHYSICAL_NOT_EXECUTED_ONLY`
+- OS scheduler/Task Scheduler/systemd/launchd installation: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- long-lived daemon/service: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- remote/cloud/distributed execution: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- initial implementation head `d455738ee9522aa7c1c2671cc3cd9bf6f1e567e5`: deterministic regression `226/226 PASS`, generic CI run `35522348903 PASS`, strict exact-head CI run `35522348911 PASS`
+- chronology-hardening head `a61a3e1fa16341265396b66a9db73700bfaabc7c`: deterministic regression `227/227 PASS`, generic CI run `35522438419 PASS`, strict exact-head CI run `35522438328 PASS`
+- runtime scope review: `PASS`; no OS scheduler installation, daemon/service, automatic approval API, unrestricted shell, distributed worker runtime, external/cloud scheduler, semantic/vector backend, vision integration, PHYSICAL_PASS synthesis, or generic SQL write API
+- primary-workstation scheduled/overnight smoke: `PENDING`
+- ADR-0019: `PROPOSED_GATE_020`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -656,4 +677,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Publish the Gate 020 synchronization checkpoint, open one draft PR for Issue #39, then implement a local persisted one-shot scheduled-run layer over Gate 019. The unattended runner may execute only current Supervisor/PolicyEngine autonomous actions through explicitly supplied narrow tools. Approval-required work must remain WAITING_FOR_APPROVAL without tool execution. Do not install/configure Windows Task Scheduler/systemd/launchd, add a daemon/service, remote/cloud scheduler, distributed workers, automatic approvals or broader authority.
+Run generic and strict exact-head CI on the Gate 020 architecture/evidence documentation head. If green, run one primary-workstation Windows scheduled/unattended smoke using `scripts/gate020_scheduled_run_smoke.py`. The smoke must prove due-only execution, policy re-authorization, no tool call for approval/forbidden actions, fail-closed interrupted-job recovery, untouched schedule-unlisted autonomous work, summary/evidence integrity, persisted reopen, and `PHYSICAL_NOT_EXECUTED`.
