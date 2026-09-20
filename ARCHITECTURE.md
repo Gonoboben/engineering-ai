@@ -674,6 +674,44 @@ drawing, schematic, CAD or fabrication claim. Image-generation software/smoke
 PASS never implies physical validation. Physical validation remains
 `PHYSICAL_NOT_EXECUTED`.
 
+### 4.24 Offline continuation execution boundary
+
+Gate 027 implements the existing offline-first architectural principle at the
+allow-listed process boundary for connected engineering projects.
+
+Every `CommandSpec` must explicitly declare one of two network-requirement
+classes:
+- `LOCAL_ONLY` — the command is permitted by the process boundary while
+  offline;
+- `NETWORK_CAPABLE` — the command may require external network/package
+  access and is rejected before executable resolution or subprocess creation
+  when offline mode is active.
+
+The classification is a control-plane execution classification, not a claim
+that arbitrary project-owned scripts have been formally proven incapable of
+opening a socket internally. Gate 027 therefore does not emulate an OS firewall
+and does not promote script content to network-safety evidence.
+
+For PlataVM, the fixed repository-integrity and semantic-gate validator commands
+are classified `LOCAL_ONLY`. The read-only and controlled adapters can operate
+with `offline=true` using only local repository state, local Git refs,
+adapter-owned worktrees and those fixed validators.
+
+For BuoyCalc, package-acquisition steps based on `dotnet restore` are
+classified `NETWORK_CAPABLE`. In offline mode these steps are blocked before
+process execution and the controlled validation result records
+`BLOCKED_RUNTIME_PREREQUISITE` with
+`OFFLINE_NETWORK_REQUIRED`. Local-only static scans and already-restored
+build/run steps remain separately classified `LOCAL_ONLY`; Gate 027 does not
+claim they can PASS unless their normal local runtime/dependency prerequisites
+are actually present.
+
+Offline continuation does not grant remote Git mutation, external model/API
+access, package download, release, fabrication, architecture or physics
+authority. A blocked network-dependent validator is not reinterpreted as PASS.
+Software offline PASS never implies physical validation; physical validation
+remains `PHYSICAL_NOT_EXECUTED`.
+
 ## 5. Trust and execution boundaries
 
 ### Trusted for control
