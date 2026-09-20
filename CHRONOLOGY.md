@@ -2611,3 +2611,42 @@ ADR-0018 added as `PROPOSED_GATE_019`.
 Next:
 synchronize architecture/status/evidence documentation, re-run exact-head CI,
 then execute one primary-workstation persistence/reopen/recovery smoke.
+
+
+---
+
+## 2026-09-20 — Gate 019 primary-workstation persistence/reopen smoke passed
+
+Exact Engineering AI head:
+`f423f16d4895049121026386f37a9c9c68b8bf89`.
+
+Local result:
+`PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`.
+
+Observed:
+- database created: `true`;
+- database reopened: `true`;
+- FIFO retry tail preserved: `true`;
+- retry attempts preserved after reopen: `1`;
+- retry final state: `PASS`;
+- WAITING_FOR_APPROVAL survived reopen: `true`;
+- explicitly approved job final state: `PASS`;
+- interrupted RUNNING recovery event: `INTERRUPTED_RECOVERY`;
+- interrupted job final state: `BLOCKED`;
+- queue events checked: `13`;
+- queue jobs checked: `3`;
+- queue integrity: `PASS`;
+- automatic approval: `false`;
+- scheduled execution: `false`;
+- distributed workers: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+Gate 019 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record smoke evidence, run final generic + strict exact-head CI on the
+post-smoke documentation head, complete final scope review, then stop at
+explicit human exact-SHA squash-merge approval.

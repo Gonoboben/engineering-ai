@@ -61,20 +61,38 @@ Smoke/acceptance-test head:
 - Gate 019 smoke harness executes in CI
 - direct queue WAITING_FOR_APPROVAL resume rejected
 
+## Primary-workstation local smoke
+
+Exact head:
+`f423f16d4895049121026386f37a9c9c68b8bf89`
+
+Result:
+`PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`
+
+Observed:
+- database_created = `true`
+- database_reopened = `true`
+- fifo_retry_tail_preserved = `true`
+- retry_attempts_preserved = `1`
+- retry_final_state = `PASS`
+- approval_wait_survived_reopen = `true`
+- approval_final_state = `PASS`
+- interrupted_run_recovery = `INTERRUPTED_RECOVERY`
+- interrupted_final_state = `BLOCKED`
+- queue_events_checked = `13`
+- queue_jobs_checked = `3`
+- queue_integrity = `true`
+- automatic_approval = `false`
+- scheduled_execution = `false`
+- distributed_workers = `false`
+- physical_validation = `PHYSICAL_NOT_EXECUTED`
+- EXIT = `0`
+- working tree remained clean and branch head unchanged.
+
 ## Remaining acceptance evidence
-Run one primary-workstation Windows/Python 3.12 smoke on a stable post-documentation
-Gate 019 head using `scripts/gate019_job_queue_smoke.py`.
 
-Required observations:
-- database created and reopened;
-- retry attempts survive reopen;
-- retry later completes PASS through Supervisor;
-- WAITING_FOR_APPROVAL survives reopen;
-- explicit Supervisor approval resume completes only with named approval;
-- interrupted RUNNING job recovers BLOCKED;
-- queue integrity PASS;
-- automatic_approval=false;
-- scheduled_execution=false;
-- physical validation remains PHYSICAL_NOT_EXECUTED.
+Run final generic and strict exact-head CI on the post-smoke evidence/status
+head and complete final scope review.
 
-ADR-0018 remains `PROPOSED_GATE_019` until exact-SHA human approval and squash merge.
+ADR-0018 remains `PROPOSED_GATE_019` until explicit exact-SHA human approval
+and squash merge.
