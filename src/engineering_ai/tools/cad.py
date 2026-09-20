@@ -9,7 +9,7 @@ not accepted.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 import hashlib
 import json
@@ -62,10 +62,12 @@ def _validate_entity_id(entity_id: str) -> str:
     value = entity_id.strip()
     if not value or len(value) > 64:
         raise CadSpecError("entity_id must contain 1..64 characters")
-    if not (value[0].isalpha() or value[0] == "_"):
-        raise CadSpecError("entity_id must start with a letter or underscore")
-    if any(not (ch.isalnum() or ch == "_") for ch in value):
-        raise CadSpecError("entity_id accepts only letters, digits, and underscore")
+    ascii_letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    ascii_digits = "0123456789"
+    if value[0] not in ascii_letters + "_":
+        raise CadSpecError("entity_id must start with an ASCII letter or underscore")
+    if any(ch not in ascii_letters + ascii_digits + "_" for ch in value):
+        raise CadSpecError("entity_id accepts only ASCII letters, digits, and underscore")
     return value
 
 
@@ -92,7 +94,7 @@ class CadBox:
     height_mm: float
     placement: CadPlacement = CadPlacement()
 
-    kind: CadPrimitiveKind = CadPrimitiveKind.BOX
+    kind: CadPrimitiveKind = field(default=CadPrimitiveKind.BOX, init=False)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "entity_id", _validate_entity_id(self.entity_id))
@@ -124,7 +126,7 @@ class CadCylinder:
     height_mm: float
     placement: CadPlacement = CadPlacement()
 
-    kind: CadPrimitiveKind = CadPrimitiveKind.CYLINDER
+    kind: CadPrimitiveKind = field(default=CadPrimitiveKind.CYLINDER, init=False)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "entity_id", _validate_entity_id(self.entity_id))
@@ -489,6 +491,8 @@ class ParametricCadAdapter:
         return resolved
 
     def _validate_candidate_artifact(self, artifact_path: Path) -> None:
+        if artifact_path.is_symlink():
+            raise CadBackendError("CAD runtime FCStd artifact symlink is not allowed")
         if not artifact_path.is_file():
             raise CadBackendError("CAD runtime did not produce an FCStd artifact")
         size = artifact_path.stat().st_size
@@ -499,6 +503,8 @@ class ParametricCadAdapter:
 
     @staticmethod
     def _load_runtime_report(report_path: Path) -> CadRuntimeReport:
+        if report_path.is_symlink():
+            raise CadBackendError("CAD runtime geometry report symlink is not allowed")
         if not report_path.is_file():
             raise CadBackendError("CAD runtime did not produce a geometry report")
         raw = report_path.read_bytes()
