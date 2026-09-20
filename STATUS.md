@@ -57,7 +57,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `023 — Provenance-preserving Vision worker`
 - Issue: `#45`
-- PR: `#46 (DRAFT)`
+- PR: `#46 (READY FOR REVIEW)`
 - Branch: `gate-023-provenance-preserving-vision-worker`
 - Base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
@@ -778,7 +778,7 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on this final documentation-only Gate 022 head. If green, mark PR #44 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0021 remains PROPOSED_GATE_022 until that approval and squash merge.
+Run final generic and strict exact-head CI on the final Gate 023 documentation-only PR head. If both remain green, freeze the branch and stop at explicit human exact-SHA squash-merge approval for PR #46. ADR-0022 remains PROPOSED_GATE_023 until that approval and squash merge.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
