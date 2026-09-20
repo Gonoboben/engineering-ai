@@ -144,6 +144,7 @@ class PlataVMControlledLoopTests(unittest.TestCase):
         assert prep.session is not None
 
         worktree_target = Path(prep.session.worktree_root) / "Docs" / "safe.txt"
+        original_worktree_content = worktree_target.read_bytes().decode("utf-8")
         proposal = PatchProposal(
             relative_path="Docs/safe.txt",
             expected_sha256=hashlib.sha256(worktree_target.read_bytes()).hexdigest(),
@@ -171,8 +172,8 @@ class PlataVMControlledLoopTests(unittest.TestCase):
         rollback = PatchProposal(
             relative_path="Docs/safe.txt",
             expected_sha256=applied.application.after_sha256,
-            new_content="before\n",
-            rationale="restore synthetic fixture before controlled cleanup",
+            new_content=original_worktree_content,
+            rationale="restore exact synthetic fixture bytes before controlled cleanup",
         )
         loop.apply_patch(
             session=prep.session,
