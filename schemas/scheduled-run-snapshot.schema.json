@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gonoboben.github.io/engineering-ai/schemas/scheduled-run-snapshot.schema.json",
+  "title": "Engineering AI Scheduled Run Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sequence",
+    "event_id",
+    "definition",
+    "event_type",
+    "session_id",
+    "summary",
+    "reason",
+    "supersedes_event_id",
+    "created_at",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+    "definition": {"$ref": "#/$defs/definition"},
+    "event_type": {
+      "type": "string",
+      "enum": ["SCHEDULED", "SESSION_STARTED", "SESSION_COMPLETED", "SESSION_BLOCKED", "CANCELLED"]
+    },
+    "session_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        {"type": "null"}
+      ]
+    },
+    "summary": {
+      "oneOf": [
+        {"$ref": "#/$defs/summary"},
+        {"type": "null"}
+      ]
+    },
+    "reason": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "null"}
+      ]
+    },
+    "supersedes_event_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        {"type": "null"}
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "definition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schedule_id",
+        "project_id",
+        "due_at",
+        "allowed_actions",
+        "max_jobs",
+        "max_session_seconds"
+      ],
+      "properties": {
+        "schedule_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+        "due_at": {"type": "string", "format": "date-time"},
+        "allowed_actions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "max_jobs": {"type": "integer", "minimum": 1, "maximum": 100},
+        "max_session_seconds": {"type": "integer", "minimum": 1, "maximum": 86400}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "session_id",
+        "schedule_id",
+        "project_id",
+        "started_at",
+        "completed_at",
+        "stop_reason",
+        "claims",
+        "touched_job_ids",
+        "recovered_interrupted_job_ids",
+        "counts",
+        "evidence_refs",
+        "physical_validation"
+      ],
+      "properties": {
+        "session_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        "schedule_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$"},
+        "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+        "started_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": "string", "format": "date-time"},
+        "stop_reason": {"type": "string", "minLength": 1},
+        "claims": {"type": "integer", "minimum": 0},
+        "touched_job_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9._-]{3,96}$"}
+        },
+        "recovered_interrupted_job_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9._-]{3,96}$"}
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["PASS", "FAIL", "BLOCKED", "WAITING_FOR_APPROVAL", "CANCELLED", "QUEUED"],
+          "properties": {
+            "PASS": {"type": "integer", "minimum": 0},
+            "FAIL": {"type": "integer", "minimum": 0},
+            "BLOCKED": {"type": "integer", "minimum": 0},
+            "WAITING_FOR_APPROVAL": {"type": "integer", "minimum": 0},
+            "CANCELLED": {"type": "integer", "minimum": 0},
+            "QUEUED": {"type": "integer", "minimum": 0}
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "physical_validation": {"const": "PHYSICAL_NOT_EXECUTED"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "SCHEDULED"}}},
+      "then": {
+        "properties": {
+          "session_id": {"type": "null"},
+          "summary": {"type": "null"},
+          "reason": {"type": "null"},
+          "supersedes_event_id": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "SESSION_STARTED"}}},
+      "then": {
+        "properties": {
+          "session_id": {"type": "string"},
+          "summary": {"type": "null"},
+          "reason": {"type": "null"},
+          "supersedes_event_id": {"type": "string"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "SESSION_COMPLETED"}}},
+      "then": {
+        "properties": {
+          "session_id": {"type": "string"},
+          "summary": {"$ref": "#/$defs/summary"},
+          "reason": {"type": "null"},
+          "supersedes_event_id": {"type": "string"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "SESSION_BLOCKED"}}},
+      "then": {
+        "properties": {
+          "session_id": {"type": "string"},
+          "summary": {"type": "null"},
+          "reason": {"type": "string", "minLength": 1},
+          "supersedes_event_id": {"type": "string"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "CANCELLED"}}},
+      "then": {
+        "properties": {
+          "session_id": {"type": "null"},
+          "summary": {"type": "null"},
+          "reason": {"type": "string", "minLength": 1},
+          "supersedes_event_id": {"type": "string"}
+        }
+      }
+    }
+  ]
+}

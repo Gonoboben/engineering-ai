@@ -2772,3 +2772,248 @@ until explicit exact-SHA human approval and squash merge.
 Next:
 run one final generic + strict exact-head CI on the final documentation-only
 head, mark PR #38 ready for review if green, then stop at human approval.
+
+
+---
+
+## 2026-09-20 — Gate 019 accepted and merged
+
+Final approved PR head:
+`a12dc51c7022ce218efb571fa7d34f06ea6753b1`.
+
+Final validation:
+- deterministic regression: `210/210 PASS`;
+- generic workflow run `35521603454`: `PASS`;
+- strict exact-head workflow run `35521603447`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation hardened-runtime smoke:
+  `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`;
+- final runtime scope review: `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`.
+
+Issue #37 closed as completed.
+
+Accepted capability:
+- local append-only persisted Supervisor job queue;
+- deterministic FIFO claim ordering;
+- bounded retry/attempt persistence;
+- timeout/deadline state;
+- WAITING_FOR_APPROVAL persistence;
+- Supervisor-only named-approval resume;
+- fail-closed interrupted/expired RUNNING recovery to BLOCKED;
+- terminal-state preservation;
+- project isolation;
+- exact predecessor-chain and SHA-256 integrity.
+
+ADR-0018 state:
+`ACCEPTED_GATE_019`.
+
+Gate 019 state:
+`ACCEPTED_MERGED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 020 scheduled/overnight engineering runs opened
+
+Issue:
+`#39 — Gate 020 — Scheduled/overnight engineering runs`.
+
+Branch:
+`gate-020-scheduled-overnight-runs`.
+
+Base:
+Gate 019 squash merge
+`f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`.
+
+Declared scope:
+- typed local persisted one-shot schedules with explicit UTC due times;
+- deterministic due-run selection;
+- bounded unattended sessions over the accepted Gate 019 queue;
+- unattended execution only for current Supervisor/PolicyEngine autonomous
+  actions and explicitly supplied narrow tools;
+- approval-required jobs preserved WAITING_FOR_APPROVAL without tool execution;
+- forbidden/non-autonomous work blocked without execution;
+- bounded max-jobs and max-session-duration budgets;
+- Gate 019 interrupted RUNNING recovery before new unattended claims;
+- append-only scheduled-run/session history;
+- deterministic summary counts for PASS / FAIL / BLOCKED /
+  WAITING_FOR_APPROVAL / CANCELLED plus evidence references;
+- one-shot local CLI/harness suitable for later invocation by a user-selected
+  OS scheduler.
+
+Explicitly out of scope:
+- installing/configuring Windows Task Scheduler/systemd/launchd;
+- long-lived daemon/service;
+- remote/cloud scheduler;
+- automatic approval acquisition;
+- parallel/distributed workers;
+- unrestricted shell;
+- external AI bridge;
+- semantic/vector retrieval;
+- Vision/CAD/image workers;
+- architecture/physics/fabrication/release authority changes.
+
+Next:
+publish the initial synchronization checkpoint, open one draft PR for Issue #39,
+then implement Gate 020 without broadening Supervisor authority.
+
+
+---
+
+## 2026-09-20 — Gate 020 scheduled/unattended run layer implemented
+
+Initial implementation head:
+`d455738ee9522aa7c1c2671cc3cd9bf6f1e567e5`.
+
+Implemented:
+- local append-only SQLite one-shot schedule/session ledger;
+- explicit timezone-aware due_at;
+- deterministic due selection by due_at then append sequence;
+- schedule allowed_actions as a narrowing constraint only;
+- current Supervisor/PolicyEngine re-authorization before every unattended
+  execution;
+- unattended tool execution only for current ALLOW plus schedule allow-list;
+- approval-required jobs -> WAITING_FOR_APPROVAL with no tool call;
+- denied/forbidden jobs -> BLOCKED with no tool call;
+- autonomous schedule-unlisted jobs remain QUEUED;
+- ambiguous multi-action jobs block without tool execution;
+- missing tool bindings block fail-closed;
+- bounded max-job and max-session-duration budgets;
+- Gate 019 interrupted RUNNING recovery before new work;
+- interrupted scheduled sessions terminally block on next invocation;
+- deterministic session summaries with state counts and evidence refs;
+- physical validation summary fixed to PHYSICAL_NOT_EXECUTED;
+- JSON Schema, deterministic tests and local smoke harness.
+
+Validation:
+- deterministic regression: `226/226 PASS`;
+- generic workflow run `35522348903`: `PASS`;
+- strict exact-head workflow run `35522348911`: `PASS`.
+
+Follow-up chronology hardening head:
+`a61a3e1fa16341265396b66a9db73700bfaabc7c`.
+
+Added:
+- completed_at cannot precede started_at;
+- regression coverage for invalid summary chronology.
+
+Validation:
+- deterministic regression: `227/227 PASS`;
+- generic workflow run `35522438419`: `PASS`;
+- strict exact-head workflow run `35522438328`: `PASS`.
+
+Runtime scope review:
+`PASS`.
+
+Confirmed absent:
+- Windows Task Scheduler/systemd/launchd installation;
+- daemon/service implementation;
+- automatic approval API;
+- unrestricted shell;
+- remote/cloud scheduler;
+- distributed workers;
+- semantic/vector backend;
+- vision runtime;
+- PHYSICAL_PASS synthesis;
+- generic SQL write API.
+
+ADR-0019 added as `PROPOSED_GATE_020`.
+
+Next:
+synchronize architecture/status/evidence documentation, re-run exact-head CI,
+then perform one primary-workstation scheduled/unattended smoke.
+
+
+---
+
+## 2026-09-20 — Gate 020 primary-workstation scheduled/unattended smoke passed
+
+Exact Engineering AI head:
+`82ead2e02f381a9ce988263058662c2614b23428`.
+
+Local result:
+`PASS_SCHEDULED_UNATTENDED_RUN_SESSION`.
+
+Observed:
+- due schedule executed: `true`;
+- future schedule remained SCHEDULED: `true`;
+- autonomous schedule-allowed job final state: `PASS`;
+- approval-required job final state: `WAITING_FOR_APPROVAL`;
+- forbidden job final state: `BLOCKED`;
+- autonomous schedule-unlisted job final state: `QUEUED`;
+- interrupted prior RUNNING job final state: `BLOCKED`;
+- summary counts: PASS=1 / BLOCKED=2 / WAITING_FOR_APPROVAL=1 /
+  FAIL=0 / CANCELLED=0 / QUEUED=0;
+- summary evidence refs: `ev-gate020-read`;
+- approval tool calls: none;
+- forbidden tool calls: none;
+- schedule-unlisted tool calls: none;
+- schedule database created and reopened: `true`;
+- schedule events checked before/after reopen: `4 / 4`;
+- schedule integrity: `PASS`;
+- queue events checked: `13`;
+- queue integrity: `PASS`;
+- automatic approval: `false`;
+- OS scheduler installation: `false`;
+- daemon/service: `false`;
+- distributed workers: `false`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`;
+- script exit: `0`;
+- repository branch remained clean and exact head unchanged.
+
+Gate 020 state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_ACCEPTANCE_CI`.
+
+Next:
+record local smoke evidence, run final acceptance CI and runtime scope review,
+prepare the final documentation-only acceptance head, then stop at explicit
+exact-SHA human squash-merge approval.
+
+
+---
+
+## 2026-09-20 — Gate 020 final acceptance checkpoint passed
+
+Post-smoke evidence head:
+`42e9fd0fe6ea9db05751a78e2a0ecd5327fe32d1`.
+
+Validation:
+- deterministic regression: `227/227 PASS`;
+- generic workflow run `35523735071`: `PASS`;
+- strict exact-head workflow run `35523735159`: `PASS`;
+- exact revision verification: `PASS`;
+- primary-workstation scheduled/unattended smoke:
+  `PASS_SCHEDULED_UNATTENDED_RUN_SESSION`.
+
+Final runtime scope review:
+`PASS`.
+
+Confirmed absent from Gate 020 runtime:
+- Windows Task Scheduler/systemd/launchd installation;
+- long-lived daemon/service lifecycle;
+- automatic approval granting;
+- unrestricted shell;
+- distributed worker runtime;
+- external/cloud scheduler;
+- semantic/vector backend;
+- vision/Qwen runtime integration;
+- PHYSICAL_PASS synthesis;
+- generic SQL write API;
+- architecture/physics/fabrication/release authority expansion.
+
+Gate 020 state:
+`IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`.
+
+ADR-0019 remains:
+`PROPOSED_GATE_020`
+until explicit exact-SHA human approval and squash merge.
+
+Next:
+run one final generic + strict exact-head CI on the final documentation-only
+head, mark PR #40 ready for review if green, then stop at human approval.

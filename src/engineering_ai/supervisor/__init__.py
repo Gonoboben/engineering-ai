@@ -15,6 +15,19 @@ from engineering_ai.supervisor.blackboard import (
 )
 from engineering_ai.supervisor.core import ExecutionResult, ProposalExecutionResult, Supervisor, ToolOutcome
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
+from engineering_ai.supervisor.scheduled_runs import (
+    PersistedScheduledRunStore,
+    ScheduleEventType,
+    ScheduledRunConflictError,
+    ScheduledRunDefinition,
+    ScheduledRunError,
+    ScheduledRunExecutor,
+    ScheduledRunIntegrityError,
+    ScheduledRunIntegrityReport,
+    ScheduledRunPolicyError,
+    ScheduledRunSnapshot,
+    ScheduledRunSummary,
+)
 from engineering_ai.supervisor.job_queue import (
     JobQueueConflictError,
     JobQueueError,
@@ -48,6 +61,17 @@ from engineering_ai.supervisor.review import (
 from engineering_ai.supervisor.stubs import StubTool
 
 __all__ = [
+    "PersistedScheduledRunStore",
+    "ScheduleEventType",
+    "ScheduledRunConflictError",
+    "ScheduledRunDefinition",
+    "ScheduledRunError",
+    "ScheduledRunExecutor",
+    "ScheduledRunIntegrityError",
+    "ScheduledRunIntegrityReport",
+    "ScheduledRunPolicyError",
+    "ScheduledRunSnapshot",
+    "ScheduledRunSummary",
     "JobQueueConflictError",
     "JobQueueError",
     "JobQueueIntegrityError",

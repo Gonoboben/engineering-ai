@@ -43,15 +43,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 017 merge commit: `f416799ca95f3bbe124b7bbfa62a86c1be0d1cbc`
 - Gate 018: `ACCEPTED_MERGED`
 - Gate 018 merge commit: `75ee907446e952fbfc8a53006c1fd65f1257faea`
+- Gate 019: `ACCEPTED_MERGED`
+- Gate 019 merge commit: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `019 — Persisted job queue`
-- Issue: `#37`
-- PR: `#38 (DRAFT)`
-- Branch: `gate-019-persisted-job-queue`
-- Base: `75ee907446e952fbfc8a53006c1fd65f1257faea`
+- Gate: `020 — Scheduled/overnight engineering runs`
+- Issue: `#39`
+- PR: `#40 (DRAFT)`
+- Branch: `gate-020-scheduled-overnight-runs`
+- Base: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
 - State: `IMPLEMENTED_VALIDATED_PENDING_HUMAN_APPROVAL`
 
 ## Architecture / implementation state
@@ -593,7 +595,52 @@ Historical CI note:
 - primary-workstation repeat smoke on post-hardening runtime: `PASS_PERSISTED_JOB_QUEUE_REOPEN_RECOVERY`; exact head `165e85404e42f1db457572842cf21fc80d08f4da`, database_created=true, database_reopened=true, fifo_retry_tail_preserved=true, retry_attempts_preserved=1, retry_final_state=PASS, approval_wait_survived_reopen=true, approval_final_state=PASS, interrupted_run_recovery=INTERRUPTED_RECOVERY, interrupted_final_state=BLOCKED, queue_events_checked=13, queue_jobs_checked=3, queue_integrity=true, automatic_approval=false, scheduled_execution=false, distributed_workers=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
 - post-repeat-smoke evidence head `1248e2a1fd13f7d1aeb12ee3b523848d3e9dc503`: deterministic regression `210/210 PASS`, generic CI run `35521519407 PASS`, strict exact-head CI run `35521519425 PASS`
 - final runtime scope review: `PASS`; no scheduler/cron/daemon, automatic approval API, queue-owned tool execution, distributed workers, semantic/vector backend, vision/Qwen runtime, PHYSICAL_PASS synthesis, or generic SQL write API
-- ADR-0018: `PROPOSED_GATE_019`
+- final approved PR head: `a12dc51c7022ce218efb571fa7d34f06ea6753b1`
+- final deterministic regression: `210/210 PASS`
+- final generic CI run `35521603454`: `PASS`
+- final strict exact-head CI run `35521603447`: `PASS`
+- exact-SHA human squash-merge approval: `PASS`
+- squash merge commit: `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`
+- Issue #37: `CLOSED / COMPLETED`
+- Gate 019 state: `ACCEPTED_MERGED`
+- ADR-0018: `ACCEPTED_GATE_019`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 020 validation state
+- Issue #39: `OPEN`
+- PR #40: `OPEN / DRAFT`
+- branch: `gate-020-scheduled-overnight-runs`
+- branch base equals Gate 019 squash merge `f8e4a6c7893c67bbc81c98bb89698ab6b91553c7`: `PASS`
+- schedule/session storage: `LOCAL_SQLITE_APPEND_ONLY_ONE_SHOT_LEDGER`
+- persisted schedule events: `SCHEDULED / SESSION_STARTED / SESSION_COMPLETED / SESSION_BLOCKED / CANCELLED`
+- explicit UTC/timezone due_at: `IMPLEMENTED`
+- deterministic due ordering: `DUE_AT_THEN_APPEND_SEQUENCE`
+- schedule allowed_actions grants authority: `PROHIBITED`
+- current Supervisor/PolicyEngine recheck before execution: `ENFORCED`
+- unattended tool execution: `ALLOW_AND_SCHEDULE_ALLOWED_ONLY`
+- approval-required tool execution unattended: `PROHIBITED_WAITING_FOR_APPROVAL`
+- forbidden/denied tool execution unattended: `PROHIBITED_BLOCKED`
+- autonomous but schedule-unlisted action: `LEFT_QUEUED`
+- ambiguous multi-action unattended job: `BLOCKED_NO_TOOL_CALL`
+- missing unattended tool: `BLOCKED_FAIL_CLOSED`
+- existing Gate 019 retry/timeout/deadline semantics: `PRESERVED`
+- interrupted prior RUNNING jobs: `RECOVERED_BLOCKED_BEFORE_NEW_WORK`
+- interrupted scheduled session replay: `PROHIBITED_SESSION_BLOCKED`
+- max jobs per session: `IMPLEMENTED_1..100`
+- max session duration: `IMPLEMENTED_1..86400_SECONDS`
+- deterministic summary counts: `PASS / FAIL / BLOCKED / WAITING_FOR_APPROVAL / CANCELLED / QUEUED`
+- evidence refs in summary: `IMPLEMENTED`
+- scheduled summary physical state: `PHYSICAL_NOT_EXECUTED_ONLY`
+- OS scheduler/Task Scheduler/systemd/launchd installation: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- long-lived daemon/service: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- remote/cloud/distributed execution: `NOT_IMPLEMENTED_OUT_OF_SCOPE`
+- initial implementation head `d455738ee9522aa7c1c2671cc3cd9bf6f1e567e5`: deterministic regression `226/226 PASS`, generic CI run `35522348903 PASS`, strict exact-head CI run `35522348911 PASS`
+- chronology-hardening head `a61a3e1fa16341265396b66a9db73700bfaabc7c`: deterministic regression `227/227 PASS`, generic CI run `35522438419 PASS`, strict exact-head CI run `35522438328 PASS`
+- runtime scope review: `PASS`; no OS scheduler installation, daemon/service, automatic approval API, unrestricted shell, distributed worker runtime, external/cloud scheduler, semantic/vector backend, vision integration, PHYSICAL_PASS synthesis, or generic SQL write API
+- primary-workstation scheduled/overnight smoke: `PASS_SCHEDULED_UNATTENDED_RUN_SESSION`; exact head `82ead2e02f381a9ce988263058662c2614b23428`, due_schedule_executed=true, future_schedule_remained_scheduled=true, autonomous_allowed_final_state=PASS, approval_final_state=WAITING_FOR_APPROVAL, forbidden_final_state=BLOCKED, unlisted_autonomous_final_state=QUEUED, interrupted_final_state=BLOCKED, summary PASS=1/BLOCKED=2/WAITING_FOR_APPROVAL=1/FAIL=0/CANCELLED=0/QUEUED=0, summary evidence `ev-gate020-read`, approval/forbidden/unlisted tool calls empty, schedule database created/reopened, schedule integrity=true, queue integrity=true, automatic_approval=false, os_scheduler_installation=false, daemon_service=false, distributed_workers=false, physical `PHYSICAL_NOT_EXECUTED`, EXIT=0, working tree clean
+- post-smoke evidence head `42e9fd0fe6ea9db05751a78e2a0ecd5327fe32d1`: deterministic regression `227/227 PASS`, generic CI run `35523735071 PASS`, strict exact-head CI run `35523735159 PASS`
+- final runtime scope review: `PASS`; no OS scheduler installation, daemon/service, automatic approval API, unrestricted shell, distributed workers, external/cloud scheduler, semantic/vector backend, vision runtime, PHYSICAL_PASS synthesis, or generic SQL write API
+- ADR-0019: `PROPOSED_GATE_020`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
 ## Primary workstation status
@@ -632,4 +679,4 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Run one final generic and strict exact-head CI on this final documentation-only Gate 019 head. If green, mark PR #38 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0018 remains PROPOSED_GATE_019 until that approval and squash merge.
+Run one final generic and strict exact-head CI on this final documentation-only Gate 020 head. If green, mark PR #40 ready for review and stop at explicit human exact-SHA squash-merge approval. ADR-0019 remains PROPOSED_GATE_020 until that approval and squash merge.
