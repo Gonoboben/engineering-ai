@@ -67,10 +67,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `028 — v1.0 policy and approval enforcement acceptance`
 - Issue: `#55`
-- PR: `#56 (DRAFT)`
+- PR: `#56 (READY FOR REVIEW)`
 - Branch: `gate-028-policy-approval-enforcement`
 - Base: `39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
-- State: `IN_PROGRESS_PENDING_EXACT_HEAD_VALIDATION`
+- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -120,7 +120,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
 - Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_ACCEPTED`
 - Offline continuation boundary: `IMPLEMENTED_VALIDATED_GATE_027_ACCEPTED`
-- v1.0 policy/approval enforcement acceptance: `IMPLEMENTATION_IN_PROGRESS_GATE_028`
+- v1.0 policy/approval enforcement acceptance: `IMPLEMENTED_VALIDATED_GATE_028_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -791,14 +791,13 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Complete Gate 028 acceptance-only implementation on the controlled branch.
-Open PR #TBD, run generic regression, strict exact-head CI and the Gate 028
-cross-platform policy/approval acceptance workflow. If all remain green,
-synchronize the exact-head evidence and stop at explicit human exact-SHA
-squash-merge approval.
+Freeze Gate 028 content at the ready-state synchronization head. Run generic,
+strict exact-head, Gate 028 policy/approval, inherited Gate 027 offline and
+inherited Gate 026 cross-platform install validation on that exact head. If all
+remain green, stop at explicit human exact-SHA squash-merge approval for PR #56.
 
-Do not change accepted policy semantics or architecture merely to satisfy the
-acceptance matrix. Denied/approval-blocked paths must remain zero-execution.
+Do not change accepted policy semantics or architecture merely to obtain PASS.
+Denied and approval-blocked paths must remain zero-execution.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
