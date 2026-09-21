@@ -547,6 +547,8 @@ Status: `IN_PROGRESS`
 
 Issue: `#59`
 
+PR: `#60 (DRAFT)`
+
 Branch: `gate-030-auditable-state-transitions`
 
 Base: accepted Gate 029 squash merge
