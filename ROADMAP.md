@@ -459,55 +459,60 @@ Gate 026 closes the reproducible-local-installation criterion only. Offline
 continuation remains a separate Phase 8 criterion.
 
 ### Gate 027 — Offline continuation boundary for connected projects
-Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#53`
+Issue: `#53 CLOSED / COMPLETED`
 
-PR: `#54 (READY FOR REVIEW)`
+PR: `#54 MERGED`
 
-Branch: `gate-027-offline-continuation-boundary`
+Final approved PR head:
+`dbb6c19a6ead1525cfdb922dda5ed91d8d59b035`
 
-Base:
-`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
+Squash merge:
+`39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
 
-Validated implementation/architecture checkpoint:
-`323b2db90c1470634ea816a4a96eb1f9dcc47ed9`
-
-Delivered:
-- mandatory explicit `NetworkRequirement` on every `CommandSpec`;
-- fail-closed `offline=True` process mode;
-- pre-subprocess rejection of `NETWORK_CAPABLE` commands;
-- PlataVM read-only and controlled local offline continuation;
-- BuoyCalc local snapshot/worktree continuation;
-- explicit `NETWORK_CAPABLE` classification for all `dotnet restore` steps;
-- structured `BLOCKED_RUNTIME_PREREQUISITE / OFFLINE_NETWORK_REQUIRED`
-  evidence for blocked offline restore;
-- local-only classification for static scans and no-restore/no-build steps;
-- Ubuntu and Windows offline-continuation smoke.
-
-Implementation validation:
-- deterministic regression: `312/312 PASS`;
-- generic workflow `35537733809`: `PASS`;
-- strict exact-head workflow `35537733812`: `PASS`;
-- Gate 027 offline workflow `35537733811`:
+Final exact-head validation:
+- generic workflow `35538670272`: `PASS`;
+- strict exact-head workflow `35538670265`: `PASS`;
+- Gate 027 offline continuation workflow `35538670312`:
   Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 026 install workflow `35537733819`:
-  Ubuntu `PASS`, Windows `PASS`.
+- inherited Gate 026 install workflow `35538670420`:
+  Ubuntu `PASS`, Windows `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-Gate 027 proves the Engineering AI control-plane offline boundary. It does not
-claim OS-level packet filtering or formal network-freedom of arbitrary
-project-owned script internals.
+Gate 027 closes the offline-continuation criterion at the Engineering AI
+control-plane boundary. It does not claim OS-level packet filtering or formal
+network-freedom of arbitrary project-owned script internals.
 
-Ready-for-review checkpoint:
-- implementation/evidence head:
-  `25401cdd3b15b5979d22ca44603e56425876b5e6`;
-- generic workflow `35537939691`: `PASS`;
-- strict exact-head workflow `35537939692`: `PASS`;
-- Gate 027 offline workflow `35537939698`: `PASS`;
-- inherited Gate 026 install workflow `35537939708`: `PASS`.
+### Gate 028 — v1.0 policy and approval enforcement acceptance
+Status: `IN_PROGRESS`
 
-Physical validation:
-`PHYSICAL_NOT_EXECUTED`.
+Issue: `#55`
+
+Branch: `gate-028-policy-approval-enforcement`
+
+Base: accepted Gate 027 squash merge
+`39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
+
+Objective:
+close the next Phase 8 / v1.0 criterion by revalidating already-accepted
+Supervisor, controlled-project, external-disclosure/tool and persisted
+approval boundaries as one deterministic cross-platform acceptance package.
+
+Scope is acceptance-only:
+- no policy-semantic or architecture expansion;
+- no broader tool/Git/network/disclosure authority;
+- no validator weakening;
+- no release/fabrication authorization;
+- no physical-validation claim.
+
+Required validation:
+- full deterministic regression remains green;
+- strict exact-head CI remains green;
+- Gate 028 policy/approval acceptance smoke passes on Ubuntu and Windows;
+- denied and approval-blocked paths make zero protected calls;
+- named approval remains explicit and bounded;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
