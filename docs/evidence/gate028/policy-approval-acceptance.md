@@ -2,6 +2,7 @@
 
 ## Gate identity
 - Issue: #55
+- PR: #56 (DRAFT)
 - Branch: `gate-028-policy-approval-enforcement`
 - Base: accepted Gate 027 squash merge
   `39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
