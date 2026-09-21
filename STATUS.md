@@ -69,10 +69,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `029 — v1.0 deterministic tool and validator integration acceptance`
 - Issue: `#57`
-- PR: `#58 (DRAFT)`
+- PR: `#58 (READY FOR REVIEW)`
 - Branch: `gate-029-deterministic-tool-validator-integration`
 - Base: `e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
-- State: `IN_PROGRESS_PENDING_EXACT_HEAD_VALIDATION`
+- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -123,7 +123,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_ACCEPTED`
 - Offline continuation boundary: `IMPLEMENTED_VALIDATED_GATE_027_ACCEPTED`
 - v1.0 policy/approval enforcement acceptance: `IMPLEMENTED_VALIDATED_GATE_028_ACCEPTED`
-- v1.0 deterministic tool/validator integration acceptance: `IMPLEMENTATION_IN_PROGRESS_GATE_029`
+- v1.0 deterministic tool/validator integration acceptance: `IMPLEMENTED_VALIDATED_GATE_029_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -794,12 +794,11 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Complete Gate 029 acceptance-only implementation on the controlled branch.
-Open PR #TBD, run generic regression, strict exact-head CI, Gate 029
-cross-platform tool/validator acceptance, inherited Gate 028 policy/approval,
-Gate 027 offline, and Gate 026 install validation. If all remain green,
-synchronize exact-head evidence and stop at explicit human exact-SHA
-squash-merge approval.
+Freeze Gate 029 content at the ready-state synchronization head. Run generic,
+strict exact-head, Gate 029 tool/validator, inherited Gate 028 policy/approval,
+Gate 027 offline and Gate 026 cross-platform install validation on that exact
+head. If all remain green, stop at explicit human exact-SHA squash-merge
+approval for PR #58.
 
 Do not expand tool authority or weaken project validators merely to obtain PASS.
 
