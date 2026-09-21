@@ -4484,3 +4484,35 @@ Stop boundaries remain unchanged:
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
 
+---
+
+## 2026-09-21 — Gate 028 ready-for-review checkpoint
+
+Validated implementation head:
+`5458c1bdd930d0d80671f42bc665807f12c8d215`.
+
+Validation:
+- deterministic regression: `313/313 PASS`;
+- generic workflow `35625528735`: `PASS`;
+- strict exact-head workflow `35625528753`: `PASS`;
+- Gate 028 policy/approval workflow `35625528680`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35625528713`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35625528728`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+Gate 028 acceptance state:
+`PASS_V1_0_POLICY_APPROVAL_ENFORCEMENT`.
+
+PR #56 was marked:
+`READY FOR REVIEW`.
+
+No policy-semantic or architecture expansion occurred. Remote Git mutation,
+release, fabrication and physical-validation authority remain ungranted.
+
+A final source-of-truth synchronization head now requires one last exact-head
+validation set before explicit human squash-merge approval.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
