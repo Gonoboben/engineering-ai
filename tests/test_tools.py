@@ -11,7 +11,7 @@ from pathlib import Path
 from engineering_ai.tools.common import ToolAccessError, ToolExecutionError
 from engineering_ai.tools.filesystem import ReadOnlyFilesystemAdapter
 from engineering_ai.tools.git import GitReadOnlyAdapter
-from engineering_ai.tools.process import AllowListedProcessRunner, CommandSpec
+from engineering_ai.tools.process import AllowListedProcessRunner, CommandSpec, NetworkRequirement
 
 
 class FilesystemAdapterTests(unittest.TestCase):
@@ -65,6 +65,7 @@ class ProcessRunnerTests(unittest.TestCase):
             spec = CommandSpec(
                 command_id="python-smoke",
                 executable=sys.executable,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
                 fixed_args=("-c", "print('tool-pass')"),
             )
             runner = AllowListedProcessRunner({"python-smoke": spec}, root=tmp)
@@ -75,11 +76,47 @@ class ProcessRunnerTests(unittest.TestCase):
             with self.assertRaises(ToolAccessError):
                 runner.run("not-allowed")
 
+    def test_offline_mode_runs_local_only_command(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            spec = CommandSpec(
+                command_id="offline-local",
+                executable=sys.executable,
+                fixed_args=("-c", "print('offline-local-pass')"),
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
+            )
+            runner = AllowListedProcessRunner(
+                {"offline-local": spec},
+                root=tmp,
+                offline=True,
+            )
+            result = runner.run("offline-local")
+            self.assertTrue(result.ok)
+            self.assertEqual(result.stdout.strip(), "offline-local-pass")
+
+    def test_offline_mode_blocks_network_capable_before_executable_resolution(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            spec = CommandSpec(
+                command_id="network-step",
+                executable="definitely-missing-network-tool",
+                network_requirement=NetworkRequirement.NETWORK_CAPABLE,
+            )
+            runner = AllowListedProcessRunner(
+                {"network-step": spec},
+                root=tmp,
+                offline=True,
+            )
+            with self.assertRaisesRegex(
+                ToolAccessError,
+                "offline mode blocks network-capable command",
+            ):
+                runner.run("network-step")
+
     def test_timeout_is_terminal_and_structured(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             spec = CommandSpec(
                 command_id="timeout-test",
                 executable=sys.executable,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
                 fixed_args=("-c", "import time; time.sleep(2)"),
                 timeout_seconds=0.05,
             )
@@ -93,6 +130,7 @@ class ProcessRunnerTests(unittest.TestCase):
             spec = CommandSpec(
                 command_id="bounded-output",
                 executable=sys.executable,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
                 fixed_args=("-c", "print('x' * 1000)"),
                 max_output_bytes=32,
             )
@@ -107,6 +145,7 @@ class ProcessRunnerTests(unittest.TestCase):
             spec = CommandSpec(
                 command_id="cwd-test",
                 executable=sys.executable,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
                 fixed_args=("-c", "print('ok')"),
             )
             runner = AllowListedProcessRunner({"cwd-test": spec}, root=tmp)

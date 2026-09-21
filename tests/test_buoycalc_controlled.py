@@ -22,6 +22,7 @@ from engineering_ai.projects.buoycalc_controlled import (
 )
 from engineering_ai.supervisor.policy import Decision, PolicyEngine
 from engineering_ai.tools import (
+    NetworkRequirement,
     PatchProposal,
     ToolAccessError,
     ToolExecutionError,
@@ -51,8 +52,9 @@ class _FakeRunner:
     fail_step: str | None = None
     mutate_path: str | None = None
 
-    def __init__(self, specs, *, root):
+    def __init__(self, specs, *, root, offline=False):
         self.root = Path(root)
+        self.offline = offline
 
     def run(self, command_id: str, *, cwd=".") -> ToolResult:
         if self.mutate_path is not None:
@@ -214,8 +216,12 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
             text=True,
         ).stdout
 
-    def loop(self) -> BuoyCalcControlledEngineeringLoop:
-        return BuoyCalcControlledEngineeringLoop(self.root, self.worktree_parent)
+    def loop(self, *, offline: bool = False) -> BuoyCalcControlledEngineeringLoop:
+        return BuoyCalcControlledEngineeringLoop(
+            self.root,
+            self.worktree_parent,
+            offline=offline,
+        )
 
     def prepare(self, name: str = "gate015-test"):
         return self.loop().prepare(
@@ -296,6 +302,78 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         loop.cleanup(prep.session)
         self.assertEqual(self._git("rev-parse", "HEAD").strip(), self.base_sha)
         self.assertEqual(self._git("status", "--porcelain").strip(), "")
+
+    def test_validator_network_classification_is_explicit(self) -> None:
+        by_id = {spec.command_id: spec for spec in _VALIDATOR_SPECS}
+        network_capable = {
+            command_id
+            for command_id, spec in by_id.items()
+            if spec.network_requirement is NetworkRequirement.NETWORK_CAPABLE
+        }
+        self.assertEqual(
+            network_capable,
+            {
+                "buoycalc.restore_app",
+                "buoycalc.restore_engineering_regression",
+                "buoycalc.restore_validation_601",
+            },
+        )
+        self.assertTrue(
+            all(
+                spec.network_requirement
+                in {NetworkRequirement.LOCAL_ONLY, NetworkRequirement.NETWORK_CAPABLE}
+                for spec in by_id.values()
+            )
+        )
+        for profile_id in (
+            "buoycalc.selected_shape_consumer_scan",
+            "buoycalc.report_store_consumer_scan",
+        ):
+            self.assertTrue(
+                all(
+                    by_id[step_id].network_requirement
+                    is NetworkRequirement.LOCAL_ONLY
+                    for step_id in _VALIDATOR_PROFILES[profile_id]
+                )
+            )
+
+    def test_offline_validation_blocks_restore_before_process_execution(self) -> None:
+        loop = self.loop(offline=True)
+        prep = loop.prepare(
+            worktree_name="offline-block",
+            branch="engineering-ai/buoycalc/offline-block",
+        )
+        self.assertEqual(prep.state, BuoyCalcControlledState.WORKTREE_READY)
+        assert prep.session is not None
+
+        with patch.object(
+            loop,
+            "runtime_prerequisites",
+            return_value=satisfied_runtime(),
+        ):
+            result = loop.validate(
+                session=prep.session,
+                profiles=("buoycalc.dotnet_build",),
+            )
+
+        self.assertEqual(
+            result.state,
+            BuoyCalcControlledState.BLOCKED_RUNTIME_PREREQUISITE,
+        )
+        self.assertTrue(result.offline)
+        self.assertTrue(result.tracked_state_unchanged)
+        first = result.profiles[0].steps[0]
+        self.assertEqual(first.step_id, "buoycalc.restore_app")
+        self.assertFalse(first.ok)
+        self.assertTrue(first.blocked)
+        self.assertEqual(first.block_reason, "OFFLINE_NETWORK_REQUIRED")
+        self.assertEqual(
+            first.network_requirement,
+            NetworkRequirement.NETWORK_CAPABLE.value,
+        )
+        self.assertIsNone(first.exit_code)
+
+        loop.cleanup(prep.session)
 
     def test_governance_and_calculation_core_patch_targets_are_blocked(self) -> None:
         loop = self.loop()

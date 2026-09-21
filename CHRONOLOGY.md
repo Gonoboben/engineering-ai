@@ -4263,3 +4263,146 @@ Offline continuation remains:
 
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-20 — Gate 026 accepted and merged
+
+Final approved PR head:
+`8e27641c250a0b3f0061c9de41e9ecdd13d17f20`.
+
+Final exact-head validation:
+- generic workflow `35536044039`: `PASS`;
+- strict exact-head workflow `35536043981`: `PASS`;
+- Gate 026 install workflow `35536044021`: `PASS`;
+- Ubuntu installed-package regression: `306/306 PASS`;
+- Windows installed-package regression: `306/306 PASS`.
+
+Squash merge on `main`:
+`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`.
+
+PR #52:
+`MERGED`.
+
+Issue #51:
+`CLOSED / COMPLETED`.
+
+Phase 8 reproducible-local-installation criterion:
+`CLOSED_BY_GATE_026`.
+
+Offline continuation:
+`NOT_CLAIMED_GATE_026`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-20 — Gate 027 offline continuation boundary opened
+
+Issue:
+`#53 — Gate 027 — Offline continuation boundary for connected projects`.
+
+Branch:
+`gate-027-offline-continuation-boundary`.
+
+Base:
+Gate 026 squash merge
+`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`.
+
+Objective:
+close the next Phase 8 criterion by making process-step network requirements
+explicit and proving connected-project local continuation in a fail-closed
+offline mode.
+
+The Gate will not emulate an OS firewall or claim that arbitrary project-owned
+scripts are network-free. Commands classified as network-capable must be
+rejected before subprocess execution when offline mode is active.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-20 — Gate 027 offline continuation implementation validated
+
+Validated implementation/architecture checkpoint:
+`323b2db90c1470634ea816a4a96eb1f9dcc47ed9`.
+
+Implemented:
+- mandatory explicit `NetworkRequirement` for every `CommandSpec`;
+- `LOCAL_ONLY` and `NETWORK_CAPABLE` process classifications;
+- offline process mode that blocks `NETWORK_CAPABLE` before executable
+  resolution/subprocess creation;
+- PlataVM read-only and controlled offline propagation;
+- BuoyCalc restore classification as network-capable;
+- structured BuoyCalc
+  `BLOCKED_RUNTIME_PREREQUISITE / OFFLINE_NETWORK_REQUIRED` evidence;
+- local-only classification for static scans and no-restore/no-build steps;
+- cross-platform synthetic connected-project offline smoke.
+
+Validation:
+- deterministic regression: `312/312 PASS`;
+- generic workflow `35537733809`: `PASS`;
+- strict exact-head workflow `35537733812`: `PASS`;
+- Gate 027 offline workflow `35537733811`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35537733819`:
+  Ubuntu `PASS`, Windows `PASS`;
+- installed-package regression: `312/312 PASS` on Ubuntu and Windows.
+
+Gate 027 smoke:
+- state: `PASS_OFFLINE_CONTINUATION_BOUNDARY`;
+- external network intentionally exercised: false;
+- PlataVM controlled offline state: `READY_FOR_HUMAN_APPROVAL`;
+- BuoyCalc network block state: `BLOCKED_RUNTIME_PREREQUISITE`;
+- blocked reason: `OFFLINE_NETWORK_REQUIRED`;
+- primary synthetic repositories unchanged.
+
+Evidence limitation:
+this proves the Engineering AI control-plane network boundary and local-resource
+smoke path. It does not claim OS-level packet filtering or formal proof that
+arbitrary project-owned script internals can never open a socket.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+run documentation/evidence exact-head validation. If green, mark PR #54 ready
+for review, synchronize ready-state source-of-truth, freeze the branch and stop
+at explicit human exact-SHA squash-merge approval after final validation.
+
+
+---
+
+## 2026-09-21 — Gate 027 ready-for-review checkpoint
+
+Implementation/evidence head before ready transition:
+`25401cdd3b15b5979d22ca44603e56425876b5e6`.
+
+Validation:
+- deterministic regression: `312/312 PASS`;
+- generic workflow `35537939691`: `PASS`;
+- strict exact-head workflow `35537939692`: `PASS`;
+- Gate 027 offline workflow `35537939698`: `PASS`;
+- inherited Gate 026 install workflow `35537939708`: `PASS`.
+
+PR #54 was marked:
+`READY FOR REVIEW`.
+
+No architecture/physics, remote Git mutation, package-download, external-model,
+release, fabrication or physical-validation authority changed by the ready
+transition.
+
+A final source-of-truth consistency head now requires one last exact-head
+validation set before branch freeze and explicit human squash-merge approval.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.

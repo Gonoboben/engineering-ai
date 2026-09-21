@@ -13,6 +13,7 @@ from engineering_ai.tools import (
     AllowListedProcessRunner,
     CommandSpec,
     GitReadOnlyAdapter,
+    NetworkRequirement,
     ReadOnlyFilesystemAdapter,
     ToolExecutionError,
     ToolResult,
@@ -135,6 +136,7 @@ class PlataVMReadOnlyAdapter:
         max_read_bytes: int = 2_097_152,
         max_scan_entries: int = 5_000,
         max_scan_depth: int = 10,
+        offline: bool = False,
     ) -> None:
         if max_scan_entries <= 0:
             raise ValueError("max_scan_entries must be positive")
@@ -166,6 +168,7 @@ class PlataVMReadOnlyAdapter:
                 ),
                 timeout_seconds=180.0,
                 max_output_bytes=262_144,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
             ),
             self.VALIDATOR_SEMANTIC_GATES: CommandSpec(
                 command_id=self.VALIDATOR_SEMANTIC_GATES,
@@ -173,9 +176,14 @@ class PlataVMReadOnlyAdapter:
                 fixed_args=("Tools/run_all_gates.py",),
                 timeout_seconds=300.0,
                 max_output_bytes=262_144,
+                network_requirement=NetworkRequirement.LOCAL_ONLY,
             ),
         }
-        self._runner = AllowListedProcessRunner(specs, root=self._root)
+        self._runner = AllowListedProcessRunner(
+            specs,
+            root=self._root,
+            offline=offline,
+        )
 
     @property
     def root(self) -> Path:

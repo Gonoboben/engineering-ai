@@ -28,22 +28,25 @@ profiles/adapters rather than replacing their source of truth.
 Phase 7 capability expansion is accepted through Gate 025. Phase 8 is validating
 the stable-platform / v1.0 criteria one by one.
 
-Gate 026 adds the canonical reproducible local installation path:
-- Python 3.12.x;
-- exact frozen runtime and install-tool dependencies;
-- fresh virtual environment;
-- non-editable wheel build/install;
-- installed schema/package verification;
-- `pip check`;
-- deterministic regression from the installed package;
-- Ubuntu and Windows CI acceptance.
+Gate 026 is accepted and establishes the canonical reproducible local
+installation path on Ubuntu and Windows.
 
-Gate 026 does **not** by itself establish the separate offline-continuation
-criterion.
+Gate 027 is implementation-validated and pending human acceptance. It makes the
+offline-first boundary explicit for connected projects:
+- every allow-listed process command declares `LOCAL_ONLY` or
+  `NETWORK_CAPABLE`;
+- offline mode blocks `NETWORK_CAPABLE` commands before process execution;
+- PlataVM local read-only/controlled validator paths continue offline;
+- BuoyCalc local repository/worktree paths continue offline;
+- BuoyCalc package-acquisition `dotnet restore` steps fail closed with explicit
+  `OFFLINE_NETWORK_REQUIRED` evidence rather than silently using the network.
 
-Connected-project control paths are already implemented and accepted for
-PlataVM and BuoyCalc under their dedicated Gates. Their repositories remain
-authoritative for their own engineering content.
+Gate 027 does not claim OS-level firewall enforcement or formal network-freedom
+of arbitrary project-owned script internals. A blocked network-dependent
+validator is never reinterpreted as PASS.
+
+Connected-project repositories remain authoritative for their own engineering
+content.
 
 ## Installation
 See `INSTALL.md` for the Gate 026 canonical local-install procedure.

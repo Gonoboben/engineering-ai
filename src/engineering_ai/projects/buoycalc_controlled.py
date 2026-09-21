@@ -20,6 +20,7 @@ from engineering_ai.tools import (
     CommandSpec,
     ControlledWorktreeAdapter,
     GitReadOnlyAdapter,
+    NetworkRequirement,
     PatchApplication,
     PatchProposal,
     ToolAccessError,
@@ -68,6 +69,9 @@ class ValidationStepEvidence:
     truncated: bool
     stdout_sha256: str
     stderr_sha256: str
+    network_requirement: str
+    blocked: bool = False
+    block_reason: str | None = None
     validation_class: str = "SOFTWARE_DETERMINISTIC"
 
 
@@ -85,6 +89,7 @@ class BuoyCalcValidationResult:
     profiles: tuple[ValidationProfileEvidence, ...]
     tracked_state_unchanged: bool
     release_state: str
+    offline: bool = False
     physical_validation: str = "PHYSICAL_NOT_EXECUTED"
 
 
@@ -101,6 +106,7 @@ def _pwsh_spec(command_id: str, script: str, *, timeout: float = 90.0) -> Comman
         ),
         timeout_seconds=timeout,
         max_output_bytes=262_144,
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
     )
 
 
@@ -108,6 +114,7 @@ def _dotnet_spec(
     command_id: str,
     args: tuple[str, ...],
     *,
+    network_requirement: NetworkRequirement,
     timeout: float = 300.0,
 ) -> CommandSpec:
     return CommandSpec(
@@ -116,6 +123,7 @@ def _dotnet_spec(
         fixed_args=args,
         timeout_seconds=timeout,
         max_output_bytes=524_288,
+        network_requirement=network_requirement,
     )
 
 
@@ -123,6 +131,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
     _dotnet_spec(
         "buoycalc.restore_app",
         ("restore", "BuoyCalc.Windows.csproj"),
+        network_requirement=NetworkRequirement.NETWORK_CAPABLE,
     ),
     _dotnet_spec(
         "buoycalc.restore_engineering_regression",
@@ -130,6 +139,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "restore",
             "validation/BuoyCalc.EngineeringRegression/BuoyCalc.EngineeringRegression.csproj",
         ),
+        network_requirement=NetworkRequirement.NETWORK_CAPABLE,
     ),
     _dotnet_spec(
         "buoycalc.build_release",
@@ -140,6 +150,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "Release",
             "--no-restore",
         ),
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
     ),
     _pwsh_spec("buoycalc.check_reportbuilder_usage", "tools/check-reportbuilder-usage.ps1"),
     _pwsh_spec("buoycalc.check_technical_report_path", "tools/check-technical-report-path.ps1"),
@@ -192,6 +203,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "--verify",
             "validation/BuoyCalc.EngineeringRegression/baselines/engineering-baseline.json",
         ),
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
         timeout=300.0,
     ),
     _pwsh_spec(
@@ -208,6 +220,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "restore",
             "validation/BuoyCalc.PhysicalRejectionValidation/BuoyCalc.PhysicalRejectionValidation.csproj",
         ),
+        network_requirement=NetworkRequirement.NETWORK_CAPABLE,
     ),
     _dotnet_spec(
         "buoycalc.build_validation_601",
@@ -218,6 +231,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "Release",
             "--no-restore",
         ),
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
     ),
     _dotnet_spec(
         "buoycalc.run_validation_601",
@@ -232,6 +246,7 @@ _VALIDATOR_SPECS: tuple[CommandSpec, ...] = (
             "--output",
             "artifacts/validation-601-physical-rejection",
         ),
+        network_requirement=NetworkRequirement.LOCAL_ONLY,
         timeout=300.0,
     ),
 )
@@ -284,10 +299,12 @@ class BuoyCalcControlledEngineeringLoop:
         worktree_parent: str | Path,
         *,
         git_executable: str = "git",
+        offline: bool = False,
     ) -> None:
         self._repository_root = Path(repository_root).resolve(strict=True)
         self._worktree_parent = Path(worktree_parent).resolve(strict=True)
         self._git_executable = git_executable
+        self._offline = offline
         self._readonly = BuoyCalcReadOnlyAdapter(
             self._repository_root,
             git_executable=git_executable,
@@ -401,15 +418,49 @@ class BuoyCalcControlledEngineeringLoop:
             raise ToolAccessError(f"validator profile is not allow-listed: {unknown[0]}")
 
         specs = self._resolved_validator_specs(runtime)
-        runner = AllowListedProcessRunner(specs, root=worktree)
+        runner = AllowListedProcessRunner(
+            specs,
+            root=worktree,
+            offline=self._offline,
+        )
         profile_evidence: list[ValidationProfileEvidence] = []
         all_steps_pass = True
+        offline_blocked = False
 
         for profile_id in selected:
             steps: list[ValidationStepEvidence] = []
             profile_pass = True
             for step_id in _VALIDATOR_PROFILES[profile_id]:
-                result = runner.run(step_id)
+                spec = specs[step_id]
+                try:
+                    result = runner.run(step_id)
+                except ToolAccessError:
+                    if (
+                        self._offline
+                        and spec.network_requirement
+                        is NetworkRequirement.NETWORK_CAPABLE
+                    ):
+                        empty_sha = hashlib.sha256(b"").hexdigest()
+                        steps.append(
+                            ValidationStepEvidence(
+                                step_id=step_id,
+                                ok=False,
+                                exit_code=None,
+                                timed_out=False,
+                                truncated=False,
+                                stdout_sha256=empty_sha,
+                                stderr_sha256=empty_sha,
+                                network_requirement=spec.network_requirement.value,
+                                blocked=True,
+                                block_reason="OFFLINE_NETWORK_REQUIRED",
+                            )
+                        )
+                        profile_pass = False
+                        all_steps_pass = False
+                        offline_blocked = True
+                        break
+                    raise
+
                 step = ValidationStepEvidence(
                     step_id=step_id,
                     ok=result.ok,
@@ -422,6 +473,7 @@ class BuoyCalcControlledEngineeringLoop:
                     stderr_sha256=hashlib.sha256(
                         result.stderr.encode("utf-8")
                     ).hexdigest(),
+                    network_requirement=spec.network_requirement.value,
                 )
                 steps.append(step)
                 if not result.ok:
@@ -448,7 +500,9 @@ class BuoyCalcControlledEngineeringLoop:
             and before_cached == after_cached
         )
 
-        if all_steps_pass and tracked_state_unchanged:
+        if offline_blocked:
+            state = BuoyCalcControlledState.BLOCKED_RUNTIME_PREREQUISITE
+        elif all_steps_pass and tracked_state_unchanged:
             state = BuoyCalcControlledState.READY_FOR_HUMAN_APPROVAL
         else:
             state = BuoyCalcControlledState.VALIDATION_FAILED
@@ -459,6 +513,7 @@ class BuoyCalcControlledEngineeringLoop:
             profiles=tuple(profile_evidence),
             tracked_state_unchanged=tracked_state_unchanged,
             release_state=RELEASE_STATE,
+            offline=self._offline,
         )
 
     def runtime_prerequisites(self) -> RuntimePrerequisiteStatus:
@@ -528,6 +583,7 @@ class BuoyCalcControlledEngineeringLoop:
                 fixed_args=spec.fixed_args,
                 timeout_seconds=spec.timeout_seconds,
                 max_output_bytes=spec.max_output_bytes,
+                network_requirement=spec.network_requirement,
             )
         return specs
 

@@ -436,52 +436,75 @@ ADR-0024: `ACCEPTED_GATE_025`.
 ## Phase 8 — Stable engineering platform
 
 ### Gate 026 — Reproducible local installation
+Status: `ACCEPTED_MERGED`
+
+Issue: `#51 CLOSED / COMPLETED`
+
+PR: `#52 MERGED`
+
+Final approved PR head:
+`8e27641c250a0b3f0061c9de41e9ecdd13d17f20`
+
+Squash merge:
+`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
+
+Final exact-head validation:
+- generic workflow `35536044039`: `PASS`;
+- strict exact-head workflow `35536043981`: `PASS`;
+- Gate 026 install workflow `35536044021`: Ubuntu `PASS`, Windows `PASS`;
+- installed-package regression: `306/306 PASS` on both platforms;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Gate 026 closes the reproducible-local-installation criterion only. Offline
+continuation remains a separate Phase 8 criterion.
+
+### Gate 027 — Offline continuation boundary for connected projects
 Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
 
-Issue: `#51`
+Issue: `#53`
 
-PR: `#52 (READY FOR REVIEW)`
+PR: `#54 (READY FOR REVIEW)`
 
-Branch: `gate-026-reproducible-local-installation`
+Branch: `gate-027-offline-continuation-boundary`
 
-Base: Gate 025 squash merge
-`171ff20125389d2d953576a0d3340c13dc1dc53f`.
+Base:
+`d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
 
-Validated implementation head:
-`6c7bfbd9f8d07b96adeb3014b2071a4bc8a0793e`.
+Validated implementation/architecture checkpoint:
+`323b2db90c1470634ea816a4a96eb1f9dcc47ed9`
 
 Delivered:
-- documented Python 3.12.x install contract;
-- exact frozen runtime and install-tool dependency sets;
-- clean fresh-venv bootstrap;
-- non-editable wheel install;
-- repeated wheel SHA-256 equality check per platform;
-- installed package/version/schema verification;
-- `pip check`;
-- full installed-package deterministic regression;
-- Ubuntu and Windows acceptance workflow.
+- mandatory explicit `NetworkRequirement` on every `CommandSpec`;
+- fail-closed `offline=True` process mode;
+- pre-subprocess rejection of `NETWORK_CAPABLE` commands;
+- PlataVM read-only and controlled local offline continuation;
+- BuoyCalc local snapshot/worktree continuation;
+- explicit `NETWORK_CAPABLE` classification for all `dotnet restore` steps;
+- structured `BLOCKED_RUNTIME_PREREQUISITE / OFFLINE_NETWORK_REQUIRED`
+  evidence for blocked offline restore;
+- local-only classification for static scans and no-restore/no-build steps;
+- Ubuntu and Windows offline-continuation smoke.
 
 Implementation validation:
-- deterministic installed-package regression:
-  `306/306 PASS` on Ubuntu;
-- deterministic installed-package regression:
-  `306/306 PASS` on Windows;
-- generic workflow `35535616430`: `PASS`;
-- strict exact-head workflow `35535616425`: `PASS`;
-- Gate 026 install workflow `35535616417`:
+- deterministic regression: `312/312 PASS`;
+- generic workflow `35537733809`: `PASS`;
+- strict exact-head workflow `35537733812`: `PASS`;
+- Gate 027 offline workflow `35537733811`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35537733819`:
   Ubuntu `PASS`, Windows `PASS`.
 
-Gate 026 establishes the reproducible-local-installation criterion only.
-Offline dependency acquisition and offline continuation remain separate Phase 8
-criteria and are not inferred from this PASS.
+Gate 027 proves the Engineering AI control-plane offline boundary. It does not
+claim OS-level packet filtering or formal network-freedom of arbitrary
+project-owned script internals.
 
 Ready-for-review checkpoint:
-- documentation/evidence head:
-  `a04337bbfbc0d9306b4f9a8a2f4d93dbc62bfb5b`;
-- generic workflow `35535865183`: `PASS`;
-- strict exact-head workflow `35535865222`: `PASS`;
-- Gate 026 install workflow `35535865187`:
-  Ubuntu `PASS`, Windows `PASS`.
+- implementation/evidence head:
+  `25401cdd3b15b5979d22ca44603e56425876b5e6`;
+- generic workflow `35537939691`: `PASS`;
+- strict exact-head workflow `35537939692`: `PASS`;
+- Gate 027 offline workflow `35537939698`: `PASS`;
+- inherited Gate 026 install workflow `35537939708`: `PASS`.
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
