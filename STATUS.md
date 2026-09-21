@@ -61,15 +61,17 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 026 merge commit: `d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
 - Gate 027: `ACCEPTED_MERGED`
 - Gate 027 merge commit: `39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
+- Gate 028: `ACCEPTED_MERGED`
+- Gate 028 merge commit: `e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `028 — v1.0 policy and approval enforcement acceptance`
-- Issue: `#55`
-- PR: `#56 (READY FOR REVIEW)`
-- Branch: `gate-028-policy-approval-enforcement`
-- Base: `39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
+- Gate: `029 — v1.0 deterministic tool and validator integration acceptance`
+- Issue: `#57`
+- PR: `#58 (READY FOR REVIEW)`
+- Branch: `gate-029-deterministic-tool-validator-integration`
+- Base: `e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
 - State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 ## Architecture / implementation state
@@ -120,7 +122,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
 - Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_ACCEPTED`
 - Offline continuation boundary: `IMPLEMENTED_VALIDATED_GATE_027_ACCEPTED`
-- v1.0 policy/approval enforcement acceptance: `IMPLEMENTED_VALIDATED_GATE_028_PENDING_ACCEPTANCE`
+- v1.0 policy/approval enforcement acceptance: `IMPLEMENTED_VALIDATED_GATE_028_ACCEPTED`
+- v1.0 deterministic tool/validator integration acceptance: `IMPLEMENTED_VALIDATED_GATE_029_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -791,13 +794,13 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Freeze Gate 028 content at the ready-state synchronization head. Run generic,
-strict exact-head, Gate 028 policy/approval, inherited Gate 027 offline and
-inherited Gate 026 cross-platform install validation on that exact head. If all
-remain green, stop at explicit human exact-SHA squash-merge approval for PR #56.
+Freeze Gate 029 content at the ready-state synchronization head. Run generic,
+strict exact-head, Gate 029 tool/validator, inherited Gate 028 policy/approval,
+Gate 027 offline and Gate 026 cross-platform install validation on that exact
+head. If all remain green, stop at explicit human exact-SHA squash-merge
+approval for PR #58.
 
-Do not change accepted policy semantics or architecture merely to obtain PASS.
-Denied and approval-blocked paths must remain zero-execution.
+Do not expand tool authority or weaken project validators merely to obtain PASS.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
