@@ -2,6 +2,7 @@
 
 ## Gate identity
 - Issue: #57
+- PR: #58 (DRAFT)
 - Branch: `gate-029-deterministic-tool-validator-integration`
 - Base: accepted Gate 028 squash merge
   `e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
