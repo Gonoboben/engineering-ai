@@ -2,7 +2,7 @@
 
 ## Gate identity
 - Issue: #57
-- PR: #58 (DRAFT)
+- PR: #58 (READY FOR REVIEW)
 - Branch: `gate-029-deterministic-tool-validator-integration`
 - Base: accepted Gate 028 squash merge
   `e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
@@ -49,7 +49,25 @@ on Ubuntu and Windows, installs the package, and executes:
 
 `python scripts/gate029_tool_validator_acceptance.py`
 
-Final run IDs and exact-head results will be recorded after validation.
+Validated implementation/ready checkpoint:
+`028ad1aad83a51657e7256de4b3f1841ffc0d1b5`
+
+Validation:
+- deterministic regression: `314/314 PASS`;
+- generic workflow `35627468692`: `PASS`;
+- strict exact-head workflow `35627468743`: `PASS`;
+- Gate 029 tool/validator workflow `35627468703`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 policy/approval workflow `35627468809`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35627468716`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35627468832`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+PR #58 was marked ready for review after this checkpoint passed.
+A final source-of-truth synchronization head requires one last exact-head
+validation set before explicit human squash-merge approval.
 
 ## Authority boundaries
 - arbitrary shell authority: not granted;
@@ -62,4 +80,4 @@ Final run IDs and exact-head results will be recorded after validation.
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
 ## Gate state
-Implementation is pending exact-head deterministic validation and review.
+Implementation is validated at the recorded checkpoint and PR #58 is ready for review. Final Gate acceptance remains pending one final exact-head validation set and explicit human exact-SHA squash-merge approval.
