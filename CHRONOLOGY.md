@@ -4584,3 +4584,39 @@ Initial implementation:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-21 — Gate 029 ready-for-review checkpoint
+
+Validated implementation head:
+`028ad1aad83a51657e7256de4b3f1841ffc0d1b5`.
+
+Validation:
+- deterministic regression: `314/314 PASS`;
+- generic workflow `35627468692`: `PASS`;
+- strict exact-head workflow `35627468743`: `PASS`;
+- Gate 029 tool/validator workflow `35627468703`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 policy/approval workflow `35627468809`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35627468716`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35627468832`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+Gate 029 acceptance state:
+`PASS_V1_0_DETERMINISTIC_TOOL_VALIDATOR_INTEGRATION`.
+
+PR #58 was marked:
+`READY FOR REVIEW`.
+
+No tool-authority, project-physics, architecture or validator-semantic expansion
+occurred. Remote Git mutation, generic filesystem write, release, fabrication
+and physical-validation authority remain ungranted.
+
+A final source-of-truth synchronization head now requires one last exact-head
+validation set before explicit human squash-merge approval.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
