@@ -517,6 +517,8 @@ Status: `IN_PROGRESS`
 
 Issue: `#57`
 
+PR: `#58 (DRAFT)`
+
 Branch: `gate-029-deterministic-tool-validator-integration`
 
 Base: accepted Gate 028 squash merge
