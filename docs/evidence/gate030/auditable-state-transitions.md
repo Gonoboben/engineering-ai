@@ -2,6 +2,7 @@
 
 ## Gate identity
 - Issue: #59
+- PR: #60 (DRAFT)
 - Branch: `gate-030-auditable-state-transitions`
 - Base: accepted Gate 029 squash merge
   `f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
