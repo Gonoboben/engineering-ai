@@ -489,6 +489,8 @@ Status: `IN_PROGRESS`
 
 Issue: `#55`
 
+PR: `#56 (DRAFT)`
+
 Branch: `gate-028-policy-approval-enforcement`
 
 Base: accepted Gate 027 squash merge
