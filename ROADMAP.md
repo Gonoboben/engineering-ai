@@ -485,11 +485,11 @@ control-plane boundary. It does not claim OS-level packet filtering or formal
 network-freedom of arbitrary project-owned script internals.
 
 ### Gate 028 — v1.0 policy and approval enforcement acceptance
-Status: `IN_PROGRESS`
+Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
 
 Issue: `#55`
 
-PR: `#56 (DRAFT)`
+PR: `#56 (READY FOR REVIEW)`
 
 Branch: `gate-028-policy-approval-enforcement`
 
@@ -515,6 +515,15 @@ Required validation:
 - denied and approval-blocked paths make zero protected calls;
 - named approval remains explicit and bounded;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+Implementation/ready checkpoint:
+- head: `5458c1bdd930d0d80671f42bc665807f12c8d215`;
+- deterministic regression: `313/313 PASS`;
+- generic workflow `35625528735`: `PASS`;
+- strict exact-head workflow `35625528753`: `PASS`;
+- Gate 028 workflow `35625528680`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35625528713`: `PASS`;
+- inherited Gate 026 workflow `35625528728`: Ubuntu `PASS`, Windows `PASS`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
