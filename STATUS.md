@@ -69,7 +69,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `029 — v1.0 deterministic tool and validator integration acceptance`
 - Issue: `#57`
-- PR: `NOT_OPEN_YET`
+- PR: `#58 (DRAFT)`
 - Branch: `gate-029-deterministic-tool-validator-integration`
 - Base: `e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
 - State: `IN_PROGRESS_PENDING_EXACT_HEAD_VALIDATION`
