@@ -70,15 +70,15 @@ def main() -> int:
         "Gate 027 unexpectedly exercised external network",
     )
     require(
-        gate027["blocked_reason"] == "OFFLINE_NETWORK_REQUIRED",
+        gate027["buoycalc"]["blocked_reason"] == "OFFLINE_NETWORK_REQUIRED",
         "BuoyCalc network-capable restore was not explicitly blocked offline",
     )
     require(
-        gate027["platavm_controlled_state"] == "READY_FOR_HUMAN_APPROVAL",
+        gate027["platavm"]["controlled_state"] == "READY_FOR_HUMAN_APPROVAL",
         "PlataVM controlled local validation did not reach approval boundary",
     )
     require(
-        gate027["buoycalc_network_block_state"] == "BLOCKED_RUNTIME_PREREQUISITE",
+        gate027["buoycalc"]["network_block_state"] == "BLOCKED_RUNTIME_PREREQUISITE",
         "BuoyCalc network-required validation did not remain blocked",
     )
 
