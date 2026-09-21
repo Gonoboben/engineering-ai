@@ -485,45 +485,64 @@ control-plane boundary. It does not claim OS-level packet filtering or formal
 network-freedom of arbitrary project-owned script internals.
 
 ### Gate 028 — v1.0 policy and approval enforcement acceptance
-Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#55`
+Issue: `#55 CLOSED / COMPLETED`
 
-PR: `#56 (READY FOR REVIEW)`
+PR: `#56 MERGED`
 
-Branch: `gate-028-policy-approval-enforcement`
+Final approved PR head:
+`fe120ee8d1e95d06600a4b3c43b769a4f4c63772`
 
-Base: accepted Gate 027 squash merge
-`39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
+Squash merge:
+`e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
+
+Final exact-head validation:
+- deterministic regression: `313/313 PASS`;
+- generic workflow `35626063568`: `PASS`;
+- strict exact-head workflow `35626063362`: `PASS`;
+- Gate 028 policy/approval workflow `35626063495`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35626063616`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35626063014`:
+  Ubuntu `PASS`, Windows `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Gate 028 closes the tested policy/approval enforcement criterion without
+changing accepted Supervisor or tool authority.
+
+### Gate 029 — v1.0 deterministic tool and validator integration acceptance
+Status: `IN_PROGRESS`
+
+Issue: `#57`
+
+Branch: `gate-029-deterministic-tool-validator-integration`
+
+Base: accepted Gate 028 squash merge
+`e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
 
 Objective:
 close the next Phase 8 / v1.0 criterion by revalidating already-accepted
-Supervisor, controlled-project, external-disclosure/tool and persisted
-approval boundaries as one deterministic cross-platform acceptance package.
+root-bounded tool adapters and connected-project validator loops as one
+deterministic cross-platform acceptance package.
 
 Scope is acceptance-only:
-- no policy-semantic or architecture expansion;
-- no broader tool/Git/network/disclosure authority;
+- no new arbitrary shell or generic write surface;
+- no remote Git mutation authority;
+- no PlataVM/BuoyCalc physics, architecture or validator-semantic change;
 - no validator weakening;
 - no release/fabrication authorization;
 - no physical-validation claim.
 
 Required validation:
+- tool adapter, PlataVM and BuoyCalc integration suites remain green;
+- validator failure/tracked mutation remain fail-closed;
+- Gate 027 offline network blocking remains explicit;
 - full deterministic regression remains green;
 - strict exact-head CI remains green;
-- Gate 028 policy/approval acceptance smoke passes on Ubuntu and Windows;
-- denied and approval-blocked paths make zero protected calls;
-- named approval remains explicit and bounded;
+- Gate 029 acceptance passes on Ubuntu and Windows;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
-
-Implementation/ready checkpoint:
-- head: `5458c1bdd930d0d80671f42bc665807f12c8d215`;
-- deterministic regression: `313/313 PASS`;
-- generic workflow `35625528735`: `PASS`;
-- strict exact-head workflow `35625528753`: `PASS`;
-- Gate 028 workflow `35625528680`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 027 workflow `35625528713`: `PASS`;
-- inherited Gate 026 workflow `35625528728`: Ubuntu `PASS`, Windows `PASS`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
