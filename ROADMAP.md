@@ -513,11 +513,11 @@ Gate 028 closes the tested policy/approval enforcement criterion without
 changing accepted Supervisor or tool authority.
 
 ### Gate 029 — v1.0 deterministic tool and validator integration acceptance
-Status: `IN_PROGRESS`
+Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
 
 Issue: `#57`
 
-PR: `#58 (DRAFT)`
+PR: `#58 (READY FOR REVIEW)`
 
 Branch: `gate-029-deterministic-tool-validator-integration`
 
@@ -545,6 +545,16 @@ Required validation:
 - strict exact-head CI remains green;
 - Gate 029 acceptance passes on Ubuntu and Windows;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+Implementation/ready checkpoint:
+- head: `028ad1aad83a51657e7256de4b3f1841ffc0d1b5`;
+- deterministic regression: `314/314 PASS`;
+- generic workflow `35627468692`: `PASS`;
+- strict exact-head workflow `35627468743`: `PASS`;
+- Gate 029 workflow `35627468703`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35627468809`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35627468716`: `PASS`;
+- inherited Gate 026 workflow `35627468832`: Ubuntu `PASS`, Windows `PASS`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
