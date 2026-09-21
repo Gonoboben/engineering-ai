@@ -2,7 +2,7 @@
 
 ## Gate identity
 - Issue: #59
-- PR: #60 (DRAFT)
+- PR: #60 (READY FOR REVIEW)
 - Branch: `gate-030-auditable-state-transitions`
 - Base: accepted Gate 029 squash merge
   `f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
@@ -53,7 +53,27 @@ on Ubuntu and Windows, installs the package, and executes:
 
 `python scripts/gate030_auditable_state_transitions.py`
 
-Final run IDs and exact-head results will be recorded after validation.
+Validated implementation/ready checkpoint:
+`bbb5067c9da5f235d191077e6591f8c3bc8bb78b`
+
+Validation:
+- deterministic regression: `315/315 PASS`;
+- generic workflow `35628992570`: `PASS`;
+- strict exact-head workflow `35628992420`: `PASS`;
+- Gate 030 auditable-state workflow `35628992522`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 tool/validator workflow `35628992451`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 policy/approval workflow `35628992587`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35628992616`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35628992397`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+PR #60 was marked ready for review after this checkpoint passed.
+A final source-of-truth synchronization head requires one last exact-head
+validation set before explicit human squash-merge approval.
 
 ## Authority boundaries
 - state-machine semantics: unchanged;
@@ -65,4 +85,4 @@ Final run IDs and exact-head results will be recorded after validation.
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
 ## Gate state
-Implementation is pending exact-head deterministic validation and review.
+Implementation is validated at the recorded checkpoint and PR #60 is ready for review. Final Gate acceptance remains pending one final exact-head validation set and explicit human exact-SHA squash-merge approval.
