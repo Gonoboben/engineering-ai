@@ -4406,3 +4406,81 @@ validation set before branch freeze and explicit human squash-merge approval.
 
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-21 — Gate 027 accepted and merged
+
+Final approved PR head:
+`dbb6c19a6ead1525cfdb922dda5ed91d8d59b035`.
+
+Final exact-head validation:
+- generic workflow `35538670272`: `PASS`;
+- strict exact-head workflow `35538670265`: `PASS`;
+- Gate 027 offline continuation workflow `35538670312`: `PASS`;
+- inherited Gate 026 install workflow `35538670420`: `PASS`;
+- Ubuntu reproducible install: `PASS`;
+- Windows reproducible install: `PASS`.
+
+Explicit human exact-SHA squash-merge approval:
+`PASS`.
+
+Squash merge on `main`:
+`39ab8ee30364cafaebe87d6d9b5ab17430f5031e`.
+
+PR #54:
+`MERGED`.
+
+Issue #53:
+`CLOSED / COMPLETED`.
+
+Phase 8 offline-continuation criterion:
+`CLOSED_BY_GATE_027`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-21 — Gate 028 policy/approval enforcement acceptance opened
+
+Issue:
+`#55 — Gate 028 — v1.0 policy and approval enforcement acceptance`.
+
+Branch:
+`gate-028-policy-approval-enforcement`.
+
+Base:
+accepted Gate 027 squash merge
+`39ab8ee30364cafaebe87d6d9b5ab17430f5031e`.
+
+Objective:
+close the next Phase 8 / v1.0 criterion by revalidating already-accepted
+policy and explicit-human-approval boundaries as a single deterministic
+cross-platform acceptance package.
+
+Initial implementation:
+- Gate-specific acceptance smoke over Supervisor policy, controlled BuoyCalc
+  mutation, external review and controlled tool exposure modules;
+- reuse of Gate 019 persisted approval-wait smoke;
+- reuse of Gate 021 external-disclosure approval smoke;
+- reuse of Gate 022 controlled-tool approval smoke;
+- exact-head Ubuntu/Windows Gate 028 workflow;
+- no policy-semantic or architecture change.
+
+Stop boundaries remain unchanged:
+- no validator weakening;
+- no remote Git mutation authority granted to Engineering AI;
+- no release/fabrication authority;
+- no project-physics expansion;
+- no physical-validation claim.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
