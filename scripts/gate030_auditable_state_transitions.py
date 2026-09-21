@@ -145,7 +145,7 @@ def main() -> int:
     )
 
     require(
-        gate021["state"] == "PASS_CONTROLLED_EXTERNAL_REVIEW_BOUNDARY",
+        gate021["state"] == "PASS_EXTERNAL_CONTROLLED_ADVISORY_BRIDGE",
         "external review acceptance did not pass",
     )
     require(
@@ -166,7 +166,7 @@ def main() -> int:
     )
 
     require(
-        gate022["state"] == "PASS_CONTROLLED_REGISTERED_TOOL_EXPOSURE",
+        gate022["state"] == "PASS_CONTROLLED_MCP_TOOL_EXPOSURE",
         "controlled tool bridge acceptance did not pass",
     )
     require(
