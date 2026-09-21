@@ -71,10 +71,10 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `030 — v1.0 auditable state transitions acceptance`
 - Issue: `#59`
-- PR: `#60 (DRAFT)`
+- PR: `#60 (READY FOR REVIEW)`
 - Branch: `gate-030-auditable-state-transitions`
 - Base: `f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
-- State: `IN_PROGRESS_PENDING_EXACT_HEAD_VALIDATION`
+- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -126,7 +126,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Offline continuation boundary: `IMPLEMENTED_VALIDATED_GATE_027_ACCEPTED`
 - v1.0 policy/approval enforcement acceptance: `IMPLEMENTED_VALIDATED_GATE_028_ACCEPTED`
 - v1.0 deterministic tool/validator integration acceptance: `IMPLEMENTED_VALIDATED_GATE_029_ACCEPTED`
-- v1.0 auditable state transitions acceptance: `IMPLEMENTATION_IN_PROGRESS_GATE_030`
+- v1.0 auditable state transitions acceptance: `IMPLEMENTED_VALIDATED_GATE_030_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -797,11 +797,11 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Complete Gate 030 acceptance-only implementation on the controlled branch.
-Open PR #TBD, run generic regression, strict exact-head CI, Gate 030
-cross-platform auditable-state acceptance, inherited Gate 029/028/027
-acceptance, and Gate 026 install validation. If all remain green, synchronize
-exact-head evidence and stop at explicit human exact-SHA squash-merge approval.
+Freeze Gate 030 content at the ready-state synchronization head. Run generic,
+strict exact-head, Gate 030 auditable-state, inherited Gate 029 tool/validator,
+Gate 028 policy/approval, Gate 027 offline and Gate 026 cross-platform install
+validation on that exact head. If all remain green, stop at explicit human
+exact-SHA squash-merge approval for PR #60.
 
 Do not change accepted state-machine semantics, make history mutable, or weaken
 integrity checks merely to obtain PASS.
