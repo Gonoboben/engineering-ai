@@ -2,7 +2,7 @@
 
 ## Gate identity
 - Issue: #55
-- PR: #56 (DRAFT)
+- PR: #56 (READY FOR REVIEW)
 - Branch: `gate-028-policy-approval-enforcement`
 - Base: accepted Gate 027 squash merge
   `39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
@@ -49,8 +49,23 @@ on Ubuntu and Windows, installs the package, and executes:
 
 `python scripts/gate028_policy_approval_acceptance.py`
 
-Final run IDs and exact-head results will be recorded after the implementation
-head is validated.
+Validated implementation/ready checkpoint:
+`5458c1bdd930d0d80671f42bc665807f12c8d215`
+
+Validation:
+- deterministic regression: `313/313 PASS`;
+- generic workflow `35625528735`: `PASS`;
+- strict exact-head workflow `35625528753`: `PASS`;
+- Gate 028 policy/approval workflow `35625528680`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35625528713`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35625528728`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+PR #56 was marked ready for review after this checkpoint passed.
+A final source-of-truth synchronization head requires one last exact-head
+validation set before explicit human squash-merge approval.
 
 ## Authority boundaries
 - policy architecture: unchanged;
@@ -62,4 +77,4 @@ head is validated.
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
 ## Gate state
-Implementation is pending exact-head deterministic validation and review.
+Implementation is validated at the recorded checkpoint and PR #56 is ready for review. Final Gate acceptance remains pending one final exact-head validation set and explicit human exact-SHA squash-merge approval.
