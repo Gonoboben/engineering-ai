@@ -543,11 +543,11 @@ Gate 029 closes the deterministic tool/validator integration criterion without
 expanding tool authority or changing connected-project validator semantics.
 
 ### Gate 030 — v1.0 auditable state transitions acceptance
-Status: `IN_PROGRESS`
+Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
 
 Issue: `#59`
 
-PR: `#60 (DRAFT)`
+PR: `#60 (READY FOR REVIEW)`
 
 Branch: `gate-030-auditable-state-transitions`
 
@@ -577,6 +577,17 @@ Required validation:
 - strict exact-head CI remains green;
 - Gate 030 acceptance passes on Ubuntu and Windows;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+Implementation/ready checkpoint:
+- head: `bbb5067c9da5f235d191077e6591f8c3bc8bb78b`;
+- deterministic regression: `315/315 PASS`;
+- generic workflow `35628992570`: `PASS`;
+- strict exact-head workflow `35628992420`: `PASS`;
+- Gate 030 workflow `35628992522`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35628992451`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35628992587`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35628992616`: `PASS`;
+- inherited Gate 026 workflow `35628992397`: Ubuntu `PASS`, Windows `PASS`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
