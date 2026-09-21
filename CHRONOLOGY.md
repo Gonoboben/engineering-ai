@@ -4516,3 +4516,71 @@ validation set before explicit human squash-merge approval.
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-21 — Gate 028 accepted and merged
+
+Final approved PR head:
+`fe120ee8d1e95d06600a4b3c43b769a4f4c63772`.
+
+Final validation:
+- deterministic regression: `313/313 PASS`;
+- generic workflow `35626063568`: `PASS`;
+- strict exact-head workflow `35626063362`: `PASS`;
+- Gate 028 policy/approval workflow `35626063495`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35626063616`: `PASS`;
+- inherited Gate 026 install workflow `35626063014`:
+  Ubuntu `PASS`, Windows `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`.
+
+PR #56:
+`MERGED`.
+
+Issue #55:
+`CLOSED / COMPLETED`.
+
+Phase 8 tested policy/approval enforcement criterion:
+`CLOSED_BY_GATE_028`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-21 — Gate 029 deterministic tool/validator integration acceptance opened
+
+Issue:
+`#57 — Gate 029 — v1.0 deterministic tool and validator integration acceptance`.
+
+Branch:
+`gate-029-deterministic-tool-validator-integration`.
+
+Base:
+accepted Gate 028 squash merge
+`e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`.
+
+Objective:
+close the next Phase 8 / v1.0 criterion by revalidating existing root-bounded
+tool adapters and PlataVM/BuoyCalc validator integration as one deterministic
+cross-platform acceptance package.
+
+Initial implementation:
+- Gate-specific acceptance smoke over tools, PlataVM read-only/controlled and
+  BuoyCalc read-only/controlled test modules;
+- inherited Gate 027 structured offline-continuation smoke;
+- exact-head Ubuntu/Windows Gate 029 workflow;
+- no tool-authority, project-physics, architecture or validator-semantic change.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
