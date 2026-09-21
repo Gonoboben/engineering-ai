@@ -57,17 +57,20 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 024 merge commit: `99a8e216dc2c8ec7b98c445f0e1909479bff6b52`
 - Gate 025: `ACCEPTED_MERGED`
 - Gate 025 merge commit: `171ff20125389d2d953576a0d3340c13dc1dc53f`
+- Gate 026: `ACCEPTED_MERGED`
+- Gate 026 merge commit: `d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
+- Gate 027: `ACCEPTED_MERGED`
+- Gate 027 merge commit: `39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `027 — Offline continuation boundary for connected projects`
-- Issue: `#53`
-- PR: `#54 (READY FOR REVIEW)`
-- Branch: `gate-027-offline-continuation-boundary`
-- Base: `d1d93c7a3c17ffbd1c4bd7d7820ca75d8f9bcc4d`
-- Validated implementation/architecture head: `323b2db90c1470634ea816a4a96eb1f9dcc47ed9`
-- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
+- Gate: `028 — v1.0 policy and approval enforcement acceptance`
+- Issue: `#55`
+- PR: `NOT_OPEN_YET`
+- Branch: `gate-028-policy-approval-enforcement`
+- Base: `39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
+- State: `IN_PROGRESS_PENDING_EXACT_HEAD_VALIDATION`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -116,7 +119,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - External controlled review bridge: `IMPLEMENTED_VALIDATED_GATE_021_ACCEPTED`
 - Controlled registered tool/MCP exposure broker: `IMPLEMENTED_VALIDATED_GATE_022_ACCEPTED`
 - Reproducible local installation: `IMPLEMENTED_VALIDATED_GATE_026_ACCEPTED`
-- Offline continuation boundary: `IMPLEMENTED_VALIDATED_GATE_027_PENDING_ACCEPTANCE`
+- Offline continuation boundary: `IMPLEMENTED_VALIDATED_GATE_027_ACCEPTED`
+- v1.0 policy/approval enforcement acceptance: `IMPLEMENTATION_IN_PROGRESS_GATE_028`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -787,12 +791,14 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Freeze Gate 027 content at the ready-state synchronization head. Run generic,
-strict exact-head, Gate 027 offline-continuation and inherited Gate 026
-cross-platform install validation on that exact head. If all remain green, stop
-at explicit human exact-SHA squash-merge approval for PR #54.
+Complete Gate 028 acceptance-only implementation on the controlled branch.
+Open PR #TBD, run generic regression, strict exact-head CI and the Gate 028
+cross-platform policy/approval acceptance workflow. If all remain green,
+synchronize the exact-head evidence and stop at explicit human exact-SHA
+squash-merge approval.
 
-Do not infer OS-level packet isolation or physical/release evidence from Gate 027.
+Do not change accepted policy semantics or architecture merely to satisfy the
+acceptance matrix. Denied/approval-blocked paths must remain zero-execution.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
