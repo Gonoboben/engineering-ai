@@ -513,48 +513,68 @@ Gate 028 closes the tested policy/approval enforcement criterion without
 changing accepted Supervisor or tool authority.
 
 ### Gate 029 — v1.0 deterministic tool and validator integration acceptance
-Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#57`
+Issue: `#57 CLOSED / COMPLETED`
 
-PR: `#58 (READY FOR REVIEW)`
+PR: `#58 MERGED`
 
-Branch: `gate-029-deterministic-tool-validator-integration`
+Final approved PR head:
+`e768210216cabd21fd977179b3397f42ea09a1a5`
 
-Base: accepted Gate 028 squash merge
-`e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
+Squash merge:
+`f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
+
+Final exact-head validation:
+- deterministic regression: `314/314 PASS`;
+- generic workflow `35628058655`: `PASS`;
+- strict exact-head workflow `35628058907`: `PASS`;
+- Gate 029 deterministic tool/validator workflow `35628058641`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 policy/approval workflow `35628058617`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35628058634`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35628058638`:
+  Ubuntu `PASS`, Windows `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Gate 029 closes the deterministic tool/validator integration criterion without
+expanding tool authority or changing connected-project validator semantics.
+
+### Gate 030 — v1.0 auditable state transitions acceptance
+Status: `IN_PROGRESS`
+
+Issue: `#59`
+
+Branch: `gate-030-auditable-state-transitions`
+
+Base: accepted Gate 029 squash merge
+`f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
 
 Objective:
 close the next Phase 8 / v1.0 criterion by revalidating already-accepted
-root-bounded tool adapters and connected-project validator loops as one
-deterministic cross-platform acceptance package.
+Supervisor audit transitions, append-only memory/lifecycle state, persisted job
+and schedule state, and controlled external/tool ledgers as one deterministic
+cross-platform acceptance package.
 
 Scope is acceptance-only:
-- no new arbitrary shell or generic write surface;
-- no remote Git mutation authority;
-- no PlataVM/BuoyCalc physics, architecture or validator-semantic change;
-- no validator weakening;
-- no release/fabrication authorization;
+- no state-machine semantic expansion;
+- no automatic approval;
+- no history rewrite/mutable-audit authority;
+- no integrity/tamper-check weakening;
+- no tool/Git/network/release/fabrication authority expansion;
 - no physical-validation claim.
 
 Required validation:
-- tool adapter, PlataVM and BuoyCalc integration suites remain green;
-- validator failure/tracked mutation remain fail-closed;
-- Gate 027 offline network blocking remains explicit;
+- Supervisor transition/audit suite remains green;
+- memory/knowledge lifecycle integrity remains append-only and stale-aware;
+- persisted job and schedule reopen/integrity checks remain green;
+- external-review and tool-ledger reopen/tamper checks remain green;
 - full deterministic regression remains green;
 - strict exact-head CI remains green;
-- Gate 029 acceptance passes on Ubuntu and Windows;
+- Gate 030 acceptance passes on Ubuntu and Windows;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
-
-Implementation/ready checkpoint:
-- head: `028ad1aad83a51657e7256de4b3f1841ffc0d1b5`;
-- deterministic regression: `314/314 PASS`;
-- generic workflow `35627468692`: `PASS`;
-- strict exact-head workflow `35627468743`: `PASS`;
-- Gate 029 workflow `35627468703`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 028 workflow `35627468809`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 027 workflow `35627468716`: `PASS`;
-- inherited Gate 026 workflow `35627468832`: Ubuntu `PASS`, Windows `PASS`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
