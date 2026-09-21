@@ -71,7 +71,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `030 — v1.0 auditable state transitions acceptance`
 - Issue: `#59`
-- PR: `NOT_OPEN_YET`
+- PR: `#60 (DRAFT)`
 - Branch: `gate-030-auditable-state-transitions`
 - Base: `f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
 - State: `IN_PROGRESS_PENDING_EXACT_HEAD_VALIDATION`
