@@ -67,7 +67,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `028 — v1.0 policy and approval enforcement acceptance`
 - Issue: `#55`
-- PR: `NOT_OPEN_YET`
+- PR: `#56 (DRAFT)`
 - Branch: `gate-028-policy-approval-enforcement`
 - Base: `39ab8ee30364cafaebe87d6d9b5ab17430f5031e`
 - State: `IN_PROGRESS_PENDING_EXACT_HEAD_VALIDATION`
