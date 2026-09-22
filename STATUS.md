@@ -65,16 +65,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 028 merge commit: `e6e6dcf2dff3d081f2fb3c394b919f60b43e2c78`
 - Gate 029: `ACCEPTED_MERGED`
 - Gate 029 merge commit: `f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
+- Gate 030: `ACCEPTED_MERGED`
+- Gate 030 merge commit: `82ec76013e28c2d7db5644c1b99565170418f9a9`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `030 — v1.0 auditable state transitions acceptance`
-- Issue: `#59`
-- PR: `#60 (READY FOR REVIEW)`
-- Branch: `gate-030-auditable-state-transitions`
-- Base: `f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
-- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
+- Gate: `031 — v1.0 measured and replaceable multi-model routing acceptance`
+- Issue: `#62`
+- PR: `PENDING`
+- Branch: `gate-031-measured-replaceable-routing`
+- Base: `82ec76013e28c2d7db5644c1b99565170418f9a9`
+- State: `IMPLEMENTATION_PENDING_VALIDATION`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -126,7 +128,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Offline continuation boundary: `IMPLEMENTED_VALIDATED_GATE_027_ACCEPTED`
 - v1.0 policy/approval enforcement acceptance: `IMPLEMENTED_VALIDATED_GATE_028_ACCEPTED`
 - v1.0 deterministic tool/validator integration acceptance: `IMPLEMENTED_VALIDATED_GATE_029_ACCEPTED`
-- v1.0 auditable state transitions acceptance: `IMPLEMENTED_VALIDATED_GATE_030_PENDING_ACCEPTANCE`
+- v1.0 auditable state transitions acceptance: `IMPLEMENTED_VALIDATED_GATE_030_ACCEPTED`
+- v1.0 measured/replaceable multi-model routing acceptance: `GATE_031_IN_PROGRESS`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -894,3 +897,27 @@ integrity checks merely to obtain PASS.
 - pre-ready documentation/evidence head `81fc9256b737a9110037f5f9695e76d40634ff0c`: generic CI `35531984785 PASS`, strict exact-head CI `35531984758 PASS`
 - final ready-state exact-head CI: `REQUIRED_ON_FINAL_HEAD`
 - human exact-SHA squash-merge approval: `PENDING`
+
+
+## Gate 030 final acceptance
+- final approved PR head: `88b9d74fa0456eb9bea92e89e8b572646ed4723c`
+- squash merge commit: `82ec76013e28c2d7db5644c1b99565170418f9a9`
+- PR #60: `MERGED`
+- Issue #59: `CLOSED / COMPLETED`
+- deterministic regression: `315/315 PASS`
+- generic workflow `35629679136`: `PASS`
+- strict exact-head workflow `35629678851`: `PASS`
+- Gate 030 workflow `35629679112`: Ubuntu `PASS`, Windows `PASS`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 031 validation state
+- Issue #62: `OPEN`
+- branch base equals Gate 030 squash merge `82ec76013e28c2d7db5644c1b99565170418f9a9`: `PASS`
+- scope: acceptance-only measured and replaceable multi-model routing
+- Gate 005/008 measurement evidence reuse: `REQUIRED`
+- Gate 009 registry/router evidence reuse: `REQUIRED`
+- test-only registry substitution is not a production qualification claim
+- practical workstation model/runtime replacement: `OUT_OF_SCOPE_GATE_031`
+- release authorization: `NOT_GRANTED`
+- fabrication authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
