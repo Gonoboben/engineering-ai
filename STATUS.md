@@ -67,16 +67,18 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 029 merge commit: `f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
 - Gate 030: `ACCEPTED_MERGED`
 - Gate 030 merge commit: `82ec76013e28c2d7db5644c1b99565170418f9a9`
+- Gate 031: `ACCEPTED_MERGED`
+- Gate 031 merge commit: `be30ad6de5092220be662b932c21198efcde9db8`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `031 — v1.0 measured and replaceable multi-model routing acceptance`
-- Issue: `#62`
-- PR: `#63 (READY FOR REVIEW)`
-- Branch: `gate-031-measured-replaceable-routing`
-- Base: `82ec76013e28c2d7db5644c1b99565170418f9a9`
-- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
+- Gate: `032 — v1.0 controlled model-to-model hand-offs with provenance acceptance`
+- Issue: `#64`
+- PR: `PENDING`
+- Branch: `gate-032-controlled-handoffs-provenance`
+- Base: `be30ad6de5092220be662b932c21198efcde9db8`
+- State: `OPEN_IMPLEMENTATION_PENDING`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -129,7 +131,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 policy/approval enforcement acceptance: `IMPLEMENTED_VALIDATED_GATE_028_ACCEPTED`
 - v1.0 deterministic tool/validator integration acceptance: `IMPLEMENTED_VALIDATED_GATE_029_ACCEPTED`
 - v1.0 auditable state transitions acceptance: `IMPLEMENTED_VALIDATED_GATE_030_ACCEPTED`
-- v1.0 measured/replaceable multi-model routing acceptance: `IMPLEMENTED_VALIDATED_GATE_031_PENDING_ACCEPTANCE`
+- v1.0 measured/replaceable multi-model routing acceptance: `IMPLEMENTED_VALIDATED_GATE_031_ACCEPTED`
+- v1.0 controlled hand-offs with provenance acceptance: `GATE_032_OPEN`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -800,14 +803,19 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Freeze Gate 030 content at the ready-state synchronization head. Run generic,
-strict exact-head, Gate 030 auditable-state, inherited Gate 029 tool/validator,
-Gate 028 policy/approval, Gate 027 offline and Gate 026 cross-platform install
-validation on that exact head. If all remain green, stop at explicit human
-exact-SHA squash-merge approval for PR #60.
+Gate 032 may implement an acceptance-only validation package over the accepted
+Gate 010 Task Blackboard/handoff runtime and Gate 011 independent-review
+boundary. Preserve Supervisor mediation, visible provenance, evidence-first
+semantics and the prohibition on direct peer-to-peer worker authority.
 
-Do not change accepted state-machine semantics, make history mutable, or weaken
-integrity checks merely to obtain PASS.
+Do not add new model qualification, practical runtime replacement, connected-
+project production work, validator weakening, release/fabrication authority or
+physical-validation claims inside Gate 032.
+
+Accepted remaining Phase 8 execution route:
+Gate 032 hand-offs -> Gate 033 persistent memory -> Gate 034 failure recovery ->
+PlataVM handoff/readiness audit -> Gate 035 controlled PlataVM+BuoyCalc use ->
+Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -936,6 +944,40 @@ integrity checks merely to obtain PASS.
 - inherited Gate 026 workflow `35771368266`: Ubuntu `PASS`; Windows initial attempt hit a transient pre-existing timeout cleanup `WinError 32/5`, failed-jobs rerun on the identical head `PASS`
 - source/test/validator change between Windows attempts: `NONE`
 - practical runtime/model replacement claim: `NOT_CLAIMED_GATE_031`
+- release authorization: `NOT_GRANTED`
+- fabrication authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+
+## Gate 031 final acceptance
+- final approved PR head: `0910527c514ea1e13c7bf0f56f7e04a33a9efd72`
+- squash merge commit: `be30ad6de5092220be662b932c21198efcde9db8`
+- PR #63: `MERGED`
+- Issue #62: `CLOSED / COMPLETED`
+- deterministic regression: `316/316 PASS`
+- generic workflow `35775473139`: `PASS`
+- strict exact-head workflow `35775472629`: `PASS`
+- Gate 031 workflow `35775472868`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 030 workflow `35775472574`: `PASS`
+- inherited Gate 029 workflow `35775472587`: `PASS`
+- inherited Gate 028 workflow `35775473357`: `PASS`
+- inherited Gate 027 workflow `35775472579`: `PASS`
+- inherited Gate 026 workflow `35775473035`: Ubuntu `PASS`, Windows `PASS` on same-head failed-job rerun
+- practical runtime/model replacement: `NOT_CLAIMED_GATE_031`
+- release authorization: `NOT_GRANTED`
+- fabrication authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 032 opening state
+- Issue #64: `OPEN`
+- branch: `gate-032-controlled-handoffs-provenance`
+- base equals Gate 031 squash merge `be30ad6de5092220be662b932c21198efcde9db8`: `PASS`
+- objective: controlled model-to-model hand-offs with provenance acceptance
+- architecture basis: Gate 010 Blackboard/handoffs + Gate 011 independent review
+- direct peer-to-peer/swarm authority: `PROHIBITED`
+- new model qualification: `OUT_OF_SCOPE`
+- practical runtime/model replacement: `OUT_OF_SCOPE_GATE_032`
+- connected-project production work: `OUT_OF_SCOPE_GATE_032`
 - release authorization: `NOT_GRANTED`
 - fabrication authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
