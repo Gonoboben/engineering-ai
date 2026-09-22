@@ -574,7 +574,7 @@ Status: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 Issue: `#62 OPEN`
 
-PR: `#63 (DRAFT)`
+PR: `#63 (READY FOR REVIEW)`
 
 Branch: `gate-031-measured-replaceable-routing`
 
