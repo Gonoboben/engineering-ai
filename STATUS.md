@@ -75,7 +75,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `032 — v1.0 controlled model-to-model hand-offs with provenance acceptance`
 - Issue: `#64`
-- PR: `PENDING`
+- PR: `#65 (DRAFT)`
 - Branch: `gate-032-controlled-handoffs-provenance`
 - Base: `be30ad6de5092220be662b932c21198efcde9db8`
 - State: `OPEN_IMPLEMENTATION_PENDING`
