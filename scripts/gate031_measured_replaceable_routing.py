@@ -150,7 +150,7 @@ def main() -> int:
     code_native_tools = router.route(
         RouteRequest(
             task_class=ModelTaskClass.CODE_REPOSITORY,
-            native_tool_proposals_required=True,
+            requires_native_tool_proposals=True,
         )
     )
     oversized_context = router.route(
@@ -191,7 +191,8 @@ def main() -> int:
         qualification="QUALIFIED_SYNTHETIC_ROUTING_ACCEPTANCE_ONLY",
         max_qualified_context_tokens=8192,
         max_qualified_output_tokens=2048,
-        native_tool_proposals=False,
+        reasoning_effort=None,
+        supports_native_tool_proposals=False,
         evidence_refs=("docs/evidence/gate009/routing.md",),
         priority=1,
     )
