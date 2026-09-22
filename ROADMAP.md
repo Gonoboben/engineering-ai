@@ -570,7 +570,7 @@ Gate 030 closes the auditable-state-transitions criterion without changing
 state-machine semantics, history mutability, integrity checks or authority.
 
 ### Gate 031 — v1.0 measured and replaceable multi-model routing acceptance
-Status: `IN_PROGRESS`
+Status: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 Issue: `#62 OPEN`
 
@@ -605,6 +605,20 @@ Required validation:
 - strict exact-head CI remains green;
 - Gate 031 acceptance passes on Ubuntu and Windows;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+Implementation checkpoint:
+- head: `84fd6695076951a02e5a3e34186891b629db1eff`;
+- deterministic regression: `316/316 PASS`;
+- generic workflow `35771368101`: `PASS`;
+- strict exact-head workflow `35771367774`: `PASS`;
+- Gate 031 workflow `35771367743`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35771367958`: `PASS`;
+- inherited Gate 029 workflow `35771367984`: `PASS`;
+- inherited Gate 028 workflow `35771367685`: `PASS`;
+- inherited Gate 027 workflow `35771367656`: `PASS`;
+- inherited Gate 026 workflow `35771368266`: Ubuntu `PASS`; Windows first
+  attempt hit a transient pre-existing timeout cleanup `WinError 32/5`, while
+  a failed-jobs rerun on the identical head passed with no source/test change.
 
 This Gate does not close the later separate criterion
 `model/runtime replaceability demonstrated in practice`.
