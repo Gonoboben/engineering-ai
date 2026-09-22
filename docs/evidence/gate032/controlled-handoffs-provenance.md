@@ -128,3 +128,29 @@ A final exact-head validation set remains required after source-of-truth
 synchronization and ready-for-review transition.
 
 No PASS from this Gate is physical evidence.
+
+
+## Ready-for-review checkpoint
+
+Ready transition source head:
+`0e0b571cf6c03033ee0142a5c69dcaeda1ccfbaf`.
+
+Validation:
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35786526609`: `PASS`;
+- strict exact-head workflow `35786526597`: `PASS`;
+- Gate 032 workflow `35786526598`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `35786526681`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35786526617`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35786526856`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35786526778`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35786526782`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35786526859`: Ubuntu `PASS`, Windows `PASS`.
+
+PR #65 is `READY FOR REVIEW`.
+
+This documentation synchronization intentionally changes the branch head.
+Therefore one final exact-head validation cycle is required on the resulting
+head before human squash-merge approval. The final run IDs are external
+repository-state evidence and do not justify another documentation commit,
+which would change the exact head again.

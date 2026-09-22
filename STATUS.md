@@ -1005,4 +1005,25 @@ Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 - release authorization: `NOT_GRANTED`
 - fabrication authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
-- next admissible action: source-of-truth synchronization CI, then ready-for-review transition if exact head remains green
+- next admissible action: final documentation/source-of-truth synchronization, then exact-head CI and explicit human exact-SHA squash-merge approval
+
+
+### Gate 032 ready-for-review checkpoint
+- PR #65: `READY FOR REVIEW`
+- ready transition source head: `0e0b571cf6c03033ee0142a5c69dcaeda1ccfbaf`
+- deterministic regression: `317/317 PASS`
+- generic workflow `35786526609`: `PASS`
+- strict exact-head workflow `35786526597`: `PASS`
+- Gate 032 workflow `35786526598`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 031 workflow `35786526681`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 030 workflow `35786526617`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 029 workflow `35786526856`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 028 workflow `35786526778`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 027 workflow `35786526782`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 026 workflow `35786526859`: Ubuntu `PASS`, Windows `PASS`
+- final documentation/source-of-truth exact-head CI: `REQUIRED_ON_FINAL_HEAD`
+- human exact-SHA squash-merge approval: `PENDING`
+- Issue #64: `OPEN`
+- release authorization: `NOT_GRANTED`
+- fabrication authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`

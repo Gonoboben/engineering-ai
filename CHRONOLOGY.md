@@ -5090,3 +5090,47 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-23 — Gate 032 ready-for-review checkpoint
+
+Ready transition source head:
+`0e0b571cf6c03033ee0142a5c69dcaeda1ccfbaf`.
+
+Validation on that exact head:
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35786526609`: `PASS`;
+- strict exact-head workflow `35786526597`: `PASS`;
+- Gate 032 workflow `35786526598`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `35786526681`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35786526617`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35786526856`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35786526778`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35786526782`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35786526859`: Ubuntu `PASS`, Windows `PASS`.
+
+PR #65 was marked:
+`READY FOR REVIEW`.
+
+No architecture, model qualification, routing decision table, tool/Git/network
+authority, connected-project physics, validator semantics, release/fabrication
+or physical-validation state changed by the ready transition.
+
+The retained first-implementation fixture failure on
+`e93e6ac1a8de9570a3ef3098073f80b8b4275dcd` remains part of Gate 032
+evidence and was not hidden.
+
+A final documentation/source-of-truth head now requires one last exact-head
+validation set before branch freeze and explicit human exact-SHA squash-merge
+approval.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
