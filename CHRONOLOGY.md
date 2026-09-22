@@ -4620,3 +4620,112 @@ validation set before explicit human squash-merge approval.
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-21 — Gate 029 accepted and merged
+
+Final approved PR head:
+`e768210216cabd21fd977179b3397f42ea09a1a5`.
+
+Final validation:
+- deterministic regression: `314/314 PASS`;
+- generic workflow `35628058655`: `PASS`;
+- strict exact-head workflow `35628058907`: `PASS`;
+- Gate 029 tool/validator workflow `35628058641`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 policy/approval workflow `35628058617`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35628058634`: `PASS`;
+- inherited Gate 026 install workflow `35628058638`:
+  Ubuntu `PASS`, Windows `PASS`;
+- explicit exact-SHA human squash-merge approval: `PASS`.
+
+Squash merge on `main`:
+`f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`.
+
+PR #58:
+`MERGED`.
+
+Issue #57:
+`CLOSED / COMPLETED`.
+
+Phase 8 deterministic tool/validator integration criterion:
+`CLOSED_BY_GATE_029`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-21 — Gate 030 auditable state transitions acceptance opened
+
+Issue:
+`#59 — Gate 030 — v1.0 auditable state transitions acceptance`.
+
+Branch:
+`gate-030-auditable-state-transitions`.
+
+Base:
+accepted Gate 029 squash merge
+`f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`.
+
+Objective:
+close the next Phase 8 / v1.0 criterion by revalidating existing Supervisor
+state/audit transitions, append-only memory/lifecycle, persisted job/schedule
+state and controlled external/tool ledgers as one deterministic cross-platform
+acceptance package.
+
+Initial implementation:
+- Gate-specific acceptance smoke over Supervisor, memory, lifecycle, job queue,
+  scheduled runs, external review and tool bridge deterministic modules;
+- reuse of Gate 018/019/020/021/022 structured smoke evidence;
+- exact-head Ubuntu/Windows Gate 030 workflow;
+- no state-machine, history-mutability, integrity or authority expansion.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-21 — Gate 030 ready-for-review checkpoint
+
+Validated implementation head:
+`bbb5067c9da5f235d191077e6591f8c3bc8bb78b`.
+
+Validation:
+- deterministic regression: `315/315 PASS`;
+- generic workflow `35628992570`: `PASS`;
+- strict exact-head workflow `35628992420`: `PASS`;
+- Gate 030 auditable-state workflow `35628992522`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 tool/validator workflow `35628992451`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 policy/approval workflow `35628992587`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 offline workflow `35628992616`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 install workflow `35628992397`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+Gate 030 acceptance state:
+`PASS_V1_0_AUDITABLE_STATE_TRANSITIONS`.
+
+PR #60 was marked:
+`READY FOR REVIEW`.
+
+No state-machine semantic, history-mutability, integrity-check or authority
+expansion occurred. Automatic approval remains prohibited. Release/fabrication
+and physical-validation authority remain ungranted.
+
+A final source-of-truth synchronization head now requires one last exact-head
+validation set before explicit human squash-merge approval.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
