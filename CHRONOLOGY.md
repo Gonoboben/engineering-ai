@@ -4982,6 +4982,9 @@ Physical validation:
 Issue:
 `#64 — Gate 032 — v1.0 controlled model-to-model hand-offs with provenance acceptance`.
 
+PR:
+`#65 — DRAFT`.
+
 Branch:
 `gate-032-controlled-handoffs-provenance`.
 
