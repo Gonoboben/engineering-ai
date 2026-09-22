@@ -2,7 +2,7 @@
 
 ## Gate identity
 - Issue: #62
-- PR: #63 (DRAFT)
+- PR: #63 (READY FOR REVIEW)
 - Branch: `gate-031-measured-replaceable-routing`
 - Base: accepted Gate 030 squash merge
   `82ec76013e28c2d7db5644c1b99565170418f9a9`
@@ -102,6 +102,6 @@ not hidden or reclassified as a deterministic PASS. The same exact source head
 was rerun and passed before readiness.
 
 ## Gate state
-Implementation checkpoint is validated. Source-of-truth synchronization now
-requires one final exact-head validation set before explicit human exact-SHA
-squash-merge approval.
+Implementation checkpoint is validated and PR #63 is ready for review. This
+ready-state source-of-truth head requires one final exact-head validation set
+before explicit human exact-SHA squash-merge approval.
