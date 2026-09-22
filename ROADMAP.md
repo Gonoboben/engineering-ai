@@ -599,7 +599,7 @@ Gate 031 closes only the measured-and-replaceable routing criterion.
 The separate practical model/runtime replacement criterion remains open.
 
 ### Gate 032 — v1.0 controlled model-to-model hand-offs with provenance acceptance
-Status: `OPEN_IMPLEMENTATION_PENDING`
+Status: `IMPLEMENTED_VALIDATED_DRAFT`
 
 Issue: `#64 OPEN`
 
@@ -633,6 +633,22 @@ Out of scope:
 - validator weakening;
 - release/fabrication authorization;
 - physical-validation claims.
+
+Implementation checkpoint:
+- corrected validated head: `acfd937cce15981d72aed902c1705d60171aaf7d`;
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35785822365`: `PASS`;
+- strict exact-head workflow `35785821993`: `PASS`;
+- Gate 032 workflow `35785822002`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gates 026–031: `PASS`;
+- the earlier Gate 032 smoke fixture failure on head
+  `e93e6ac1a8de9570a3ef3098073f80b8b4275dcd` is retained in evidence;
+- release/fabrication authority remains `NOT_GRANTED`;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+The Gate remains unaccepted until ready-state source-of-truth synchronization,
+final exact-head CI, explicit human approval on the final head SHA, squash
+merge verification, and Issue completion.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:

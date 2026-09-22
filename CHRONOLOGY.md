@@ -5020,3 +5020,73 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-23 — Gate 032 reconciliation and implementation checkpoint
+
+Read-only reconciliation before implementation confirmed:
+- `main`: `be30ad6de5092220be662b932c21198efcde9db8`;
+- Issue #64: `OPEN`;
+- PR #65: `DRAFT`;
+- Gate 032 branch was based exactly on the accepted Gate 031 squash merge;
+- pre-implementation PR head: `88ce9157d938a2965a469d9817b32e073357c423`;
+- pre-implementation changed files were only `ROADMAP.md`, `STATUS.md` and
+  `CHRONOLOGY.md`;
+- inherited CI on that pre-implementation head was green;
+- no source-of-truth conflict was found.
+
+Gate 010 and Gate 011 were re-read from source, evidence and deterministic
+tests. Existing accepted behavior already provided Supervisor-only handoffs,
+read-only worker views, visible-record context, hidden/cross-task exclusion,
+fail-closed missing context, coder native-tool rejection, evidence-first review
+and same-model self-review rejection.
+
+The objective gap was narrow: HANDOFF records did not explicitly carry all
+originating role/model/provider and source/version provenance required by the
+Gate 032 acceptance criterion.
+
+Gate 032 therefore added only additive provenance hardening and an acceptance
+package. No routing table, model qualification, policy authority, tool
+authority, connected-project physics, release/fabrication or physical state was
+expanded.
+
+First implementation head:
+`e93e6ac1a8de9570a3ef3098073f80b8b4275dcd`.
+
+Gate 032 workflow `35785749569` failed on Ubuntu because the new Gate-specific
+smoke fixture used a non-SHA repository-head placeholder rejected by the
+existing project-state schema. Generic and strict exact-head regression failed
+for the same fixture defect. No validator was changed or weakened.
+
+Correction head:
+`acfd937cce15981d72aed902c1705d60171aaf7d`.
+
+Validation on the corrected exact head:
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35785822365`: `PASS`;
+- strict exact-head workflow `35785821993`: `PASS`;
+- Gate 032 workflow `35785822002`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `35785821972`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35785822032`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35785822009`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35785822123`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35785822081`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35785822177`: Ubuntu `PASS`, Windows `PASS`.
+
+PR #65 remains:
+`DRAFT`.
+
+Gate 032 is not yet accepted or merged. A ready-state synchronization and final
+exact-head validation remain required before explicit human squash-merge
+approval.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.

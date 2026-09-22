@@ -981,3 +981,28 @@ Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 - release authorization: `NOT_GRANTED`
 - fabrication authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
+
+### Gate 032 implementation checkpoint
+- PR #65: `DRAFT`
+- first implementation head `e93e6ac1a8de9570a3ef3098073f80b8b4275dcd`: Gate 032 smoke fixture failed because a non-SHA placeholder violated the existing project-state schema; failure retained
+- corrected validated head: `acfd937cce15981d72aed902c1705d60171aaf7d`
+- additive runtime hardening: explicit HANDOFF task/origin/target/visible-evidence/source-version provenance
+- Gate 010 Supervisor mediation and hidden/cross-task context boundaries: `PRESERVED`
+- Gate 011 evidence-first / independent-review semantics: `PRESERVED`
+- deterministic regression: `317/317 PASS`
+- generic workflow `35785822365`: `PASS`
+- strict exact-head workflow `35785821993`: `PASS`
+- Gate 032 workflow `35785822002`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 031 workflow `35785821972`: `PASS`
+- inherited Gate 030 workflow `35785822032`: `PASS`
+- inherited Gate 029 workflow `35785822009`: `PASS`
+- inherited Gate 028 workflow `35785822123`: `PASS`
+- inherited Gate 027 workflow `35785822081`: `PASS`
+- inherited Gate 026 workflow `35785822177`: Ubuntu `PASS`, Windows `PASS`
+- direct peer-to-peer/swarm authority: `PROHIBITED`
+- new model qualification: `NONE`
+- practical runtime/model replacement: `NOT_CLAIMED_GATE_032`
+- release authorization: `NOT_GRANTED`
+- fabrication authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+- next admissible action: source-of-truth synchronization CI, then ready-for-review transition if exact head remains green

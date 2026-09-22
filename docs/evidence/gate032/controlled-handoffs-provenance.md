@@ -95,14 +95,36 @@ Persistent project memory with provenance remains Gate 033.
 
 ## Validation
 
-Implementation validation is pending CI on the Gate 032 implementation head.
+First implementation head:
+`e93e6ac1a8de9570a3ef3098073f80b8b4275dcd`.
 
-Required final acceptance evidence:
-- full deterministic regression;
-- generic CI;
-- strict exact-head CI;
-- Gate 032 Ubuntu/Windows acceptance workflow;
-- inherited Phase 8 workflows;
-- final exact-head validation after source-of-truth synchronization.
+The first Gate 032 workflow run `35785749569` failed on Ubuntu because the
+Gate-specific smoke fixture supplied a non-SHA placeholder to the existing
+project-state schema. Generic and strict exact-head regression also failed on
+that same implementation head because they include the Gate 032 wrapper test.
+This was a test-fixture defect, not a validator or authority failure. The
+failure remains recorded and was not bypassed or hidden.
+
+Correction head:
+`acfd937cce15981d72aed902c1705d60171aaf7d`.
+
+The correction changed the Gate-specific smoke state to use the actual
+`git rev-parse HEAD` value. No validator, routing, model qualification,
+authority, release/fabrication or physical semantics changed.
+
+Validation on correction head:
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35785822365`: `PASS`;
+- strict exact-head workflow `35785821993`: `PASS`;
+- Gate 032 workflow `35785822002`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `35785821972`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35785822032`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35785822009`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35785822123`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35785822081`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35785822177`: Ubuntu `PASS`, Windows `PASS`.
+
+A final exact-head validation set remains required after source-of-truth
+synchronization and ready-for-review transition.
 
 No PASS from this Gate is physical evidence.
