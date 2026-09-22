@@ -4877,3 +4877,45 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-22 — Gate 031 ready-for-review checkpoint
+
+Ready-transition source head before documentation synchronization:
+`4aad08ad402cf248796c61a5e05219e26f59eb21`.
+
+Validation on that exact head:
+- deterministic regression: `316/316 PASS`;
+- generic workflow `35774754266`: `PASS`;
+- strict exact-head workflow `35774754209`: `PASS`;
+- Gate 031 workflow `35774754510`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35774754315`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35774754322`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35774754475`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35774754239`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35774754526`: Ubuntu `PASS`, Windows `PASS`.
+
+PR #63 was marked:
+`READY FOR REVIEW`.
+
+No architecture, routing-runtime, qualification, provider, tool-authority,
+validator, release, fabrication or physical-validation semantics changed by the
+ready transition.
+
+A final documentation-only source-of-truth head now requires one last exact-head
+validation set before branch freeze and explicit human exact-SHA squash-merge
+approval.
+
+Practical model/runtime replacement remains:
+`NOT_CLAIMED_GATE_031`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
