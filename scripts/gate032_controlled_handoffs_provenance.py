@@ -70,7 +70,7 @@ def policy() -> dict:
     }
 
 
-def state() -> dict:
+def state(head_sha: str) -> dict:
     return {
         "schema_version": "1.0",
         "state_revision": 1,
@@ -79,7 +79,7 @@ def state() -> dict:
         "active_job_id": None,
         "repository_ref": {
             "branch": "gate-032-controlled-handoffs-provenance",
-            "head_sha": "runtime-resolved-by-gate032-smoke",
+            "head_sha": head_sha,
         },
         "architecture_baseline": "Gate 007 / Gate 010 / Gate 011",
         "effective_permissions": {
@@ -132,7 +132,7 @@ def main() -> int:
     router = DeterministicModelRouter(accepted_registry())
     supervisor = Supervisor(
         policy=policy(),
-        state=state(),
+        state=state(head),
         model_router=router,
         blackboard=board,
     )
