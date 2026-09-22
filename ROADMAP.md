@@ -543,51 +543,69 @@ Gate 029 closes the deterministic tool/validator integration criterion without
 expanding tool authority or changing connected-project validator semantics.
 
 ### Gate 030 — v1.0 auditable state transitions acceptance
-Status: `READY_FOR_REVIEW_PENDING_HUMAN_APPROVAL`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#59`
+Issue: `#59 CLOSED / COMPLETED`
 
-PR: `#60 (READY FOR REVIEW)`
+PR: `#60 MERGED`
 
-Branch: `gate-030-auditable-state-transitions`
+Final approved PR head:
+`88b9d74fa0456eb9bea92e89e8b572646ed4723c`
 
-Base: accepted Gate 029 squash merge
-`f76cc2a2db329a43bff2ff47f9dcd2039e37e05d`
+Squash merge:
+`82ec76013e28c2d7db5644c1b99565170418f9a9`
+
+Final exact-head validation:
+- deterministic regression: `315/315 PASS`;
+- generic workflow `35629679136`: `PASS`;
+- strict exact-head workflow `35629678851`: `PASS`;
+- Gate 030 workflow `35629679112`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35629678990`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35629679002`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35629679048`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35629679029`: Ubuntu `PASS`, Windows `PASS`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Gate 030 closes the auditable-state-transitions criterion without changing
+state-machine semantics, history mutability, integrity checks or authority.
+
+### Gate 031 — v1.0 measured and replaceable multi-model routing acceptance
+Status: `IN_PROGRESS`
+
+Issue: `#62 OPEN`
+
+Branch: `gate-031-measured-replaceable-routing`
+
+Base: accepted Gate 030 squash merge
+`82ec76013e28c2d7db5644c1b99565170418f9a9`
 
 Objective:
-close the next Phase 8 / v1.0 criterion by revalidating already-accepted
-Supervisor audit transitions, append-only memory/lifecycle state, persisted job
-and schedule state, and controlled external/tool ledgers as one deterministic
-cross-platform acceptance package.
+close the next Phase 8 / v1.0 criterion by revalidating measured Gate 005/008
+model evidence together with the Gate 009 evidence-backed deterministic
+registry/router boundary.
 
 Scope is acceptance-only:
-- no state-machine semantic expansion;
-- no automatic approval;
-- no history rewrite/mutable-audit authority;
-- no integrity/tamper-check weakening;
-- no tool/Git/network/release/fabrication authority expansion;
+- no new model qualification;
+- no Router model/provider/tool execution;
+- no Supervisor or routing architecture change;
+- no unmeasured role promotion;
+- no practical workstation model/runtime replacement claim;
+- no new tool/Git/network/release/fabrication authority;
 - no physical-validation claim.
 
 Required validation:
-- Supervisor transition/audit suite remains green;
-- memory/knowledge lifecycle integrity remains append-only and stale-aware;
-- persisted job and schedule reopen/integrity checks remain green;
-- external-review and tool-ledger reopen/tamper checks remain green;
+- measured accepted routes remain deterministic and provenance-bound;
+- unsupported or over-envelope requirements remain `NO_ROUTE`;
+- unmeasured Vision/Image routes remain `NO_ROUTE`;
+- test-only alternate registry composition proves data-bound route replacement
+  without changing Supervisor/Router implementation;
 - full deterministic regression remains green;
 - strict exact-head CI remains green;
-- Gate 030 acceptance passes on Ubuntu and Windows;
+- Gate 031 acceptance passes on Ubuntu and Windows;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
 
-Implementation/ready checkpoint:
-- head: `bbb5067c9da5f235d191077e6591f8c3bc8bb78b`;
-- deterministic regression: `315/315 PASS`;
-- generic workflow `35628992570`: `PASS`;
-- strict exact-head workflow `35628992420`: `PASS`;
-- Gate 030 workflow `35628992522`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 029 workflow `35628992451`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 028 workflow `35628992587`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 027 workflow `35628992616`: `PASS`;
-- inherited Gate 026 workflow `35628992397`: Ubuntu `PASS`, Windows `PASS`.
+This Gate does not close the later separate criterion
+`model/runtime replaceability demonstrated in practice`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
