@@ -76,7 +76,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - PR: `#63 (DRAFT)`
 - Branch: `gate-031-measured-replaceable-routing`
 - Base: `82ec76013e28c2d7db5644c1b99565170418f9a9`
-- State: `IMPLEMENTATION_PENDING_VALIDATION`
+- State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -129,7 +129,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 policy/approval enforcement acceptance: `IMPLEMENTED_VALIDATED_GATE_028_ACCEPTED`
 - v1.0 deterministic tool/validator integration acceptance: `IMPLEMENTED_VALIDATED_GATE_029_ACCEPTED`
 - v1.0 auditable state transitions acceptance: `IMPLEMENTED_VALIDATED_GATE_030_ACCEPTED`
-- v1.0 measured/replaceable multi-model routing acceptance: `GATE_031_IN_PROGRESS`
+- v1.0 measured/replaceable multi-model routing acceptance: `IMPLEMENTED_VALIDATED_GATE_031_PENDING_ACCEPTANCE`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -918,6 +918,24 @@ integrity checks merely to obtain PASS.
 - Gate 009 registry/router evidence reuse: `REQUIRED`
 - test-only registry substitution is not a production qualification claim
 - practical workstation model/runtime replacement: `OUT_OF_SCOPE_GATE_031`
+- release authorization: `NOT_GRANTED`
+- fabrication authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+
+### Gate 031 implementation checkpoint
+- validated head: `84fd6695076951a02e5a3e34186891b629db1eff`
+- deterministic regression: `316/316 PASS`
+- generic workflow `35771368101`: `PASS`
+- strict exact-head workflow `35771367774`: `PASS`
+- Gate 031 workflow `35771367743`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 030 workflow `35771367958`: `PASS`
+- inherited Gate 029 workflow `35771367984`: `PASS`
+- inherited Gate 028 workflow `35771367685`: `PASS`
+- inherited Gate 027 workflow `35771367656`: `PASS`
+- inherited Gate 026 workflow `35771368266`: Ubuntu `PASS`; Windows initial attempt hit a transient pre-existing timeout cleanup `WinError 32/5`, failed-jobs rerun on the identical head `PASS`
+- source/test/validator change between Windows attempts: `NONE`
+- practical runtime/model replacement claim: `NOT_CLAIMED_GATE_031`
 - release authorization: `NOT_GRANTED`
 - fabrication authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
