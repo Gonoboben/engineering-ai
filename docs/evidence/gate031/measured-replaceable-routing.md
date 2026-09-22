@@ -78,6 +78,30 @@ demonstration and must not be inferred from registry substitution alone.
 - fabrication authorization: `NOT_GRANTED`;
 - physical validation: `PHYSICAL_NOT_EXECUTED`.
 
+## Validation checkpoint
+
+Validated head:
+`84fd6695076951a02e5a3e34186891b629db1eff`
+
+Results:
+- deterministic regression: `316/316 PASS`;
+- generic workflow `35771368101`: `PASS`;
+- strict exact-head workflow `35771367774`: `PASS`;
+- Gate 031 workflow `35771367743`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35771367958`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35771367984`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35771367685`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35771367656`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35771368266`: Ubuntu `PASS`; first Windows
+  attempt failed in the pre-existing timeout cleanup test with `WinError 32/5`,
+  then a failed-jobs rerun on the identical head completed `PASS` without any
+  source, test or validator change.
+
+The initial Windows Gate 026 failure is recorded as a transient cleanup race,
+not hidden or reclassified as a deterministic PASS. The same exact source head
+was rerun and passed before readiness.
+
 ## Gate state
-Implementation is pending exact-head cross-platform validation and explicit human
-exact-SHA squash-merge approval.
+Implementation checkpoint is validated. Source-of-truth synchronization now
+requires one final exact-head validation set before explicit human exact-SHA
+squash-merge approval.
