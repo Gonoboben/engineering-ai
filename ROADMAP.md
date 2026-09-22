@@ -603,6 +603,8 @@ Status: `OPEN_IMPLEMENTATION_PENDING`
 
 Issue: `#64 OPEN`
 
+PR: `#65 DRAFT`
+
 Branch: `gate-032-controlled-handoffs-provenance`
 
 Base: accepted Gate 031 squash merge
