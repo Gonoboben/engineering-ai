@@ -73,7 +73,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `031 — v1.0 measured and replaceable multi-model routing acceptance`
 - Issue: `#62`
-- PR: `#63 (DRAFT)`
+- PR: `#63 (READY FOR REVIEW)`
 - Branch: `gate-031-measured-replaceable-routing`
 - Base: `82ec76013e28c2d7db5644c1b99565170418f9a9`
 - State: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
