@@ -4919,3 +4919,101 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-22 — Gate 031 accepted and merged
+
+Final approved PR head:
+`0910527c514ea1e13c7bf0f56f7e04a33a9efd72`.
+
+Final exact-head validation:
+- deterministic regression: `316/316 PASS`;
+- generic workflow `35775473139`: `PASS`;
+- strict exact-head workflow `35775472629`: `PASS`;
+- Gate 031 measured-routing workflow `35775472868`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35775472574`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35775472587`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35775473357`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35775472579`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35775473035`:
+  Ubuntu `PASS`, Windows `PASS` on same-head failed-job rerun.
+
+The earlier Windows timeout-cleanup `WinError 32/5` evidence remains retained.
+No source, test or validator weakening was used to obtain the subsequent
+same-head PASS.
+
+Explicit human exact-SHA squash-merge approval:
+`PASS`.
+
+Squash merge on `main`:
+`be30ad6de5092220be662b932c21198efcde9db8`.
+
+PR #63:
+`MERGED`.
+
+Issue #62:
+`CLOSED / COMPLETED`.
+
+Phase 8 measured-and-replaceable multi-model routing criterion:
+`CLOSED_BY_GATE_031`.
+
+The separate practical model/runtime replacement criterion remains open.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-22 — Gate 032 opened and remaining Phase 8 route fixed
+
+Issue:
+`#64 — Gate 032 — v1.0 controlled model-to-model hand-offs with provenance acceptance`.
+
+Branch:
+`gate-032-controlled-handoffs-provenance`.
+
+Base:
+accepted Gate 031 squash merge
+`be30ad6de5092220be662b932c21198efcde9db8`.
+
+Gate 032 objective:
+revalidate the accepted Gate 010 Blackboard/handoff runtime together with Gate
+011 evidence-first independent review as one Supervisor-controlled,
+provenance-preserving acceptance package.
+
+The remaining Phase 8 execution route is now recorded in source of truth:
+
+1. Gate 032 — controlled model-to-model hand-offs with provenance acceptance.
+2. Gate 033 — persistent project memory with provenance acceptance.
+3. Gate 034 — documented model/tool failure recovery acceptance.
+4. PlataVM handoff/readiness audit — read-only preparation before real
+   connected-project acceptance.
+5. Gate 035 — successful controlled use on PlataVM and BuoyCalc.
+6. Gate 036 — model/runtime replaceability demonstrated in practice.
+7. Final v1.0 readiness audit — cold-start/source-of-truth continuation without
+   hidden chat context.
+
+This route does not grant architecture, model, tool, Git, connected-project
+physics, release, fabrication or physical-validation authority.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
