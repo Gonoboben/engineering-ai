@@ -4824,3 +4824,56 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-22 — Gate 031 implementation checkpoint validated
+
+Validated head:
+`84fd6695076951a02e5a3e34186891b629db1eff`.
+
+Validation:
+- deterministic regression: `316/316 PASS`;
+- generic workflow `35771368101`: `PASS`;
+- strict exact-head workflow `35771367774`: `PASS`;
+- Gate 031 measured-routing workflow `35771367743`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35771367958`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35771367984`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35771367685`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35771367656`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+Inherited Gate 026 workflow `35771368266`:
+- Ubuntu clean install/regression: `PASS`;
+- Windows attempt 1: `FAIL` in the pre-existing
+  `test_timeout_is_terminal_and_structured` cleanup path after timeout,
+  reporting `WinError 32/5` while removing the temporary directory;
+- the same test had passed on the prior accepted Gate 030 Windows Gate 026 run;
+- a failed-jobs rerun was executed on the identical Gate 031 head;
+- no source, test or validator change occurred between attempts;
+- Windows rerun: `PASS`.
+
+Interpretation:
+the first Windows result is retained as observed failure evidence. The subsequent
+same-head PASS supports classification as a transient Windows process-handle
+cleanup race, not a Gate 031 routing regression. No validator or test was
+weakened to obtain PASS.
+
+Gate 031 criterion state:
+`IMPLEMENTED_VALIDATED_PENDING_FINAL_EXACT_HEAD_CHECK`.
+
+The separate Phase 8 practical model/runtime replacement criterion remains open.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
