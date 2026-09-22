@@ -574,6 +574,8 @@ Status: `IN_PROGRESS`
 
 Issue: `#62 OPEN`
 
+PR: `#63 (DRAFT)`
+
 Branch: `gate-031-measured-replaceable-routing`
 
 Base: accepted Gate 030 squash merge
