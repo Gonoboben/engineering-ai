@@ -4729,3 +4729,98 @@ validation set before explicit human squash-merge approval.
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-22 — Gate 030 accepted and merged
+
+Final approved PR head:
+`88b9d74fa0456eb9bea92e89e8b572646ed4723c`.
+
+Final exact-head validation:
+- deterministic regression: `315/315 PASS`;
+- generic workflow `35629679136`: `PASS`;
+- strict exact-head workflow `35629678851`: `PASS`;
+- Gate 030 auditable-state workflow `35629679112`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35629678990`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35629679002`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35629679048`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35629679029`:
+  Ubuntu `PASS`, Windows `PASS`.
+
+Explicit human exact-SHA squash-merge approval:
+`PASS`.
+
+Squash merge on `main`:
+`82ec76013e28c2d7db5644c1b99565170418f9a9`.
+
+PR #60:
+`MERGED`.
+
+Issue #59:
+`CLOSED / COMPLETED`.
+
+Phase 8 auditable-state-transitions criterion:
+`CLOSED_BY_GATE_030`.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-22 — Gate 031 measured and replaceable multi-model routing acceptance opened
+
+Issue:
+`#62 — Gate 031 — v1.0 measured and replaceable multi-model routing acceptance`.
+
+Branch:
+`gate-031-measured-replaceable-routing`.
+
+Base:
+accepted Gate 030 squash merge
+`82ec76013e28c2d7db5644c1b99565170418f9a9`.
+
+Repository audit before implementation confirmed:
+- Gate 005 contains measured baseline evidence for `gpt-oss:20b / medium`;
+- Gate 008 contains measured qualification evidence for `qwen3.5:9b` and
+  `qwen2.5-coder:7b-instruct`;
+- Gate 009 implements the immutable evidence-backed
+  `ModelCapabilityRegistry` and pure deterministic
+  `DeterministicModelRouter`;
+- accepted route decisions preserve provider/model identity and evidence refs;
+- over-envelope or unqualified requirements fail closed as `NO_ROUTE`;
+- Router has no provider/tool execution dependency.
+
+Gate 031 acceptance implementation adds:
+- a deterministic acceptance harness over the accepted Gate 005/008/009
+  evidence and current routing runtime;
+- a test-only alternate registry entry proving that route selection changes
+  through registry data without Supervisor/Router architecture changes;
+- explicit checks that this synthetic replacement is not a production
+  qualification or practical runtime-replacement claim;
+- an exact-head Ubuntu/Windows Gate-specific workflow;
+- evidence/status/roadmap synchronization.
+
+Separate Phase 8 criterion
+`model/runtime replaceability demonstrated in practice`
+remains open and must not be inferred from this Gate.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
