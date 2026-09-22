@@ -53,6 +53,7 @@ class DisagreementRequest:
     originating_model: str
     evidence_record_ids: tuple[int, ...]
     evidence_disposition: EvidenceDisposition
+    source_version_refs: tuple[str, ...] = ()
     revision_count: int = 0
     context_tokens: int = 8192
     max_output_tokens: int = 2048
@@ -66,6 +67,10 @@ class DisagreementRequest:
             raise ValueError("originating_model must be non-empty")
         if len(set(self.evidence_record_ids)) != len(self.evidence_record_ids):
             raise ValueError("evidence_record_ids must be unique")
+        if len(set(self.source_version_refs)) != len(self.source_version_refs):
+            raise ValueError("source_version_refs must be unique")
+        if any(not ref.strip() for ref in self.source_version_refs):
+            raise ValueError("source_version_refs must be non-empty strings")
         if self.revision_count < 0 or self.revision_count > 1:
             raise ValueError("revision_count must be 0 or 1")
 
@@ -181,6 +186,24 @@ def _append_human_escalation(
     )
 
 
+def _originating_route_identity(
+    router: DeterministicModelRouter,
+    model: str,
+) -> tuple[str, str] | None:
+    matches = tuple(
+        entry for entry in router.registry.entries if entry.model == model
+    )
+    providers = {entry.provider for entry in matches}
+    task_classes = {
+        task_class.value
+        for entry in matches
+        for task_class in entry.task_classes
+    }
+    if len(providers) != 1 or len(task_classes) != 1:
+        return None
+    return next(iter(task_classes)), next(iter(providers))
+
+
 def plan_disagreement(
     *,
     blackboard: TaskBlackboard,
@@ -274,6 +297,25 @@ def plan_disagreement(
             reason="originating model cannot independently review itself",
         )
 
+    originating_identity = _originating_route_identity(
+        router,
+        request.originating_model,
+    )
+    if originating_identity is None:
+        escalation = _append_human_escalation(
+            blackboard,
+            task_id=request.task_id,
+            disagreement_record_id=disagreement.record_id,
+            reason="originating model provenance is not uniquely qualified",
+        )
+        return DisagreementDecision(
+            state=DisagreementState.NEEDS_HUMAN_APPROVAL,
+            disagreement_record=disagreement,
+            control_record=escalation,
+            reason="originating model provenance is not uniquely qualified",
+        )
+    originating_role, originating_provider = originating_identity
+
     visible_ids = (
         request.claim_record_id,
         *request.evidence_record_ids,
@@ -285,6 +327,10 @@ def plan_disagreement(
         request=HandoffRequest(
             task_id=request.task_id,
             target_task_class=ModelTaskClass.BASELINE_REASONING,
+            originating_role=originating_role,
+            originating_model=request.originating_model,
+            originating_provider=originating_provider,
+            source_version_refs=request.source_version_refs,
             visible_record_ids=visible_ids,
             context_tokens=request.context_tokens,
             max_output_tokens=request.max_output_tokens,
