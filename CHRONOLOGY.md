@@ -5134,3 +5134,102 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-27 — Gate 032 accepted and merged
+
+Issue #64 completed and PR #65 squash-merged.
+
+Final approved PR head:
+`a89a2c7fdb2e472dd422121695d8492a31387b80`
+
+Squash merge on `main`:
+`79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
+
+Gate 032 state became:
+`ACCEPTED_MERGED`
+
+Controlled model-to-model hand-off provenance acceptance closed without granting
+direct peer-to-peer authority, new model/tool authority, release/fabrication
+authority or physical-validation claims.
+
+---
+
+## 2026-09-27 — Dedicated EngineeringAI-Ubuntu execution node validated
+
+Engineering AI source at exact main revision
+`79fd557c645f9310c5729400cfe7ba5fcf61ffa0` was transferred by local Git bundle
+to the dedicated Ubuntu node and installed through the Gate 026 reproducible
+installation contract.
+
+Result:
+- Ubuntu 24.04.5 LTS / Python 3.12.3;
+- deterministic regression: `317/317 PASS`;
+- repeated wheel SHA-256: identical;
+- installed-package boundary: `PASS`;
+- pip dependency check: `PASS`;
+- repository HEAD preserved;
+- generated `build/` residue removed after verifying it contained no tracked files;
+- final worktree: `CLEAN`.
+
+This validates the node as a real Linux Engineering AI execution environment,
+not as a second control plane.
+
+---
+
+## 2026-09-27 — Gate 033 opened
+
+Issue #66 / draft PR #67.
+
+Branch:
+`gate-033-persistent-project-memory-provenance`
+
+Base:
+`79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
+
+Purpose:
+close the v1.0 persistent project memory with provenance criterion by integrated
+acceptance of the already-accepted Gate 016 memory, Gate 017 retrieval and
+Gate 018 lifecycle mechanisms without memory-architecture redesign.
+
+---
+
+## 2026-09-27 — Gate 033 dual-platform local acceptance checkpoint
+
+Exact checkpoint head:
+`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
+
+Windows result:
+- Gate 033 harness: `PASS_V1_0_PERSISTENT_PROJECT_MEMORY_PROVENANCE`;
+- wrapper: `PASS`;
+- deterministic regression: `318/318 PASS`;
+- exact HEAD preserved;
+- worktree clean.
+
+Dedicated EngineeringAI-Ubuntu result:
+- exact local Git-bundle checkout at the same head: `PASS`;
+- Gate 033 harness: `PASS`;
+- wrapper: `PASS`;
+- deterministic regression: `318/318 PASS` in `50.565 s`;
+- exact HEAD preserved;
+- worktree clean.
+
+Integrated assertions include persistence across reopen, project isolation,
+provenance-preserving retrieval, exact source/evidence revision+SHA lifecycle
+bindings, explicit source/evidence stale states, append-only history, advisory
+model boundary and no automatic model/Blackboard context injection.
+
+GitHub-hosted pull-request jobs on this checkpoint currently terminate before
+any job step is recorded. That hosted execution condition remains unresolved
+and is retained separately from the successful deterministic local validation.
+
+Gate 033 remains:
+`IMPLEMENTED_LOCAL_VALIDATED / HOSTED_CI_PENDING`
+
+Release/fabrication:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`

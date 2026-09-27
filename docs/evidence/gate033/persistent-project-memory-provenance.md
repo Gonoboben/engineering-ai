@@ -8,7 +8,7 @@
   `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
 - Gate 032 final approved PR head:
   `a89a2c7fdb2e472dd422121695d8492a31387b80`
-- State: `OPENING / NOT_ACCEPTED`
+- State: `IMPLEMENTED_LOCAL_VALIDATED / HOSTED_CI_PENDING`
 
 ## Objective
 
@@ -92,3 +92,68 @@ Gate 033 must prove, as one integrated package:
 3. Gate 035 — successful controlled use on PlataVM and BuoyCalc.
 4. Gate 036 — practical model/runtime replaceability.
 5. Final v1.0 cold-start/source-of-truth readiness audit.
+
+
+## Local dual-platform validation checkpoint
+
+Exact checkpoint head:
+`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
+
+Windows primary workstation:
+- Python: `3.12.10`;
+- Gate 033 acceptance harness:
+  `PASS_V1_0_PERSISTENT_PROJECT_MEMORY_PROVENANCE`;
+- Gate 033 wrapper: `1/1 PASS`;
+- full deterministic regression: `318/318 PASS` in `137.686 s`;
+- source HEAD preserved: `PASS`;
+- worktree after validation: `CLEAN`.
+
+Dedicated EngineeringAI-Ubuntu execution node:
+- exact Gate 033 bundle transferred locally and checked out at the same head;
+- Gate 033 acceptance harness: `PASS`;
+- Gate 033 wrapper: `PASS`;
+- full deterministic regression: `318/318 PASS` in `50.565 s`;
+- source HEAD preserved: `PASS`;
+- worktree after validation: `CLEAN`;
+- root filesystem: `30G total / 5.1G used / 24G available / 18%`;
+- visible memory: `1.8 GiB`, approximately `1.3 GiB available`;
+- swap: `2.0 GiB total / 0 used`;
+- retained local log:
+  `/home/andrey/gate033-ubuntu-5fefd222.log`.
+
+The dual-platform checkpoint proves the Gate 033 implementation on the exact
+recorded branch head. It is deterministic/local software validation only and
+does not create any physical-validation claim.
+
+## Gate 033 integrated assertions
+
+The exact checkpoint demonstrated:
+- persistent memory and lifecycle databases reopen successfully;
+- source content SHA-256 is preserved across reopen;
+- same memory identity remains isolated by `project_id`;
+- cross-project get, retrieval leakage and lifecycle binding fail closed;
+- retrieval after reopen preserves record/memory identity, revision, provenance,
+  source/evidence refs and content SHA-256;
+- lifecycle records preserve exact source/evidence revision+SHA bindings;
+- source revision drift yields `STALE_SOURCE_REVISION`;
+- evidence revision drift yields `STALE_EVIDENCE_REVISION`;
+- lifecycle history remains append-only and prior hashes remain unchanged;
+- MODEL/ADVISORY evidence self-promotion is rejected;
+- automatic model/Blackboard context injection remains `false`;
+- semantic/vector backend remains `DEFERRED_NOT_JUSTIFIED`;
+- release/fabrication authority remains false;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+## GitHub-hosted execution condition
+
+On checkpoint head
+`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`, the PR-triggered hosted workflows
+including generic validation, strict exact-head validation, inherited Phase 8
+workflows and Gate 033 concluded `failure` before any job step was recorded.
+The Gate 033 hosted Windows and Ubuntu jobs expose no executed steps/log stream.
+
+This condition is retained as an external execution blocker. It is not
+reinterpreted as a deterministic Engineering AI test failure and it is not
+reinterpreted as PASS.
+
+Hosted exact-head acceptance remains `PENDING` before ready-for-review.

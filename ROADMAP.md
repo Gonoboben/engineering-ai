@@ -599,70 +599,77 @@ Gate 031 closes only the measured-and-replaceable routing criterion.
 The separate practical model/runtime replacement criterion remains open.
 
 ### Gate 032 — v1.0 controlled model-to-model hand-offs with provenance acceptance
-Status: `READY_FOR_REVIEW`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#64 OPEN`
+Issue: `#64 CLOSED / COMPLETED`
 
-PR: `#65 DRAFT`
+PR: `#65 MERGED`
 
-Branch: `gate-032-controlled-handoffs-provenance`
+Final approved PR head:
+`a89a2c7fdb2e472dd422121695d8492a31387b80`
 
-Base: accepted Gate 031 squash merge
-`be30ad6de5092220be662b932c21198efcde9db8`
+Squash merge:
+`79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
 
-Objective:
-close the next Phase 8 / v1.0 criterion by revalidating the accepted Gate 010
-Blackboard/handoff architecture together with Gate 011 evidence-first independent
-review as one Supervisor-controlled provenance-preserving acceptance package.
-
-Scope:
-- synchronize Gate 031 as `ACCEPTED_MERGED`;
-- preserve task/model/provider/evidence provenance across hand-offs;
-- require Supervisor mediation for every worker-to-worker transition;
-- reject hidden or cross-task evidence as a substitute for visible deterministic
-  context;
-- preserve reviewer-independence and evidence-first disagreement semantics;
-- keep direct peer-to-peer/swarm authority prohibited;
-- retain full deterministic regression and inherited Phase 8 checks.
-
-Out of scope:
-- new model qualification;
-- practical model/runtime replacement;
-- connected-project production work;
-- authority expansion;
-- validator weakening;
-- release/fabrication authorization;
-- physical-validation claims.
-
-Implementation checkpoint:
-- corrected validated head: `acfd937cce15981d72aed902c1705d60171aaf7d`;
+Final validation:
 - deterministic regression: `317/317 PASS`;
-- generic workflow `35785822365`: `PASS`;
-- strict exact-head workflow `35785821993`: `PASS`;
-- Gate 032 workflow `35785822002`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gates 026–031: `PASS`;
-- the earlier Gate 032 smoke fixture failure on head
-  `e93e6ac1a8de9570a3ef3098073f80b8b4275dcd` is retained in evidence;
-- release/fabrication authority remains `NOT_GRANTED`;
-- physical validation remains `PHYSICAL_NOT_EXECUTED`.
+- final exact-head validation and inherited Phase 8 workflows: `PASS`;
+- controlled hand-off provenance, Supervisor mediation and independent-review boundaries: `PASS`;
+- direct peer-to-peer/swarm authority: `PROHIBITED`;
+- release/fabrication authorization: `NOT_GRANTED`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-Ready-for-review checkpoint:
-- ready transition source head: `0e0b571cf6c03033ee0142a5c69dcaeda1ccfbaf`;
-- deterministic regression: `317/317 PASS`;
-- generic workflow `35786526609`: `PASS`;
-- strict exact-head workflow `35786526597`: `PASS`;
-- Gate 032 workflow `35786526598`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 031 workflow `35786526681`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 030 workflow `35786526617`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 029 workflow `35786526856`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 028 workflow `35786526778`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 027 workflow `35786526782`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 026 workflow `35786526859`: Ubuntu `PASS`, Windows `PASS`;
-- PR #65: `READY FOR REVIEW`.
+Gate 032 closes the controlled model-to-model hand-offs with provenance
+criterion without granting new model, tool, Git, network, release, fabrication
+or physical-validation authority.
 
-The Gate remains unaccepted until this final documentation/source-of-truth head
-passes exact-head CI, explicit human approval is given on that exact final head
-SHA, the squash merge is verified, and Issue #64 is completed.
+### Gate 033 — v1.0 persistent project memory with provenance acceptance
+Status: `IMPLEMENTED_LOCAL_VALIDATED / HOSTED_CI_PENDING`
+
+Issue: `#66 OPEN`
+
+PR: `#67 DRAFT`
+
+Branch: `gate-033-persistent-project-memory-provenance`
+
+Base: accepted Gate 032 squash merge
+`79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
+
+Local dual-platform checkpoint head:
+`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
+
+Delivered acceptance package:
+- Gate 016 persistent append-only decision/evidence memory reused without redesign;
+- Gate 017 provenance-preserving retrieval reused without automatic context injection;
+- Gate 018 exact lifecycle source/evidence revision binding reused without redesign;
+- close/reopen identity and content SHA-256 preservation: `PASS`;
+- same-memory-id project isolation and cross-project fail-closed behavior: `PASS`;
+- retrieval after reopen preserves provenance/source/evidence refs and SHA-256: `PASS`;
+- exact source/evidence revision+SHA lifecycle binding: `PASS`;
+- source drift -> `STALE_SOURCE_REVISION`: `PASS`;
+- evidence drift -> `STALE_EVIDENCE_REVISION`: `PASS`;
+- append-only lifecycle history preserved through invalidation: `PASS`;
+- MODEL/ADVISORY self-promotion to accepted evidence: `BLOCKED / PASS`;
+- semantic/vector retrieval: `DEFERRED_NOT_JUSTIFIED`;
+- automatic model/Blackboard context injection: `FALSE`.
+
+Validation on the exact checkpoint head:
+- Windows Python 3.12.10: Gate 033 harness `PASS`, wrapper `PASS`,
+  full deterministic regression `318/318 PASS`, clean worktree;
+- dedicated EngineeringAI-Ubuntu node: Gate 033 harness `PASS`, wrapper `PASS`,
+  full deterministic regression `318/318 PASS` in 50.565 s, exact HEAD preserved,
+  clean worktree;
+- Ubuntu node resource state after regression: root filesystem 18% used,
+  1.8 GiB RAM visible, 2.0 GiB swap unused.
+
+GitHub-hosted pull-request runs created for this checkpoint currently conclude
+`failure` before any job step is recorded on both hosted Windows and Ubuntu
+jobs. No checkout/test step executed, so those results are retained as an
+external execution blocker and are not reinterpreted as an engineering FAIL or
+PASS. Hosted exact-head acceptance remains pending.
+
+Release/fabrication authorization remains `NOT_GRANTED`.
+Physical validation remains `PHYSICAL_NOT_EXECUTED`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:

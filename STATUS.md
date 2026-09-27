@@ -69,16 +69,19 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 030 merge commit: `82ec76013e28c2d7db5644c1b99565170418f9a9`
 - Gate 031: `ACCEPTED_MERGED`
 - Gate 031 merge commit: `be30ad6de5092220be662b932c21198efcde9db8`
+- Gate 032: `ACCEPTED_MERGED`
+- Gate 032 merge commit: `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `032 — v1.0 controlled model-to-model hand-offs with provenance acceptance`
-- Issue: `#64`
-- PR: `#65 (DRAFT)`
-- Branch: `gate-032-controlled-handoffs-provenance`
-- Base: `be30ad6de5092220be662b932c21198efcde9db8`
-- State: `OPEN_IMPLEMENTATION_PENDING`
+- Gate: `033 — v1.0 persistent project memory with provenance acceptance`
+- Issue: `#66`
+- PR: `#67 (DRAFT)`
+- Branch: `gate-033-persistent-project-memory-provenance`
+- Base: `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
+- Local dual-platform checkpoint head: `5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
+- State: `IMPLEMENTED_LOCAL_VALIDATED / HOSTED_CI_PENDING`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -132,7 +135,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 deterministic tool/validator integration acceptance: `IMPLEMENTED_VALIDATED_GATE_029_ACCEPTED`
 - v1.0 auditable state transitions acceptance: `IMPLEMENTED_VALIDATED_GATE_030_ACCEPTED`
 - v1.0 measured/replaceable multi-model routing acceptance: `IMPLEMENTED_VALIDATED_GATE_031_ACCEPTED`
-- v1.0 controlled hand-offs with provenance acceptance: `GATE_032_OPEN`
+- v1.0 controlled hand-offs with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_032_ACCEPTED`
+- v1.0 persistent project memory with provenance acceptance: `GATE_033_IMPLEMENTED_LOCAL_VALIDATED_HOSTED_CI_PENDING`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -803,17 +807,27 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 032 may implement an acceptance-only validation package over the accepted
-Gate 010 Task Blackboard/handoff runtime and Gate 011 independent-review
-boundary. Preserve Supervisor mediation, visible provenance, evidence-first
-semantics and the prohibition on direct peer-to-peer worker authority.
+Gate 033 implementation is locally validated on both Windows and the dedicated
+EngineeringAI-Ubuntu execution node at exact head
+`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`.
 
-Do not add new model qualification, practical runtime replacement, connected-
-project production work, validator weakening, release/fabrication authority or
-physical-validation claims inside Gate 032.
+Before any ready-for-review transition:
+- retain the Windows and Ubuntu `318/318 PASS` evidence;
+- keep the repository exact-head/clean-worktree evidence;
+- resolve or explicitly classify the GitHub-hosted Actions condition where PR
+  jobs conclude `failure` before any job step is recorded;
+- obtain an actual exact-head CI execution result or an explicit source-of-truth
+  decision changing that acceptance mechanism;
+- then perform final Gate 033 documentation/evidence synchronization and request
+  explicit human approval on the exact final head.
+
+Do not reinterpret the hosted pre-step failure as a deterministic product FAIL
+or PASS. Do not add memory redesign, semantic/vector retrieval, automatic memory
+promotion/injection, new model qualification, connected-project production work,
+validator weakening, release/fabrication authority or physical-validation claims.
 
 Accepted remaining Phase 8 execution route:
-Gate 032 hand-offs -> Gate 033 persistent memory -> Gate 034 failure recovery ->
+Gate 033 persistent memory -> Gate 034 failure recovery ->
 PlataVM handoff/readiness audit -> Gate 035 controlled PlataVM+BuoyCalc use ->
 Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 
@@ -1024,6 +1038,48 @@ Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 - final documentation/source-of-truth exact-head CI: `REQUIRED_ON_FINAL_HEAD`
 - human exact-SHA squash-merge approval: `PENDING`
 - Issue #64: `OPEN`
+- release authorization: `NOT_GRANTED`
+- fabrication authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+
+## Gate 032 final acceptance
+- final approved PR head: `a89a2c7fdb2e472dd422121695d8492a31387b80`
+- squash merge commit: `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
+- PR #65: `MERGED`
+- Issue #64: `CLOSED / COMPLETED`
+- deterministic regression: `317/317 PASS`
+- controlled hand-off provenance acceptance: `PASS`
+- Supervisor mediation / evidence-first independent review: `PRESERVED`
+- direct peer-to-peer/swarm authority: `PROHIBITED`
+- release authorization: `NOT_GRANTED`
+- fabrication authorization: `NOT_GRANTED`
+- physical validation: `PHYSICAL_NOT_EXECUTED`
+
+## Gate 033 implementation / local dual-platform validation
+- Issue #66: `OPEN`
+- PR #67: `DRAFT`
+- branch base equals Gate 032 squash merge `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`: `PASS`
+- exact local checkpoint head: `5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
+- acceptance scope: existing Gates 016–018 memory/retrieval/lifecycle only; no redesign
+- Windows Gate 033 harness: `PASS_V1_0_PERSISTENT_PROJECT_MEMORY_PROVENANCE`
+- Windows wrapper test: `PASS`
+- Windows deterministic regression: `318/318 PASS`
+- Windows exact HEAD preserved / clean worktree: `PASS`
+- EngineeringAI-Ubuntu Gate 033 harness: `PASS`
+- EngineeringAI-Ubuntu wrapper test: `PASS`
+- EngineeringAI-Ubuntu deterministic regression: `318/318 PASS` in `50.565 s`
+- EngineeringAI-Ubuntu exact HEAD preserved / clean worktree: `PASS`
+- source drift detection: `STALE_SOURCE_REVISION / PASS`
+- evidence drift detection: `STALE_EVIDENCE_REVISION / PASS`
+- project isolation and cross-project fail-closed behavior: `PASS`
+- exact source/evidence revision+SHA lifecycle binding: `PASS`
+- automatic model/Blackboard context injection: `FALSE`
+- semantic/vector retrieval: `DEFERRED_NOT_JUSTIFIED`
+- GitHub-hosted PR runs on this head: `PRE_STEP_EXTERNAL_EXECUTION_FAILURE / NO JOB STEPS RECORDED`
+- hosted exact-head acceptance: `PENDING`
+- memory architecture change: `NONE`
+- new model/tool/Git/network authority: `NONE`
 - release authorization: `NOT_GRANTED`
 - fabrication authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
