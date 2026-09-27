@@ -4919,3 +4919,218 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-22 — Gate 031 accepted and merged
+
+Final approved PR head:
+`0910527c514ea1e13c7bf0f56f7e04a33a9efd72`.
+
+Final exact-head validation:
+- deterministic regression: `316/316 PASS`;
+- generic workflow `35775473139`: `PASS`;
+- strict exact-head workflow `35775472629`: `PASS`;
+- Gate 031 measured-routing workflow `35775472868`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35775472574`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35775472587`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35775473357`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35775472579`:
+  Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35775473035`:
+  Ubuntu `PASS`, Windows `PASS` on same-head failed-job rerun.
+
+The earlier Windows timeout-cleanup `WinError 32/5` evidence remains retained.
+No source, test or validator weakening was used to obtain the subsequent
+same-head PASS.
+
+Explicit human exact-SHA squash-merge approval:
+`PASS`.
+
+Squash merge on `main`:
+`be30ad6de5092220be662b932c21198efcde9db8`.
+
+PR #63:
+`MERGED`.
+
+Issue #62:
+`CLOSED / COMPLETED`.
+
+Phase 8 measured-and-replaceable multi-model routing criterion:
+`CLOSED_BY_GATE_031`.
+
+The separate practical model/runtime replacement criterion remains open.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-09-22 — Gate 032 opened and remaining Phase 8 route fixed
+
+Issue:
+`#64 — Gate 032 — v1.0 controlled model-to-model hand-offs with provenance acceptance`.
+
+PR:
+`#65 — DRAFT`.
+
+Branch:
+`gate-032-controlled-handoffs-provenance`.
+
+Base:
+accepted Gate 031 squash merge
+`be30ad6de5092220be662b932c21198efcde9db8`.
+
+Gate 032 objective:
+revalidate the accepted Gate 010 Blackboard/handoff runtime together with Gate
+011 evidence-first independent review as one Supervisor-controlled,
+provenance-preserving acceptance package.
+
+The remaining Phase 8 execution route is now recorded in source of truth:
+
+1. Gate 032 — controlled model-to-model hand-offs with provenance acceptance.
+2. Gate 033 — persistent project memory with provenance acceptance.
+3. Gate 034 — documented model/tool failure recovery acceptance.
+4. PlataVM handoff/readiness audit — read-only preparation before real
+   connected-project acceptance.
+5. Gate 035 — successful controlled use on PlataVM and BuoyCalc.
+6. Gate 036 — model/runtime replaceability demonstrated in practice.
+7. Final v1.0 readiness audit — cold-start/source-of-truth continuation without
+   hidden chat context.
+
+This route does not grant architecture, model, tool, Git, connected-project
+physics, release, fabrication or physical-validation authority.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-23 — Gate 032 reconciliation and implementation checkpoint
+
+Read-only reconciliation before implementation confirmed:
+- `main`: `be30ad6de5092220be662b932c21198efcde9db8`;
+- Issue #64: `OPEN`;
+- PR #65: `DRAFT`;
+- Gate 032 branch was based exactly on the accepted Gate 031 squash merge;
+- pre-implementation PR head: `88ce9157d938a2965a469d9817b32e073357c423`;
+- pre-implementation changed files were only `ROADMAP.md`, `STATUS.md` and
+  `CHRONOLOGY.md`;
+- inherited CI on that pre-implementation head was green;
+- no source-of-truth conflict was found.
+
+Gate 010 and Gate 011 were re-read from source, evidence and deterministic
+tests. Existing accepted behavior already provided Supervisor-only handoffs,
+read-only worker views, visible-record context, hidden/cross-task exclusion,
+fail-closed missing context, coder native-tool rejection, evidence-first review
+and same-model self-review rejection.
+
+The objective gap was narrow: HANDOFF records did not explicitly carry all
+originating role/model/provider and source/version provenance required by the
+Gate 032 acceptance criterion.
+
+Gate 032 therefore added only additive provenance hardening and an acceptance
+package. No routing table, model qualification, policy authority, tool
+authority, connected-project physics, release/fabrication or physical state was
+expanded.
+
+First implementation head:
+`e93e6ac1a8de9570a3ef3098073f80b8b4275dcd`.
+
+Gate 032 workflow `35785749569` failed on Ubuntu because the new Gate-specific
+smoke fixture used a non-SHA repository-head placeholder rejected by the
+existing project-state schema. Generic and strict exact-head regression failed
+for the same fixture defect. No validator was changed or weakened.
+
+Correction head:
+`acfd937cce15981d72aed902c1705d60171aaf7d`.
+
+Validation on the corrected exact head:
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35785822365`: `PASS`;
+- strict exact-head workflow `35785821993`: `PASS`;
+- Gate 032 workflow `35785822002`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `35785821972`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35785822032`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35785822009`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35785822123`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35785822081`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35785822177`: Ubuntu `PASS`, Windows `PASS`.
+
+PR #65 remains:
+`DRAFT`.
+
+Gate 032 is not yet accepted or merged. A ready-state synchronization and final
+exact-head validation remain required before explicit human squash-merge
+approval.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.
+
+
+---
+
+## 2026-09-23 — Gate 032 ready-for-review checkpoint
+
+Ready transition source head:
+`0e0b571cf6c03033ee0142a5c69dcaeda1ccfbaf`.
+
+Validation on that exact head:
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35786526609`: `PASS`;
+- strict exact-head workflow `35786526597`: `PASS`;
+- Gate 032 workflow `35786526598`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `35786526681`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35786526617`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35786526856`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35786526778`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35786526782`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35786526859`: Ubuntu `PASS`, Windows `PASS`.
+
+PR #65 was marked:
+`READY FOR REVIEW`.
+
+No architecture, model qualification, routing decision table, tool/Git/network
+authority, connected-project physics, validator semantics, release/fabrication
+or physical-validation state changed by the ready transition.
+
+The retained first-implementation fixture failure on
+`e93e6ac1a8de9570a3ef3098073f80b8b4275dcd` remains part of Gate 032
+evidence and was not hidden.
+
+A final documentation/source-of-truth head now requires one last exact-head
+validation set before branch freeze and explicit human exact-SHA squash-merge
+approval.
+
+Release authorization:
+`NOT_GRANTED`.
+
+Fabrication authorization:
+`NOT_GRANTED`.
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`.

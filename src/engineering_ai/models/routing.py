@@ -121,6 +121,12 @@ class DeterministicModelRouter:
     def __init__(self, registry: ModelCapabilityRegistry) -> None:
         self._registry = registry
 
+    @property
+    def registry(self) -> ModelCapabilityRegistry:
+        """Expose the immutable qualification registry for provenance lookup."""
+
+        return self._registry
+
     def route(self, request: RouteRequest) -> RouteDecision:
         candidates = self._registry.candidates(request.task_class)
         considered = tuple(entry.model for entry in candidates)

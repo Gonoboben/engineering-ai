@@ -103,6 +103,10 @@ class BlackboardView:
 class HandoffRequest:
     task_id: str
     target_task_class: ModelTaskClass
+    originating_role: str = "SUPERVISOR"
+    originating_model: str | None = None
+    originating_provider: str | None = None
+    source_version_refs: tuple[str, ...] = ()
     required_context_keys: tuple[str, ...] = ()
     visible_record_ids: tuple[int, ...] = ()
     requires_native_tool_proposals: bool = False
@@ -112,6 +116,20 @@ class HandoffRequest:
     def __post_init__(self) -> None:
         if not self.task_id.strip():
             raise ValueError("task_id must be non-empty")
+        if not self.originating_role.strip():
+            raise ValueError("originating_role must be non-empty")
+        if (self.originating_model is None) != (self.originating_provider is None):
+            raise ValueError(
+                "originating_model and originating_provider must be supplied together"
+            )
+        if self.originating_model is not None and not self.originating_model.strip():
+            raise ValueError("originating_model must be non-empty when supplied")
+        if self.originating_provider is not None and not self.originating_provider.strip():
+            raise ValueError("originating_provider must be non-empty when supplied")
+        if len(set(self.source_version_refs)) != len(self.source_version_refs):
+            raise ValueError("source_version_refs must be unique")
+        if any(not ref.strip() for ref in self.source_version_refs):
+            raise ValueError("source_version_refs must be non-empty strings")
         if len(set(self.required_context_keys)) != len(self.required_context_keys):
             raise ValueError("required_context_keys must be unique")
         if len(set(self.visible_record_ids)) != len(self.visible_record_ids):
@@ -319,16 +337,42 @@ def build_handoff(
             missing_context_keys=missing,
         )
 
+    visible_evidence_refs = tuple(
+        dict.fromkeys(
+            ref
+            for visible_record in visible.records
+            if visible_record.kind is BlackboardRecordKind.DETERMINISTIC_EVIDENCE
+            for ref in visible_record.evidence_refs
+        )
+    )
+    source_version_refs = tuple(
+        dict.fromkeys((*request.source_version_refs, *visible_evidence_refs))
+    )
+    if not source_version_refs and visible.records:
+        source_version_refs = tuple(
+            f"blackboard:{request.task_id}:record:{visible_record.record_id}"
+            for visible_record in visible.records
+        )
+
     record = blackboard._append_control(
         task_id=request.task_id,
         kind=BlackboardRecordKind.HANDOFF,
         payload={
+            "task_id": request.task_id,
+            "originating_role": request.originating_role,
+            "originating_model": request.originating_model,
+            "originating_provider": request.originating_provider,
+            "target_role": request.target_task_class.value,
             "target_task_class": request.target_task_class.value,
+            "target_model": route.model,
+            "target_provider": route.provider,
             "model": route.model,
             "provider": route.provider,
             "reasoning_effort": route.reasoning_effort,
             "visible_record_ids": tuple(r.record_id for r in visible.records),
+            "visible_evidence_refs": visible_evidence_refs,
             "required_context_keys": request.required_context_keys,
+            "source_version_refs": source_version_refs,
             "route_evidence_refs": route.evidence_refs,
         },
     )

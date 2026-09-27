@@ -570,58 +570,99 @@ Gate 030 closes the auditable-state-transitions criterion without changing
 state-machine semantics, history mutability, integrity checks or authority.
 
 ### Gate 031 — v1.0 measured and replaceable multi-model routing acceptance
-Status: `READY_FOR_REVIEW_PENDING_FINAL_EXACT_HEAD_CHECK`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#62 OPEN`
+Issue: `#62 CLOSED / COMPLETED`
 
-PR: `#63 (READY FOR REVIEW)`
+PR: `#63 MERGED`
 
-Branch: `gate-031-measured-replaceable-routing`
+Final approved PR head:
+`0910527c514ea1e13c7bf0f56f7e04a33a9efd72`
 
-Base: accepted Gate 030 squash merge
-`82ec76013e28c2d7db5644c1b99565170418f9a9`
+Squash merge:
+`be30ad6de5092220be662b932c21198efcde9db8`
+
+Final exact-head validation:
+- deterministic regression: `316/316 PASS`;
+- generic workflow `35775473139`: `PASS`;
+- strict exact-head workflow `35775472629`: `PASS`;
+- Gate 031 workflow `35775472868`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35775472574`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35775472587`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35775473357`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35775472579`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35775473035`: Ubuntu `PASS`, Windows `PASS`
+  on same-head failed-job rerun after retained transient timeout-cleanup evidence;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Gate 031 closes only the measured-and-replaceable routing criterion.
+The separate practical model/runtime replacement criterion remains open.
+
+### Gate 032 — v1.0 controlled model-to-model hand-offs with provenance acceptance
+Status: `READY_FOR_REVIEW`
+
+Issue: `#64 OPEN`
+
+PR: `#65 DRAFT`
+
+Branch: `gate-032-controlled-handoffs-provenance`
+
+Base: accepted Gate 031 squash merge
+`be30ad6de5092220be662b932c21198efcde9db8`
 
 Objective:
-close the next Phase 8 / v1.0 criterion by revalidating measured Gate 005/008
-model evidence together with the Gate 009 evidence-backed deterministic
-registry/router boundary.
+close the next Phase 8 / v1.0 criterion by revalidating the accepted Gate 010
+Blackboard/handoff architecture together with Gate 011 evidence-first independent
+review as one Supervisor-controlled provenance-preserving acceptance package.
 
-Scope is acceptance-only:
-- no new model qualification;
-- no Router model/provider/tool execution;
-- no Supervisor or routing architecture change;
-- no unmeasured role promotion;
-- no practical workstation model/runtime replacement claim;
-- no new tool/Git/network/release/fabrication authority;
-- no physical-validation claim.
+Scope:
+- synchronize Gate 031 as `ACCEPTED_MERGED`;
+- preserve task/model/provider/evidence provenance across hand-offs;
+- require Supervisor mediation for every worker-to-worker transition;
+- reject hidden or cross-task evidence as a substitute for visible deterministic
+  context;
+- preserve reviewer-independence and evidence-first disagreement semantics;
+- keep direct peer-to-peer/swarm authority prohibited;
+- retain full deterministic regression and inherited Phase 8 checks.
 
-Required validation:
-- measured accepted routes remain deterministic and provenance-bound;
-- unsupported or over-envelope requirements remain `NO_ROUTE`;
-- unmeasured Vision/Image routes remain `NO_ROUTE`;
-- test-only alternate registry composition proves data-bound route replacement
-  without changing Supervisor/Router implementation;
-- full deterministic regression remains green;
-- strict exact-head CI remains green;
-- Gate 031 acceptance passes on Ubuntu and Windows;
-- physical validation remains `PHYSICAL_NOT_EXECUTED`.
+Out of scope:
+- new model qualification;
+- practical model/runtime replacement;
+- connected-project production work;
+- authority expansion;
+- validator weakening;
+- release/fabrication authorization;
+- physical-validation claims.
 
 Implementation checkpoint:
-- head: `84fd6695076951a02e5a3e34186891b629db1eff`;
-- deterministic regression: `316/316 PASS`;
-- generic workflow `35771368101`: `PASS`;
-- strict exact-head workflow `35771367774`: `PASS`;
-- Gate 031 workflow `35771367743`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 030 workflow `35771367958`: `PASS`;
-- inherited Gate 029 workflow `35771367984`: `PASS`;
-- inherited Gate 028 workflow `35771367685`: `PASS`;
-- inherited Gate 027 workflow `35771367656`: `PASS`;
-- inherited Gate 026 workflow `35771368266`: Ubuntu `PASS`; Windows first
-  attempt hit a transient pre-existing timeout cleanup `WinError 32/5`, while
-  a failed-jobs rerun on the identical head passed with no source/test change.
+- corrected validated head: `acfd937cce15981d72aed902c1705d60171aaf7d`;
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35785822365`: `PASS`;
+- strict exact-head workflow `35785821993`: `PASS`;
+- Gate 032 workflow `35785822002`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gates 026–031: `PASS`;
+- the earlier Gate 032 smoke fixture failure on head
+  `e93e6ac1a8de9570a3ef3098073f80b8b4275dcd` is retained in evidence;
+- release/fabrication authority remains `NOT_GRANTED`;
+- physical validation remains `PHYSICAL_NOT_EXECUTED`.
 
-This Gate does not close the later separate criterion
-`model/runtime replaceability demonstrated in practice`.
+Ready-for-review checkpoint:
+- ready transition source head: `0e0b571cf6c03033ee0142a5c69dcaeda1ccfbaf`;
+- deterministic regression: `317/317 PASS`;
+- generic workflow `35786526609`: `PASS`;
+- strict exact-head workflow `35786526597`: `PASS`;
+- Gate 032 workflow `35786526598`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `35786526681`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `35786526617`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `35786526856`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `35786526778`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `35786526782`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `35786526859`: Ubuntu `PASS`, Windows `PASS`;
+- PR #65: `READY FOR REVIEW`.
+
+The Gate remains unaccepted until this final documentation/source-of-truth head
+passes exact-head CI, explicit human approval is given on that exact final head
+SHA, the squash merge is verified, and Issue #64 is completed.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
@@ -636,3 +677,22 @@ A stable v1.0 requires, at minimum:
 - successful controlled use on both PlataVM and BuoyCalc;
 - documented recovery from model/tool failure;
 - model/runtime replaceability demonstrated in practice.
+
+### Planned Phase 8 closure sequence after Gate 031
+
+The accepted execution order for closing the remaining v1.0 criteria is:
+
+1. Gate 032 — controlled model-to-model hand-offs with provenance acceptance.
+2. Gate 033 — persistent project memory with provenance acceptance.
+3. Gate 034 — documented model/tool failure recovery acceptance.
+4. PlataVM handoff/readiness audit — read-only preparation of the real project
+   before connected-project acceptance; this audit is not itself a substitute
+   for a Gate acceptance result.
+5. Gate 035 — successful controlled use on both PlataVM and BuoyCalc.
+6. Gate 036 — model/runtime replaceability demonstrated in practice.
+7. Final v1.0 readiness audit — cold-start/source-of-truth review proving that
+   the platform can resume from repository state without hidden chat context.
+
+The sequence may be changed only by an explicit source-of-truth update. It does
+not grant new architecture, model, tool, Git, project-physics, release,
+fabrication or physical-validation authority.
