@@ -599,70 +599,98 @@ Gate 031 closes only the measured-and-replaceable routing criterion.
 The separate practical model/runtime replacement criterion remains open.
 
 ### Gate 032 — v1.0 controlled model-to-model hand-offs with provenance acceptance
+Status: `ACCEPTED_MERGED`
+
+Issue: `#64 CLOSED / COMPLETED`
+
+PR: `#65 MERGED`
+
+Final approved PR head:
+`a89a2c7fdb2e472dd422121695d8492a31387b80`
+
+Squash merge:
+`79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
+
+Final validation:
+- deterministic regression: `317/317 PASS`;
+- final exact-head validation and inherited Phase 8 workflows: `PASS`;
+- controlled hand-off provenance, Supervisor mediation and independent-review boundaries: `PASS`;
+- direct peer-to-peer/swarm authority: `PROHIBITED`;
+- release/fabrication authorization: `NOT_GRANTED`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+Gate 032 closes the controlled model-to-model hand-offs with provenance
+criterion without granting new model, tool, Git, network, release, fabrication
+or physical-validation authority.
+
+### Gate 033 — v1.0 persistent project memory with provenance acceptance
 Status: `READY_FOR_REVIEW`
 
-Issue: `#64 OPEN`
+Issue: `#66 OPEN`
 
-PR: `#65 DRAFT`
+PR: `#67 DRAFT` until the final documentation/source-of-truth head completes
+its exact-head validation set; after that the PR may transition to ready-for-review
+without further source changes.
 
-Branch: `gate-032-controlled-handoffs-provenance`
+Branch: `gate-033-persistent-project-memory-provenance`
 
-Base: accepted Gate 031 squash merge
-`be30ad6de5092220be662b932c21198efcde9db8`
+Base: accepted Gate 032 squash merge
+`79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
 
-Objective:
-close the next Phase 8 / v1.0 criterion by revalidating the accepted Gate 010
-Blackboard/handoff architecture together with Gate 011 evidence-first independent
-review as one Supervisor-controlled provenance-preserving acceptance package.
+Final implementation/evidence checkpoint head before this ready-state
+documentation synchronization:
+`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`
 
-Scope:
-- synchronize Gate 031 as `ACCEPTED_MERGED`;
-- preserve task/model/provider/evidence provenance across hand-offs;
-- require Supervisor mediation for every worker-to-worker transition;
-- reject hidden or cross-task evidence as a substitute for visible deterministic
-  context;
-- preserve reviewer-independence and evidence-first disagreement semantics;
-- keep direct peer-to-peer/swarm authority prohibited;
-- retain full deterministic regression and inherited Phase 8 checks.
+Delivered acceptance package:
+- Gate 016 persistent append-only decision/evidence memory reused without redesign;
+- Gate 017 provenance-preserving retrieval reused without automatic context injection;
+- Gate 018 exact lifecycle source/evidence revision binding reused without redesign;
+- close/reopen identity and content SHA-256 preservation: `PASS`;
+- same-memory-id project isolation and cross-project fail-closed behavior: `PASS`;
+- retrieval after reopen preserves provenance/source/evidence refs and SHA-256: `PASS`;
+- exact source/evidence revision+SHA lifecycle binding: `PASS`;
+- source drift -> `STALE_SOURCE_REVISION`: `PASS`;
+- evidence drift -> `STALE_EVIDENCE_REVISION`: `PASS`;
+- append-only lifecycle history preserved through invalidation: `PASS`;
+- MODEL/ADVISORY self-promotion to accepted evidence: `BLOCKED / PASS`;
+- semantic/vector retrieval: `DEFERRED_NOT_JUSTIFIED`;
+- automatic model/Blackboard context injection: `FALSE`.
 
-Out of scope:
-- new model qualification;
-- practical model/runtime replacement;
-- connected-project production work;
-- authority expansion;
-- validator weakening;
-- release/fabrication authorization;
-- physical-validation claims.
+Final local exact-head validation on
+`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`:
+- Windows Python 3.12.10: Gate 033 harness `PASS`, wrapper `PASS`,
+  deterministic regression `318/318 PASS` in `137.732 s`,
+  exact HEAD preserved and worktree clean;
+- dedicated EngineeringAI-Ubuntu node: Gate 033 harness `PASS`, wrapper `PASS`,
+  deterministic regression `318/318 PASS` in `50.398 s`,
+  exact HEAD preserved and worktree clean.
 
-Implementation checkpoint:
-- corrected validated head: `acfd937cce15981d72aed902c1705d60171aaf7d`;
-- deterministic regression: `317/317 PASS`;
-- generic workflow `35785822365`: `PASS`;
-- strict exact-head workflow `35785821993`: `PASS`;
-- Gate 032 workflow `35785822002`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gates 026–031: `PASS`;
-- the earlier Gate 032 smoke fixture failure on head
-  `e93e6ac1a8de9570a3ef3098073f80b8b4275dcd` is retained in evidence;
-- release/fabrication authority remains `NOT_GRANTED`;
-- physical validation remains `PHYSICAL_NOT_EXECUTED`.
+GitHub-hosted CI recovery on the same exact checkpoint head:
+- the original 2026-09-27 runs terminated before any job step because the
+  GitHub Free included Actions allowance had reached `2000/2000` minutes and
+  the Actions budget was `$0` with stop-usage enabled;
+- after the monthly allowance reset, the failed runs were rerun without any
+  source/test/validator change;
+- generic validation `36308233803`: `PASS`;
+- strict exact-head validation `36308233920`: `PASS`;
+- Gate 033 workflow `36308233810`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 032 workflow `36308233969`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `36308233951`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `36308233801`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `36308233830`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `36308233887`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `36308233860`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `36308233804`: Ubuntu `PASS`, Windows `PASS`.
 
-Ready-for-review checkpoint:
-- ready transition source head: `0e0b571cf6c03033ee0142a5c69dcaeda1ccfbaf`;
-- deterministic regression: `317/317 PASS`;
-- generic workflow `35786526609`: `PASS`;
-- strict exact-head workflow `35786526597`: `PASS`;
-- Gate 032 workflow `35786526598`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 031 workflow `35786526681`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 030 workflow `35786526617`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 029 workflow `35786526856`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 028 workflow `35786526778`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 027 workflow `35786526782`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 026 workflow `35786526859`: Ubuntu `PASS`, Windows `PASS`;
-- PR #65: `READY FOR REVIEW`.
+The quota-limited first attempts are retained as external execution evidence and
+are not reinterpreted as engineering failures. The successful same-head reruns
+demonstrate that no implementation correction was required.
 
-The Gate remains unaccepted until this final documentation/source-of-truth head
-passes exact-head CI, explicit human approval is given on that exact final head
-SHA, the squash merge is verified, and Issue #64 is completed.
+This ready-state documentation commit must itself complete the repository's
+final exact-head CI set before explicit human exact-SHA squash-merge approval.
+
+Release/fabrication authorization remains `NOT_GRANTED`.
+Physical validation remains `PHYSICAL_NOT_EXECUTED`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
