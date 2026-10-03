@@ -5233,3 +5233,46 @@ Release/fabrication:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`
+
+
+---
+
+## 2026-10-03 — Gate 033 hosted CI quota recovery
+
+The Gate 033 PR had previously produced hosted workflow failures before any job
+step executed. Billing inspection established the cause:
+- GitHub Free Actions allowance exhausted: `2000 / 2000` minutes;
+- Actions budget: `$0`;
+- stop-usage: enabled.
+
+No Gate 033 source correction was made for that condition.
+
+After the monthly Actions allowance reset, the exact unchanged implementation
+and evidence checkpoint
+`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`
+was rerun.
+
+Results:
+- generic validation `36308233803`: `PASS`;
+- strict exact-head validation `36308233920`: `PASS`;
+- Gate 033 `36308233810`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 032 `36308233969`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 031 `36308233951`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 030 `36308233801`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 029 `36308233830`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 028 `36308233887`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 027 `36308233860`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 026 `36308233804`: Ubuntu `PASS`, Windows `PASS`.
+
+The successful same-head reruns confirm that the earlier pre-step failures were
+external quota enforcement rather than an Engineering AI implementation failure.
+
+Gate 033 now enters the ready-for-review documentation synchronization. The
+resulting documentation head must pass its own exact-head CI set before branch
+freeze and explicit human exact-SHA squash-merge approval.
+
+Release/fabrication:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`

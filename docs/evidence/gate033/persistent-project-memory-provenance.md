@@ -8,7 +8,7 @@
   `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
 - Gate 032 final approved PR head:
   `a89a2c7fdb2e472dd422121695d8492a31387b80`
-- State: `IMPLEMENTED_LOCAL_VALIDATED / HOSTED_CI_PENDING`
+- State: `READY_FOR_REVIEW / FINAL_DOCUMENTATION_CI_REQUIRED`
 
 ## Objective
 
@@ -94,17 +94,17 @@ Gate 033 must prove, as one integrated package:
 5. Final v1.0 cold-start/source-of-truth readiness audit.
 
 
-## Local dual-platform validation checkpoint
+## Final local dual-platform validation checkpoint
 
-Exact checkpoint head:
-`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
+Exact implementation/evidence checkpoint head:
+`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`
 
 Windows primary workstation:
 - Python: `3.12.10`;
 - Gate 033 acceptance harness:
   `PASS_V1_0_PERSISTENT_PROJECT_MEMORY_PROVENANCE`;
 - Gate 033 wrapper: `1/1 PASS`;
-- full deterministic regression: `318/318 PASS` in `137.686 s`;
+- full deterministic regression: `318/318 PASS` in `137.732 s`;
 - source HEAD preserved: `PASS`;
 - worktree after validation: `CLEAN`.
 
@@ -112,18 +112,17 @@ Dedicated EngineeringAI-Ubuntu execution node:
 - exact Gate 033 bundle transferred locally and checked out at the same head;
 - Gate 033 acceptance harness: `PASS`;
 - Gate 033 wrapper: `PASS`;
-- full deterministic regression: `318/318 PASS` in `50.565 s`;
+- full deterministic regression: `318/318 PASS` in `50.398 s`;
 - source HEAD preserved: `PASS`;
 - worktree after validation: `CLEAN`;
-- root filesystem: `30G total / 5.1G used / 24G available / 18%`;
+- root filesystem after run: `30G total / 5.2G used / 24G available / 19%`;
 - visible memory: `1.8 GiB`, approximately `1.3 GiB available`;
 - swap: `2.0 GiB total / 0 used`;
 - retained local log:
-  `/home/andrey/gate033-ubuntu-5fefd222.log`.
+  `/home/andrey/gate033-final-ubuntu-044c8dff.log`.
 
-The dual-platform checkpoint proves the Gate 033 implementation on the exact
-recorded branch head. It is deterministic/local software validation only and
-does not create any physical-validation claim.
+This checkpoint is deterministic/local software validation only and does not
+create any physical-validation claim.
 
 ## Gate 033 integrated assertions
 
@@ -144,16 +143,35 @@ The exact checkpoint demonstrated:
 - release/fabrication authority remains false;
 - physical validation remains `PHYSICAL_NOT_EXECUTED`.
 
-## GitHub-hosted execution condition
+## GitHub-hosted quota incident and recovery
 
-On checkpoint head
-`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`, the PR-triggered hosted workflows
-including generic validation, strict exact-head validation, inherited Phase 8
-workflows and Gate 033 concluded `failure` before any job step was recorded.
-The Gate 033 hosted Windows and Ubuntu jobs expose no executed steps/log stream.
+Initial pull-request runs on exact head
+`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed` concluded `failure` before any
+job step was recorded. Account billing evidence then showed:
+- GitHub Free Actions included minutes: `2000 / 2000 used`;
+- Actions budget: `$0`;
+- stop usage: enabled.
 
-This condition is retained as an external execution blocker. It is not
-reinterpreted as a deterministic Engineering AI test failure and it is not
-reinterpreted as PASS.
+The initial hosted failures are therefore retained as
+`HOSTED_CI_NOT_EXECUTED / INCLUDED_ACTIONS_MINUTES_EXHAUSTED`, not as
+deterministic project test failures.
 
-Hosted exact-head acceptance remains `PENDING` before ready-for-review.
+After the monthly Actions allowance reset on 2026-10-03, the failed workflows
+were rerun on the unchanged exact source head:
+- generic validation `36308233803`: `PASS`;
+- strict exact-head validation `36308233920`: `PASS`;
+- Gate 033 `36308233810`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 032 `36308233969`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 031 `36308233951`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 030 `36308233801`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 029 `36308233830`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 028 `36308233887`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 027 `36308233860`: Ubuntu `PASS`, Windows `PASS`;
+- Gate 026 `36308233804`: Ubuntu `PASS`, Windows `PASS`.
+
+No source, test, validator, architecture, policy or authority change occurred
+between the quota-blocked first attempts and the successful same-head reruns.
+
+The quota incident is resolved. This final ready-state documentation commit must
+still pass its automatically triggered exact-head CI set before PR #67 may be
+treated as frozen for explicit human exact-SHA squash-merge approval.

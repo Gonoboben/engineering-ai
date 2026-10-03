@@ -624,19 +624,22 @@ criterion without granting new model, tool, Git, network, release, fabrication
 or physical-validation authority.
 
 ### Gate 033 — v1.0 persistent project memory with provenance acceptance
-Status: `IMPLEMENTED_LOCAL_VALIDATED / HOSTED_CI_PENDING`
+Status: `READY_FOR_REVIEW`
 
 Issue: `#66 OPEN`
 
-PR: `#67 DRAFT`
+PR: `#67 DRAFT` until the final documentation/source-of-truth head completes
+its exact-head validation set; after that the PR may transition to ready-for-review
+without further source changes.
 
 Branch: `gate-033-persistent-project-memory-provenance`
 
 Base: accepted Gate 032 squash merge
 `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
 
-Local dual-platform checkpoint head:
-`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
+Final implementation/evidence checkpoint head before this ready-state
+documentation synchronization:
+`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`
 
 Delivered acceptance package:
 - Gate 016 persistent append-only decision/evidence memory reused without redesign;
@@ -653,20 +656,38 @@ Delivered acceptance package:
 - semantic/vector retrieval: `DEFERRED_NOT_JUSTIFIED`;
 - automatic model/Blackboard context injection: `FALSE`.
 
-Validation on the exact checkpoint head:
+Final local exact-head validation on
+`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`:
 - Windows Python 3.12.10: Gate 033 harness `PASS`, wrapper `PASS`,
-  full deterministic regression `318/318 PASS`, clean worktree;
+  deterministic regression `318/318 PASS` in `137.732 s`,
+  exact HEAD preserved and worktree clean;
 - dedicated EngineeringAI-Ubuntu node: Gate 033 harness `PASS`, wrapper `PASS`,
-  full deterministic regression `318/318 PASS` in 50.565 s, exact HEAD preserved,
-  clean worktree;
-- Ubuntu node resource state after regression: root filesystem 18% used,
-  1.8 GiB RAM visible, 2.0 GiB swap unused.
+  deterministic regression `318/318 PASS` in `50.398 s`,
+  exact HEAD preserved and worktree clean.
 
-GitHub-hosted pull-request runs created for this checkpoint currently conclude
-`failure` before any job step is recorded on both hosted Windows and Ubuntu
-jobs. No checkout/test step executed, so those results are retained as an
-external execution blocker and are not reinterpreted as an engineering FAIL or
-PASS. Hosted exact-head acceptance remains pending.
+GitHub-hosted CI recovery on the same exact checkpoint head:
+- the original 2026-09-27 runs terminated before any job step because the
+  GitHub Free included Actions allowance had reached `2000/2000` minutes and
+  the Actions budget was `$0` with stop-usage enabled;
+- after the monthly allowance reset, the failed runs were rerun without any
+  source/test/validator change;
+- generic validation `36308233803`: `PASS`;
+- strict exact-head validation `36308233920`: `PASS`;
+- Gate 033 workflow `36308233810`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 032 workflow `36308233969`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 031 workflow `36308233951`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 030 workflow `36308233801`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 029 workflow `36308233830`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 028 workflow `36308233887`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 027 workflow `36308233860`: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gate 026 workflow `36308233804`: Ubuntu `PASS`, Windows `PASS`.
+
+The quota-limited first attempts are retained as external execution evidence and
+are not reinterpreted as engineering failures. The successful same-head reruns
+demonstrate that no implementation correction was required.
+
+This ready-state documentation commit must itself complete the repository's
+final exact-head CI set before explicit human exact-SHA squash-merge approval.
 
 Release/fabrication authorization remains `NOT_GRANTED`.
 Physical validation remains `PHYSICAL_NOT_EXECUTED`.

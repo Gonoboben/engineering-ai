@@ -77,11 +77,12 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `033 — v1.0 persistent project memory with provenance acceptance`
 - Issue: `#66`
-- PR: `#67 (DRAFT)`
+- PR: `#67 (DRAFT; ready transition pending final documentation-head CI)`
 - Branch: `gate-033-persistent-project-memory-provenance`
 - Base: `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
-- Local dual-platform checkpoint head: `5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
-- State: `IMPLEMENTED_LOCAL_VALIDATED / HOSTED_CI_PENDING`
+- Final validated implementation/evidence checkpoint head:
+  `044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`
+- State: `READY_FOR_REVIEW / FINAL_DOCUMENTATION_CI_REQUIRED`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -136,7 +137,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 auditable state transitions acceptance: `IMPLEMENTED_VALIDATED_GATE_030_ACCEPTED`
 - v1.0 measured/replaceable multi-model routing acceptance: `IMPLEMENTED_VALIDATED_GATE_031_ACCEPTED`
 - v1.0 controlled hand-offs with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_032_ACCEPTED`
-- v1.0 persistent project memory with provenance acceptance: `GATE_033_IMPLEMENTED_LOCAL_VALIDATED_HOSTED_CI_PENDING`
+- v1.0 persistent project memory with provenance acceptance: `GATE_033_READY_FOR_REVIEW_FINAL_DOCUMENTATION_CI_REQUIRED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -807,29 +808,33 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 033 implementation is locally validated on both Windows and the dedicated
-EngineeringAI-Ubuntu execution node at exact head
-`5fefd2229c9d502f1e7cff712aa8b5fd7473d564`.
+Gate 033 implementation and acceptance behavior are validated on Windows,
+the dedicated EngineeringAI-Ubuntu node and GitHub-hosted Windows/Ubuntu
+runners at exact implementation/evidence checkpoint head
+`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`.
 
-Before any ready-for-review transition:
-- retain the Windows and Ubuntu `318/318 PASS` evidence;
-- keep the repository exact-head/clean-worktree evidence;
-- resolve or explicitly classify the GitHub-hosted Actions condition where PR
-  jobs conclude `failure` before any job step is recorded;
-- obtain an actual exact-head CI execution result or an explicit source-of-truth
-  decision changing that acceptance mechanism;
-- then perform final Gate 033 documentation/evidence synchronization and request
-  explicit human approval on the exact final head.
+The GitHub-hosted pre-step failures from 2026-09-27 are now explained by the
+exhausted GitHub Free Actions allowance (`2000/2000` minutes, `$0` Actions
+budget, stop-usage enabled). After the monthly reset, the same exact source head
+passed generic validation, strict exact-head validation, Gate 033 and inherited
+Gates 026–032 without implementation changes.
 
-Do not reinterpret the hosted pre-step failure as a deterministic product FAIL
-or PASS. Do not add memory redesign, semantic/vector retrieval, automatic memory
+The next admissible action is limited to:
+1. validate this final documentation/source-of-truth head with the automatically
+   triggered exact-head CI set;
+2. if green, transition PR #67 from DRAFT to READY FOR REVIEW without source
+   changes;
+3. freeze the exact PR head and request explicit human exact-SHA squash-merge
+   approval.
+
+Do not add memory redesign, semantic/vector retrieval, automatic memory
 promotion/injection, new model qualification, connected-project production work,
 validator weakening, release/fabrication authority or physical-validation claims.
 
-Accepted remaining Phase 8 execution route:
-Gate 033 persistent memory -> Gate 034 failure recovery ->
-PlataVM handoff/readiness audit -> Gate 035 controlled PlataVM+BuoyCalc use ->
-Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
+Accepted remaining Phase 8 execution route after Gate 033 acceptance:
+Gate 034 failure recovery -> PlataVM handoff/readiness audit ->
+Gate 035 controlled PlataVM+BuoyCalc use -> Gate 036 practical model/runtime
+replacement -> final v1.0 readiness audit.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
@@ -1056,19 +1061,20 @@ Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 - fabrication authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
 
-## Gate 033 implementation / local dual-platform validation
+## Gate 033 ready-for-review checkpoint
 - Issue #66: `OPEN`
-- PR #67: `DRAFT`
+- PR #67: `DRAFT` pending final documentation-head CI
 - branch base equals Gate 032 squash merge `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`: `PASS`
-- exact local checkpoint head: `5fefd2229c9d502f1e7cff712aa8b5fd7473d564`
+- final validated implementation/evidence checkpoint head:
+  `044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`
 - acceptance scope: existing Gates 016–018 memory/retrieval/lifecycle only; no redesign
 - Windows Gate 033 harness: `PASS_V1_0_PERSISTENT_PROJECT_MEMORY_PROVENANCE`
 - Windows wrapper test: `PASS`
-- Windows deterministic regression: `318/318 PASS`
+- Windows deterministic regression: `318/318 PASS` in `137.732 s`
 - Windows exact HEAD preserved / clean worktree: `PASS`
 - EngineeringAI-Ubuntu Gate 033 harness: `PASS`
 - EngineeringAI-Ubuntu wrapper test: `PASS`
-- EngineeringAI-Ubuntu deterministic regression: `318/318 PASS` in `50.565 s`
+- EngineeringAI-Ubuntu deterministic regression: `318/318 PASS` in `50.398 s`
 - EngineeringAI-Ubuntu exact HEAD preserved / clean worktree: `PASS`
 - source drift detection: `STALE_SOURCE_REVISION / PASS`
 - evidence drift detection: `STALE_EVIDENCE_REVISION / PASS`
@@ -1076,10 +1082,22 @@ Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 - exact source/evidence revision+SHA lifecycle binding: `PASS`
 - automatic model/Blackboard context injection: `FALSE`
 - semantic/vector retrieval: `DEFERRED_NOT_JUSTIFIED`
-- GitHub-hosted PR runs on this head: `PRE_STEP_EXTERNAL_EXECUTION_FAILURE / NO JOB STEPS RECORDED`
-- hosted exact-head acceptance: `PENDING`
+- initial GitHub-hosted failure condition: `INCLUDED_ACTIONS_MINUTES_EXHAUSTED / 2000 OF 2000`
+- source/test/validator change before rerun: `NONE`
+- generic workflow `36308233803`: `PASS`
+- strict exact-head workflow `36308233920`: `PASS`
+- Gate 033 workflow `36308233810`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 032 workflow `36308233969`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 031 workflow `36308233951`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 030 workflow `36308233801`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 029 workflow `36308233830`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 028 workflow `36308233887`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 027 workflow `36308233860`: Ubuntu `PASS`, Windows `PASS`
+- inherited Gate 026 workflow `36308233804`: Ubuntu `PASS`, Windows `PASS`
 - memory architecture change: `NONE`
 - new model/tool/Git/network authority: `NONE`
 - release authorization: `NOT_GRANTED`
 - fabrication authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
+- next admissible action: final documentation-head CI, then PR ready transition and
+  explicit human exact-SHA squash-merge approval
