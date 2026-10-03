@@ -78,3 +78,34 @@ Existing accepted mechanisms already include:
 - release authorization: `NOT_GRANTED`
 - fabrication authorization: `NOT_GRANTED`
 - physical validation: `PHYSICAL_NOT_EXECUTED`
+
+
+## Implementation integration checkpoint
+
+Gate 034 adds no new recovery subsystem.
+
+The minimal integration is:
+- `Supervisor.classify_tool_failure(...)` exposes the existing
+  attempts/retry_limit classification as a side-effect-free policy helper;
+- the existing `Supervisor.execute(...)` failure path is refactored to call
+  that same classifier, preserving prior behavior;
+- Planner/Executor/Reviewer orchestration catches typed `ModelProviderError`
+  failures and converts them into bounded `QUEUED` retry or terminal `FAIL`
+  job state instead of allowing an uncontrolled provider exception to escape;
+- failed model calls are auditable `MODEL_CALL / FAIL` events;
+- role-loop deterministic tool failures use the Supervisor classifier and
+  return `QUEUED` or `FAIL` according to the same job retry contract;
+- recovery retry blockers are cleared after a later non-QUEUED terminal result.
+
+Gate-specific acceptance harness:
+`scripts/gate034_model_tool_failure_recovery.py`
+
+Regression wrapper:
+`tests/test_gate034_model_tool_failure_recovery.py`
+
+Cross-platform workflow:
+`.github/workflows/gate034-model-tool-failure-recovery.yml`
+
+Validation on the implementation head remains pending. No PASS is claimed by
+this documentation checkpoint until the harness and full deterministic
+regression execute successfully.

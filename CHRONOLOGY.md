@@ -5276,3 +5276,40 @@ Release/fabrication:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`
+
+
+---
+
+## 2026-10-03 — Gate 033 final acceptance and Gate 034 opening
+
+Gate 033 final approved PR head:
+`6d2cdd1e98741ea5cc11562c4f20382bd1fef10b`
+
+All final hosted workflows on that exact head passed, including generic,
+strict exact-head, Gate 033 and inherited Gates 026–032.
+
+PR #67 was squash-merged as:
+`302d96a670f5197a496c583bc6faea60b16a5d87`
+
+Issue #66 was closed as:
+`COMPLETED`
+
+Gate 034 was then opened from that exact accepted main:
+- Issue #68: `OPEN`;
+- branch: `gate-034-model-tool-failure-recovery`;
+- Draft PR #69;
+- opening head: `b15c231d7adc56bce8100ce2fb2ba3fa228d2304`.
+
+Opening reconciliation found that bounded Supervisor tool retry, persisted queue
+restart/deadline recovery, process timeout handling, approval persistence and
+bounded structured-output correction already exist. The implementation scope is
+therefore limited to the demonstrated integration gaps: model-provider failure
+must become a bounded fail-closed orchestration result, and role-loop tool
+failure must reuse the existing Supervisor retry classification rather than
+invent a second authority path.
+
+Release/fabrication:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`
