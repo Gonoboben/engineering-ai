@@ -624,73 +624,94 @@ criterion without granting new model, tool, Git, network, release, fabrication
 or physical-validation authority.
 
 ### Gate 033 — v1.0 persistent project memory with provenance acceptance
-Status: `READY_FOR_REVIEW`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#66 OPEN`
+Issue: `#66 CLOSED / COMPLETED`
 
-PR: `#67 DRAFT` until the final documentation/source-of-truth head completes
-its exact-head validation set; after that the PR may transition to ready-for-review
-without further source changes.
+PR: `#67 MERGED`
 
-Branch: `gate-033-persistent-project-memory-provenance`
+Final approved PR head:
+`6d2cdd1e98741ea5cc11562c4f20382bd1fef10b`
 
-Base: accepted Gate 032 squash merge
-`79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
+Squash merge:
+`302d96a670f5197a496c583bc6faea60b16a5d87`
 
-Final implementation/evidence checkpoint head before this ready-state
-documentation synchronization:
-`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`
+Final validation:
+- Windows local Gate 033 harness/wrapper/full deterministic regression:
+  `318/318 PASS`;
+- dedicated EngineeringAI-Ubuntu Gate 033 harness/wrapper/full deterministic
+  regression: `318/318 PASS`;
+- generic and strict exact-head hosted validation: `PASS`;
+- Gate 033 hosted workflow: Ubuntu `PASS`, Windows `PASS`;
+- inherited Gates 026–032 hosted acceptance workflows: `PASS`;
+- initial quota-blocked hosted attempts retained as
+  `HOSTED_CI_NOT_EXECUTED / INCLUDED_ACTIONS_MINUTES_EXHAUSTED`, then
+  same-head reruns passed after monthly quota reset;
+- release/fabrication authorization: `NOT_GRANTED`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-Delivered acceptance package:
-- Gate 016 persistent append-only decision/evidence memory reused without redesign;
-- Gate 017 provenance-preserving retrieval reused without automatic context injection;
-- Gate 018 exact lifecycle source/evidence revision binding reused without redesign;
-- close/reopen identity and content SHA-256 preservation: `PASS`;
-- same-memory-id project isolation and cross-project fail-closed behavior: `PASS`;
-- retrieval after reopen preserves provenance/source/evidence refs and SHA-256: `PASS`;
-- exact source/evidence revision+SHA lifecycle binding: `PASS`;
-- source drift -> `STALE_SOURCE_REVISION`: `PASS`;
-- evidence drift -> `STALE_EVIDENCE_REVISION`: `PASS`;
-- append-only lifecycle history preserved through invalidation: `PASS`;
-- MODEL/ADVISORY self-promotion to accepted evidence: `BLOCKED / PASS`;
-- semantic/vector retrieval: `DEFERRED_NOT_JUSTIFIED`;
-- automatic model/Blackboard context injection: `FALSE`.
+Gate 033 closes the persistent project memory with provenance criterion without
+adding semantic/vector retrieval, automatic memory injection/promotion, or new
+model/tool/Git/network authority.
 
-Final local exact-head validation on
-`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`:
-- Windows Python 3.12.10: Gate 033 harness `PASS`, wrapper `PASS`,
-  deterministic regression `318/318 PASS` in `137.732 s`,
-  exact HEAD preserved and worktree clean;
-- dedicated EngineeringAI-Ubuntu node: Gate 033 harness `PASS`, wrapper `PASS`,
-  deterministic regression `318/318 PASS` in `50.398 s`,
-  exact HEAD preserved and worktree clean.
+### Gate 034 — v1.0 documented model/tool failure recovery acceptance
+Status: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
 
-GitHub-hosted CI recovery on the same exact checkpoint head:
-- the original 2026-09-27 runs terminated before any job step because the
-  GitHub Free included Actions allowance had reached `2000/2000` minutes and
-  the Actions budget was `$0` with stop-usage enabled;
-- after the monthly allowance reset, the failed runs were rerun without any
-  source/test/validator change;
-- generic validation `36308233803`: `PASS`;
-- strict exact-head validation `36308233920`: `PASS`;
-- Gate 033 workflow `36308233810`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 032 workflow `36308233969`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 031 workflow `36308233951`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 030 workflow `36308233801`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 029 workflow `36308233830`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 028 workflow `36308233887`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 027 workflow `36308233860`: Ubuntu `PASS`, Windows `PASS`;
-- inherited Gate 026 workflow `36308233804`: Ubuntu `PASS`, Windows `PASS`.
+Issue: `#68 OPEN`
 
-The quota-limited first attempts are retained as external execution evidence and
-are not reinterpreted as engineering failures. The successful same-head reruns
-demonstrate that no implementation correction was required.
+PR: `#69 DRAFT`
 
-This ready-state documentation commit must itself complete the repository's
-final exact-head CI set before explicit human exact-SHA squash-merge approval.
+Branch: `gate-034-model-tool-failure-recovery`
 
-Release/fabrication authorization remains `NOT_GRANTED`.
-Physical validation remains `PHYSICAL_NOT_EXECUTED`.
+Base: accepted Gate 033 squash merge
+`302d96a670f5197a496c583bc6faea60b16a5d87`
+
+Implementation head:
+`146c16e20d0a80c5a722560226c55af9886d1207`
+
+Validated acceptance behavior:
+- bounded model-provider failure retry / retry exhaustion;
+- Supervisor-owned bounded tool-failure classification reused by role-loop
+  orchestration;
+- bounded structured-output protocol correction;
+- structured process timeout;
+- interrupted persisted RUNNING recovery;
+- persisted deadline expiry / late-PASS rejection;
+- policy and offline denial not misclassified as retriable infrastructure
+  failure;
+- WAITING_FOR_APPROVAL persistence with no automatic approval;
+- project/job identity, attempts, blockers and append-only recovery history
+  preserved;
+- no observed failure/recovery boundary produced false PASS.
+
+Validation on the implementation head:
+- local Windows Gate 034 harness/wrapper: `PASS`;
+- local Windows deterministic regression: `319/319 PASS`;
+- local Windows exact HEAD preserved and worktree clean: `PASS`;
+- dedicated EngineeringAI-Ubuntu Gate 034 harness/wrapper: `PASS`;
+- dedicated EngineeringAI-Ubuntu deterministic regression:
+  `319/319 PASS`;
+- dedicated EngineeringAI-Ubuntu exact HEAD preserved and worktree clean:
+  `PASS`;
+- hosted Gate 034 workflow `37111284820`: Ubuntu `PASS`,
+  Windows `PASS`;
+- strict exact-head workflow `37111284731`: `PASS`;
+- generic workflow `37111284747`: `PASS`;
+- inherited hosted Gate 026–033 workflows on the same head: `PASS`.
+
+The resulting documentation-only head must pass its own exact-head hosted CI
+set before PR #69 may be considered for Ready for Review.
+
+No architecture redesign, validator weakening, automatic approval, new
+model/tool/Git/network authority, connected-project production work,
+release/fabrication authorization or physical-validation claim is permitted by
+Gate 034.
+
+Release authorization: `NOT_GRANTED`.
+
+Fabrication authorization: `NOT_GRANTED`.
+
+Physical validation: `PHYSICAL_NOT_EXECUTED`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:

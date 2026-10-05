@@ -75,14 +75,15 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `033 — v1.0 persistent project memory with provenance acceptance`
-- Issue: `#66`
-- PR: `#67 (DRAFT; ready transition pending final documentation-head CI)`
-- Branch: `gate-033-persistent-project-memory-provenance`
-- Base: `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
-- Final validated implementation/evidence checkpoint head:
-  `044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`
-- State: `READY_FOR_REVIEW / FINAL_DOCUMENTATION_CI_REQUIRED`
+- Gate: `034 — v1.0 documented model/tool failure recovery acceptance`
+- Issue: `#68`
+- PR: `#69 (DRAFT)`
+- Branch: `gate-034-model-tool-failure-recovery`
+- Base: accepted Gate 033 squash merge
+  `302d96a670f5197a496c583bc6faea60b16a5d87`
+- Opening head: `b15c231d7adc56bce8100ce2fb2ba3fa228d2304`
+- Implementation head: `146c16e20d0a80c5a722560226c55af9886d1207`
+- State: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -137,7 +138,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 auditable state transitions acceptance: `IMPLEMENTED_VALIDATED_GATE_030_ACCEPTED`
 - v1.0 measured/replaceable multi-model routing acceptance: `IMPLEMENTED_VALIDATED_GATE_031_ACCEPTED`
 - v1.0 controlled hand-offs with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_032_ACCEPTED`
-- v1.0 persistent project memory with provenance acceptance: `GATE_033_READY_FOR_REVIEW_FINAL_DOCUMENTATION_CI_REQUIRED`
+- v1.0 persistent project memory with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_033_ACCEPTED`
+- v1.0 documented model/tool failure recovery acceptance: `IMPLEMENTED_VALIDATED_GATE_034_PENDING_FINAL_DOCUMENTATION_CI`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -808,33 +810,37 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 033 implementation and acceptance behavior are validated on Windows,
-the dedicated EngineeringAI-Ubuntu node and GitHub-hosted Windows/Ubuntu
-runners at exact implementation/evidence checkpoint head
-`044c8dfffa5dc5d24ba45839ac7e950b83ef0aed`.
+Gate 034 implementation head
+`146c16e20d0a80c5a722560226c55af9886d1207`
+is validated on hosted CI, local Windows and the dedicated
+EngineeringAI-Ubuntu node.
 
-The GitHub-hosted pre-step failures from 2026-09-27 are now explained by the
-exhausted GitHub Free Actions allowance (`2000/2000` minutes, `$0` Actions
-budget, stop-usage enabled). After the monthly reset, the same exact source head
-passed generic validation, strict exact-head validation, Gate 033 and inherited
-Gates 026–032 without implementation changes.
+Validation evidence on that implementation head:
+- Gate 034 acceptance harness: `PASS_V1_0_DOCUMENTED_MODEL_TOOL_FAILURE_RECOVERY`;
+- local Windows Gate 034 wrapper: `PASS`;
+- local Windows deterministic regression: `319/319 PASS`;
+- local Windows exact HEAD preserved and worktree clean: `PASS`;
+- dedicated EngineeringAI-Ubuntu Gate 034 wrapper: `PASS`;
+- dedicated EngineeringAI-Ubuntu deterministic regression: `319/319 PASS`;
+- dedicated EngineeringAI-Ubuntu exact HEAD preserved and worktree clean: `PASS`;
+- hosted Gate 034 workflow: Ubuntu `PASS`, Windows `PASS`;
+- generic and strict exact-head hosted validation: `PASS`;
+- inherited hosted Gate 026–033 workflows: `PASS`.
 
-The next admissible action is limited to:
-1. validate this final documentation/source-of-truth head with the automatically
-   triggered exact-head CI set;
-2. if green, transition PR #67 from DRAFT to READY FOR REVIEW without source
-   changes;
-3. freeze the exact PR head and request explicit human exact-SHA squash-merge
-   approval.
+This documentation-only synchronization does not itself complete the Gate.
+The resulting exact documentation head must pass its own hosted CI set before
+any Ready for Review transition.
 
-Do not add memory redesign, semantic/vector retrieval, automatic memory
-promotion/injection, new model qualification, connected-project production work,
-validator weakening, release/fabrication authority or physical-validation claims.
+PR #69 must remain `DRAFT` until separate explicit human authorization.
+Merge is not authorized.
 
-Accepted remaining Phase 8 execution route after Gate 033 acceptance:
-Gate 034 failure recovery -> PlataVM handoff/readiness audit ->
-Gate 035 controlled PlataVM+BuoyCalc use -> Gate 036 practical model/runtime
-replacement -> final v1.0 readiness audit.
+Do not change code, tests, validators, architecture, model/tool/Git/network
+authority, connected-project physics, release/fabrication state, or physical
+validation as part of this final documentation checkpoint.
+
+After Gate 034 acceptance, the accepted Phase 8 route remains:
+PlataVM handoff/readiness audit -> Gate 035 controlled PlataVM+BuoyCalc use ->
+Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`

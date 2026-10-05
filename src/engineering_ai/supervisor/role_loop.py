@@ -16,6 +16,7 @@ from typing import Any, Callable, Mapping, Sequence
 from engineering_ai.models import (
     ModelMessage,
     ModelProvider,
+    ModelProviderError,
     ModelRequest,
     ModelResponse,
     ModelToolCall,
@@ -145,6 +146,11 @@ class RoleStateMachine:
 class PlannerExecutorReviewerLoop:
     """Supervisor-owned orchestration around one replaceable model provider."""
 
+    RECOVERY_BLOCKER_PREFIXES = (
+        "tool failure; retry available:",
+        "model provider failure; retry available:",
+    )
+
     def __init__(
         self,
         *,
@@ -209,6 +215,17 @@ class PlannerExecutorReviewerLoop:
                     job=working_job, user_task=user_task, revision_note=revision_note
                 )
                 self._validate_plan(working_job, plan)
+            except ModelProviderError as exc:
+                return self._model_provider_failure(
+                    machine=machine,
+                    job=working_job,
+                    role=EngineeringRole.PLANNER,
+                    error=exc,
+                    plan=plan,
+                    execution=execution,
+                    review=review,
+                    revision_count=revision_count,
+                )
             except (SemanticValidationError, ValueError) as exc:
                 machine.transition(LoopState.FAIL)
                 return self._finish(
@@ -236,6 +253,17 @@ class PlannerExecutorReviewerLoop:
                     job=working_job,
                     user_task=user_task,
                     plan=plan,
+                )
+            except ModelProviderError as exc:
+                return self._model_provider_failure(
+                    machine=machine,
+                    job=working_job,
+                    role=EngineeringRole.EXECUTOR,
+                    error=exc,
+                    plan=plan,
+                    execution=execution,
+                    review=review,
+                    revision_count=revision_count,
                 )
             except (SemanticValidationError, ValueError) as exc:
                 machine.transition(LoopState.FAIL)
@@ -282,6 +310,17 @@ class PlannerExecutorReviewerLoop:
                     user_task=user_task,
                     plan=plan,
                     execution=execution,
+                )
+            except ModelProviderError as exc:
+                return self._model_provider_failure(
+                    machine=machine,
+                    job=working_job,
+                    role=EngineeringRole.REVIEWER,
+                    error=exc,
+                    plan=plan,
+                    execution=execution,
+                    review=review,
+                    revision_count=revision_count,
                 )
             except (SemanticValidationError, ValueError) as exc:
                 machine.transition(LoopState.FAIL)
@@ -551,6 +590,11 @@ class PlannerExecutorReviewerLoop:
             if outcome is None:
                 raise RuntimeError("Supervisor ALLOW must produce a ToolOutcome")
             if not outcome.ok:
+                recovery_job = self._supervisor.classify_tool_failure(
+                    job=job,
+                    action=action,
+                    outcome=outcome,
+                )
                 return self._terminal_from_executor(
                     job,
                     plan,
@@ -558,8 +602,15 @@ class PlannerExecutorReviewerLoop:
                     summary,
                     executed,
                     evidence,
-                    f"deterministic tool failure: {action}: {outcome.summary}",
+                    recovery_job["blocker"],
                     waiting=False,
+                    status=recovery_job["status"],
+                    result_job=recovery_job,
+                    next_action=(
+                        f"retry {action}"
+                        if recovery_job["status"] == "QUEUED"
+                        else None
+                    ),
                 )
             executed.append(action)
             for ref in outcome.evidence_refs:
@@ -721,12 +772,20 @@ class PlannerExecutorReviewerLoop:
         blocker: str,
         *,
         waiting: bool,
+        status: str | None = None,
+        result_job: dict[str, Any] | None = None,
+        next_action: str | None = None,
     ) -> RoleLoopResult:
+        terminal_status = status or (
+            "WAITING_FOR_APPROVAL" if waiting else "FAIL"
+        )
         machine = RoleStateMachine()
         machine.transition(LoopState.PLAN_VALIDATED)
         machine.transition(LoopState.EXECUTE)
         machine.transition(
-            LoopState.WAITING_FOR_APPROVAL if waiting else LoopState.FAIL
+            LoopState.WAITING_FOR_APPROVAL
+            if terminal_status == "WAITING_FOR_APPROVAL"
+            else LoopState.FAIL
         )
         execution = ExecutionResult(
             summary=summary,
@@ -737,13 +796,63 @@ class PlannerExecutorReviewerLoop:
         )
         return self._finish(
             machine=machine,
-            job=job,
+            job=job if result_job is None else result_job,
             plan=plan,
             execution=execution,
             review=None,
             revision_count=0,
             blocker=blocker,
-            status="WAITING_FOR_APPROVAL" if waiting else "FAIL",
+            status=terminal_status,
+            next_action=next_action,
+        )
+
+    def _model_provider_failure(
+        self,
+        *,
+        machine: RoleStateMachine,
+        job: dict[str, Any],
+        role: EngineeringRole,
+        error: ModelProviderError,
+        plan: PlanResult | None,
+        execution: ExecutionResult | None,
+        review: ReviewResult | None,
+        revision_count: int,
+    ) -> RoleLoopResult:
+        machine.transition(LoopState.FAIL)
+        self._record_model_failure(job, role, error)
+
+        recovered_job = deepcopy(job)
+        if recovered_job["attempts"] >= recovered_job["retry_limit"]:
+            status = "FAIL"
+            blocker = (
+                "retry limit exhausted after model provider failure: "
+                f"{role.value}: {error}"
+            )
+            next_action = None
+        else:
+            recovered_job["attempts"] += 1
+            status = "QUEUED"
+            blocker = (
+                "model provider failure; retry available: "
+                f"{role.value}: {error}"
+            )
+            next_action = (
+                "retry role loop after "
+                f"{role.value.lower()} model provider recovery"
+            )
+
+        recovered_job["status"] = status
+        recovered_job["blocker"] = blocker
+        return self._finish(
+            machine=machine,
+            job=recovered_job,
+            plan=plan,
+            execution=execution,
+            review=review,
+            revision_count=revision_count,
+            blocker=blocker,
+            status=status,
+            next_action=next_action,
         )
 
     def _finish(
@@ -757,21 +866,32 @@ class PlannerExecutorReviewerLoop:
         revision_count: int,
         blocker: str | None,
         status: str,
+        next_action: str | None = None,
     ) -> RoleLoopResult:
         job = deepcopy(job)
         job["status"] = status
         job["blocker"] = blocker
+
+        if status != "QUEUED":
+            self._state["blockers"] = [
+                existing
+                for existing in self._state["blockers"]
+                if not existing.startswith(self.RECOVERY_BLOCKER_PREFIXES)
+            ]
+
         self._state["state_revision"] += 1
         self._state["active_job_id"] = (
-            job["job_id"] if status == "WAITING_FOR_APPROVAL" else None
-        )
-        self._state["next_admissible_action"] = (
-            "obtain explicit human approval"
-            if status == "WAITING_FOR_APPROVAL"
+            job["job_id"]
+            if status in {"WAITING_FOR_APPROVAL", "QUEUED"}
             else None
         )
+        if next_action is None and status == "WAITING_FOR_APPROVAL":
+            next_action = "obtain explicit human approval"
+        self._state["next_admissible_action"] = next_action
+
         if blocker and blocker not in self._state["blockers"]:
             self._state["blockers"].append(blocker)
+
         validate_instance("job.schema.json", job)
         validate_instance("project-state.schema.json", self._state)
         self._record_transition(
@@ -782,6 +902,8 @@ class PlannerExecutorReviewerLoop:
                 if status == "PASS"
                 else "NEEDS_HUMAN_APPROVAL"
                 if status == "WAITING_FOR_APPROVAL"
+                else "BLOCKED"
+                if status == "BLOCKED"
                 else "FAIL"
             ),
             summary=blocker or "Planner / Executor / Reviewer loop completed",
@@ -797,6 +919,31 @@ class PlannerExecutorReviewerLoop:
             revision_count=revision_count,
             audit_events=tuple(deepcopy(self._audit_events)),
             blocker=blocker,
+        )
+
+    def _record_model_failure(
+        self,
+        job: dict[str, Any],
+        role: EngineeringRole,
+        error: ModelProviderError,
+    ) -> None:
+        self._record(
+            self._audit.model_event(
+                project_id=job["project_id"],
+                gate_id=job.get("gate_id"),
+                job_id=job["job_id"],
+                role=role.value,
+                provider=getattr(self._provider, "provider_name", "unknown"),
+                runtime_version=None,
+                model=self._config.model,
+                ok=False,
+                summary=(
+                    f"{role.value} model provider failure: "
+                    f"{error.__class__.__name__}: {error}"
+                ),
+                before_ref=self._repository_ref(),
+                after_ref=self._repository_ref(),
+            )
         )
 
     def _record_model_call(

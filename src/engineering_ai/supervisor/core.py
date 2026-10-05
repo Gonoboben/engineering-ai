@@ -836,6 +836,49 @@ class Supervisor:
             approver=approver,
         )
 
+    def classify_tool_failure(
+        self,
+        *,
+        job: dict[str, Any],
+        action: str,
+        outcome: ToolOutcome,
+    ) -> dict[str, Any]:
+        """Classify one already-observed tool failure with the existing retry policy.
+
+        This helper is side-effect free: it does not execute a tool, grant policy
+        authority, or mutate Supervisor state. It lets higher-level orchestration
+        reuse the same bounded attempts/retry_limit semantics as execute().
+        """
+
+        working_job = deepcopy(job)
+        validate_instance("job.schema.json", working_job)
+        self._validate_job_context(working_job)
+        if working_job["status"] in self.TERMINAL_JOB_STATES:
+            raise SemanticValidationError(
+                f"terminal job cannot classify tool failure: {working_job['status']}"
+            )
+        if action not in working_job["requested_actions"]:
+            raise SemanticValidationError(
+                "tool failure action was not declared in requested_actions"
+            )
+        if outcome.ok:
+            raise ValueError("tool failure classification requires outcome.ok=false")
+
+        if working_job["attempts"] >= working_job["retry_limit"]:
+            working_job["status"] = "FAIL"
+            working_job["blocker"] = (
+                f"retry limit exhausted after tool failure: {outcome.summary}"
+            )
+        else:
+            working_job["attempts"] += 1
+            working_job["status"] = "QUEUED"
+            working_job["blocker"] = (
+                f"tool failure; retry available: {outcome.summary}"
+            )
+
+        validate_instance("job.schema.json", working_job)
+        return deepcopy(working_job)
+
     def _handle_tool_failure(
         self,
         job: dict[str, Any],
@@ -843,31 +886,21 @@ class Supervisor:
         outcome: ToolOutcome,
         before_ref: str | None,
     ) -> None:
-        if job["attempts"] >= job["retry_limit"]:
-            blocker = f"retry limit exhausted after tool failure: {outcome.summary}"
-            job["status"] = "FAIL"
-            job["blocker"] = blocker
-            self._apply_state_blocker(job, blocker, next_action=None)
-            self._record_transition(
-                job=job,
-                action=action,
-                status="FAIL",
-                summary=blocker,
-                before_ref=before_ref,
-                evidence_refs=list(outcome.evidence_refs),
-            )
-            return
+        classified = self.classify_tool_failure(
+            job=job,
+            action=action,
+            outcome=outcome,
+        )
+        job.clear()
+        job.update(classified)
 
-        job["attempts"] += 1
-        blocker = f"tool failure; retry available: {outcome.summary}"
-        job["status"] = "QUEUED"
-        job["blocker"] = blocker
-        self._apply_state_blocker(job, blocker, next_action=f"retry {action}")
+        next_action = f"retry {action}" if job["status"] == "QUEUED" else None
+        self._apply_state_blocker(job, job["blocker"], next_action=next_action)
         self._record_transition(
             job=job,
             action=action,
             status="FAIL",
-            summary=blocker,
+            summary=job["blocker"],
             before_ref=before_ref,
             evidence_refs=list(outcome.evidence_refs),
         )
