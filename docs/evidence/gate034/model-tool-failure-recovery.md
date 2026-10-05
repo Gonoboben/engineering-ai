@@ -6,7 +6,7 @@
 - Branch: `gate-034-model-tool-failure-recovery`
 - Base: Gate 033 squash merge
   `302d96a670f5197a496c583bc6faea60b16a5d87`
-- State: `OPENING / READ_ONLY_RECONCILIATION_COMPLETE`
+- State: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
 
 ## Objective
 
@@ -106,6 +106,102 @@ Regression wrapper:
 Cross-platform workflow:
 `.github/workflows/gate034-model-tool-failure-recovery.yml`
 
-Validation on the implementation head remains pending. No PASS is claimed by
-this documentation checkpoint until the harness and full deterministic
-regression execute successfully.
+## Validation checkpoint
+
+Implementation head:
+`146c16e20d0a80c5a722560226c55af9886d1207`
+
+Gate-specific acceptance state:
+`PASS_V1_0_DOCUMENTED_MODEL_TOOL_FAILURE_RECOVERY`
+
+Validated behavior:
+- model-provider unavailability enters bounded `QUEUED` retry and preserves
+  the incremented attempt count across persisted queue reopen;
+- successful provider recovery can later complete `PASS` without resetting
+  the recorded attempt;
+- model-provider retry exhaustion terminates `FAIL`;
+- failed model calls are recorded as `MODEL_CALL / FAIL`;
+- role-loop deterministic tool failures reuse
+  `Supervisor.classify_tool_failure(...)` and the existing
+  attempts/retry_limit contract;
+- successful tool retry can later complete `PASS`;
+- tool retry exhaustion terminates `FAIL`;
+- malformed structured model output can recover within the bounded correction
+  allowance and terminates `FAIL` after exhaustion;
+- allow-listed process timeout is returned as structured non-PASS evidence;
+- offline mode blocks network-capable process execution before launch;
+- persisted interrupted RUNNING work recovers to
+  `INTERRUPTED_RECOVERY / BLOCKED`;
+- persisted late PASS after deadline expiry is rejected as
+  `TIMEOUT_RECOVERY / BLOCKED`;
+- policy denial calls no tool and consumes no retry attempt;
+- WAITING_FOR_APPROVAL survives reopen without synthesized approval;
+- queue integrity remains valid;
+- no tested failure/recovery path produced false PASS.
+
+### Local Windows
+
+- Gate 034 harness: `PASS`;
+- Gate 034 wrapper: `PASS`;
+- deterministic regression: `319/319 PASS` in `129.396 s`;
+- exact source revision preserved:
+  `146c16e20d0a80c5a722560226c55af9886d1207`;
+- final worktree: `CLEAN`.
+
+The first wrapper command was interrupted by Windows PowerShell interpreting
+unittest stderr output as `NativeCommandError` even though the test itself had
+reported `ok`. The wrapper invocation was corrected by capturing stdout and
+stderr separately. No Engineering AI source, test or validator change was made
+between attempts.
+
+### Dedicated EngineeringAI-Ubuntu
+
+- Ubuntu 24.04.5 LTS;
+- Python 3.12.3;
+- exact source revision transferred by verified Git bundle;
+- Gate 034 harness: `PASS`;
+- Gate 034 wrapper: `PASS`;
+- deterministic regression: `319/319 PASS` in `51.121 s`;
+- exact source revision preserved:
+  `146c16e20d0a80c5a722560226c55af9886d1207`;
+- final worktree: `CLEAN`;
+- queue/recovery validation did not require external network authority;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+An initial SSH transfer attempt used a stale dynamic Hyper-V Default Switch
+guest address while the VM was powered off. The running VM was then identified
+by its fixed virtual NIC MAC, its current DHCP address was resolved, and the
+SSH host key was verified before transfer. This was retained as infrastructure
+transport evidence and required no Engineering AI source/test/validator change.
+
+### Hosted CI on the same implementation head
+
+- Gate 034 workflow `37111284820`: Ubuntu `PASS`, Windows `PASS`;
+- strict exact-head workflow `37111284731`: `PASS`;
+- generic workflow `37111284747`: `PASS`;
+- Gate 026 workflow `37111284752`: `PASS`;
+- Gate 027 workflow `37111284755`: `PASS`;
+- Gate 028 workflow `37111284732`: `PASS`;
+- Gate 029 workflow `37111284805`: `PASS`;
+- Gate 030 workflow `37111284730`: `PASS`;
+- Gate 031 workflow `37111284751`: `PASS`;
+- Gate 032 workflow `37111284750`: `PASS`;
+- Gate 033 workflow `37111284728`: `PASS`.
+
+### Remaining acceptance step
+
+This file is part of the final documentation-only synchronization. The
+resulting documentation head must pass its own hosted CI set before Gate 034
+may move from Draft to Ready for Review.
+
+PR #69 remains `DRAFT`.
+
+Ready for Review: `NOT_AUTHORIZED`.
+
+Merge: `NOT_AUTHORIZED`.
+
+Release authorization: `NOT_GRANTED`.
+
+Fabrication authorization: `NOT_GRANTED`.
+
+Physical validation: `PHYSICAL_NOT_EXECUTED`.

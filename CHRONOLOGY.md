@@ -5313,3 +5313,87 @@ Release/fabrication:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`
+
+
+---
+
+## 2026-10-05 — Gate 034 dual-platform implementation validation checkpoint
+
+Implementation head:
+`146c16e20d0a80c5a722560226c55af9886d1207`
+
+Gate 034 acceptance harness on the implementation head reported:
+`PASS_V1_0_DOCUMENTED_MODEL_TOOL_FAILURE_RECOVERY`.
+
+Validated recovery properties include:
+- model-provider failure enters bounded `QUEUED` retry or terminal `FAIL`;
+- failed model calls are auditable;
+- model retry state persists across queue reopen and can recover to `PASS`;
+- deterministic role-loop tool failure reuses the Supervisor-owned
+  attempts/retry_limit classifier;
+- malformed structured model output remains bounded and fails closed after
+  retry exhaustion;
+- process timeout is structured;
+- offline network-capable process execution is blocked before execution;
+- interrupted persisted RUNNING work recovers to `BLOCKED`;
+- late PASS after persisted deadline expiry is rejected as
+  `TIMEOUT_RECOVERY`;
+- policy denial consumes no retry and calls no tool;
+- WAITING_FOR_APPROVAL survives reopen and never self-approves;
+- no tested failure/recovery boundary produced false PASS.
+
+Local Windows:
+- Gate 034 harness: `PASS`;
+- wrapper: `PASS`;
+- deterministic regression: `319/319 PASS`;
+- exact implementation HEAD preserved;
+- final worktree: `CLEAN`.
+
+The first Windows wrapper invocation was interrupted by Windows PowerShell
+stderr-to-NativeCommandError handling even though unittest had already reported
+the Gate 034 test as `ok`. The invocation wrapper was corrected to capture
+stdout/stderr separately; no Engineering AI source, test or validator change
+was made, and the same exact head then passed wrapper and full regression.
+
+Dedicated EngineeringAI-Ubuntu:
+- Ubuntu 24.04.5 LTS / Python 3.12.3;
+- exact implementation HEAD imported by verified Git bundle;
+- Gate 034 harness: `PASS`;
+- wrapper: `PASS`;
+- deterministic regression: `319/319 PASS` in `51.121 s`;
+- exact implementation HEAD preserved;
+- final worktree: `CLEAN`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+The initial transfer attempt targeted a stale dynamic Hyper-V Default Switch
+guest address while the VM was powered off. After startup, the VM was
+identified by its fixed virtual NIC MAC and current DHCP address; SSH host
+identity was verified before transfer. This was infrastructure transport
+recovery, not a Gate 034 source failure, and no source/test/validator change
+was made.
+
+Hosted validation on the same implementation head:
+- Gate 034 workflow `37111284820`: Ubuntu `PASS`, Windows `PASS`;
+- strict exact-head workflow `37111284731`: `PASS`;
+- generic workflow `37111284747`: `PASS`;
+- Gate 026 workflow `37111284752`: `PASS`;
+- Gate 027 workflow `37111284755`: `PASS`;
+- Gate 028 workflow `37111284732`: `PASS`;
+- Gate 029 workflow `37111284805`: `PASS`;
+- Gate 030 workflow `37111284730`: `PASS`;
+- Gate 031 workflow `37111284751`: `PASS`;
+- Gate 032 workflow `37111284750`: `PASS`;
+- Gate 033 workflow `37111284728`: `PASS`.
+
+Gate 034 now enters final documentation-only synchronization. The resulting
+documentation head must pass its own hosted CI before any Ready for Review
+transition. PR #69 remains `DRAFT`.
+
+Release authorization:
+`NOT_GRANTED`
+
+Fabrication authorization:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`

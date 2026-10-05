@@ -655,7 +655,7 @@ adding semantic/vector retrieval, automatic memory injection/promotion, or new
 model/tool/Git/network authority.
 
 ### Gate 034 — v1.0 documented model/tool failure recovery acceptance
-Status: `IMPLEMENTATION_IN_PROGRESS / VALIDATION_PENDING`
+Status: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
 
 Issue: `#68 OPEN`
 
@@ -666,7 +666,10 @@ Branch: `gate-034-model-tool-failure-recovery`
 Base: accepted Gate 033 squash merge
 `302d96a670f5197a496c583bc6faea60b16a5d87`
 
-Acceptance scope:
+Implementation head:
+`146c16e20d0a80c5a722560226c55af9886d1207`
+
+Validated acceptance behavior:
 - bounded model-provider failure retry / retry exhaustion;
 - Supervisor-owned bounded tool-failure classification reused by role-loop
   orchestration;
@@ -678,11 +681,37 @@ Acceptance scope:
   failure;
 - WAITING_FOR_APPROVAL persistence with no automatic approval;
 - project/job identity, attempts, blockers and append-only recovery history
-  preserved.
+  preserved;
+- no observed failure/recovery boundary produced false PASS.
 
-No architecture redesign, validator weakening, new authority, connected-project
-production work, release/fabrication authorization or physical-validation claim
-is permitted by Gate 034.
+Validation on the implementation head:
+- local Windows Gate 034 harness/wrapper: `PASS`;
+- local Windows deterministic regression: `319/319 PASS`;
+- local Windows exact HEAD preserved and worktree clean: `PASS`;
+- dedicated EngineeringAI-Ubuntu Gate 034 harness/wrapper: `PASS`;
+- dedicated EngineeringAI-Ubuntu deterministic regression:
+  `319/319 PASS`;
+- dedicated EngineeringAI-Ubuntu exact HEAD preserved and worktree clean:
+  `PASS`;
+- hosted Gate 034 workflow `37111284820`: Ubuntu `PASS`,
+  Windows `PASS`;
+- strict exact-head workflow `37111284731`: `PASS`;
+- generic workflow `37111284747`: `PASS`;
+- inherited hosted Gate 026–033 workflows on the same head: `PASS`.
+
+The resulting documentation-only head must pass its own exact-head hosted CI
+set before PR #69 may be considered for Ready for Review.
+
+No architecture redesign, validator weakening, automatic approval, new
+model/tool/Git/network authority, connected-project production work,
+release/fabrication authorization or physical-validation claim is permitted by
+Gate 034.
+
+Release authorization: `NOT_GRANTED`.
+
+Fabrication authorization: `NOT_GRANTED`.
+
+Physical validation: `PHYSICAL_NOT_EXECUTED`.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
