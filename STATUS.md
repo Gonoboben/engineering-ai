@@ -75,15 +75,24 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `034 — v1.0 documented model/tool failure recovery acceptance`
-- Issue: `#68`
-- PR: `#69 (DRAFT)`
-- Branch: `gate-034-model-tool-failure-recovery`
-- Base: accepted Gate 033 squash merge
-  `302d96a670f5197a496c583bc6faea60b16a5d87`
-- Opening head: `b15c231d7adc56bce8100ce2fb2ba3fa228d2304`
-- Implementation head: `146c16e20d0a80c5a722560226c55af9886d1207`
-- State: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
+- Gate: `035 — v1.0 controlled connected-project use acceptance (PlataVM + BuoyCalc)`
+- Issue: `#70 OPEN`
+- PR: `#71 DRAFT`
+- Branch: `gate-035-controlled-connected-project-use`
+- Base: accepted Gate 034 squash merge
+  `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
+- Gate 034 final documentation head:
+  `30da5eb9ba1dbeaf54cbc2eacd3e0802ab99fcfe`
+- State: `OPENING_CONTRACT_IMPLEMENTED / HOSTED_CI_AND_REAL_PROJECT_PILOT_PENDING`
+- PlataVM pilot target: Issue #99 / Draft PR #100 /
+  `11e746cfea7f9200415cf817b6cde928b6a2651a`; current-head native CI remains
+  `CANCELLED / NON_PASS`.
+- BuoyCalc pilot baseline:
+  `main@325aee5ee3a9f64413e416a1206fc4e296d9723f`; release remains
+  `NOT READY FOR v1.0`.
+- BuoyCalc participation is experimental controlled-use evidence only; it is
+  not an operational project handoff. Any later handoff requires a separate
+  owner decision after the current owner/ChatGPT release path.
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -139,7 +148,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 measured/replaceable multi-model routing acceptance: `IMPLEMENTED_VALIDATED_GATE_031_ACCEPTED`
 - v1.0 controlled hand-offs with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_032_ACCEPTED`
 - v1.0 persistent project memory with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_033_ACCEPTED`
-- v1.0 documented model/tool failure recovery acceptance: `IMPLEMENTED_VALIDATED_GATE_034_PENDING_FINAL_DOCUMENTATION_CI`
+- v1.0 documented model/tool failure recovery acceptance: `IMPLEMENTED_VALIDATED_GATE_034_ACCEPTED`
+- v1.0 controlled connected-project use acceptance: `GATE_035_OPENING_CONTRACT_IMPLEMENTED_REAL_PILOT_PENDING`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -810,36 +820,31 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 034 implementation head
-`146c16e20d0a80c5a722560226c55af9886d1207`
-is validated on hosted CI, local Windows and the dedicated
-EngineeringAI-Ubuntu node.
+Gate 034 is accepted and merged as:
+`6db84082e45f3e00a555f5af79f66c1fc6b48ea6`.
 
-Validation evidence on that implementation head:
-- Gate 034 acceptance harness: `PASS_V1_0_DOCUMENTED_MODEL_TOOL_FAILURE_RECOVERY`;
-- local Windows Gate 034 wrapper: `PASS`;
-- local Windows deterministic regression: `319/319 PASS`;
-- local Windows exact HEAD preserved and worktree clean: `PASS`;
-- dedicated EngineeringAI-Ubuntu Gate 034 wrapper: `PASS`;
-- dedicated EngineeringAI-Ubuntu deterministic regression: `319/319 PASS`;
-- dedicated EngineeringAI-Ubuntu exact HEAD preserved and worktree clean: `PASS`;
-- hosted Gate 034 workflow: Ubuntu `PASS`, Windows `PASS`;
-- generic and strict exact-head hosted validation: `PASS`;
-- inherited hosted Gate 026–033 workflows: `PASS`.
+Gate 035 opening is limited to the accepted connected-project control contract.
+The opening harness must pass hosted exact-head validation before the real
+project pilot is executed.
 
-This documentation-only synchronization does not itself complete the Gate.
-The resulting exact documentation head must pass its own hosted CI set before
-any Ready for Review transition.
+The real pilot must then:
+- recover PlataVM and BuoyCalc state from repository/project sources without
+  relying on hidden chat context;
+- preserve project isolation and project-specific policy;
+- run only existing allow-listed local validators;
+- keep cancelled/missing/native evidence explicitly non-PASS;
+- preserve all release/fabrication/physical barriers;
+- perform zero connected-project remote mutations;
+- treat BuoyCalc as an experimental validation target only, not as transferred
+  project ownership or autonomous development authority.
 
-PR #69 must remain `DRAFT` until separate explicit human authorization.
-Merge is not authorized.
+Core runtime under `src/engineering_ai/...` is frozen on the opening
+iteration. A core change may be considered only if the real pilot demonstrates
+a concrete missing capability and requires a new explicit authorization.
 
-Do not change code, tests, validators, architecture, model/tool/Git/network
-authority, connected-project physics, release/fabrication state, or physical
-validation as part of this final documentation checkpoint.
+PR Ready for Review and merge are not authorized.
 
-After Gate 034 acceptance, the accepted Phase 8 route remains:
-PlataVM handoff/readiness audit -> Gate 035 controlled PlataVM+BuoyCalc use ->
+After Gate 035 acceptance, the accepted Phase 8 route remains:
 Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
 
 ## Gate 023 validation state

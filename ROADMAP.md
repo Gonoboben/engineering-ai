@@ -655,57 +655,76 @@ adding semantic/vector retrieval, automatic memory injection/promotion, or new
 model/tool/Git/network authority.
 
 ### Gate 034 — v1.0 documented model/tool failure recovery acceptance
-Status: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#68 OPEN`
+Issue: `#68 CLOSED / COMPLETED`
 
-PR: `#69 DRAFT`
+PR: `#69 MERGED`
 
-Branch: `gate-034-model-tool-failure-recovery`
+Final approved PR head:
+`30da5eb9ba1dbeaf54cbc2eacd3e0802ab99fcfe`
 
-Base: accepted Gate 033 squash merge
-`302d96a670f5197a496c583bc6faea60b16a5d87`
+Squash merge:
+`6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
 
-Implementation head:
-`146c16e20d0a80c5a722560226c55af9886d1207`
-
-Validated acceptance behavior:
-- bounded model-provider failure retry / retry exhaustion;
-- Supervisor-owned bounded tool-failure classification reused by role-loop
-  orchestration;
-- bounded structured-output protocol correction;
-- structured process timeout;
-- interrupted persisted RUNNING recovery;
-- persisted deadline expiry / late-PASS rejection;
-- policy and offline denial not misclassified as retriable infrastructure
-  failure;
-- WAITING_FOR_APPROVAL persistence with no automatic approval;
-- project/job identity, attempts, blockers and append-only recovery history
-  preserved;
-- no observed failure/recovery boundary produced false PASS.
-
-Validation on the implementation head:
-- local Windows Gate 034 harness/wrapper: `PASS`;
-- local Windows deterministic regression: `319/319 PASS`;
-- local Windows exact HEAD preserved and worktree clean: `PASS`;
-- dedicated EngineeringAI-Ubuntu Gate 034 harness/wrapper: `PASS`;
-- dedicated EngineeringAI-Ubuntu deterministic regression:
-  `319/319 PASS`;
-- dedicated EngineeringAI-Ubuntu exact HEAD preserved and worktree clean:
-  `PASS`;
-- hosted Gate 034 workflow `37111284820`: Ubuntu `PASS`,
-  Windows `PASS`;
-- strict exact-head workflow `37111284731`: `PASS`;
-- generic workflow `37111284747`: `PASS`;
-- inherited hosted Gate 026–033 workflows on the same head: `PASS`.
-
-The resulting documentation-only head must pass its own exact-head hosted CI
-set before PR #69 may be considered for Ready for Review.
+Accepted evidence includes dual-platform local validation, hosted Gate 034,
+generic/strict exact-head and inherited Gate 026–033 validation. The initial
+Windows cleanup race remains recorded as a transient execution artifact; the
+same exact documentation head later passed the failed Gate 026 Windows job on
+rerun without source/test/validator changes.
 
 No architecture redesign, validator weakening, automatic approval, new
 model/tool/Git/network authority, connected-project production work,
-release/fabrication authorization or physical-validation claim is permitted by
-Gate 034.
+release/fabrication authorization or physical-validation claim was granted.
+
+Release authorization: `NOT_GRANTED`.
+
+Fabrication authorization: `NOT_GRANTED`.
+
+Physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+### Gate 035 — v1.0 controlled connected-project use acceptance
+Status: `OPENING_CONTRACT_IMPLEMENTED / HOSTED_CI_AND_REAL_PROJECT_PILOT_PENDING`
+
+Issue: `#70 OPEN`
+
+PR: `#71 DRAFT`
+
+Branch: `gate-035-controlled-connected-project-use`
+
+Base:
+`6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
+
+Purpose:
+prove controlled use on real PlataVM and BuoyCalc states without treating a
+project-level non-PASS state as a platform failure and without promoting local
+or model evidence beyond its authority.
+
+Opening connected-project snapshot:
+- PlataVM main `dcba77466d4800c0e7a336a2771684e066f845db`,
+  Issue #99 / Draft PR #100,
+  head `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+- current PlataVM head native runs are `CANCELLED / NON_PASS`; local semantic
+  evidence does not imply native KiCad, physical, fabrication or production
+  PASS;
+- BuoyCalc main
+  `325aee5ee3a9f64413e416a1206fc4e296d9723f`;
+- BuoyCalc exact-main required checks are green while release disposition
+  remains `NOT READY FOR v1.0`;
+- BuoyCalc Issue #627 / Draft PR #628 remain outside Gate 035 mutation scope.
+
+Owner process boundary:
+BuoyCalc is used by Gate 035 as an experimental controlled-use target only.
+The owner intends to finish the BuoyCalc release through the current
+owner/ChatGPT workflow before deciding whether to transfer operational work to
+Engineering AI. Gate 035 does not make that later decision.
+
+Opening implementation is intentionally limited to harness/tests/workflow and
+evidence/governance synchronization. Core runtime is unchanged.
+
+Final Gate 035 acceptance requires real connected-project execution evidence;
+the synthetic opening contract alone cannot satisfy the v1.0 connected-project
+criterion.
 
 Release authorization: `NOT_GRANTED`.
 
@@ -731,13 +750,13 @@ A stable v1.0 requires, at minimum:
 
 The accepted execution order for closing the remaining v1.0 criteria is:
 
-1. Gate 032 — controlled model-to-model hand-offs with provenance acceptance.
-2. Gate 033 — persistent project memory with provenance acceptance.
-3. Gate 034 — documented model/tool failure recovery acceptance.
-4. PlataVM handoff/readiness audit — read-only preparation of the real project
-   before connected-project acceptance; this audit is not itself a substitute
-   for a Gate acceptance result.
-5. Gate 035 — successful controlled use on both PlataVM and BuoyCalc.
+1. Gate 032 — `ACCEPTED_MERGED`: controlled model-to-model hand-offs with provenance.
+2. Gate 033 — `ACCEPTED_MERGED`: persistent project memory with provenance.
+3. Gate 034 — `ACCEPTED_MERGED`: documented model/tool failure recovery.
+4. PlataVM handoff/readiness audit — `COMPLETED_READ_ONLY`; its findings are
+   Gate 035 inputs, not a substitute for controlled-use acceptance.
+5. Gate 035 — `ACTIVE`: controlled use on PlataVM and BuoyCalc. BuoyCalc use
+   is experimental validation only and does not constitute operational handoff.
 6. Gate 036 — model/runtime replaceability demonstrated in practice.
 7. Final v1.0 readiness audit — cold-start/source-of-truth review proving that
    the platform can resume from repository state without hidden chat context.
