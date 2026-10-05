@@ -5397,3 +5397,64 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`
+
+---
+
+## 2026-10-05 — Gate 034 accepted and Gate 035 opening authorized
+
+Gate 034 final documentation head:
+`30da5eb9ba1dbeaf54cbc2eacd3e0802ab99fcfe`
+
+The complete final documentation CI set passed after a rerun of the failed
+Gate 026 Windows job on the same exact SHA. No source, test or validator change
+was made for that rerun.
+
+PR #69 was marked Ready for Review only after explicit human authorization and
+then squash-merged only after a separate exact-SHA authorization.
+
+Squash merge on `main`:
+`6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
+
+Issue #68 was closed:
+`COMPLETED`
+
+A read-only PlataVM handoff/readiness audit then established the real Gate 035
+starting conditions:
+- PlataVM main:
+  `dcba77466d4800c0e7a336a2771684e066f845db`;
+- active PlataVM Issue #99 / Draft PR #100;
+- active PR head:
+  `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+- local deterministic correction evidence exists, while both current-head
+  native CI runs are `CANCELLED` and therefore NON-PASS;
+- the existing Engineering AI PlataVM control boundary must not promote local
+  semantic PASS to native KiCad, physical, fabrication or production PASS.
+
+BuoyCalc read-only reconciliation for Gate 035 established:
+- canonical main:
+  `325aee5ee3a9f64413e416a1206fc4e296d9723f`;
+- exact-main required checks are green;
+- release disposition remains `CURRENT RELEASE STATUS = NOT READY FOR v1.0`;
+- Issue #627 / Draft PR #628 remain a separate remediation stream.
+
+Owner direction for BuoyCalc:
+Gate 035 may use BuoyCalc as an experimental controlled-use target, but this is
+not an operational project handoff. The intended process is to finish the
+BuoyCalc release through the current owner/ChatGPT workflow first and only then
+decide separately whether Engineering AI should take operational responsibility.
+
+Gate 035 was authorized from exact accepted Engineering AI main:
+`6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
+
+Opening scope:
+- one Issue;
+- one branch;
+- one Draft PR;
+- Gate 035 harness/tests/workflow/evidence;
+- STATUS/ROADMAP/CHRONOLOGY synchronization only;
+- no `src/engineering_ai/...` core runtime changes;
+- no PlataVM or BuoyCalc mutation;
+- no architecture/physics/validator/model/tool/Git/network authority change;
+- no release/fabrication/physical state promotion;
+- Ready for Review and merge not authorized.
+
