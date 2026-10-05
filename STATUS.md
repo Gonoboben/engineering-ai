@@ -77,7 +77,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `035 — v1.0 controlled connected-project use acceptance (PlataVM + BuoyCalc)`
 - Issue: `#70 OPEN`
-- PR: `PENDING_DRAFT_CREATION`
+- PR: `#71 DRAFT`
 - Branch: `gate-035-controlled-connected-project-use`
 - Base: accepted Gate 034 squash merge
   `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`

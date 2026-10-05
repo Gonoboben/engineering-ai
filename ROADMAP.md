@@ -688,7 +688,7 @@ Status: `OPENING_CONTRACT_IMPLEMENTED / HOSTED_CI_AND_REAL_PROJECT_PILOT_PENDING
 
 Issue: `#70 OPEN`
 
-PR: `PENDING_DRAFT_CREATION`
+PR: `#71 DRAFT`
 
 Branch: `gate-035-controlled-connected-project-use`
 
