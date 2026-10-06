@@ -305,6 +305,22 @@ class Supervisor:
             reason="all required validators passed with matching revision and evidence",
         )
 
+    def record_validator_results(
+        self,
+        *,
+        job: dict[str, Any],
+        validator_results: tuple[ValidatorOutcome, ...],
+    ) -> dict[str, Any]:
+        """Record declared validator outcomes into the current project state."""
+        working_job = deepcopy(job)
+        validate_instance("job.schema.json", working_job)
+        self._validate_job_context(working_job)
+        self._apply_validator_results(
+            job=working_job,
+            validator_results=validator_results,
+        )
+        return self.state
+
     def retrieve_memory_context(
         self,
         request: RetrievalRequest,
@@ -1087,7 +1103,7 @@ class Supervisor:
             status="FAIL",
             summary=job["blocker"],
             before_ref=before_ref,
-            evidence_refs=list(outcome.evidence_refs),
+            evidence_refs=self._outcome_evidence_refs(outcome),
         )
 
     def _apply_validator_results(
