@@ -249,6 +249,12 @@ class Gate035AcceptanceContractTests(unittest.TestCase):
         )
         self.assertEqual(result.job["status"], "BLOCKED")
         self.assertIn("REVISION_MISMATCH", result.job["blocker"])
+        self.assertFalse(
+            any(
+                item["check_id"] == "schema-suite"
+                for item in result.state["validation_states"]
+            )
+        )
 
     def test_fail_without_evidence_cannot_fail_current_job(self) -> None:
         supervisor = Supervisor(policy=policy(), state=state())
@@ -265,6 +271,12 @@ class Gate035AcceptanceContractTests(unittest.TestCase):
         )
         self.assertEqual(result.job["status"], "BLOCKED")
         self.assertIn("FAIL_WITHOUT_EVIDENCE", result.job["blocker"])
+        self.assertFalse(
+            any(
+                item["check_id"] == "schema-suite"
+                for item in result.state["validation_states"]
+            )
+        )
 
     def test_pass_without_evidence_cannot_close_job(self) -> None:
         supervisor = Supervisor(policy=policy(), state=state())
@@ -279,6 +291,12 @@ class Gate035AcceptanceContractTests(unittest.TestCase):
         )
         self.assertEqual(result.job["status"], "BLOCKED")
         self.assertIn("PASS_WITHOUT_EVIDENCE", result.job["blocker"])
+        self.assertFalse(
+            any(
+                item["check_id"] == "schema-suite"
+                for item in result.state["validation_states"]
+            )
+        )
 
     def test_exact_revision_evidence_closes_required_validator(self) -> None:
         supervisor = Supervisor(policy=policy(), state=state())
