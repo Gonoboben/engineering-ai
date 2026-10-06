@@ -680,11 +680,11 @@ changing architecture, validator semantics, model/tool/Git/network authority,
 release/fabrication authority or physical-validation semantics.
 
 ### Gate 035 — v1.0 deterministic acceptance-contract conformance
-Status: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
+Status: `READY_FOR_REVIEW`
 
 Issue: `#72 OPEN`
 
-PR: `#73 DRAFT`
+PR: `#73 READY FOR REVIEW`
 
 Branch: `gate-035-deterministic-acceptance-contract-conformance`
 
@@ -716,8 +716,14 @@ Hosted validation on that exact checkpoint:
 - strict exact-head validation `37535951618`: `PASS`;
 - inherited Gate 026–034 workflows on the same exact head: `PASS`.
 
-The resulting documentation/source-of-truth head must pass its own hosted CI
-set before PR #73 may transition from Draft to Ready for Review.
+The first documentation/source-of-truth head
+`1884700a3610fa1860e18bade5af0f5935d9a706`
+completed the full hosted CI set successfully, after which PR #73 transitioned
+to Ready for Review without source changes.
+
+The synchronization head recording that transition must itself remain fully
+green before any merge. Merge still requires separate explicit human exact-SHA
+authorization.
 
 Release authorization: `NOT_GRANTED`.
 
