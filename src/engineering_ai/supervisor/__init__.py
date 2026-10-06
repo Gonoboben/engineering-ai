@@ -13,7 +13,14 @@ from engineering_ai.supervisor.blackboard import (
     HandoffRequest,
     TaskBlackboard,
 )
-from engineering_ai.supervisor.core import ExecutionResult, ProposalExecutionResult, Supervisor, ToolOutcome
+from engineering_ai.supervisor.core import (
+    ExecutionResult,
+    JobCompletionDecision,
+    ProposalExecutionResult,
+    Supervisor,
+    ToolOutcome,
+    ValidatorOutcome,
+)
 from engineering_ai.supervisor.policy import Decision, PolicyDecision, PolicyEngine
 from engineering_ai.supervisor.tool_bridge import (
     CapabilityBinding,
@@ -209,6 +216,7 @@ __all__ = [
     "IndependentReviewFinding",
     "EngineeringRole",
     "ExecutionResult",
+    "JobCompletionDecision",
     "LoopState",
     "PlanResult",
     "PlannerExecutorReviewerLoop",
@@ -226,6 +234,7 @@ __all__ = [
     "TaskBlackboard",
     "Supervisor",
     "ToolOutcome",
+    "ValidatorOutcome",
     "VisionAdvisoryObservation",
     "VisionAuthority",
     "VisionBudgetError",
