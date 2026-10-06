@@ -5459,3 +5459,53 @@ Fabrication authorization:
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`
 
+---
+
+## 2026-10-07 — Gate 035 implementation/evidence checkpoint
+
+Exact implementation/evidence checkpoint:
+`38b6db633c24963d6afbec1f62a6a817172129b1`
+
+Gate 035 closes the generic required-validator completion gap against the
+already accepted architecture without introducing a new authority model.
+
+Validated behavior:
+- tool `ok=true` does not imply job `PASS` when declared required validators
+  remain unresolved;
+- exact-revision, evidence-backed validator `PASS` may close its declared
+  requirement;
+- exact-revision, evidence-backed validator `FAIL` fails the job;
+- missing, `NOT_RUN`, timed-out, revision-mismatched or evidence-less
+  validator outcomes cannot produce job `PASS`;
+- stale or evidence-less decisive `PASS/FAIL` results are not promoted into
+  current validation state;
+- Reviewer `ACCEPT` cannot replace deterministic required validation;
+- jobs with genuinely empty `required_validators` preserve the accepted
+  no-validator completion path.
+
+Hosted validation on the exact checkpoint:
+- Gate 035 `37535951540`: Ubuntu `PASS`, Windows `PASS`;
+- generic `37535951408`: `PASS`;
+- strict exact-head `37535951618`: `PASS`;
+- Gate 034 `37535951403`: `PASS`;
+- Gate 033 `37535952500`: `PASS`;
+- Gate 032 `37535951506`: `PASS`;
+- Gate 031 `37535951440`: `PASS`;
+- Gate 030 `37535951456`: `PASS`;
+- Gate 029 `37535951415`: `PASS`;
+- Gate 028 `37535951821`: `PASS`;
+- Gate 027 `37535951394`: `PASS`;
+- Gate 026 `37535951426`: Ubuntu `PASS`, Windows `PASS`.
+
+PR #73 remains `DRAFT`. A final documentation/source-of-truth exact-head CI
+set remains required before any Ready for Review transition.
+
+Release authorization:
+`NOT_GRANTED`
+
+Fabrication authorization:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`
+

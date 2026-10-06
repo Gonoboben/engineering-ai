@@ -680,9 +680,11 @@ changing architecture, validator semantics, model/tool/Git/network authority,
 release/fabrication authority or physical-validation semantics.
 
 ### Gate 035 — v1.0 deterministic acceptance-contract conformance
-Status: `IN_PROGRESS`
+Status: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
 
 Issue: `#72 OPEN`
+
+PR: `#73 DRAFT`
 
 Branch: `gate-035-deterministic-acceptance-contract-conformance`
 
@@ -704,6 +706,18 @@ Scope:
 
 Gate 035 is a conformance remediation, not a new v1.0 product criterion and not
 an architecture redesign.
+
+Validated implementation/evidence checkpoint:
+`38b6db633c24963d6afbec1f62a6a817172129b1`
+
+Hosted validation on that exact checkpoint:
+- Gate 035 workflow `37535951540`: Ubuntu `PASS`, Windows `PASS`;
+- generic validation `37535951408`: `PASS`;
+- strict exact-head validation `37535951618`: `PASS`;
+- inherited Gate 026–034 workflows on the same exact head: `PASS`.
+
+The resulting documentation/source-of-truth head must pass its own hosted CI
+set before PR #73 may transition from Draft to Ready for Review.
 
 Release authorization: `NOT_GRANTED`.
 

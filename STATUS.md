@@ -85,7 +85,9 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Branch: `gate-035-deterministic-acceptance-contract-conformance`
 - Base: accepted Gate 034 squash merge
   `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
-- State: `IMPLEMENTATION_IN_PROGRESS / CI_NOT_YET_EVALUATED`
+- State: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
+- Implementation/evidence checkpoint:
+  `38b6db633c24963d6afbec1f62a6a817172129b1`
 - Purpose: restore the already accepted required-validator/evidence completion
   contract before real connected-project controlled use.
 
@@ -144,7 +146,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 controlled hand-offs with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_032_ACCEPTED`
 - v1.0 persistent project memory with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_033_ACCEPTED`
 - v1.0 documented model/tool failure recovery acceptance: `IMPLEMENTED_VALIDATED_GATE_034_ACCEPTED`
-- v1.0 deterministic acceptance-contract conformance: `GATE_035_IN_PROGRESS`
+- v1.0 deterministic acceptance-contract conformance: `GATE_035_IMPLEMENTATION_VALIDATED_FINAL_DOCUMENTATION_CI_REQUIRED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -815,37 +817,50 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 034 is accepted and merged:
-- Issue #68: `CLOSED / COMPLETED`;
-- PR #69: `MERGED`;
-- final approved PR head:
-  `30da5eb9ba1dbeaf54cbc2eacd3e0802ab99fcfe`;
-- squash merge:
-  `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`;
-- final generic, strict exact-head, Gate 034 and inherited Gate 026–033
-  hosted workflows: `PASS`;
-- release/fabrication authorization: `NOT_GRANTED`;
-- physical validation: `PHYSICAL_NOT_EXECUTED`.
+Gate 035 implementation/evidence checkpoint
+`38b6db633c24963d6afbec1f62a6a817172129b1`
+is validated on GitHub-hosted CI.
 
-Gate 035 is opened as a conformance remediation against the accepted
-architecture, not as an architecture redesign.
+Exact checkpoint results:
+- Gate 035 workflow `37535951540`: Ubuntu `PASS`, Windows `PASS`;
+- generic validation `37535951408`: `PASS`;
+- strict exact-head validation `37535951618`: `PASS`;
+- inherited Gate 034 `37535951403`: `PASS`;
+- inherited Gate 033 `37535952500`: `PASS`;
+- inherited Gate 032 `37535951506`: `PASS`;
+- inherited Gate 031 `37535951440`: `PASS`;
+- inherited Gate 030 `37535951456`: `PASS`;
+- inherited Gate 029 `37535951415`: `PASS`;
+- inherited Gate 028 `37535951821`: `PASS`;
+- inherited Gate 027 `37535951394`: `PASS`;
+- inherited Gate 026 `37535951426`: Ubuntu `PASS`, Windows `PASS`.
 
-The next admissible work is limited to:
-1. implement and test deterministic closure of declared
-   `required_validators` before generic job `PASS`;
-2. prove that missing, failed, timed-out, evidence-less or revision-mismatched
-   required validators cannot produce `PASS`;
-3. prove that Reviewer/model `ACCEPT` cannot bypass this boundary;
-4. preserve the no-validator path when a job genuinely declares no required
-   validators;
-5. run Gate 035, generic, strict exact-head and inherited regression CI;
-6. keep the PR draft until implementation/evidence is complete.
+Validated Gate 035 behavior:
+- tool success alone cannot complete a job with unresolved
+  `required_validators`;
+- required validator `PASS` closes only with non-empty evidence bound to the
+  current exact repository SHA;
+- exact-revision evidence-backed validator `FAIL` fails the job;
+- stale or evidence-less `PASS/FAIL` cannot be promoted into current
+  validation state and cannot complete/fail the current job;
+- `NOT_RUN` and timeout remain non-PASS;
+- Reviewer `ACCEPT` cannot substitute for required deterministic validation;
+- jobs with genuinely empty `required_validators` retain the existing
+  successful completion path.
 
-Gate 035 must not change architecture, model routing/qualification,
-PlataVM/BuoyCalc project-specific validator semantics, release/fabrication
-authority or physical-validation semantics.
+No architecture, model routing/qualification, PlataVM/BuoyCalc project-specific
+validator semantics, release/fabrication authority or physical-validation
+semantics changed.
 
-After Gate 035 acceptance, the planned route is:
+This implementation/evidence checkpoint is not the final PR head. The resulting
+documentation/source-of-truth head must pass its own exact-head hosted CI set
+before PR #73 may transition from Draft to Ready for Review.
+
+Release authorization: `NOT_GRANTED`.
+Fabrication authorization: `NOT_GRANTED`.
+Physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+After Gate 035 acceptance, the planned route remains:
 Gate 036 controlled PlataVM+BuoyCalc use -> Gate 037 practical model/runtime
 replacement -> final v1.0 cold-start/source-of-truth readiness audit.
 
