@@ -273,22 +273,20 @@ class Supervisor:
             if result is None:
                 incomplete.append(f"{validator_id}=MISSING")
                 continue
-            if result.state == "FAIL":
-                failed.append(f"{validator_id}=FAIL")
-                continue
             if result.timed_out:
                 incomplete.append(f"{validator_id}=TIMEOUT")
                 continue
-            if result.state != "PASS":
+            if result.state not in {"PASS", "FAIL"}:
                 incomplete.append(f"{validator_id}={result.state}")
                 continue
-            if not result.evidence_refs:
-                incomplete.append(f"{validator_id}=PASS_WITHOUT_EVIDENCE")
-                continue
             if result.repository_head_sha != expected_sha:
-                incomplete.append(
-                    f"{validator_id}=REVISION_MISMATCH"
-                )
+                incomplete.append(f"{validator_id}=REVISION_MISMATCH")
+                continue
+            if not result.evidence_refs:
+                incomplete.append(f"{validator_id}={result.state}_WITHOUT_EVIDENCE")
+                continue
+            if result.state == "FAIL":
+                failed.append(f"{validator_id}=FAIL")
 
         if failed:
             return JobCompletionDecision(
