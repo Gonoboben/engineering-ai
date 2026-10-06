@@ -5397,3 +5397,65 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`
+
+---
+
+## 2026-10-07 — Gate 034 final acceptance and Gate 035 opening
+
+Gate 034 source-of-truth reconciliation confirmed:
+- Issue #68: `CLOSED / COMPLETED`;
+- PR #69: `MERGED`;
+- final PR head: `30da5eb9ba1dbeaf54cbc2eacd3e0802ab99fcfe`;
+- squash merge: `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`;
+- final Gate 034 workflow `37251626010`: `PASS`;
+- final strict exact-head workflow `37251626074`: `PASS`;
+- final generic workflow `37251626129`: `PASS`;
+- inherited Gate 026–033 workflows on the same exact head: `PASS`.
+
+The ECC comparative audit exposed that generic `Supervisor.execute()` could mark a
+job `PASS` from `ToolOutcome.ok=true` without proving closure of the job's
+declared `required_validators`. Read-only reconciliation against
+`ARCHITECTURE.md` and `DECISIONS.md` established that this is not a new
+architecture requirement: accepted architecture already requires validation
+before work is marked complete and requires completion states to reference
+actual validator/evidence results.
+
+Human authorization therefore opened Gate 035 as a narrow v1.0 conformance
+remediation, not an architecture redesign.
+
+Gate 035 opening:
+- Issue #72: `OPEN`;
+- branch: `gate-035-deterministic-acceptance-contract-conformance`;
+- base: `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`;
+- Draft PR #73: `OPEN`.
+
+Authorized scope:
+- close declared `required_validators` against explicit validator outcome,
+  evidence and exact repository revision before generic job `PASS`;
+- keep jobs with genuinely empty `required_validators` working;
+- prevent Reviewer/model `ACCEPT` from replacing deterministic validation;
+- add deterministic negative/positive regression evidence;
+- synchronize source of truth after the already-completed Gate 034 merge.
+
+Explicitly out of scope:
+- architecture redesign;
+- ECC feature adoption;
+- retrieval/context/memory changes;
+- model routing/qualification changes;
+- PlataVM/BuoyCalc project-specific validator semantic changes;
+- release/fabrication authority;
+- physical-validation claims.
+
+Planned post-Gate-035 route:
+Gate 036 controlled PlataVM+BuoyCalc use -> Gate 037 practical model/runtime
+replacement -> final v1.0 cold-start/source-of-truth readiness audit.
+
+Release authorization:
+`NOT_GRANTED`
+
+Fabrication authorization:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`
+
