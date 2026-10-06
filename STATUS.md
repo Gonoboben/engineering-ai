@@ -81,7 +81,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `035 — v1.0 deterministic acceptance-contract conformance`
 - Issue: `#72 OPEN`
-- PR: `DRAFT_TO_BE_OPENED`
+- PR: `#73 DRAFT / OPEN`
 - Branch: `gate-035-deterministic-acceptance-contract-conformance`
 - Base: accepted Gate 034 squash merge
   `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
