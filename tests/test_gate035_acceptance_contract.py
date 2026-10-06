@@ -234,6 +234,38 @@ class Gate035AcceptanceContractTests(unittest.TestCase):
         self.assertEqual(result.job["status"], "BLOCKED")
         self.assertIn("REVISION_MISMATCH", result.job["blocker"])
 
+    def test_fail_from_other_revision_cannot_fail_current_job(self) -> None:
+        supervisor = Supervisor(policy=policy(), state=state())
+        result = supervisor.execute(
+            job=job(),
+            action="run_validator",
+            tool=lambda action: ToolOutcome(
+                True,
+                "stale validator failure",
+                validator_results=(
+                    validator(state_value="FAIL", sha=OTHER_HEAD),
+                ),
+            ),
+        )
+        self.assertEqual(result.job["status"], "BLOCKED")
+        self.assertIn("REVISION_MISMATCH", result.job["blocker"])
+
+    def test_fail_without_evidence_cannot_fail_current_job(self) -> None:
+        supervisor = Supervisor(policy=policy(), state=state())
+        result = supervisor.execute(
+            job=job(),
+            action="run_validator",
+            tool=lambda action: ToolOutcome(
+                True,
+                "validator failure without evidence",
+                validator_results=(
+                    validator(state_value="FAIL", evidence=()),
+                ),
+            ),
+        )
+        self.assertEqual(result.job["status"], "BLOCKED")
+        self.assertIn("FAIL_WITHOUT_EVIDENCE", result.job["blocker"])
+
     def test_pass_without_evidence_cannot_close_job(self) -> None:
         supervisor = Supervisor(policy=policy(), state=state())
         result = supervisor.execute(
