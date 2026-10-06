@@ -66,7 +66,14 @@
             "type": "string",
             "enum": ["PASS", "FAIL", "NOT_RUN", "NOT_APPLICABLE", "PHYSICAL_NOT_EXECUTED", "NEEDS_HUMAN_APPROVAL"]
           },
-          "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+          "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "repository_head_sha": {
+            "oneOf": [
+              {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+              {"type": "null"}
+            ]
+          },
+          "timed_out": {"type": "boolean"}
         }
       }
     },
