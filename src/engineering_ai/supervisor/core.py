@@ -975,7 +975,10 @@ class Supervisor:
         )
 
         if outcome.ok:
-            completion = self.evaluate_job_completion(job=working_job)
+            completion = self.evaluate_job_completion(
+                job=working_job,
+                validator_results=outcome.validator_results,
+            )
             if completion.status == "PASS":
                 working_job["status"] = "PASS"
                 working_job["blocker"] = None
@@ -1126,25 +1129,33 @@ class Supervisor:
                     "validator result was not declared in job required_validators: "
                     f"{result.validator_id}"
                 )
-            record = {
-                "check_id": result.validator_id,
-                "validation_class": result.validation_class,
-                "state": result.state,
-                "evidence_refs": list(result.evidence_refs),
-                "repository_head_sha": result.repository_head_sha,
-                "timed_out": result.timed_out,
-            }
-            if result.validator_id in by_id:
-                self._state["validation_states"][by_id[result.validator_id]] = record
-            else:
-                by_id[result.validator_id] = len(self._state["validation_states"])
-                self._state["validation_states"].append(record)
+
+            exact_revision = result.repository_head_sha == current_sha
+            decisive_without_evidence = (
+                result.state in {"PASS", "FAIL"} and not result.evidence_refs
+            )
+            eligible_for_current_state = exact_revision and not decisive_without_evidence
+
+            if eligible_for_current_state:
+                record = {
+                    "check_id": result.validator_id,
+                    "validation_class": result.validation_class,
+                    "state": result.state,
+                    "evidence_refs": list(result.evidence_refs),
+                    "repository_head_sha": result.repository_head_sha,
+                    "timed_out": result.timed_out,
+                }
+                if result.validator_id in by_id:
+                    self._state["validation_states"][by_id[result.validator_id]] = record
+                else:
+                    by_id[result.validator_id] = len(self._state["validation_states"])
+                    self._state["validation_states"].append(record)
 
             closed = (
-                result.state == "PASS"
+                eligible_for_current_state
+                and result.state == "PASS"
                 and not result.timed_out
                 and bool(result.evidence_refs)
-                and result.repository_head_sha == current_sha
             )
             if closed:
                 self._state["pending_checks"] = [
