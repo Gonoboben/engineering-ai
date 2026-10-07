@@ -176,7 +176,7 @@ def accepted_provider() -> FakeProvider:
 
 
 class Gate035AcceptanceContractTests(unittest.TestCase):
-    def test_job_cannot_omit_policy_mandatory_validator(self) -> None:
+    def test_policy_mandatory_validator_cannot_be_bypassed_by_job_omission(self) -> None:
         mandatory_policy = policy()
         mandatory_policy["mandatory_validators"] = ["schema-suite"]
         supervisor = Supervisor(policy=mandatory_policy, state=state())
@@ -184,19 +184,34 @@ class Gate035AcceptanceContractTests(unittest.TestCase):
 
         def tool(action: str) -> ToolOutcome:
             calls.append(action)
-            return ToolOutcome(True, "must not execute")
+            return ToolOutcome(True, "read ok", ("ev-read",))
 
-        with self.assertRaisesRegex(
-            SemanticValidationError,
-            "omit project policy mandatory validators",
-        ):
-            supervisor.execute(
-                job=job(required=()),
-                action="read_repository",
-                tool=tool,
-            )
+        result = supervisor.execute(
+            job=job(required=()),
+            action="read_repository",
+            tool=tool,
+        )
 
-        self.assertEqual(calls, [])
+        self.assertEqual(calls, ["read_repository"])
+        self.assertEqual(result.job["status"], "BLOCKED")
+        self.assertIn("schema-suite=MISSING", result.job["blocker"])
+
+    def test_policy_mandatory_validator_can_close_without_duplicate_job_declaration(self) -> None:
+        mandatory_policy = policy()
+        mandatory_policy["mandatory_validators"] = ["schema-suite"]
+        supervisor = Supervisor(policy=mandatory_policy, state=state())
+
+        result = supervisor.execute(
+            job=job(required=()),
+            action="run_validator",
+            tool=lambda action: ToolOutcome(
+                True,
+                "policy validator pass",
+                validator_results=(validator(),),
+            ),
+        )
+
+        self.assertEqual(result.job["status"], "PASS")
 
     def test_tool_success_without_required_validator_is_blocked(self) -> None:
         supervisor = Supervisor(policy=policy(), state=state())
