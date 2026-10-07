@@ -121,17 +121,11 @@ def run() -> dict:
         policy=mandatory_policy,
         state=state(head),
     )
-    mandatory_omission_blocked = False
-    try:
-        mandatory_supervisor.execute(
-            job=job(required=()),
-            action="read_repository",
-            tool=lambda action: ToolOutcome(True, "must not execute"),
-        )
-    except Exception as exc:
-        mandatory_omission_blocked = (
-            "omit project policy mandatory validators" in str(exc)
-        )
+    mandatory_omission = mandatory_supervisor.execute(
+        job=job(required=()),
+        action="read_repository",
+        tool=lambda action: ToolOutcome(True, "read ok", ("ev-read",)),
+    )
 
     missing_supervisor = Supervisor(policy=policy(), state=state(head))
     missing = missing_supervisor.execute(
@@ -206,7 +200,9 @@ def run() -> dict:
     )
 
     checks = {
-        "policy_mandatory_validator_cannot_be_omitted": mandatory_omission_blocked,
+        "policy_mandatory_validator_cannot_be_bypassed_by_job_omission":
+            mandatory_omission.job["status"] == "BLOCKED"
+            and "schema-suite=MISSING" in mandatory_omission.job["blocker"],
         "missing_required_validator_blocked": missing.job["status"] == "BLOCKED",
         "failed_required_validator_failed": failed.job["status"] == "FAIL",
         "timeout_not_pass": timeout.job["status"] == "BLOCKED",
