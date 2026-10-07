@@ -728,7 +728,7 @@ Purpose:
 
 Exact Gate 036 project sources:
 - PlataVM Draft PR #100 head
-  `11e746cfea7f9200415cf817b6cde928b6a2651a`, base main
+  `840435615d0b3ebf5f1137f575cfd75b66501964`, base main
   `dcba77466d4800c0e7a336a2771684e066f845db`;
 - BuoyCalc
   `main@325aee5ee3a9f64413e416a1206fc4e296d9723f`.
@@ -737,6 +737,15 @@ The Gate 036 CI harness may validate evidence semantics only. Final Gate
 acceptance additionally requires a real primary-workstation execution against
 both exact connected-project revisions. Synthetic/self-test evidence cannot
 close the Gate.
+
+Remediation checkpoint:
+- the first Windows real-pilot attempt demonstrated a PlataVM repository-path
+  canonicalization defect and an Engineering AI transient disposable-worktree
+  cleanup defect;
+- the owner authorized only minimal portability/cleanup remediation inside
+  existing PlataVM PR #100 and this Gate 036 branch;
+- Gate 036 remains open until the remediated exact revisions complete the real
+  primary-workstation acceptance path.
 
 Connected-project commits, pushes, PR mutation/creation/merge, architecture,
 physics, validator weakening, release/fabrication authorization and physical
