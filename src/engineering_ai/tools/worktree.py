@@ -312,18 +312,8 @@ class ControlledWorktreeAdapter:
         """
 
         if worktree.exists():
-            def _clear_readonly_and_retry(function, path, exc_info):
-                try:
-                    os.chmod(path, stat.S_IWRITE)
-                    function(path)
-                except OSError:
-                    raise exc_info[1]
-
             try:
-                shutil.rmtree(
-                    worktree,
-                    onerror=_clear_readonly_and_retry,
-                )
+                self._remove_disposable_filesystem_with_retry(worktree)
             except OSError as exc:
                 raise ToolExecutionError(
                     "disposable worktree cleanup failed after git remove error "
@@ -344,6 +334,51 @@ class ControlledWorktreeAdapter:
             raise ToolExecutionError(
                 "disposable worktree path still exists after guarded cleanup"
             )
+
+    @staticmethod
+    def _remove_disposable_filesystem_with_retry(
+        worktree: Path,
+        *,
+        attempts: int = 10,
+    ) -> None:
+        """Boundedly retry filesystem cleanup after Git worktree deregistration.
+
+        Windows may release the directory handle slightly after Git has already
+        removed the worktree registration. Retry only the already-verified
+        adapter-owned disposable path; persistent locks still fail closed.
+        """
+
+        if attempts <= 0:
+            raise ValueError("attempts must be positive")
+
+        def _clear_readonly_and_retry(function, path, exc_info):
+            try:
+                os.chmod(path, stat.S_IWRITE)
+                function(path)
+            except OSError:
+                raise exc_info[1]
+
+        last_error: OSError | None = None
+        for index in range(attempts):
+            if not worktree.exists():
+                return
+            try:
+                shutil.rmtree(
+                    worktree,
+                    onerror=_clear_readonly_and_retry,
+                )
+            except OSError as exc:
+                last_error = exc
+
+            if not worktree.exists():
+                return
+
+            if index + 1 < attempts:
+                time.sleep(min(0.25 * (index + 1), 1.0))
+
+        if last_error is not None:
+            raise last_error
+        raise OSError(f"disposable worktree path still exists: {worktree}")
 
     def _require_primary_clean(self) -> None:
         result = self._primary_git.status()
