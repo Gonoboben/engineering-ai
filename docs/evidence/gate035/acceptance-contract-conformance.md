@@ -25,9 +25,11 @@ The generic Supervisor completion boundary now distinguishes:
 - required-validator closure;
 - terminal job completion.
 
-The job contract must first include every validator declared mandatory by the
-project policy. A job cannot obtain a validator-free completion path by omitting
-a project-policy mandatory validator.
+The effective required-validator set is the deterministic union of
+project-policy `mandatory_validators` and job-declared `required_validators`.
+A job may proceed through non-terminal work without duplicating policy validators
+in its own declaration, but it cannot obtain terminal `PASS` while any effective
+required validator remains unresolved.
 
 A required validator closes a job only when:
 1. its validator ID is declared by the job;
@@ -40,7 +42,8 @@ Missing, `NOT_RUN`, timed-out, evidence-less or revision-mismatched required val
 
 Jobs with an empty `required_validators` set retain the existing no-validator
 completion path only when the project policy also declares no mandatory
-validators.
+validators. If policy validators exist, they remain effective completion
+requirements even when the job-local list is empty.
 
 The Planner/Executor/Reviewer loop uses the same deterministic completion boundary. Reviewer `ACCEPT` cannot substitute for a missing required validator.
 
@@ -67,7 +70,7 @@ Physical validation remains `PHYSICAL_NOT_EXECUTED`.
 ## Required evidence
 
 Gate-specific deterministic coverage includes:
-- project-policy mandatory validator omitted by the job -> rejected before execution;
+- project-policy mandatory validator omitted by the job -> execution may proceed, but terminal PASS is blocked until that validator closes;
 - tool success + missing required validator -> not PASS;
 - exact-revision evidence-backed required validator FAIL -> FAIL;
 - stale-revision FAIL -> BLOCKED and is not promoted into current validation state;
