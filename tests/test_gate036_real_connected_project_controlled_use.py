@@ -12,6 +12,12 @@ from scripts.gate036_real_connected_project_controlled_use import (
 
 
 class Gate036RealConnectedProjectControlledUseTests(unittest.TestCase):
+    def test_platavm_expected_head_tracks_remediated_pr100(self) -> None:
+        self.assertEqual(
+            PLATAVM_EXPECTED_HEAD,
+            "840435615d0b3ebf5f1137f575cfd75b66501964",
+        )
+
     def test_complete_real_evidence_passes(self) -> None:
         payload = _synthetic_pass_payload()
         passed, errors = evaluate_gate036_payload(payload)
