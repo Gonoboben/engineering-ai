@@ -71,19 +71,25 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Gate 031 merge commit: `be30ad6de5092220be662b932c21198efcde9db8`
 - Gate 032: `ACCEPTED_MERGED`
 - Gate 032 merge commit: `79fd557c645f9310c5729400cfe7ba5fcf61ffa0`
+- Gate 033: `ACCEPTED_MERGED`
+- Gate 033 merge commit: `302d96a670f5197a496c583bc6faea60b16a5d87`
+- Gate 034: `ACCEPTED_MERGED`
+- Gate 034 merge commit: `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
 - Control-plane architecture: `ACCEPTED_SUPERVISED_MULTI_MODEL_BASELINE`
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `034 — v1.0 documented model/tool failure recovery acceptance`
-- Issue: `#68`
-- PR: `#69 (DRAFT)`
-- Branch: `gate-034-model-tool-failure-recovery`
-- Base: accepted Gate 033 squash merge
-  `302d96a670f5197a496c583bc6faea60b16a5d87`
-- Opening head: `b15c231d7adc56bce8100ce2fb2ba3fa228d2304`
-- Implementation head: `146c16e20d0a80c5a722560226c55af9886d1207`
-- State: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
+- Gate: `035 — v1.0 deterministic acceptance-contract conformance`
+- Issue: `#72 OPEN`
+- PR: `#73 READY FOR REVIEW / OPEN`
+- Branch: `gate-035-deterministic-acceptance-contract-conformance`
+- Base: accepted Gate 034 squash merge
+  `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
+- State: `READY_FOR_REVIEW_FINAL_EXACT_HEAD_CI_REQUIRED`
+- Current implementation/evidence checkpoint:
+  `e6770dff9a3c52124ae6e6650a64a7f696570343`
+- Purpose: restore the already accepted required-validator/evidence completion
+  contract before real connected-project controlled use.
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -139,7 +145,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 measured/replaceable multi-model routing acceptance: `IMPLEMENTED_VALIDATED_GATE_031_ACCEPTED`
 - v1.0 controlled hand-offs with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_032_ACCEPTED`
 - v1.0 persistent project memory with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_033_ACCEPTED`
-- v1.0 documented model/tool failure recovery acceptance: `IMPLEMENTED_VALIDATED_GATE_034_PENDING_FINAL_DOCUMENTATION_CI`
+- v1.0 documented model/tool failure recovery acceptance: `IMPLEMENTED_VALIDATED_GATE_034_ACCEPTED`
+- v1.0 deterministic acceptance-contract conformance: `GATE_035_READY_FOR_REVIEW`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -810,37 +817,44 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 034 implementation head
-`146c16e20d0a80c5a722560226c55af9886d1207`
-is validated on hosted CI, local Windows and the dedicated
-EngineeringAI-Ubuntu node.
+Gate 035 Ready-for-Review source transition was made from exact head:
+`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`.
 
-Validation evidence on that implementation head:
-- Gate 034 acceptance harness: `PASS_V1_0_DOCUMENTED_MODEL_TOOL_FAILURE_RECOVERY`;
-- local Windows Gate 034 wrapper: `PASS`;
-- local Windows deterministic regression: `319/319 PASS`;
-- local Windows exact HEAD preserved and worktree clean: `PASS`;
-- dedicated EngineeringAI-Ubuntu Gate 034 wrapper: `PASS`;
-- dedicated EngineeringAI-Ubuntu deterministic regression: `319/319 PASS`;
-- dedicated EngineeringAI-Ubuntu exact HEAD preserved and worktree clean: `PASS`;
-- hosted Gate 034 workflow: Ubuntu `PASS`, Windows `PASS`;
-- generic and strict exact-head hosted validation: `PASS`;
-- inherited hosted Gate 026–033 workflows: `PASS`.
+On that exact revision, all 12 pull-request workflows completed successfully:
+- Gate 035 `37589599652`: `PASS`;
+- generic validation `37589599705`: `PASS`;
+- strict exact-head validation `37589599645`: `PASS`;
+- Gate 034 `37589599627`: `PASS`;
+- Gate 033 `37589599542`: `PASS`;
+- Gate 032 `37589599674`: `PASS`;
+- Gate 031 `37589599588`: `PASS`;
+- Gate 030 `37589599504`: `PASS`;
+- Gate 029 `37589599486`: `PASS`;
+- Gate 028 `37589599523`: `PASS`;
+- Gate 027 `37589599567`: `PASS`;
+- Gate 026 `37589599711`: Ubuntu `PASS`, Windows `PASS` after rerunning
+  only the failed Windows job on the unchanged exact head.
 
-This documentation-only synchronization does not itself complete the Gate.
-The resulting exact documentation head must pass its own hosted CI set before
-any Ready for Review transition.
+The first Gate 026 Windows attempt again failed only during temporary-directory
+cleanup in the inherited Gate 034 timeout harness with `WinError 32/5`.
+The rerun passed without source changes. This remains classified as a Windows
+CI/test-harness cleanup flake, not a Gate 035 validation failure.
 
-PR #69 must remain `DRAFT` until separate explicit human authorization.
-Merge is not authorized.
+PR #73 is now:
+`READY FOR REVIEW / OPEN`.
 
-Do not change code, tests, validators, architecture, model/tool/Git/network
-authority, connected-project physics, release/fabrication state, or physical
-validation as part of this final documentation checkpoint.
+This documentation-only source-of-truth synchronization commit must complete
+the full hosted CI set successfully on its own exact head. If green, the branch
+is frozen and the only admissible next action is explicit human exact-SHA
+squash-merge authorization.
 
-After Gate 034 acceptance, the accepted Phase 8 route remains:
-PlataVM handoff/readiness audit -> Gate 035 controlled PlataVM+BuoyCalc use ->
-Gate 036 practical model/runtime replacement -> final v1.0 readiness audit.
+Release authorization: `NOT_GRANTED`.
+Fabrication authorization: `NOT_GRANTED`.
+Physical validation: `PHYSICAL_NOT_EXECUTED`.
+
+After Gate 035 acceptance, the planned route remains:
+Gate 036 controlled PlataVM+BuoyCalc use -> Gate 037 practical model/runtime
+replacement -> final v1.0 cold-start/source-of-truth readiness audit.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`

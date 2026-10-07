@@ -95,7 +95,9 @@ class FakeCadRuntime:
 
 
 def make_policy() -> dict:
-    return load_fixture("valid_policy.json")
+    policy = load_fixture("valid_policy.json")
+    policy["mandatory_validators"] = []
+    return policy
 
 
 def make_state(*, allow_propose_patch: bool) -> dict:

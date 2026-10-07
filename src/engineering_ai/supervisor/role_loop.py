@@ -23,7 +23,7 @@ from engineering_ai.models import (
     ModelToolSpec,
 )
 from engineering_ai.supervisor.audit import AuditEmitter
-from engineering_ai.supervisor.core import Supervisor, ToolOutcome
+from engineering_ai.supervisor.core import Supervisor, ToolOutcome, ValidatorOutcome
 from engineering_ai.supervisor.policy import Decision
 from engineering_ai.validation import SemanticValidationError, validate_instance
 
@@ -100,6 +100,7 @@ class ExecutionResult:
     executed_actions: tuple[str, ...]
     evidence_refs: tuple[str, ...]
     model_response: ModelResponse
+    validator_results: tuple[ValidatorOutcome, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -336,6 +337,27 @@ class PlannerExecutorReviewerLoop:
                 )
 
             if review.decision is ReviewDecision.ACCEPT:
+                completion = self._supervisor.evaluate_job_completion(
+                    job=working_job,
+                    validator_results=execution.validator_results,
+                )
+                if completion.status != "PASS":
+                    machine.transition(LoopState.FAIL)
+                    return self._finish(
+                        machine=machine,
+                        job=working_job,
+                        plan=plan,
+                        execution=execution,
+                        review=review,
+                        revision_count=revision_count,
+                        blocker=completion.reason,
+                        status=completion.status,
+                        next_action=(
+                            "complete required validators"
+                            if completion.status == "BLOCKED"
+                            else None
+                        ),
+                    )
                 machine.transition(LoopState.COMPLETE)
                 return self._finish(
                     machine=machine,
@@ -526,6 +548,8 @@ class PlannerExecutorReviewerLoop:
         executed: list[str] = []
         evidence: list[str] = []
         seen_evidence: set[str] = set()
+        validator_results: list[ValidatorOutcome] = []
+        seen_validators: set[str] = set()
 
         for proposal in proposals:
             action = proposal.name
@@ -613,10 +637,28 @@ class PlannerExecutorReviewerLoop:
                     ),
                 )
             executed.append(action)
+            for result in outcome.validator_results:
+                if result.validator_id in seen_validators:
+                    raise SemanticValidationError(
+                        "duplicate validator result in one executor run: "
+                        f"{result.validator_id}"
+                    )
+                validator_results.append(result)
+                seen_validators.add(result.validator_id)
+                for ref in result.evidence_refs:
+                    if ref not in seen_evidence:
+                        evidence.append(ref)
+                        seen_evidence.add(ref)
             for ref in outcome.evidence_refs:
                 if ref not in seen_evidence:
                     evidence.append(ref)
                     seen_evidence.add(ref)
+
+        if validator_results:
+            self._state = self._supervisor.record_validator_results(
+                job=job,
+                validator_results=tuple(validator_results),
+            )
 
         return ExecutionResult(
             summary=summary,
@@ -624,6 +666,7 @@ class PlannerExecutorReviewerLoop:
             executed_actions=tuple(executed),
             evidence_refs=tuple(evidence),
             model_response=response,
+            validator_results=tuple(validator_results),
         )
 
     def _run_reviewer(
@@ -882,7 +925,7 @@ class PlannerExecutorReviewerLoop:
         self._state["state_revision"] += 1
         self._state["active_job_id"] = (
             job["job_id"]
-            if status in {"WAITING_FOR_APPROVAL", "QUEUED"}
+            if status in {"WAITING_FOR_APPROVAL", "QUEUED", "BLOCKED"}
             else None
         )
         if next_action is None and status == "WAITING_FOR_APPROVAL":

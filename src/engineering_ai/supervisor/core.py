@@ -52,10 +52,70 @@ from engineering_ai.validation import SemanticValidationError, validate_instance
 
 
 @dataclass(frozen=True)
+class ValidatorOutcome:
+    validator_id: str
+    state: str
+    evidence_refs: tuple[str, ...] = ()
+    repository_head_sha: str | None = None
+    timed_out: bool = False
+    validation_class: str = "DETERMINISTIC_TEST"
+
+    def __post_init__(self) -> None:
+        if not self.validator_id.strip():
+            raise ValueError("validator_id must be non-empty")
+        if self.state not in {
+            "PASS",
+            "FAIL",
+            "NOT_RUN",
+            "NOT_APPLICABLE",
+            "PHYSICAL_NOT_EXECUTED",
+            "NEEDS_HUMAN_APPROVAL",
+        }:
+            raise ValueError(f"unsupported validator state: {self.state}")
+        if len(set(self.evidence_refs)) != len(self.evidence_refs):
+            raise ValueError("validator evidence_refs must be unique")
+        if any(not ref.strip() for ref in self.evidence_refs):
+            raise ValueError("validator evidence_refs must be non-empty strings")
+        if self.repository_head_sha is not None:
+            sha = self.repository_head_sha
+            if len(sha) != 40 or any(ch not in "0123456789abcdef" for ch in sha):
+                raise ValueError("repository_head_sha must be a lowercase 40-char SHA")
+        if self.timed_out and self.state == "PASS":
+            raise ValueError("timed-out validator cannot be PASS")
+        if self.validation_class not in {
+            "ADVISORY",
+            "SOURCE",
+            "CALCULATION",
+            "SIMULATION",
+            "DETERMINISTIC_TEST",
+            "PHYSICAL",
+        }:
+            raise ValueError(f"unsupported validation_class: {self.validation_class}")
+
+
+@dataclass(frozen=True)
 class ToolOutcome:
     ok: bool
     summary: str
     evidence_refs: tuple[str, ...] = ()
+    validator_results: tuple[ValidatorOutcome, ...] = ()
+
+    def __post_init__(self) -> None:
+        validator_ids = [item.validator_id for item in self.validator_results]
+        if len(set(validator_ids)) != len(validator_ids):
+            raise ValueError("validator_results must contain unique validator_id values")
+
+
+@dataclass(frozen=True)
+class JobCompletionDecision:
+    status: str
+    reason: str
+
+    def __post_init__(self) -> None:
+        if self.status not in {"PASS", "BLOCKED", "FAIL"}:
+            raise ValueError(f"unsupported completion status: {self.status}")
+        if not self.reason.strip():
+            raise ValueError("completion reason must be non-empty")
 
 
 class ToolCallable(Protocol):
@@ -92,6 +152,8 @@ class Supervisor:
         "policy denied action:",
         "tool failure; retry available:",
         "retry limit exhausted after tool failure:",
+        "required validators incomplete:",
+        "required validator failed:",
     )
 
     def __init__(
@@ -148,6 +210,114 @@ class Supervisor:
         if self._model_router is None:
             raise RuntimeError("Supervisor has no model router configured")
         return self._model_router.route(request)
+
+
+    def evaluate_job_completion(
+        self,
+        *,
+        job: dict[str, Any],
+        validator_results: tuple[ValidatorOutcome, ...] = (),
+    ) -> JobCompletionDecision:
+        """Deterministically evaluate whether required validators close this job.
+
+        Tool success, model/reviewer agreement, and the mere presence of evidence
+        references are not substitutes for explicit required-validator closure.
+        """
+        working_job = deepcopy(job)
+        validate_instance("job.schema.json", working_job)
+        self._validate_job_context(working_job)
+
+        required = self._required_validator_ids(working_job)
+        if not required:
+            return JobCompletionDecision(
+                status="PASS",
+                reason="job declares no required validators",
+            )
+
+        expected_sha = (
+            self._state.get("repository_ref", {}).get("head_sha")
+            if self._state.get("repository_ref")
+            else None
+        )
+        if expected_sha is None:
+            return JobCompletionDecision(
+                status="BLOCKED",
+                reason="required validators cannot close without an exact repository HEAD",
+            )
+
+        available: dict[str, ValidatorOutcome] = {}
+        for item in self._state.get("validation_states", []):
+            check_id = item.get("check_id")
+            if not isinstance(check_id, str) or not check_id.strip():
+                continue
+            available[check_id] = ValidatorOutcome(
+                validator_id=check_id,
+                state=item["state"],
+                evidence_refs=tuple(item.get("evidence_refs", ())),
+                repository_head_sha=item.get("repository_head_sha"),
+                timed_out=bool(item.get("timed_out", False)),
+                validation_class=item["validation_class"],
+            )
+        for result in validator_results:
+            if result.validator_id not in required:
+                raise SemanticValidationError(
+                    "validator result was not declared in job required_validators: "
+                    f"{result.validator_id}"
+                )
+            available[result.validator_id] = result
+
+        failed: list[str] = []
+        incomplete: list[str] = []
+        for validator_id in required:
+            result = available.get(validator_id)
+            if result is None:
+                incomplete.append(f"{validator_id}=MISSING")
+                continue
+            if result.timed_out:
+                incomplete.append(f"{validator_id}=TIMEOUT")
+                continue
+            if result.state not in {"PASS", "FAIL"}:
+                incomplete.append(f"{validator_id}={result.state}")
+                continue
+            if result.repository_head_sha != expected_sha:
+                incomplete.append(f"{validator_id}=REVISION_MISMATCH")
+                continue
+            if not result.evidence_refs:
+                incomplete.append(f"{validator_id}={result.state}_WITHOUT_EVIDENCE")
+                continue
+            if result.state == "FAIL":
+                failed.append(f"{validator_id}=FAIL")
+
+        if failed:
+            return JobCompletionDecision(
+                status="FAIL",
+                reason="required validator failed: " + ", ".join(failed),
+            )
+        if incomplete:
+            return JobCompletionDecision(
+                status="BLOCKED",
+                reason="required validators incomplete: " + ", ".join(incomplete),
+            )
+        return JobCompletionDecision(
+            status="PASS",
+            reason="all required validators passed with matching revision and evidence",
+        )
+
+    def record_validator_results(
+        self,
+        *,
+        job: dict[str, Any],
+        validator_results: tuple[ValidatorOutcome, ...],
+    ) -> dict[str, Any]:
+        """Record declared validator outcomes into the current project state."""
+        working_job = deepcopy(job)
+        validate_instance("job.schema.json", working_job)
+        self._validate_job_context(working_job)
+        self._apply_validator_results(
+            job=working_job,
+            validator_results=validator_results,
+        )
+        return self.state
 
     def retrieve_memory_context(
         self,
@@ -693,7 +863,7 @@ class Supervisor:
                 summary=outcome.summary,
                 before_ref=before_ref,
                 after_ref=self._repository_ref(),
-                evidence_refs=list(outcome.evidence_refs),
+                evidence_refs=self._outcome_evidence_refs(outcome),
                 approval_required=decision.approval_required,
                 approval_obtained=decision.approval_obtained,
                 approver=decision.approver,
@@ -781,6 +951,12 @@ class Supervisor:
         if not isinstance(outcome, ToolOutcome):
             raise TypeError("tool must return ToolOutcome")
 
+        self._apply_validator_results(
+            job=working_job,
+            validator_results=outcome.validator_results,
+        )
+        outcome_evidence_refs = self._outcome_evidence_refs(outcome)
+
         self._record(
             self._audit.tool_event(
                 project_id=working_job["project_id"],
@@ -791,7 +967,7 @@ class Supervisor:
                 summary=outcome.summary,
                 before_ref=before_ref,
                 after_ref=self._repository_ref(),
-                evidence_refs=list(outcome.evidence_refs),
+                evidence_refs=outcome_evidence_refs,
                 approval_required=decision.approval_required,
                 approval_obtained=decision.approval_obtained,
                 approver=decision.approver,
@@ -799,18 +975,44 @@ class Supervisor:
         )
 
         if outcome.ok:
-            working_job["status"] = "PASS"
-            working_job["blocker"] = None
-            self._clear_transient_supervisor_blockers()
-            self._advance_state(active_job_id=None, next_action=None)
-            self._record_transition(
+            completion = self.evaluate_job_completion(
                 job=working_job,
-                action=action,
-                status="PASS",
-                summary="tool action completed successfully",
-                before_ref=before_ref,
-                evidence_refs=list(outcome.evidence_refs),
+                validator_results=outcome.validator_results,
             )
+            if completion.status == "PASS":
+                working_job["status"] = "PASS"
+                working_job["blocker"] = None
+                self._clear_transient_supervisor_blockers()
+                self._advance_state(active_job_id=None, next_action=None)
+                self._record_transition(
+                    job=working_job,
+                    action=action,
+                    status="PASS",
+                    summary=completion.reason,
+                    before_ref=before_ref,
+                    evidence_refs=outcome_evidence_refs,
+                )
+            else:
+                working_job["status"] = completion.status
+                working_job["blocker"] = completion.reason
+                next_action = (
+                    "complete required validators"
+                    if completion.status == "BLOCKED"
+                    else None
+                )
+                self._apply_state_blocker(
+                    working_job,
+                    completion.reason,
+                    next_action=next_action,
+                )
+                self._record_transition(
+                    job=working_job,
+                    action=action,
+                    status=completion.status,
+                    summary=completion.reason,
+                    before_ref=before_ref,
+                    evidence_refs=outcome_evidence_refs,
+                )
         else:
             self._handle_tool_failure(working_job, action, outcome, before_ref)
 
@@ -902,8 +1104,94 @@ class Supervisor:
             status="FAIL",
             summary=job["blocker"],
             before_ref=before_ref,
-            evidence_refs=list(outcome.evidence_refs),
+            evidence_refs=self._outcome_evidence_refs(outcome),
         )
+
+    def _apply_validator_results(
+        self,
+        *,
+        job: dict[str, Any],
+        validator_results: tuple[ValidatorOutcome, ...],
+    ) -> None:
+        if not validator_results:
+            return
+
+        required = set(self._required_validator_ids(job))
+        by_id = {
+            item["check_id"]: index
+            for index, item in enumerate(self._state.get("validation_states", []))
+        }
+        current_sha = self._state.get("repository_ref", {}).get("head_sha")
+
+        for result in validator_results:
+            if result.validator_id not in required:
+                raise SemanticValidationError(
+                    "validator result was not declared in job required_validators: "
+                    f"{result.validator_id}"
+                )
+
+            exact_revision = result.repository_head_sha == current_sha
+            decisive_without_evidence = (
+                result.state in {"PASS", "FAIL"} and not result.evidence_refs
+            )
+            eligible_for_current_state = exact_revision and not decisive_without_evidence
+
+            if eligible_for_current_state:
+                record = {
+                    "check_id": result.validator_id,
+                    "validation_class": result.validation_class,
+                    "state": result.state,
+                    "evidence_refs": list(result.evidence_refs),
+                    "repository_head_sha": result.repository_head_sha,
+                    "timed_out": result.timed_out,
+                }
+                if result.validator_id in by_id:
+                    self._state["validation_states"][by_id[result.validator_id]] = record
+                else:
+                    by_id[result.validator_id] = len(self._state["validation_states"])
+                    self._state["validation_states"].append(record)
+
+            closed = (
+                eligible_for_current_state
+                and result.state == "PASS"
+                and not result.timed_out
+                and bool(result.evidence_refs)
+            )
+            if closed:
+                self._state["pending_checks"] = [
+                    check
+                    for check in self._state["pending_checks"]
+                    if check != result.validator_id
+                ]
+            elif result.validator_id not in self._state["pending_checks"]:
+                self._state["pending_checks"].append(result.validator_id)
+
+        validate_instance("project-state.schema.json", self._state)
+
+    def _required_validator_ids(self, job: dict[str, Any]) -> tuple[str, ...]:
+        return tuple(
+            dict.fromkeys(
+                (
+                    *self._policy["mandatory_validators"],
+                    *job["required_validators"],
+                )
+            )
+        )
+
+    @staticmethod
+    def _outcome_evidence_refs(outcome: ToolOutcome) -> list[str]:
+        refs: list[str] = []
+        seen: set[str] = set()
+        for ref in outcome.evidence_refs:
+            if ref not in seen:
+                refs.append(ref)
+                seen.add(ref)
+        for result in outcome.validator_results:
+            for ref in result.evidence_refs:
+                if ref not in seen:
+                    refs.append(ref)
+                    seen.add(ref)
+        return refs
 
     def _validate_job_context(self, job: dict[str, Any]) -> None:
         if job["project_id"] != self._policy["project_id"]:

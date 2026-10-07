@@ -655,63 +655,99 @@ adding semantic/vector retrieval, automatic memory injection/promotion, or new
 model/tool/Git/network authority.
 
 ### Gate 034 — v1.0 documented model/tool failure recovery acceptance
-Status: `IMPLEMENTATION_VALIDATED / FINAL_DOCUMENTATION_CI_REQUIRED`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#68 OPEN`
+Issue: `#68 CLOSED / COMPLETED`
 
-PR: `#69 DRAFT`
+PR: `#69 MERGED`
 
-Branch: `gate-034-model-tool-failure-recovery`
+Final approved PR head:
+`30da5eb9ba1dbeaf54cbc2eacd3e0802ab99fcfe`
 
-Base: accepted Gate 033 squash merge
-`302d96a670f5197a496c583bc6faea60b16a5d87`
+Squash merge:
+`6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
 
-Implementation head:
-`146c16e20d0a80c5a722560226c55af9886d1207`
+Final exact-head hosted validation:
+- Gate 034 workflow `37251626010`: `PASS`;
+- strict exact-head workflow `37251626074`: `PASS`;
+- generic workflow `37251626129`: `PASS`;
+- inherited Gate 026–033 workflows on the same exact head: `PASS`;
+- release/fabrication authorization: `NOT_GRANTED`;
+- physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-Validated acceptance behavior:
-- bounded model-provider failure retry / retry exhaustion;
-- Supervisor-owned bounded tool-failure classification reused by role-loop
-  orchestration;
-- bounded structured-output protocol correction;
-- structured process timeout;
-- interrupted persisted RUNNING recovery;
-- persisted deadline expiry / late-PASS rejection;
-- policy and offline denial not misclassified as retriable infrastructure
-  failure;
-- WAITING_FOR_APPROVAL persistence with no automatic approval;
-- project/job identity, attempts, blockers and append-only recovery history
-  preserved;
-- no observed failure/recovery boundary produced false PASS.
+Gate 034 closes the documented model/tool failure recovery criterion without
+changing architecture, validator semantics, model/tool/Git/network authority,
+release/fabrication authority or physical-validation semantics.
 
-Validation on the implementation head:
-- local Windows Gate 034 harness/wrapper: `PASS`;
-- local Windows deterministic regression: `319/319 PASS`;
-- local Windows exact HEAD preserved and worktree clean: `PASS`;
-- dedicated EngineeringAI-Ubuntu Gate 034 harness/wrapper: `PASS`;
-- dedicated EngineeringAI-Ubuntu deterministic regression:
-  `319/319 PASS`;
-- dedicated EngineeringAI-Ubuntu exact HEAD preserved and worktree clean:
-  `PASS`;
-- hosted Gate 034 workflow `37111284820`: Ubuntu `PASS`,
-  Windows `PASS`;
-- strict exact-head workflow `37111284731`: `PASS`;
-- generic workflow `37111284747`: `PASS`;
-- inherited hosted Gate 026–033 workflows on the same head: `PASS`.
+### Gate 035 — v1.0 deterministic acceptance-contract conformance
+Status: `READY_FOR_REVIEW_FINAL_EXACT_HEAD_CI_REQUIRED`
 
-The resulting documentation-only head must pass its own exact-head hosted CI
-set before PR #69 may be considered for Ready for Review.
+Issue: `#72 OPEN`
 
-No architecture redesign, validator weakening, automatic approval, new
-model/tool/Git/network authority, connected-project production work,
-release/fabrication authorization or physical-validation claim is permitted by
-Gate 034.
+PR: `#73 READY FOR REVIEW / OPEN`
 
-Release authorization: `NOT_GRANTED`.
+Branch: `gate-035-deterministic-acceptance-contract-conformance`
 
-Fabrication authorization: `NOT_GRANTED`.
+Base:
+`6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
 
-Physical validation: `PHYSICAL_NOT_EXECUTED`.
+Purpose:
+- restore conformance with the already accepted rule that validation is required
+  before generic engineering work reaches terminal `PASS`;
+- treat successful tool execution separately from validator closure;
+- make the effective required-validator set the deterministic union of project
+  policy `mandatory_validators` and job `required_validators`;
+- require exact-revision, evidence-backed PASS for every effective required
+  validator;
+- prevent Reviewer/model `ACCEPT` from substituting for deterministic
+  validation;
+- preserve the no-validator completion path only when neither policy nor job
+  requires validators;
+- do not change PlataVM/BuoyCalc project-specific validator semantics.
+
+Gate 035 is a conformance remediation, not a new v1.0 product criterion and not
+an architecture redesign.
+
+The earlier implementation/evidence checkpoint
+`38b6db633c24963d6afbec1f62a6a817172129b1` was superseded after post-review
+analysis found that policy-level `mandatory_validators` were not yet included
+in the generic terminal completion set. PR #73 was returned to Draft.
+
+Current validated implementation/evidence checkpoint:
+`e6770dff9a3c52124ae6e6650a64a7f696570343`
+
+Hosted validation on that exact checkpoint:
+- Gate 035 workflow `37587374112`: `PASS`;
+- generic validation `37587374030`: `PASS`;
+- strict exact-head validation `37587374079`: `PASS`;
+- Gate 034 `37587374040`: `PASS`;
+- Gate 033 `37587374086`: `PASS`;
+- Gate 032 `37587374074`: `PASS`;
+- Gate 031 `37587374042`: `PASS`;
+- Gate 030 `37587374041`: `PASS`;
+- Gate 029 `37587374104`: `PASS`;
+- Gate 028 `37587374026`: `PASS`;
+- Gate 027 `37587374039`: `PASS`;
+- Gate 026 `37587374052`: Ubuntu `PASS`, Windows `PASS` after one
+  failed-job rerun on the unchanged head following a Windows temporary-directory
+  cleanup error in inherited Gate 034 test infrastructure.
+
+No validator was weakened and no architecture, model routing, project-specific
+validator semantics, release/fabrication authority or physical-validation
+semantics were expanded.
+
+The corrected source-of-truth head
+`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`
+completed the full hosted pull-request workflow set successfully, including
+Gate 026 Ubuntu and Windows after a failed-job rerun of the Windows cleanup
+flake on the unchanged exact revision.
+
+PR #73 then transitioned to:
+`READY FOR REVIEW / OPEN`.
+
+This Ready-state source-of-truth synchronization commit must itself complete the
+full hosted CI set successfully. If green, the branch is frozen and merge
+requires separate explicit human exact-SHA authorization.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
@@ -737,9 +773,11 @@ The accepted execution order for closing the remaining v1.0 criteria is:
 4. PlataVM handoff/readiness audit — read-only preparation of the real project
    before connected-project acceptance; this audit is not itself a substitute
    for a Gate acceptance result.
-5. Gate 035 — successful controlled use on both PlataVM and BuoyCalc.
-6. Gate 036 — model/runtime replaceability demonstrated in practice.
-7. Final v1.0 readiness audit — cold-start/source-of-truth review proving that
+5. Gate 035 — deterministic acceptance-contract conformance remediation.
+6. Gate 036 — successful controlled use on both PlataVM and BuoyCalc.
+7. Gate 037 — model/runtime replaceability demonstrated in practice, including
+   qualification/admission conformance needed for a new production route.
+8. Final v1.0 readiness audit — cold-start/source-of-truth review proving that
    the platform can resume from repository state without hidden chat context.
 
 The sequence may be changed only by an explicit source-of-truth update. It does

@@ -5397,3 +5397,263 @@ Fabrication authorization:
 
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`
+
+---
+
+## 2026-10-07 — Gate 034 final acceptance and Gate 035 opening
+
+Gate 034 source-of-truth reconciliation confirmed:
+- Issue #68: `CLOSED / COMPLETED`;
+- PR #69: `MERGED`;
+- final PR head: `30da5eb9ba1dbeaf54cbc2eacd3e0802ab99fcfe`;
+- squash merge: `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`;
+- final Gate 034 workflow `37251626010`: `PASS`;
+- final strict exact-head workflow `37251626074`: `PASS`;
+- final generic workflow `37251626129`: `PASS`;
+- inherited Gate 026–033 workflows on the same exact head: `PASS`.
+
+The ECC comparative audit exposed that generic `Supervisor.execute()` could mark a
+job `PASS` from `ToolOutcome.ok=true` without proving closure of the job's
+declared `required_validators`. Read-only reconciliation against
+`ARCHITECTURE.md` and `DECISIONS.md` established that this is not a new
+architecture requirement: accepted architecture already requires validation
+before work is marked complete and requires completion states to reference
+actual validator/evidence results.
+
+Human authorization therefore opened Gate 035 as a narrow v1.0 conformance
+remediation, not an architecture redesign.
+
+Gate 035 opening:
+- Issue #72: `OPEN`;
+- branch: `gate-035-deterministic-acceptance-contract-conformance`;
+- base: `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`;
+- Draft PR #73: `OPEN`.
+
+Authorized scope:
+- close declared `required_validators` against explicit validator outcome,
+  evidence and exact repository revision before generic job `PASS`;
+- keep jobs with genuinely empty `required_validators` working;
+- prevent Reviewer/model `ACCEPT` from replacing deterministic validation;
+- add deterministic negative/positive regression evidence;
+- synchronize source of truth after the already-completed Gate 034 merge.
+
+Explicitly out of scope:
+- architecture redesign;
+- ECC feature adoption;
+- retrieval/context/memory changes;
+- model routing/qualification changes;
+- PlataVM/BuoyCalc project-specific validator semantic changes;
+- release/fabrication authority;
+- physical-validation claims.
+
+Planned post-Gate-035 route:
+Gate 036 controlled PlataVM+BuoyCalc use -> Gate 037 practical model/runtime
+replacement -> final v1.0 cold-start/source-of-truth readiness audit.
+
+Release authorization:
+`NOT_GRANTED`
+
+Fabrication authorization:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`
+
+---
+
+## 2026-10-07 — Gate 035 implementation/evidence checkpoint
+
+Exact implementation/evidence checkpoint:
+`38b6db633c24963d6afbec1f62a6a817172129b1`
+
+Gate 035 closes the generic required-validator completion gap against the
+already accepted architecture without introducing a new authority model.
+
+Validated behavior:
+- tool `ok=true` does not imply job `PASS` when declared required validators
+  remain unresolved;
+- exact-revision, evidence-backed validator `PASS` may close its declared
+  requirement;
+- exact-revision, evidence-backed validator `FAIL` fails the job;
+- missing, `NOT_RUN`, timed-out, revision-mismatched or evidence-less
+  validator outcomes cannot produce job `PASS`;
+- stale or evidence-less decisive `PASS/FAIL` results are not promoted into
+  current validation state;
+- Reviewer `ACCEPT` cannot replace deterministic required validation;
+- jobs with genuinely empty `required_validators` preserve the accepted
+  no-validator completion path.
+
+Hosted validation on the exact checkpoint:
+- Gate 035 `37535951540`: Ubuntu `PASS`, Windows `PASS`;
+- generic `37535951408`: `PASS`;
+- strict exact-head `37535951618`: `PASS`;
+- Gate 034 `37535951403`: `PASS`;
+- Gate 033 `37535952500`: `PASS`;
+- Gate 032 `37535951506`: `PASS`;
+- Gate 031 `37535951440`: `PASS`;
+- Gate 030 `37535951456`: `PASS`;
+- Gate 029 `37535951415`: `PASS`;
+- Gate 028 `37535951821`: `PASS`;
+- Gate 027 `37535951394`: `PASS`;
+- Gate 026 `37535951426`: Ubuntu `PASS`, Windows `PASS`.
+
+PR #73 remains `DRAFT`. A final documentation/source-of-truth exact-head CI
+set remains required before any Ready for Review transition.
+
+Release authorization:
+`NOT_GRANTED`
+
+Fabrication authorization:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`
+
+---
+
+## 2026-10-07 — Gate 035 Ready for Review transition
+
+The first documentation/source-of-truth head:
+`1884700a3610fa1860e18bade5af0f5935d9a706`
+
+completed the full pull-request hosted validation set successfully:
+- Gate 035: `PASS`;
+- generic validation: `PASS`;
+- strict exact-head validation: `PASS`;
+- inherited Gate 026–034 workflows: `PASS`.
+
+PR #73 was then transitioned from `DRAFT` to:
+`READY FOR REVIEW`
+
+No source, runtime, test, validator, project-adapter, model-routing or authority
+change was made during the Ready transition.
+
+This source-of-truth synchronization records the external PR-state change. Its
+resulting exact branch head must pass the full hosted CI set before branch freeze
+and explicit human exact-SHA squash-merge authorization.
+
+Release authorization:
+`NOT_GRANTED`
+
+Fabrication authorization:
+`NOT_GRANTED`
+
+Physical validation:
+`PHYSICAL_NOT_EXECUTED`
+
+
+---
+
+## 2026-10-07 — Gate 035 post-review conformance correction
+
+After the earlier Gate 035 Ready-for-Review transition, an additional
+contract review found a remaining v1.0 conformance gap: generic terminal
+completion closed job-declared `required_validators`, but project-policy
+`mandatory_validators` were not yet included in the effective completion set.
+
+PR #73 was therefore returned to:
+`DRAFT / OPEN`.
+
+The correction remained within the authorized Gate 035 scope. The effective
+required-validator set is now the deterministic union of:
+- project-policy `mandatory_validators`;
+- job-declared `required_validators`.
+
+Policy-mandatory validators do not block enqueue/proposal/intermediate work
+merely because they are not duplicated in the job-local list, but terminal
+`PASS` is impossible until every effective required validator is closed by
+exact-revision, evidence-backed deterministic PASS.
+
+Synthetic regression fixtures whose purpose is queue, scheduler, CAD, image or
+recovery behavior now explicitly declare an empty policy mandatory-validator
+set instead of inheriting the generic `schema-suite` fixture while expecting a
+validator-free PASS. Production validator semantics were not weakened.
+
+Current validated implementation/evidence checkpoint:
+`e6770dff9a3c52124ae6e6650a64a7f696570343`.
+
+Hosted validation on that exact revision:
+- Gate 035 `37587374112`: `PASS`;
+- generic validation `37587374030`: `PASS`;
+- strict exact-head `37587374079`: `PASS`;
+- Gate 034 `37587374040`: `PASS`;
+- Gate 033 `37587374086`: `PASS`;
+- Gate 032 `37587374074`: `PASS`;
+- Gate 031 `37587374042`: `PASS`;
+- Gate 030 `37587374041`: `PASS`;
+- Gate 029 `37587374104`: `PASS`;
+- Gate 028 `37587374026`: `PASS`;
+- Gate 027 `37587374039`: `PASS`;
+- Gate 026 `37587374052`: Ubuntu `PASS`; Windows `PASS` on failed-job
+  rerun at the same exact head.
+
+The first Gate 026 Windows attempt reached inherited Gate 034 temporary-directory
+cleanup and failed with `WinError 32/5` because the directory was still held by
+a process. The failed-job rerun passed without source changes; this is recorded
+as a Windows CI/test-harness flake, not as Gate 035 engineering evidence.
+
+Release authorization remains:
+`NOT_GRANTED`.
+
+Fabrication authorization remains:
+`NOT_GRANTED`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+create one source-of-truth synchronization commit, run the full hosted CI set on
+that exact revision, and only if green return PR #73 to Ready for Review. Final
+merge remains prohibited without separate explicit human exact-SHA
+authorization.
+
+---
+
+## 2026-10-07 — Gate 035 corrected Ready for Review transition
+
+Corrected source-of-truth head:
+`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`.
+
+All 12 hosted pull-request workflows completed successfully on that exact
+revision:
+- Gate 035 `37589599652`: `PASS`;
+- generic validation `37589599705`: `PASS`;
+- strict exact-head `37589599645`: `PASS`;
+- Gate 034 `37589599627`: `PASS`;
+- Gate 033 `37589599542`: `PASS`;
+- Gate 032 `37589599674`: `PASS`;
+- Gate 031 `37589599588`: `PASS`;
+- Gate 030 `37589599504`: `PASS`;
+- Gate 029 `37589599486`: `PASS`;
+- Gate 028 `37589599523`: `PASS`;
+- Gate 027 `37589599567`: `PASS`;
+- Gate 026 `37589599711`: Ubuntu `PASS`, Windows `PASS`.
+
+The first Windows Gate 026 attempt again failed only while cleaning the
+temporary directory used by the inherited Gate 034 timeout harness
+(`WinError 32/5`). Only the failed Windows job was rerun, and it passed on the
+unchanged exact head. No source, validator or authority change was made to
+obtain PASS.
+
+PR #73 then transitioned from:
+`DRAFT / OPEN`
+to:
+`READY FOR REVIEW / OPEN`.
+
+No source/runtime/test/validator/project-adapter/model-routing or authority
+change was made by the Ready transition.
+
+Next:
+record this Ready state in one documentation-only source-of-truth commit, run
+the complete hosted CI set on that exact resulting head, freeze the branch if
+green, and stop for explicit human exact-SHA squash-merge authorization.
+
+Release authorization remains:
+`NOT_GRANTED`.
+
+Fabrication authorization remains:
+`NOT_GRANTED`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
