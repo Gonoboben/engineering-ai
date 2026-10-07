@@ -711,14 +711,17 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         ), patch(
             "engineering_ai.tools.worktree.shutil.rmtree",
             side_effect=persistent,
-        ), patch("engineering_ai.tools.worktree.time.sleep") as sleep_mock:
+        ) as rmtree_mock, patch(
+            "engineering_ai.tools.worktree.time.sleep"
+        ) as sleep_mock:
             with self.assertRaisesRegex(
                 ToolExecutionError,
                 "disposable worktree cleanup failed after git remove error",
             ):
                 loop.cleanup_disposable_generated(prep.session)
 
-        self.assertEqual(sleep_mock.call_count, 9)
+        self.assertEqual(rmtree_mock.call_count, 10)
+        self.assertGreaterEqual(sleep_mock.call_count, 9)
         self.assertTrue(worktree.exists())
         branch = subprocess.run(
             [
