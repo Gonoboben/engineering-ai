@@ -18,7 +18,7 @@ PlataVM:
 - repository: `Gonoboben/plataVM`;
 - active Draft PR: `#100`;
 - exact accepted Gate 036 source head:
-  `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+  `840435615d0b3ebf5f1137f575cfd75b66501964`;
 - project base main:
   `dcba77466d4800c0e7a336a2771684e066f845db`;
 - active branch:
@@ -93,6 +93,30 @@ The harness contains a fail-closed evaluator. It rejects, at minimum:
 CI self-tests are explicitly synthetic contract tests and cannot satisfy real
 Gate 036 acceptance.
 
+## Remediation checkpoint
+
+The first primary-workstation exercise exposed two bounded portability/cleanup
+defects without changing either connected project's primary checkout:
+
+- PlataVM's PCB-E auxiliary validator compared repository-relative manifest
+  paths using the host-native separator. On Windows the same canonical path was
+  rendered with backslashes and failed three exact string contracts. The
+  owner-authorized PR #100 remediation changes only repository-relative path
+  canonicalization to POSIX form and adds regression coverage. The remediated
+  Draft PR #100 exact head is
+  `840435615d0b3ebf5f1137f575cfd75b66501964`.
+- BuoyCalc deterministic validation reached
+  `READY_FOR_HUMAN_APPROVAL`, but disposable worktree cleanup encountered an
+  already-deregistered Windows filesystem residue with `WinError 32`.
+  Gate 036 therefore adds bounded retry/backoff for the already-verified
+  adapter-owned disposable path plus transient/persistent-lock regressions.
+  Persistent locking still fails closed with `ToolExecutionError`.
+
+These remediations do not expand model/tool/project authority and do not change
+PlataVM physics, engineering contracts, validator allowlists, release,
+fabrication or physical states. Final Gate 036 acceptance still requires a new
+real primary-workstation run against the exact revisions above.
+
 ## Current state
 
 `REAL_PRIMARY_WORKSTATION_EXECUTION_REQUIRED`.
@@ -102,7 +126,7 @@ No real Gate 036 PASS is claimed yet.
 The next acceptance action is to run the Gate 036 harness on the primary
 workstation with:
 - PlataVM checkout clean on
-  `agent/pcb-e-aux-hardware-current-v1-9@11e746cfea7f9200415cf817b6cde928b6a2651a`;
+  `agent/pcb-e-aux-hardware-current-v1-9@840435615d0b3ebf5f1137f575cfd75b66501964`;
 - BuoyCalc checkout clean on
   `main@325aee5ee3a9f64413e416a1206fc4e296d9723f`;
 - explicit human approval for disposable worktree creation.
