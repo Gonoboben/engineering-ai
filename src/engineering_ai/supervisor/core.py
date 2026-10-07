@@ -227,7 +227,7 @@ class Supervisor:
         validate_instance("job.schema.json", working_job)
         self._validate_job_context(working_job)
 
-        required = tuple(working_job["required_validators"])
+        required = self._required_validator_ids(working_job)
         if not required:
             return JobCompletionDecision(
                 status="PASS",
@@ -1116,7 +1116,7 @@ class Supervisor:
         if not validator_results:
             return
 
-        required = set(job["required_validators"])
+        required = set(self._required_validator_ids(job))
         by_id = {
             item["check_id"]: index
             for index, item in enumerate(self._state.get("validation_states", []))
@@ -1168,6 +1168,16 @@ class Supervisor:
 
         validate_instance("project-state.schema.json", self._state)
 
+    def _required_validator_ids(self, job: dict[str, Any]) -> tuple[str, ...]:
+        return tuple(
+            dict.fromkeys(
+                (
+                    *self._policy["mandatory_validators"],
+                    *job["required_validators"],
+                )
+            )
+        )
+
     @staticmethod
     def _outcome_evidence_refs(outcome: ToolOutcome) -> list[str]:
         refs: list[str] = []
@@ -1191,15 +1201,6 @@ class Supervisor:
         if job["retry_limit"] > self._policy["retry_limit"]:
             raise SemanticValidationError(
                 "job retry_limit cannot exceed project policy retry_limit"
-            )
-        missing_mandatory = sorted(
-            set(self._policy["mandatory_validators"])
-            - set(job["required_validators"])
-        )
-        if missing_mandatory:
-            raise SemanticValidationError(
-                "job required_validators omit project policy mandatory validators: "
-                + ", ".join(missing_mandatory)
             )
 
     def _apply_state_blocker(
