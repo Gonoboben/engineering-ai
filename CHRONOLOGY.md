@@ -5657,3 +5657,61 @@ Fabrication authorization remains:
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
 
+---
+
+## 2026-10-07 — Gate 035 accepted merge and Gate 036 opening
+
+Gate 035 final approved PR head:
+`abbb9f9e0a2592c98bc9f3d58ce22a97a2ec552d`.
+
+All final exact-head hosted workflows passed before explicit human merge
+authorization.
+
+PR #73 was squash-merged to:
+`main@d9ab48f50ef9e78c7fd7423cebadf39634c3de66`.
+
+Issue #72 closed as completed.
+
+Human authorization then opened Gate 036:
+`v1.0 real connected-project controlled-use acceptance`.
+
+Gate 036:
+- Issue #74: `OPEN`;
+- branch: `gate-036-real-connected-project-controlled-use`;
+- base:
+  `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`.
+
+Authorized exact real-project sources:
+- PlataVM PR #100 head:
+  `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+- PlataVM base main:
+  `dcba77466d4800c0e7a336a2771684e066f845db`;
+- BuoyCalc main:
+  `325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+
+Gate 036 reuses the existing Gate 013 and Gate 015 controlled adapters and
+their existing fixed validator profiles. It adds an acceptance harness, not a
+new project authority layer.
+
+Real acceptance requires disposable local worktree/branch execution against
+both exact revisions, deterministic validator evidence, cleanup and proof that
+the primary checkouts are unchanged.
+
+PlataVM PR #100 currently has cancelled GitHub workflow conclusions. Gate 036
+must not reinterpret those cancelled runs as native project PASS or merge
+readiness.
+
+BuoyCalc Draft PR #628 is not the Gate 036 primary baseline. Gate 036 uses the
+accepted clean-main boundary required by the existing Gate 015 adapter.
+
+No connected-project remote history mutation is authorized.
+
+Release authorization remains:
+`NOT_GRANTED`.
+
+Fabrication authorization remains:
+`NOT_GRANTED`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+

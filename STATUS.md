@@ -79,17 +79,31 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `035 — v1.0 deterministic acceptance-contract conformance`
-- Issue: `#72 OPEN`
-- PR: `#73 READY FOR REVIEW / OPEN`
-- Branch: `gate-035-deterministic-acceptance-contract-conformance`
-- Base: accepted Gate 034 squash merge
-  `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
-- State: `READY_FOR_REVIEW_FINAL_EXACT_HEAD_CI_REQUIRED`
-- Current implementation/evidence checkpoint:
-  `e6770dff9a3c52124ae6e6650a64a7f696570343`
-- Purpose: restore the already accepted required-validator/evidence completion
-  contract before real connected-project controlled use.
+- Gate: `036 — v1.0 real connected-project controlled-use acceptance`
+- Issue: `#74 OPEN`
+- PR: `NOT_OPEN_YET`
+- Branch: `gate-036-real-connected-project-controlled-use`
+- Base: accepted Gate 035 squash merge
+  `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`
+- State: `IMPLEMENTATION_OPEN_REAL_EXECUTION_REQUIRED`
+- Purpose: close the existing v1.0 criterion for successful controlled use on
+  both real connected projects without expanding project or release authority.
+
+Gate 035 accepted merge:
+- Issue #72: `CLOSED / COMPLETED`;
+- PR #73: `MERGED`;
+- final approved PR head:
+  `abbb9f9e0a2592c98bc9f3d58ce22a97a2ec552d`;
+- squash merge:
+  `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`;
+- final exact-head Gate 035 and inherited workflow set: `PASS`.
+
+Gate 036 exact connected-project sources:
+- PlataVM PR #100:
+  `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+- BuoyCalc main:
+  `325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -146,7 +160,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 controlled hand-offs with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_032_ACCEPTED`
 - v1.0 persistent project memory with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_033_ACCEPTED`
 - v1.0 documented model/tool failure recovery acceptance: `IMPLEMENTED_VALIDATED_GATE_034_ACCEPTED`
-- v1.0 deterministic acceptance-contract conformance: `GATE_035_READY_FOR_REVIEW`
+- v1.0 deterministic acceptance-contract conformance: `IMPLEMENTED_VALIDATED_GATE_035_ACCEPTED`
+- v1.0 real connected-project controlled-use acceptance: `GATE_036_OPEN_REAL_EXECUTION_REQUIRED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -817,44 +832,30 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 035 Ready-for-Review source transition was made from exact head:
-`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`.
+Gate 036 implementation must first validate its deterministic evidence contract
+in CI. This does not satisfy the real-project criterion.
 
-On that exact revision, all 12 pull-request workflows completed successfully:
-- Gate 035 `37589599652`: `PASS`;
-- generic validation `37589599705`: `PASS`;
-- strict exact-head validation `37589599645`: `PASS`;
-- Gate 034 `37589599627`: `PASS`;
-- Gate 033 `37589599542`: `PASS`;
-- Gate 032 `37589599674`: `PASS`;
-- Gate 031 `37589599588`: `PASS`;
-- Gate 030 `37589599504`: `PASS`;
-- Gate 029 `37589599486`: `PASS`;
-- Gate 028 `37589599523`: `PASS`;
-- Gate 027 `37589599567`: `PASS`;
-- Gate 026 `37589599711`: Ubuntu `PASS`, Windows `PASS` after rerunning
-  only the failed Windows job on the unchanged exact head.
+Real acceptance then requires primary-workstation execution of
+`scripts/gate036_real_connected_project_controlled_use.py --approve-worktrees`
+against the exact connected-project revisions recorded above.
 
-The first Gate 026 Windows attempt again failed only during temporary-directory
-cleanup in the inherited Gate 034 timeout harness with `WinError 32/5`.
-The rerun passed without source changes. This remains classified as a Windows
-CI/test-harness cleanup flake, not a Gate 035 validation failure.
+The harness must prove for both projects:
+- exact source identity;
+- accepted existing controlled adapter only;
+- disposable local worktree/branch creation;
+- existing fixed validator/profile completion;
+- `READY_FOR_HUMAN_APPROVAL`;
+- cleanup;
+- unchanged primary checkout;
+- no connected-project remote mutation;
+- no release/fabrication/physical promotion.
 
-PR #73 is now:
-`READY FOR REVIEW / OPEN`.
-
-This documentation-only source-of-truth synchronization commit must complete
-the full hosted CI set successfully on its own exact head. If green, the branch
-is frozen and the only admissible next action is explicit human exact-SHA
-squash-merge authorization.
+Synthetic CI evidence cannot substitute for this real execution.
 
 Release authorization: `NOT_GRANTED`.
 Fabrication authorization: `NOT_GRANTED`.
 Physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-After Gate 035 acceptance, the planned route remains:
-Gate 036 controlled PlataVM+BuoyCalc use -> Gate 037 practical model/runtime
-replacement -> final v1.0 cold-start/source-of-truth readiness audit.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`
