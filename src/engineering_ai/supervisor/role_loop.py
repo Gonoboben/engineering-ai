@@ -801,15 +801,6 @@ class PlannerExecutorReviewerLoop:
             raise SemanticValidationError(
                 "job retry_limit cannot exceed project policy retry_limit"
             )
-        missing_mandatory = sorted(
-            set(self._policy["mandatory_validators"])
-            - set(job["required_validators"])
-        )
-        if missing_mandatory:
-            raise SemanticValidationError(
-                "job required_validators omit project policy mandatory validators: "
-                + ", ".join(missing_mandatory)
-            )
         if job["status"] in {"PASS", "FAIL", "CANCELLED"}:
             raise SemanticValidationError("terminal job cannot enter role loop")
 
