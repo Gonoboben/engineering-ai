@@ -680,11 +680,11 @@ changing architecture, validator semantics, model/tool/Git/network authority,
 release/fabrication authority or physical-validation semantics.
 
 ### Gate 035 — v1.0 deterministic acceptance-contract conformance
-Status: `IMPLEMENTATION_VALIDATED_SOURCE_SYNC_REQUIRED`
+Status: `READY_FOR_REVIEW_FINAL_EXACT_HEAD_CI_REQUIRED`
 
 Issue: `#72 OPEN`
 
-PR: `#73 DRAFT / OPEN`
+PR: `#73 READY FOR REVIEW / OPEN`
 
 Branch: `gate-035-deterministic-acceptance-contract-conformance`
 
@@ -736,9 +736,18 @@ No validator was weakened and no architecture, model routing, project-specific
 validator semantics, release/fabrication authority or physical-validation
 semantics were expanded.
 
-This source-of-truth synchronization head must pass the full hosted CI set
-before PR #73 may return to Ready for Review. Merge still requires separate
-explicit human exact-SHA authorization.
+The corrected source-of-truth head
+`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`
+completed the full hosted pull-request workflow set successfully, including
+Gate 026 Ubuntu and Windows after a failed-job rerun of the Windows cleanup
+flake on the unchanged exact revision.
+
+PR #73 then transitioned to:
+`READY FOR REVIEW / OPEN`.
+
+This Ready-state source-of-truth synchronization commit must itself complete the
+full hosted CI set successfully. If green, the branch is frozen and merge
+requires separate explicit human exact-SHA authorization.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:

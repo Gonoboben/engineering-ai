@@ -5607,3 +5607,53 @@ that exact revision, and only if green return PR #73 to Ready for Review. Final
 merge remains prohibited without separate explicit human exact-SHA
 authorization.
 
+---
+
+## 2026-10-07 — Gate 035 corrected Ready for Review transition
+
+Corrected source-of-truth head:
+`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`.
+
+All 12 hosted pull-request workflows completed successfully on that exact
+revision:
+- Gate 035 `37589599652`: `PASS`;
+- generic validation `37589599705`: `PASS`;
+- strict exact-head `37589599645`: `PASS`;
+- Gate 034 `37589599627`: `PASS`;
+- Gate 033 `37589599542`: `PASS`;
+- Gate 032 `37589599674`: `PASS`;
+- Gate 031 `37589599588`: `PASS`;
+- Gate 030 `37589599504`: `PASS`;
+- Gate 029 `37589599486`: `PASS`;
+- Gate 028 `37589599523`: `PASS`;
+- Gate 027 `37589599567`: `PASS`;
+- Gate 026 `37589599711`: Ubuntu `PASS`, Windows `PASS`.
+
+The first Windows Gate 026 attempt again failed only while cleaning the
+temporary directory used by the inherited Gate 034 timeout harness
+(`WinError 32/5`). Only the failed Windows job was rerun, and it passed on the
+unchanged exact head. No source, validator or authority change was made to
+obtain PASS.
+
+PR #73 then transitioned from:
+`DRAFT / OPEN`
+to:
+`READY FOR REVIEW / OPEN`.
+
+No source/runtime/test/validator/project-adapter/model-routing or authority
+change was made by the Ready transition.
+
+Next:
+record this Ready state in one documentation-only source-of-truth commit, run
+the complete hosted CI set on that exact resulting head, freeze the branch if
+green, and stop for explicit human exact-SHA squash-merge authorization.
+
+Release authorization remains:
+`NOT_GRANTED`.
+
+Fabrication authorization remains:
+`NOT_GRANTED`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+

@@ -81,11 +81,11 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `035 — v1.0 deterministic acceptance-contract conformance`
 - Issue: `#72 OPEN`
-- PR: `#73 DRAFT / OPEN`
+- PR: `#73 READY FOR REVIEW / OPEN`
 - Branch: `gate-035-deterministic-acceptance-contract-conformance`
 - Base: accepted Gate 034 squash merge
   `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
-- State: `IMPLEMENTATION_VALIDATED_SOURCE_SYNC_REQUIRED`
+- State: `READY_FOR_REVIEW_FINAL_EXACT_HEAD_CI_REQUIRED`
 - Current implementation/evidence checkpoint:
   `e6770dff9a3c52124ae6e6650a64a7f696570343`
 - Purpose: restore the already accepted required-validator/evidence completion
@@ -817,43 +817,36 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 035 current implementation/evidence checkpoint:
-`e6770dff9a3c52124ae6e6650a64a7f696570343`.
+Gate 035 Ready-for-Review source transition was made from exact head:
+`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`.
 
-This exact revision completed the full hosted pull-request validation set:
-- Gate 035 `37587374112`: `PASS`;
-- generic validation `37587374030`: `PASS`;
-- strict exact-head validation `37587374079`: `PASS`;
-- Gate 034 `37587374040`: `PASS`;
-- Gate 033 `37587374086`: `PASS`;
-- Gate 032 `37587374074`: `PASS`;
-- Gate 031 `37587374042`: `PASS`;
-- Gate 030 `37587374041`: `PASS`;
-- Gate 029 `37587374104`: `PASS`;
-- Gate 028 `37587374026`: `PASS`;
-- Gate 027 `37587374039`: `PASS`;
-- Gate 026 `37587374052`: Ubuntu `PASS`, Windows `PASS` after rerunning
-  the failed Windows job on the same exact head.
+On that exact revision, all 12 pull-request workflows completed successfully:
+- Gate 035 `37589599652`: `PASS`;
+- generic validation `37589599705`: `PASS`;
+- strict exact-head validation `37589599645`: `PASS`;
+- Gate 034 `37589599627`: `PASS`;
+- Gate 033 `37589599542`: `PASS`;
+- Gate 032 `37589599674`: `PASS`;
+- Gate 031 `37589599588`: `PASS`;
+- Gate 030 `37589599504`: `PASS`;
+- Gate 029 `37589599486`: `PASS`;
+- Gate 028 `37589599523`: `PASS`;
+- Gate 027 `37589599567`: `PASS`;
+- Gate 026 `37589599711`: Ubuntu `PASS`, Windows `PASS` after rerunning
+  only the failed Windows job on the unchanged exact head.
 
-The first Gate 026 Windows attempt failed only while cleaning a
-`TemporaryDirectory` used by the inherited Gate 034 timeout harness
-(`WinError 32/5`); the deterministic regression had otherwise reached that
-cleanup point. The failed-job rerun on the unchanged exact head passed. No
-Gate 035 source or validator was weakened to obtain this result.
+The first Gate 026 Windows attempt again failed only during temporary-directory
+cleanup in the inherited Gate 034 timeout harness with `WinError 32/5`.
+The rerun passed without source changes. This remains classified as a Windows
+CI/test-harness cleanup flake, not a Gate 035 validation failure.
 
-The earlier Gate 035 checkpoint
-`38b6db633c24963d6afbec1f62a6a817172129b1` and subsequent Ready-for-Review
-transition are retained in chronology but are superseded for current-state
-purposes. A post-review conformance check found that project-policy
-`mandatory_validators` were not yet part of the generic terminal completion
-set. PR #73 was returned to Draft and the completion contract was corrected so
-the effective required set is the deterministic union of policy-mandatory and
-job-required validators.
+PR #73 is now:
+`READY FOR REVIEW / OPEN`.
 
-This source-of-truth synchronization commit must pass its own full hosted CI
-set. If green, PR #73 may transition to Ready for Review. A final source-state
-synchronization/exact-head validation remains required before explicit human
-exact-SHA squash-merge authorization.
+This documentation-only source-of-truth synchronization commit must complete
+the full hosted CI set successfully on its own exact head. If green, the branch
+is frozen and the only admissible next action is explicit human exact-SHA
+squash-merge authorization.
 
 Release authorization: `NOT_GRANTED`.
 Fabrication authorization: `NOT_GRANTED`.

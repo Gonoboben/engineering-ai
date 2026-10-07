@@ -134,3 +134,31 @@ Physical validation remains `PHYSICAL_NOT_EXECUTED`.
 The source-of-truth synchronization commit produced after this checkpoint must
 pass its own full exact-head CI set before Ready for Review.
 
+## Corrected Ready-for-Review checkpoint
+
+Exact source-of-truth head before the Ready transition:
+`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`.
+
+On that exact revision the full hosted pull-request workflow set completed
+successfully:
+- Gate 035 `37589599652`: `PASS`;
+- generic validation `37589599705`: `PASS`;
+- strict exact-head validation `37589599645`: `PASS`;
+- inherited Gate 027–034 workflows: `PASS`;
+- Gate 026 `37589599711`: Ubuntu `PASS`, Windows `PASS` after failed-job
+  rerun on the same exact revision.
+
+The initial Gate 026 Windows failure was the previously observed
+temporary-directory cleanup flake in the inherited Gate 034 timeout harness
+(`WinError 32/5`). No source change was made between failure and PASS.
+
+PR #73 is now `READY FOR REVIEW / OPEN`.
+
+This Ready-state source-of-truth synchronization commit must pass the complete
+hosted CI set on its own exact revision before branch freeze and human
+exact-SHA merge authorization.
+
+Release authorization remains `NOT_GRANTED`.
+Fabrication authorization remains `NOT_GRANTED`.
+Physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
