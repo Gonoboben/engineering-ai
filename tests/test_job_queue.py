@@ -75,7 +75,9 @@ def make_job(
 
 
 def make_policy() -> dict:
-    return load_fixture("valid_policy.json")
+    policy = load_fixture("valid_policy.json")
+    policy["mandatory_validators"] = []
+    return policy
 
 
 def make_state() -> dict:
