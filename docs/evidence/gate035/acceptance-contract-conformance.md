@@ -87,24 +87,41 @@ Gate-specific deterministic coverage includes:
 Final exact-head CI and full regression remain required before any Ready for Review or merge decision.
 
 
-## Implementation/evidence checkpoint
+## Current implementation/evidence checkpoint
 
-Exact checkpoint:
+The earlier checkpoint
 `38b6db633c24963d6afbec1f62a6a817172129b1`
+was superseded after post-review analysis found that project-policy
+`mandatory_validators` were not included in the effective terminal completion
+set.
 
-Hosted validation:
-- Gate 035 workflow `37535951540`: Ubuntu `PASS`, Windows `PASS`;
-- generic validation `37535951408`: `PASS`;
-- strict exact-head validation `37535951618`: `PASS`;
-- Gate 034 `37535951403`: `PASS`;
-- Gate 033 `37535952500`: `PASS`;
-- Gate 032 `37535951506`: `PASS`;
-- Gate 031 `37535951440`: `PASS`;
-- Gate 030 `37535951456`: `PASS`;
-- Gate 029 `37535951415`: `PASS`;
-- Gate 028 `37535951821`: `PASS`;
-- Gate 027 `37535951394`: `PASS`;
-- Gate 026 `37535951426`: Ubuntu `PASS`, Windows `PASS`.
+Current exact checkpoint:
+`e6770dff9a3c52124ae6e6650a64a7f696570343`
+
+The effective required-validator set is now the deterministic union of
+project-policy `mandatory_validators` and job-declared
+`required_validators`. A policy-mandatory validator cannot be bypassed by
+omitting it from the job-local list.
+
+Hosted validation on the current exact checkpoint:
+- Gate 035 workflow `37587374112`: `PASS`;
+- generic validation `37587374030`: `PASS`;
+- strict exact-head validation `37587374079`: `PASS`;
+- Gate 034 `37587374040`: `PASS`;
+- Gate 033 `37587374086`: `PASS`;
+- Gate 032 `37587374074`: `PASS`;
+- Gate 031 `37587374042`: `PASS`;
+- Gate 030 `37587374041`: `PASS`;
+- Gate 029 `37587374104`: `PASS`;
+- Gate 028 `37587374026`: `PASS`;
+- Gate 027 `37587374039`: `PASS`;
+- Gate 026 `37587374052`: Ubuntu `PASS`; Windows `PASS` after rerunning
+  the failed Windows job on the same exact checkpoint.
+
+The first Windows Gate 026 attempt failed during temporary-directory cleanup in
+the inherited Gate 034 timeout harness with `WinError 32/5`. Its failed-job
+rerun passed on the unchanged source revision. No Gate 035 source, validator or
+authority boundary was weakened to obtain PASS.
 
 No local workstation or dedicated EngineeringAI-Ubuntu execution is claimed by
 this Gate 035 checkpoint. The acceptance evidence above is GitHub-hosted CI on
@@ -114,5 +131,6 @@ Release authorization remains `NOT_GRANTED`.
 Fabrication authorization remains `NOT_GRANTED`.
 Physical validation remains `PHYSICAL_NOT_EXECUTED`.
 
-The documentation/source-of-truth commit produced after this checkpoint must
-pass its own exact-head CI set before Ready for Review.
+The source-of-truth synchronization commit produced after this checkpoint must
+pass its own full exact-head CI set before Ready for Review.
+

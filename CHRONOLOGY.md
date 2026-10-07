@@ -5541,3 +5541,69 @@ Fabrication authorization:
 Physical validation:
 `PHYSICAL_NOT_EXECUTED`
 
+
+---
+
+## 2026-10-07 — Gate 035 post-review conformance correction
+
+After the earlier Gate 035 Ready-for-Review transition, an additional
+contract review found a remaining v1.0 conformance gap: generic terminal
+completion closed job-declared `required_validators`, but project-policy
+`mandatory_validators` were not yet included in the effective completion set.
+
+PR #73 was therefore returned to:
+`DRAFT / OPEN`.
+
+The correction remained within the authorized Gate 035 scope. The effective
+required-validator set is now the deterministic union of:
+- project-policy `mandatory_validators`;
+- job-declared `required_validators`.
+
+Policy-mandatory validators do not block enqueue/proposal/intermediate work
+merely because they are not duplicated in the job-local list, but terminal
+`PASS` is impossible until every effective required validator is closed by
+exact-revision, evidence-backed deterministic PASS.
+
+Synthetic regression fixtures whose purpose is queue, scheduler, CAD, image or
+recovery behavior now explicitly declare an empty policy mandatory-validator
+set instead of inheriting the generic `schema-suite` fixture while expecting a
+validator-free PASS. Production validator semantics were not weakened.
+
+Current validated implementation/evidence checkpoint:
+`e6770dff9a3c52124ae6e6650a64a7f696570343`.
+
+Hosted validation on that exact revision:
+- Gate 035 `37587374112`: `PASS`;
+- generic validation `37587374030`: `PASS`;
+- strict exact-head `37587374079`: `PASS`;
+- Gate 034 `37587374040`: `PASS`;
+- Gate 033 `37587374086`: `PASS`;
+- Gate 032 `37587374074`: `PASS`;
+- Gate 031 `37587374042`: `PASS`;
+- Gate 030 `37587374041`: `PASS`;
+- Gate 029 `37587374104`: `PASS`;
+- Gate 028 `37587374026`: `PASS`;
+- Gate 027 `37587374039`: `PASS`;
+- Gate 026 `37587374052`: Ubuntu `PASS`; Windows `PASS` on failed-job
+  rerun at the same exact head.
+
+The first Gate 026 Windows attempt reached inherited Gate 034 temporary-directory
+cleanup and failed with `WinError 32/5` because the directory was still held by
+a process. The failed-job rerun passed without source changes; this is recorded
+as a Windows CI/test-harness flake, not as Gate 035 engineering evidence.
+
+Release authorization remains:
+`NOT_GRANTED`.
+
+Fabrication authorization remains:
+`NOT_GRANTED`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
+Next:
+create one source-of-truth synchronization commit, run the full hosted CI set on
+that exact revision, and only if green return PR #73 to Ready for Review. Final
+merge remains prohibited without separate explicit human exact-SHA
+authorization.
+

@@ -680,11 +680,11 @@ changing architecture, validator semantics, model/tool/Git/network authority,
 release/fabrication authority or physical-validation semantics.
 
 ### Gate 035 — v1.0 deterministic acceptance-contract conformance
-Status: `READY_FOR_REVIEW`
+Status: `IMPLEMENTATION_VALIDATED_SOURCE_SYNC_REQUIRED`
 
 Issue: `#72 OPEN`
 
-PR: `#73 READY FOR REVIEW`
+PR: `#73 DRAFT / OPEN`
 
 Branch: `gate-035-deterministic-acceptance-contract-conformance`
 
@@ -692,44 +692,53 @@ Base:
 `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
 
 Purpose:
-restore conformance with the already accepted requirement that validation is
-required before generic engineering work is marked complete.
-
-Scope:
-- bind declared `required_validators` to explicit validator outcome, evidence
-  and exact repository revision before generic job `PASS`;
-- preserve jobs that genuinely declare no required validators;
-- ensure Reviewer/model acceptance cannot substitute for missing deterministic
+- restore conformance with the already accepted rule that validation is required
+  before generic engineering work reaches terminal `PASS`;
+- treat successful tool execution separately from validator closure;
+- make the effective required-validator set the deterministic union of project
+  policy `mandatory_validators` and job `required_validators`;
+- require exact-revision, evidence-backed PASS for every effective required
+  validator;
+- prevent Reviewer/model `ACCEPT` from substituting for deterministic
   validation;
-- add deterministic negative/positive regression evidence;
+- preserve the no-validator completion path only when neither policy nor job
+  requires validators;
 - do not change PlataVM/BuoyCalc project-specific validator semantics.
 
 Gate 035 is a conformance remediation, not a new v1.0 product criterion and not
 an architecture redesign.
 
-Validated implementation/evidence checkpoint:
-`38b6db633c24963d6afbec1f62a6a817172129b1`
+The earlier implementation/evidence checkpoint
+`38b6db633c24963d6afbec1f62a6a817172129b1` was superseded after post-review
+analysis found that policy-level `mandatory_validators` were not yet included
+in the generic terminal completion set. PR #73 was returned to Draft.
+
+Current validated implementation/evidence checkpoint:
+`e6770dff9a3c52124ae6e6650a64a7f696570343`
 
 Hosted validation on that exact checkpoint:
-- Gate 035 workflow `37535951540`: Ubuntu `PASS`, Windows `PASS`;
-- generic validation `37535951408`: `PASS`;
-- strict exact-head validation `37535951618`: `PASS`;
-- inherited Gate 026–034 workflows on the same exact head: `PASS`.
+- Gate 035 workflow `37587374112`: `PASS`;
+- generic validation `37587374030`: `PASS`;
+- strict exact-head validation `37587374079`: `PASS`;
+- Gate 034 `37587374040`: `PASS`;
+- Gate 033 `37587374086`: `PASS`;
+- Gate 032 `37587374074`: `PASS`;
+- Gate 031 `37587374042`: `PASS`;
+- Gate 030 `37587374041`: `PASS`;
+- Gate 029 `37587374104`: `PASS`;
+- Gate 028 `37587374026`: `PASS`;
+- Gate 027 `37587374039`: `PASS`;
+- Gate 026 `37587374052`: Ubuntu `PASS`, Windows `PASS` after one
+  failed-job rerun on the unchanged head following a Windows temporary-directory
+  cleanup error in inherited Gate 034 test infrastructure.
 
-The first documentation/source-of-truth head
-`1884700a3610fa1860e18bade5af0f5935d9a706`
-completed the full hosted CI set successfully, after which PR #73 transitioned
-to Ready for Review without source changes.
+No validator was weakened and no architecture, model routing, project-specific
+validator semantics, release/fabrication authority or physical-validation
+semantics were expanded.
 
-The synchronization head recording that transition must itself remain fully
-green before any merge. Merge still requires separate explicit human exact-SHA
-authorization.
-
-Release authorization: `NOT_GRANTED`.
-
-Fabrication authorization: `NOT_GRANTED`.
-
-Physical validation: `PHYSICAL_NOT_EXECUTED`.
+This source-of-truth synchronization head must pass the full hosted CI set
+before PR #73 may return to Ready for Review. Merge still requires separate
+explicit human exact-SHA authorization.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:
