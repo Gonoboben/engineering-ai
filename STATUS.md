@@ -81,11 +81,11 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 ## Current Gate
 - Gate: `036 — v1.0 real connected-project controlled-use acceptance`
 - Issue: `#74 OPEN`
-- PR: `NOT_OPEN_YET`
+- PR: `#75 OPEN / DRAFT`
 - Branch: `gate-036-real-connected-project-controlled-use`
 - Base: accepted Gate 035 squash merge
   `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`
-- State: `IMPLEMENTATION_OPEN_REAL_EXECUTION_REQUIRED`
+- State: `REMEDIATION_IMPLEMENTED_REAL_RERUN_REQUIRED`
 - Purpose: close the existing v1.0 criterion for successful controlled use on
   both real connected projects without expanding project or release authority.
 
@@ -99,10 +99,21 @@ Gate 035 accepted merge:
 - final exact-head Gate 035 and inherited workflow set: `PASS`.
 
 Gate 036 exact connected-project sources:
-- PlataVM PR #100:
-  `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+- PlataVM PR #100 remediated Draft head:
+  `840435615d0b3ebf5f1137f575cfd75b66501964`;
 - BuoyCalc main:
   `325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+
+Gate 036 remediation checkpoint:
+- first Windows real-pilot execution preserved both connected primary checkouts;
+- PlataVM Windows semantic validation exposed a repository-relative path
+  separator defect, remediated in existing PR #100 without changing engineering
+  contracts or authority;
+- BuoyCalc validation reached `READY_FOR_HUMAN_APPROVAL`, while disposable
+  cleanup exposed a transient Windows filesystem-handle residue;
+- bounded disposable filesystem retry/backoff plus fail-closed persistent-lock
+  regression coverage is implemented on PR #75;
+- final real primary-workstation rerun is still required before Gate PASS.
 
 
 ## Architecture / implementation state
