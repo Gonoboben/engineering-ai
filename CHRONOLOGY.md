@@ -5715,3 +5715,40 @@ Fabrication authorization remains:
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
 
+---
+
+## 2026-10-07 — Gate 036 real-pilot remediation
+
+The first Windows primary-workstation connected-project exercise remained
+fail-closed and left both original connected-project checkouts unchanged.
+
+Observed blockers:
+- PlataVM Draft PR #100 exact head
+  `11e746cfea7f9200415cf817b6cde928b6a2651a` passed repository integrity but
+  its PCB-E auxiliary semantic validator failed three repository-relative path
+  string contracts because Windows rendered `Path.relative_to(...)` with
+  backslashes while the canonical manifest uses forward slashes;
+- BuoyCalc deterministic validation reached `READY_FOR_HUMAN_APPROVAL`, but
+  disposable worktree cleanup encountered an already-deregistered filesystem
+  residue with Windows `WinError 32`.
+
+Owner authorized minimal remediation without architecture, physics, validator
+meaning or authority expansion.
+
+PlataVM remediation was committed/pushed in the existing Issue #99 / Draft PR
+#100 branch. The only validator semantic representation change is canonical
+POSIX repository-relative paths plus self-test regression coverage. New exact
+Draft PR #100 head:
+`840435615d0b3ebf5f1137f575cfd75b66501964`.
+
+Gate 036 PR #75 remediation adds bounded retry/backoff only for the already
+verified adapter-owned disposable filesystem path after Git worktree removal,
+with transient-lock recovery and persistent-lock fail-closed regressions. The
+Gate 036 exact PlataVM source identity is synchronized to the new PR #100 head.
+
+Gate 036 remains DRAFT / not accepted. A new real primary-workstation execution
+and hosted CI are required. No Ready for Review or merge is authorized.
+
+Release authorization remains `NOT_GRANTED`.
+Fabrication authorization remains `NOT_GRANTED`.
+Physical validation remains `PHYSICAL_NOT_EXECUTED`.
