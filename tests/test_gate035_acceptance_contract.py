@@ -176,6 +176,28 @@ def accepted_provider() -> FakeProvider:
 
 
 class Gate035AcceptanceContractTests(unittest.TestCase):
+    def test_job_cannot_omit_policy_mandatory_validator(self) -> None:
+        mandatory_policy = policy()
+        mandatory_policy["mandatory_validators"] = ["schema-suite"]
+        supervisor = Supervisor(policy=mandatory_policy, state=state())
+        calls: list[str] = []
+
+        def tool(action: str) -> ToolOutcome:
+            calls.append(action)
+            return ToolOutcome(True, "must not execute")
+
+        with self.assertRaisesRegex(
+            SemanticValidationError,
+            "omit project policy mandatory validators",
+        ):
+            supervisor.execute(
+                job=job(required=()),
+                action="read_repository",
+                tool=tool,
+            )
+
+        self.assertEqual(calls, [])
+
     def test_tool_success_without_required_validator_is_blocked(self) -> None:
         supervisor = Supervisor(policy=policy(), state=state())
         result = supervisor.execute(
