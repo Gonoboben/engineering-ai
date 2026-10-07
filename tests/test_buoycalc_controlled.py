@@ -635,6 +635,111 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
         self.assertNotEqual(branch.returncode, 0)
         self.assertEqual(self._git("rev-parse", "HEAD").strip(), self.base_sha)
 
+    def test_disposable_cleanup_retries_transient_filesystem_lock(self) -> None:
+        loop = self.loop()
+        prep = loop.prepare(
+            worktree_name="transient-lock-fallback",
+            branch="engineering-ai/buoycalc/transient-lock-fallback",
+        )
+        assert prep.session is not None
+        worktree = Path(prep.session.worktree_root)
+        generated = worktree / "artifacts/generated.txt"
+        generated.parent.mkdir(parents=True, exist_ok=True)
+        generated.write_text("generated\n", encoding="utf-8")
+
+        adapter = loop._worktrees
+        original_rmtree = shutil.rmtree
+        rmtree_attempts = {"count": 0}
+
+        def flaky_rmtree(path, *args, **kwargs):
+            rmtree_attempts["count"] += 1
+            if rmtree_attempts["count"] == 1:
+                raise PermissionError(32, "synthetic transient directory lock", str(path))
+            return original_rmtree(path, *args, **kwargs)
+
+        with patch.object(
+            adapter,
+            "_remove_disposable_worktree_with_retry",
+            return_value="fatal: not a working tree",
+        ), patch(
+            "engineering_ai.tools.worktree.shutil.rmtree",
+            side_effect=flaky_rmtree,
+        ), patch("engineering_ai.tools.worktree.time.sleep") as sleep_mock:
+            loop.cleanup_disposable_generated(prep.session)
+
+        self.assertEqual(rmtree_attempts["count"], 2)
+        self.assertGreaterEqual(sleep_mock.call_count, 1)
+        self.assertFalse(worktree.exists())
+        branch = subprocess.run(
+            [
+                "git",
+                "show-ref",
+                "--verify",
+                "refs/heads/engineering-ai/buoycalc/transient-lock-fallback",
+            ],
+            cwd=self.root,
+            check=False,
+            capture_output=True,
+        )
+        self.assertNotEqual(branch.returncode, 0)
+        self.assertEqual(self._git("rev-parse", "HEAD").strip(), self.base_sha)
+        self.assertEqual(self._git("status", "--porcelain").strip(), "")
+
+    def test_disposable_cleanup_persistent_filesystem_lock_fails_closed(self) -> None:
+        loop = self.loop()
+        prep = loop.prepare(
+            worktree_name="persistent-lock-fallback",
+            branch="engineering-ai/buoycalc/persistent-lock-fallback",
+        )
+        assert prep.session is not None
+        worktree = Path(prep.session.worktree_root)
+        generated = worktree / "artifacts/generated.txt"
+        generated.parent.mkdir(parents=True, exist_ok=True)
+        generated.write_text("generated\n", encoding="utf-8")
+
+        adapter = loop._worktrees
+        persistent = PermissionError(
+            32,
+            "synthetic persistent directory lock",
+            str(worktree),
+        )
+
+        with patch.object(
+            adapter,
+            "_remove_disposable_worktree_with_retry",
+            return_value="fatal: not a working tree",
+        ), patch(
+            "engineering_ai.tools.worktree.shutil.rmtree",
+            side_effect=persistent,
+        ), patch("engineering_ai.tools.worktree.time.sleep") as sleep_mock:
+            with self.assertRaisesRegex(
+                ToolExecutionError,
+                "disposable worktree cleanup failed after git remove error",
+            ):
+                loop.cleanup_disposable_generated(prep.session)
+
+        self.assertEqual(sleep_mock.call_count, 9)
+        self.assertTrue(worktree.exists())
+        branch = subprocess.run(
+            [
+                "git",
+                "show-ref",
+                "--verify",
+                "refs/heads/engineering-ai/buoycalc/persistent-lock-fallback",
+            ],
+            cwd=self.root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(branch.returncode, 0)
+        self.assertIn(self.base_sha, branch.stdout)
+        self.assertEqual(self._git("rev-parse", "HEAD").strip(), self.base_sha)
+        self.assertEqual(self._git("status", "--porcelain").strip(), "")
+
+        loop.cleanup_disposable_generated(prep.session)
+        self.assertFalse(worktree.exists())
+
     def test_disposable_cleanup_rejects_tracked_diff(self) -> None:
         loop = self.loop()
         prep = loop.prepare(
