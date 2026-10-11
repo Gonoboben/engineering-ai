@@ -5752,3 +5752,38 @@ and hosted CI are required. No Ready for Review or merge is authorized.
 Release authorization remains `NOT_GRANTED`.
 Fabrication authorization remains `NOT_GRANTED`.
 Physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-10-11 — Gate 036 failed real cleanup; isolated Windows diagnostics authorized
+
+The real primary-workstation Gate 036 exercise ran Engineering AI PR #75 head
+`b463eb0d7216c3ba9ae0241d1f261c4f731e3584` against the pinned connected
+PlataVM PR #100 head `840435615d0b3ebf5f1137f575cfd75b66501964` and
+BuoyCalc `main@325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+
+PlataVM: two fixed validators PASS and automatic disposable cleanup PASS.
+BuoyCalc: all four fixed profiles / 23 steps PASS and tracked state unchanged.
+Automated BuoyCalc cleanup failed with Windows `WinError 32` after Git worktree
+deregistration, leaving an empty filesystem path and exact-base controlled
+branch. Overall harness: `BLOCKED_OR_FAILED_REAL_CONNECTED_PROJECT_CONTROLLED_USE`,
+exit code 1. All three primary checkouts and the Gate 035 worktree remained
+unchanged; no connected-project remote mutation was attempted.
+
+The owner separately approved recovery, which verified absence of registered
+Git worktree, exact branch SHA, empty directory, no reparse point, and clean
+primary checkout. Only this empty disposable directory and exact service branch
+were removed. Recovery: PASS. Historical Gate 036: still BLOCKED.
+
+The owner then approved narrowly scoped improvements in existing PR #75:
+bounded diagnostics for individual cleanup attempts; exposure in failed
+Gate 036 JSON evidence; and a real Windows directory-handle regression in the
+Windows CI matrix. Root cause of the original holding handle is unknown.
+No solver/physics/validator contract, permission boundary, release/fabrication
+authority, or roadmap sequence is changed. No new real Gate 036 execution is
+approved. New exact PR head and hosted CI must be checked before proposing any
+further remediation or future real run.
+
+Release authorization: `NOT_GRANTED`.
+Fabrication authorization: `NOT_GRANTED`.
+Physical validation: `PHYSICAL_NOT_EXECUTED`.

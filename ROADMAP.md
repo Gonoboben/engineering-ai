@@ -709,7 +709,7 @@ model-routing authority, release/fabrication authority or physical-validation
 semantics.
 
 ### Gate 036 — v1.0 real connected-project controlled-use acceptance
-Status: `OPEN_REAL_EXECUTION_REQUIRED`
+Status: `OPEN_REAL_REEXECUTION_REQUIRED_CLEANUP_BLOCKED`
 
 Issue: `#74 OPEN`
 
@@ -746,6 +746,17 @@ Remediation checkpoint:
   existing PlataVM PR #100 and this Gate 036 branch;
 - Gate 036 remains open until the remediated exact revisions complete the real
   primary-workstation acceptance path.
+
+2026-10-11 real-primary-workstation checkpoint:
+- PlataVM and BuoyCalc fixed validator sets passed on the exact source identities;
+- BuoyCalc automated Windows cleanup failed after Git deregistration with
+  `WinError 32`; overall Gate 036 remains BLOCKED;
+- user-authorized guarded manual residue cleanup passed independently, but
+  does not convert the failed run into PASS;
+- existing PR #75 now includes bounded cleanup diagnostics and an isolated
+  real Windows directory-handle regression for CI review;
+- a new real acceptance run requires separate explicit authorization and
+  successful cleanup; no roadmap reorder or authority expansion.
 
 Connected-project commits, pushes, PR mutation/creation/merge, architecture,
 physics, validator weakening, release/fabrication authorization and physical

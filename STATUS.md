@@ -85,7 +85,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Branch: `gate-036-real-connected-project-controlled-use`
 - Base: accepted Gate 035 squash merge
   `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`
-- State: `REMEDIATION_IMPLEMENTED_REAL_RERUN_REQUIRED`
+- State: `REAL_WINDOWS_VALIDATION_PASSED_AUTOMATED_CLEANUP_BLOCKED`
 - Purpose: close the existing v1.0 criterion for successful controlled use on
   both real connected projects without expanding project or release authority.
 
@@ -114,6 +114,16 @@ Gate 036 remediation checkpoint:
 - bounded disposable filesystem retry/backoff plus fail-closed persistent-lock
   regression coverage is implemented on PR #75;
 - final real primary-workstation rerun is still required before Gate PASS.
+- the authorized 2026-10-11 real exercise on the fixed source identities
+  passed PlataVM 2/2 validators and BuoyCalc 4/4 profiles (23/23 steps), but
+  BuoyCalc automatic cleanup again failed with Windows `WinError 32`;
+- Git deregistered the worktree before its empty physical directory could be
+  removed; primary checkouts stayed unchanged and Gate 036 result was BLOCKED;
+- guarded owner-authorized manual recovery removed only the verified empty
+  disposable directory and the exact controlled branch, without promoting PASS;
+- further owner-authorized PR #75 work adds bounded per-attempt cleanup
+  diagnostics and a real Win32 held-directory regression in Windows CI;
+  root cause remains unproven and no second real Gate 036 run is authorized.
 
 
 ## Architecture / implementation state
@@ -843,8 +853,11 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 036 implementation must first validate its deterministic evidence contract
-in CI. This does not satisfy the real-project criterion.
+Next: verify exact-head and Gate 036 Windows CI for the bounded cleanup
+instrumentation and real Win32 directory-handle regression. The 2026-10-11
+real connected-project validation passed but automatic cleanup failed, so
+Gate 036 remains BLOCKED. No real reexecution without a new human approval.
+Synthetic/isolated CI does not satisfy the real-project criterion.
 
 Real acceptance then requires primary-workstation execution of
 `scripts/gate036_real_connected_project_controlled_use.py --approve-worktrees`
