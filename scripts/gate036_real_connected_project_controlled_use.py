@@ -348,6 +348,7 @@ def _run_buoycalc(repository: Path) -> dict[str, Any]:
         "profiles": [],
         "tracked_state_unchanged": False,
         "cleanup_state": "NOT_ATTEMPTED",
+        "cleanup_events": [],
         "worktree_removed": False,
         "branch_removed": False,
         "repository_unchanged": False,
@@ -443,6 +444,8 @@ def _run_buoycalc(repository: Path) -> dict[str, Any]:
     except (ToolAccessError, ToolExecutionError, OSError, ValueError) as exc:
         payload["execution_error"] = f"{type(exc).__name__}: {exc}"
     finally:
+        # Preserve bounded trace even when fail-closed cleanup raises.
+        payload["cleanup_events"] = list(loop.cleanup_events)
         payload["worktree_removed"] = not worktree_path.exists()
         payload["branch_removed"] = _branch_removed(repository, branch)
         payload["after"] = _git_snapshot_dict(readonly.git_snapshot())
