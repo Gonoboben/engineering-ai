@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import sys
 import subprocess
@@ -668,6 +669,13 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
             loop.cleanup_disposable_generated(prep.session)
 
         self.assertEqual(rmtree_attempts["count"], 2)
+        attempts = [
+            event for event in loop.cleanup_events
+            if event["stage"] == "filesystem_remove"
+        ]
+        self.assertEqual(len(attempts), 2)
+        self.assertEqual(attempts[0]["error_type"], "PermissionError")
+        self.assertFalse(attempts[-1]["worktree_exists"])
         self.assertGreaterEqual(sleep_mock.call_count, 1)
         self.assertFalse(worktree.exists())
         branch = subprocess.run(
@@ -721,6 +729,12 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
                 loop.cleanup_disposable_generated(prep.session)
 
         self.assertEqual(rmtree_mock.call_count, 10)
+        attempts = [
+            event for event in loop.cleanup_events
+            if event["stage"] == "filesystem_remove"
+        ]
+        self.assertEqual(len(attempts), 10)
+        self.assertTrue(all(event["worktree_exists"] for event in attempts))
         self.assertGreaterEqual(sleep_mock.call_count, 9)
         self.assertTrue(worktree.exists())
         branch = subprocess.run(
@@ -742,6 +756,70 @@ class BuoyCalcControlledLoopTests(unittest.TestCase):
 
         loop.cleanup_disposable_generated(prep.session)
         self.assertFalse(worktree.exists())
+
+
+    @unittest.skipUnless(os.name == "nt", "real directory handles require Windows")
+    def test_disposable_cleanup_real_windows_directory_handle(self) -> None:
+        """A separate Windows process with no FILE_SHARE_DELETE blocks rmtree.
+
+        This is an isolated filesystem regression, not real Gate 036 execution.
+        It validates the persistent-lock stop condition and subsequent release
+        using a real Win32 directory handle rather than a mocked exception.
+        """
+        adapter = self.loop()._worktrees
+        directory = Path(self.worktree_tmp.name) / "win32-held-directory"
+        directory.mkdir()
+        holder_script = (
+            "import ctypes, os, time\n"
+            "from ctypes import wintypes\n"
+            "dll = ctypes.WinDLL('kernel32', use_last_error=True)\n"
+            "open_dir = dll.CreateFileW\n"
+            "open_dir.argtypes = (wintypes.LPCWSTR, wintypes.DWORD, "
+            "wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD, "
+            "wintypes.DWORD, ctypes.c_void_p)\n"
+            "open_dir.restype = wintypes.HANDLE\n"
+            "handle = open_dir(os.getcwd(), 0, 3, None, 3, "
+            "0x02000000, None)\n"
+            "if handle is None or handle == ctypes.c_void_p(-1).value:\n"
+            "    raise ctypes.WinError(ctypes.get_last_error())\n"
+            "print('READY', flush=True)\n"
+            "time.sleep(60)\n"
+        )
+        holder = subprocess.Popen(
+            [sys.executable, "-B", "-c", holder_script],
+            cwd=directory,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        try:
+            assert holder.stdout is not None
+            self.assertEqual(holder.stdout.readline().strip(), "READY")
+            with self.assertRaises(OSError):
+                adapter._remove_disposable_filesystem_with_retry(
+                    directory, attempts=2
+                )
+            self.assertTrue(directory.exists())
+            events = [
+                event for event in adapter.cleanup_events
+                if event["stage"] == "filesystem_remove"
+            ]
+            self.assertEqual(len(events), 2)
+            self.assertTrue(all(event["worktree_exists"] for event in events))
+            self.assertTrue(
+                all(event["error_type"] is not None for event in events)
+            )
+        finally:
+            if holder.poll() is None:
+                holder.terminate()
+            holder.communicate(timeout=10)
+
+        # The same isolated path must become removable after the OS releases
+        # the real directory handle. Never infer PASS for the failed attempt.
+        adapter._remove_disposable_filesystem_with_retry(directory, attempts=10)
+        self.assertFalse(directory.exists())
+        self.assertFalse(adapter.cleanup_events[-1]["worktree_exists"])
 
     def test_disposable_cleanup_rejects_tracked_diff(self) -> None:
         loop = self.loop()
