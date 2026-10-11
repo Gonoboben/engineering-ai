@@ -82,10 +82,21 @@ class ControlledWorktreeAdapter:
         self._max_write_bytes = max_write_bytes
         self._primary_git = GitReadOnlyAdapter(self._repo, git_executable=git_executable)
         self._sessions: dict[str, WorktreeSession] = {}
+        # Bounded, non-authoritative cleanup diagnostics for Gate 036 evidence.
+        self._cleanup_events: list[dict[str, object]] = []
 
     @property
     def branch_prefix(self) -> str:
         return self._branch_prefix
+
+    @property
+    def cleanup_events(self) -> tuple[dict[str, object], ...]:
+        """Return bounded diagnostic snapshots; never infer acceptance from them."""
+        return tuple(dict(event) for event in self._cleanup_events)
+
+    def _record_cleanup_event(self, **fields: object) -> None:
+        if len(self._cleanup_events) < 32:
+            self._cleanup_events.append(dict(fields))
 
     def create_worktree(
         self,
@@ -241,6 +252,7 @@ class ControlledWorktreeAdapter:
         untracked build artifacts, but never tracked project changes or commits.
         """
 
+        self._cleanup_events.clear()
         worktree = self._require_session(session)
         git = GitReadOnlyAdapter(worktree)
         head = git.head_sha()
@@ -278,6 +290,7 @@ class ControlledWorktreeAdapter:
                 + (delete.stderr.strip() or delete.stdout.strip())
             )
         self._sessions.pop(str(worktree), None)
+        self._record_cleanup_event(stage="cleanup_complete", worktree_exists=worktree.exists())
 
     def _remove_disposable_worktree_with_retry(
         self,
@@ -287,13 +300,23 @@ class ControlledWorktreeAdapter:
     ) -> str | None:
         last_error = ""
         for index in range(attempts):
+            started = time.monotonic()
             result = self._run_git(
                 ["worktree", "remove", "--force", str(worktree)],
                 operation="git.worktree_remove_disposable",
             )
+            error = result.stderr.strip() or result.stdout.strip()
+            self._record_cleanup_event(
+                stage="git_worktree_remove",
+                attempt=index + 1,
+                elapsed_ms=round((time.monotonic() - started) * 1000),
+                exit_code=result.returncode,
+                worktree_exists=worktree.exists(),
+                git_error=error[:512] if result.returncode else None,
+            )
             if result.returncode == 0:
                 return None
-            last_error = result.stderr.strip() or result.stdout.strip()
+            last_error = error
             if index + 1 < attempts:
                 time.sleep(0.25 * (index + 1))
         return last_error or "git worktree remove failed"
@@ -320,9 +343,16 @@ class ControlledWorktreeAdapter:
                     f"{remove_error!r}: {exc}"
                 ) from exc
 
+        started = time.monotonic()
         prune = self._run_git(
             ["worktree", "prune", "--expire", "now"],
             operation="git.worktree_prune_disposable",
+        )
+        self._record_cleanup_event(
+            stage="git_worktree_prune",
+            elapsed_ms=round((time.monotonic() - started) * 1000),
+            exit_code=prune.returncode,
+            worktree_exists=worktree.exists(),
         )
         if prune.returncode != 0:
             raise ToolExecutionError(
@@ -335,8 +365,8 @@ class ControlledWorktreeAdapter:
                 "disposable worktree path still exists after guarded cleanup"
             )
 
-    @staticmethod
     def _remove_disposable_filesystem_with_retry(
+        self,
         worktree: Path,
         *,
         attempts: int = 10,
@@ -362,6 +392,8 @@ class ControlledWorktreeAdapter:
         for index in range(attempts):
             if not worktree.exists():
                 return
+            started = time.monotonic()
+            error: OSError | None = None
             try:
                 shutil.rmtree(
                     worktree,
@@ -369,7 +401,17 @@ class ControlledWorktreeAdapter:
                 )
             except OSError as exc:
                 last_error = exc
+                error = exc
 
+            self._record_cleanup_event(
+                stage="filesystem_remove",
+                attempt=index + 1,
+                elapsed_ms=round((time.monotonic() - started) * 1000),
+                worktree_exists=worktree.exists(),
+                error_type=type(error).__name__ if error is not None else None,
+                winerror=getattr(error, "winerror", None),
+                errno=getattr(error, "errno", None),
+            )
             if not worktree.exists():
                 return
 
