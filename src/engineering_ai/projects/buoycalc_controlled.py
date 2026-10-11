@@ -324,6 +324,11 @@ class BuoyCalcControlledEngineeringLoop:
     def branch_prefix(self) -> str:
         return self._worktrees.branch_prefix
 
+    @property
+    def cleanup_events(self) -> tuple[dict[str, object], ...]:
+        """Expose adapter-owned cleanup diagnostics without granting new authority."""
+        return self._worktrees.cleanup_events
+
     def prepare(
         self,
         *,
