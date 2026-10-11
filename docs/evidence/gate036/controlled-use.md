@@ -117,9 +117,45 @@ PlataVM physics, engineering contracts, validator allowlists, release,
 fabrication or physical states. Final Gate 036 acceptance still requires a new
 real primary-workstation run against the exact revisions above.
 
+## 2026-10-11 real Windows acceptance / cleanup evidence
+
+The explicitly authorized primary-workstation Gate 036 exercise ran against
+Engineering AI `b463eb0d7216c3ba9ae0241d1f261c4f731e3584`, PlataVM
+`840435615d0b3ebf5f1137f575cfd75b66501964`, and BuoyCalc main
+`325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+
+- PlataVM: both fixed validators PASS; worktree/branch cleanup PASS.
+- BuoyCalc: all four fixed profiles / 23 steps PASS, tracked state unchanged.
+- BuoyCalc cleanup: FAIL after Git had deregistered the disposable worktree;
+  its directory remained with Windows `WinError 32` and the controlled branch
+  remained at the exact base SHA. Overall Gate 036 exit code 1 / BLOCKED.
+- The primary checkouts and Gate 035 worktree remained unchanged.
+- A separately authorized manual recovery later verified the disposable
+  directory was empty and not a reparse point, that Git had deregistered the
+  worktree, and that its branch still equaled the expected base SHA. Only this
+  empty directory and exact disposable branch were then removed successfully.
+  Manual recovery does not retrospectively change the failed acceptance.
+
+Root cause of the Windows handle retention is unproven: no holding handle was
+found by Resource Monitor later. The existing synthetic transient/persistent
+lock tests do not exercise a real Windows directory handle. The owner approved
+bounded cleanup-attempt diagnostics and an isolated real Win32 handle regression
+inside existing Draft PR #75. This adds no new tool permissions or validator
+allowlists, and does not change release/fabrication/physical authority.
+
+The remediation captures bounded diagnostic events from the Git remove and
+filesystem fallback stages in the Gate 036 JSON evidence (including attempts,
+latency, exit status, and OS error numbers). The Windows regression acquires a
+real no-FILE_SHARE_DELETE directory handle in a separate process and verifies
+fail-closed behavior while held and removability after release. It does not
+establish the process responsible for the historical failure.
+
+The new instrumentation and regression still require hosted CI review. No
+second real Gate 036 execution, approval for release, or merge is authorized.
+
 ## Current state
 
-`REAL_PRIMARY_WORKSTATION_EXECUTION_REQUIRED`.
+`REAL_PRIMARY_WORKSTATION_REEXECUTION_REQUIRED_AFTER_CLEANUP_DIAGNOSTICS`.
 
 No real Gate 036 PASS is claimed yet.
 
