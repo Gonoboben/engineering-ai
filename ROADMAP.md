@@ -680,74 +680,97 @@ changing architecture, validator semantics, model/tool/Git/network authority,
 release/fabrication authority or physical-validation semantics.
 
 ### Gate 035 — v1.0 deterministic acceptance-contract conformance
-Status: `READY_FOR_REVIEW_FINAL_EXACT_HEAD_CI_REQUIRED`
+Status: `ACCEPTED_MERGED`
 
-Issue: `#72 OPEN`
+Issue: `#72 CLOSED / COMPLETED`
 
-PR: `#73 READY FOR REVIEW / OPEN`
+PR: `#73 MERGED`
 
-Branch: `gate-035-deterministic-acceptance-contract-conformance`
+Final approved PR head:
+`abbb9f9e0a2592c98bc9f3d58ce22a97a2ec552d`
+
+Accepted squash merge:
+`d9ab48f50ef9e78c7fd7423cebadf39634c3de66`
+
+Delivered:
+- effective required-validator closure is the deterministic union of
+  project-policy `mandatory_validators` and job `required_validators`;
+- terminal generic job `PASS` requires exact-revision, evidence-backed closure
+  of every effective required validator;
+- Reviewer/model/tool success cannot substitute for deterministic validation;
+- no-validator completion remains available only when neither policy nor job
+  requires validators.
+
+Final exact-head Gate 035, generic, strict exact-head and inherited Gate
+026–034 workflows passed before explicit human exact-SHA squash-merge approval.
+
+Gate 035 changed no architecture, project-specific validator semantics,
+model-routing authority, release/fabrication authority or physical-validation
+semantics.
+
+### Gate 036 — v1.0 real connected-project controlled-use acceptance
+Status: `OPEN_SOURCE_RECONCILIATION_APPROVED_REAL_NOT_RUN`
+
+Issue: `#74 OPEN`
+
+Branch: `gate-036-real-connected-project-controlled-use`
 
 Base:
-`6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
+`d9ab48f50ef9e78c7fd7423cebadf39634c3de66`
 
 Purpose:
-- restore conformance with the already accepted rule that validation is required
-  before generic engineering work reaches terminal `PASS`;
-- treat successful tool execution separately from validator closure;
-- make the effective required-validator set the deterministic union of project
-  policy `mandatory_validators` and job `required_validators`;
-- require exact-revision, evidence-backed PASS for every effective required
-  validator;
-- prevent Reviewer/model `ACCEPT` from substituting for deterministic
-  validation;
-- preserve the no-validator completion path only when neither policy nor job
-  requires validators;
-- do not change PlataVM/BuoyCalc project-specific validator semantics.
+- close the v1.0 criterion for successful controlled use on both PlataVM and
+  BuoyCalc;
+- use only the existing Gate 013/015 controlled adapters and fixed validators;
+- prove real exact-revision worktree/validation/evidence/cleanup behavior;
+- preserve connected-project remote history and all release/fabrication/physical
+  barriers.
 
-Gate 035 is a conformance remediation, not a new v1.0 product criterion and not
-an architecture redesign.
+Exact Gate 036 project sources:
+- PlataVM Draft PR #100 head
+  `840435615d0b3ebf5f1137f575cfd75b66501964`, base main
+  `dcba77466d4800c0e7a336a2771684e066f845db`;
+- BuoyCalc
+  `main@1ea0ddb76f07a41a811390632b64afbf257283eb`.
 
-The earlier implementation/evidence checkpoint
-`38b6db633c24963d6afbec1f62a6a817172129b1` was superseded after post-review
-analysis found that policy-level `mandatory_validators` were not yet included
-in the generic terminal completion set. PR #73 was returned to Draft.
+The Gate 036 CI harness may validate evidence semantics only. Final Gate
+acceptance additionally requires a real primary-workstation execution against
+both exact connected-project revisions. Synthetic/self-test evidence cannot
+close the Gate.
 
-Current validated implementation/evidence checkpoint:
-`e6770dff9a3c52124ae6e6650a64a7f696570343`
+2026-10-19 owner-approved source reconciliation:
+- BuoyCalc `main@325aee5ee3a9f64413e416a1206fc4e296d9723f` is retained as the historical
+  source of the blocked real cleanup attempt, not current validation evidence.
+- New exact source `main@1ea0ddb76f07a41a811390632b64afbf257283eb` includes merged PR #628 and #630;
+  affected validator scripts and engineering regressions require new checks.
+- PR #75 CI at `c5f7394544ea64d2c4a8fa18f0d3070c12a4d75a` passed 13/13 hosted workflows for the
+  old source contract only; no new-source PASS is inferred.
+- New source-identity harness/tests/docs require review and separately authorized
+  commit/push, then real worktree validation only after a separate approval.
 
-Hosted validation on that exact checkpoint:
-- Gate 035 workflow `37587374112`: `PASS`;
-- generic validation `37587374030`: `PASS`;
-- strict exact-head validation `37587374079`: `PASS`;
-- Gate 034 `37587374040`: `PASS`;
-- Gate 033 `37587374086`: `PASS`;
-- Gate 032 `37587374074`: `PASS`;
-- Gate 031 `37587374042`: `PASS`;
-- Gate 030 `37587374041`: `PASS`;
-- Gate 029 `37587374104`: `PASS`;
-- Gate 028 `37587374026`: `PASS`;
-- Gate 027 `37587374039`: `PASS`;
-- Gate 026 `37587374052`: Ubuntu `PASS`, Windows `PASS` after one
-  failed-job rerun on the unchanged head following a Windows temporary-directory
-  cleanup error in inherited Gate 034 test infrastructure.
+Remediation checkpoint:
+- the first Windows real-pilot attempt demonstrated a PlataVM repository-path
+  canonicalization defect and an Engineering AI transient disposable-worktree
+  cleanup defect;
+- the owner authorized only minimal portability/cleanup remediation inside
+  existing PlataVM PR #100 and this Gate 036 branch;
+- Gate 036 remains open until the remediated exact revisions complete the real
+  primary-workstation acceptance path.
 
-No validator was weakened and no architecture, model routing, project-specific
-validator semantics, release/fabrication authority or physical-validation
-semantics were expanded.
+2026-10-11 real-primary-workstation checkpoint:
+- PlataVM and BuoyCalc fixed validator sets passed on the exact source identities;
+- BuoyCalc automated Windows cleanup failed after Git deregistration with
+  `WinError 32`; overall Gate 036 remains BLOCKED;
+- user-authorized guarded manual residue cleanup passed independently, but
+  does not convert the failed run into PASS;
+- existing PR #75 now includes bounded cleanup diagnostics and an isolated
+  real Windows directory-handle regression for CI review;
+- a new real acceptance run requires separate explicit authorization and
+  successful cleanup; no roadmap reorder or authority expansion.
 
-The corrected source-of-truth head
-`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`
-completed the full hosted pull-request workflow set successfully, including
-Gate 026 Ubuntu and Windows after a failed-job rerun of the Windows cleanup
-flake on the unchanged exact revision.
-
-PR #73 then transitioned to:
-`READY FOR REVIEW / OPEN`.
-
-This Ready-state source-of-truth synchronization commit must itself complete the
-full hosted CI set successfully. If green, the branch is frozen and merge
-requires separate explicit human exact-SHA authorization.
+Connected-project commits, pushes, PR mutation/creation/merge, architecture,
+physics, validator weakening, release/fabrication authorization and physical
+validation are outside Gate 036.
 
 ### v1.0 criteria
 A stable v1.0 requires, at minimum:

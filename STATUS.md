@@ -79,17 +79,64 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Human architecture approval: `APPROVED`
 
 ## Current Gate
-- Gate: `035 — v1.0 deterministic acceptance-contract conformance`
-- Issue: `#72 OPEN`
-- PR: `#73 READY FOR REVIEW / OPEN`
-- Branch: `gate-035-deterministic-acceptance-contract-conformance`
-- Base: accepted Gate 034 squash merge
-  `6db84082e45f3e00a555f5af79f66c1fc6b48ea6`
-- State: `READY_FOR_REVIEW_FINAL_EXACT_HEAD_CI_REQUIRED`
-- Current implementation/evidence checkpoint:
-  `e6770dff9a3c52124ae6e6650a64a7f696570343`
-- Purpose: restore the already accepted required-validator/evidence completion
-  contract before real connected-project controlled use.
+- Gate: `036 — v1.0 real connected-project controlled-use acceptance`
+- Issue: `#74 OPEN`
+- PR: `#75 OPEN / DRAFT`
+- Branch: `gate-036-real-connected-project-controlled-use`
+- Base: accepted Gate 035 squash merge
+  `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`
+- State: `SOURCE_RECONCILIATION_APPROVED_REAL_EXECUTION_NOT_RUN`
+- Purpose: close the existing v1.0 criterion for successful controlled use on
+  both real connected projects without expanding project or release authority.
+
+Gate 035 accepted merge:
+- Issue #72: `CLOSED / COMPLETED`;
+- PR #73: `MERGED`;
+- final approved PR head:
+  `abbb9f9e0a2592c98bc9f3d58ce22a97a2ec552d`;
+- squash merge:
+  `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`;
+- final exact-head Gate 035 and inherited workflow set: `PASS`.
+
+Gate 036 exact connected-project sources:
+- PlataVM PR #100 remediated Draft head:
+  `840435615d0b3ebf5f1137f575cfd75b66501964`;
+- BuoyCalc main:
+  `1ea0ddb76f07a41a811390632b64afbf257283eb`.
+
+Gate 036 2026-10-19 source reconciliation (owner approved, not Gate PASS):
+- Historical BuoyCalc source `325aee5ee3a9f64413e416a1206fc4e296d9723f` remains attached to
+  the failed Windows cleanup evidence; it is not promoted to PASS.
+- Approved BuoyCalc source `1ea0ddb76f07a41a811390632b64afbf257283eb` includes merged PR #628
+  and #630. Two intervening commits change engineering regressions and active validator
+  scripts; prior validation cannot be transferred to this source.
+- PR #75 head `c5f7394544ea64d2c4a8fa18f0d3070c12a4d75a` passed 13/13 hosted workflows
+  before this source-identity change; no new-source Gate PASS is claimed.
+- Only a reviewed, separately approved commit/push may synchronize the harness
+  and docs; local protected checkout relocation and real execution require
+  separate approvals. Release/fabrication/physical authority is unchanged.
+
+Gate 036 remediation checkpoint:
+- first Windows real-pilot execution preserved both connected primary checkouts;
+- PlataVM Windows semantic validation exposed a repository-relative path
+  separator defect, remediated in existing PR #100 without changing engineering
+  contracts or authority;
+- BuoyCalc validation reached `READY_FOR_HUMAN_APPROVAL`, while disposable
+  cleanup exposed a transient Windows filesystem-handle residue;
+- bounded disposable filesystem retry/backoff plus fail-closed persistent-lock
+  regression coverage is implemented on PR #75;
+- final real primary-workstation rerun is still required before Gate PASS.
+- the authorized 2026-10-11 real exercise on the fixed source identities
+  passed PlataVM 2/2 validators and BuoyCalc 4/4 profiles (23/23 steps), but
+  BuoyCalc automatic cleanup again failed with Windows `WinError 32`;
+- Git deregistered the worktree before its empty physical directory could be
+  removed; primary checkouts stayed unchanged and Gate 036 result was BLOCKED;
+- guarded owner-authorized manual recovery removed only the verified empty
+  disposable directory and the exact controlled branch, without promoting PASS;
+- further owner-authorized PR #75 work adds bounded per-attempt cleanup
+  diagnostics and a real Win32 held-directory regression in Windows CI;
+  root cause remains unproven and no second real Gate 036 run is authorized.
+
 
 ## Architecture / implementation state
 - Python package skeleton: `IMPLEMENTED_VALIDATED`
@@ -146,7 +193,8 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - v1.0 controlled hand-offs with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_032_ACCEPTED`
 - v1.0 persistent project memory with provenance acceptance: `IMPLEMENTED_VALIDATED_GATE_033_ACCEPTED`
 - v1.0 documented model/tool failure recovery acceptance: `IMPLEMENTED_VALIDATED_GATE_034_ACCEPTED`
-- v1.0 deterministic acceptance-contract conformance: `GATE_035_READY_FOR_REVIEW`
+- v1.0 deterministic acceptance-contract conformance: `IMPLEMENTED_VALIDATED_GATE_035_ACCEPTED`
+- v1.0 real connected-project controlled-use acceptance: `GATE_036_OPEN_REAL_EXECUTION_REQUIRED`
 
 ## Connected engineering projects
 - PlataVM: `CONTROLLED_GATE013_ACCEPTED_WRITE_BLOCKED_BY_SOURCE_CONFLICT`
@@ -817,44 +865,35 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Gate 035 Ready-for-Review source transition was made from exact head:
-`fd5142e34e3b69d9a9adc14b283e895c3d7d2c86`.
+Next: review the local source-identity synchronization diff for the owner-approved
+BuoyCalc SHA, then separately authorize any commit, push and exact-head CI.
+GitHub CI at previous PR #75 head `c5f7394` passed 13/13 workflows but is
+synthetic regarding real connected-project acceptance. The 2026-10-11 real
+validators passed while BuoyCalc automatic cleanup failed: Gate 036 remains
+BLOCKED/NOT_RUN on the newly approved source. The old result is historical.
 
-On that exact revision, all 12 pull-request workflows completed successfully:
-- Gate 035 `37589599652`: `PASS`;
-- generic validation `37589599705`: `PASS`;
-- strict exact-head validation `37589599645`: `PASS`;
-- Gate 034 `37589599627`: `PASS`;
-- Gate 033 `37589599542`: `PASS`;
-- Gate 032 `37589599674`: `PASS`;
-- Gate 031 `37589599588`: `PASS`;
-- Gate 030 `37589599504`: `PASS`;
-- Gate 029 `37589599486`: `PASS`;
-- Gate 028 `37589599523`: `PASS`;
-- Gate 027 `37589599567`: `PASS`;
-- Gate 026 `37589599711`: Ubuntu `PASS`, Windows `PASS` after rerunning
-  only the failed Windows job on the unchanged exact head.
+Only after new-source deterministic validation, protected checkout reconciliation
+and separate human approval may the primary-workstation harness run with
+`scripts/gate036_real_connected_project_controlled_use.py --approve-worktrees`
+against both exact revisions recorded above.
 
-The first Gate 026 Windows attempt again failed only during temporary-directory
-cleanup in the inherited Gate 034 timeout harness with `WinError 32/5`.
-The rerun passed without source changes. This remains classified as a Windows
-CI/test-harness cleanup flake, not a Gate 035 validation failure.
+The harness must prove for both projects:
+- exact source identity;
+- accepted existing controlled adapter only;
+- disposable local worktree/branch creation;
+- existing fixed validator/profile completion;
+- `READY_FOR_HUMAN_APPROVAL`;
+- cleanup;
+- unchanged primary checkout;
+- no connected-project remote mutation;
+- no release/fabrication/physical promotion.
 
-PR #73 is now:
-`READY FOR REVIEW / OPEN`.
-
-This documentation-only source-of-truth synchronization commit must complete
-the full hosted CI set successfully on its own exact head. If green, the branch
-is frozen and the only admissible next action is explicit human exact-SHA
-squash-merge authorization.
+Synthetic CI evidence cannot substitute for this real execution.
 
 Release authorization: `NOT_GRANTED`.
 Fabrication authorization: `NOT_GRANTED`.
 Physical validation: `PHYSICAL_NOT_EXECUTED`.
 
-After Gate 035 acceptance, the planned route remains:
-Gate 036 controlled PlataVM+BuoyCalc use -> Gate 037 practical model/runtime
-replacement -> final v1.0 cold-start/source-of-truth readiness audit.
 
 ## Gate 023 validation state
 - base: `3111a1d793c05ead0292839500e698a9c5fe2c56`

@@ -5657,3 +5657,133 @@ Fabrication authorization remains:
 Physical validation remains:
 `PHYSICAL_NOT_EXECUTED`.
 
+---
+
+## 2026-10-07 — Gate 035 accepted merge and Gate 036 opening
+
+Gate 035 final approved PR head:
+`abbb9f9e0a2592c98bc9f3d58ce22a97a2ec552d`.
+
+All final exact-head hosted workflows passed before explicit human merge
+authorization.
+
+PR #73 was squash-merged to:
+`main@d9ab48f50ef9e78c7fd7423cebadf39634c3de66`.
+
+Issue #72 closed as completed.
+
+Human authorization then opened Gate 036:
+`v1.0 real connected-project controlled-use acceptance`.
+
+Gate 036:
+- Issue #74: `OPEN`;
+- branch: `gate-036-real-connected-project-controlled-use`;
+- base:
+  `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`.
+
+Authorized exact real-project sources:
+- PlataVM PR #100 head:
+  `11e746cfea7f9200415cf817b6cde928b6a2651a`;
+- PlataVM base main:
+  `dcba77466d4800c0e7a336a2771684e066f845db`;
+- BuoyCalc main:
+  `325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+
+Gate 036 reuses the existing Gate 013 and Gate 015 controlled adapters and
+their existing fixed validator profiles. It adds an acceptance harness, not a
+new project authority layer.
+
+Real acceptance requires disposable local worktree/branch execution against
+both exact revisions, deterministic validator evidence, cleanup and proof that
+the primary checkouts are unchanged.
+
+PlataVM PR #100 currently has cancelled GitHub workflow conclusions. Gate 036
+must not reinterpret those cancelled runs as native project PASS or merge
+readiness.
+
+BuoyCalc Draft PR #628 is not the Gate 036 primary baseline. Gate 036 uses the
+accepted clean-main boundary required by the existing Gate 015 adapter.
+
+No connected-project remote history mutation is authorized.
+
+Release authorization remains:
+`NOT_GRANTED`.
+
+Fabrication authorization remains:
+`NOT_GRANTED`.
+
+Physical validation remains:
+`PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-10-07 — Gate 036 real-pilot remediation
+
+The first Windows primary-workstation connected-project exercise remained
+fail-closed and left both original connected-project checkouts unchanged.
+
+Observed blockers:
+- PlataVM Draft PR #100 exact head
+  `11e746cfea7f9200415cf817b6cde928b6a2651a` passed repository integrity but
+  its PCB-E auxiliary semantic validator failed three repository-relative path
+  string contracts because Windows rendered `Path.relative_to(...)` with
+  backslashes while the canonical manifest uses forward slashes;
+- BuoyCalc deterministic validation reached `READY_FOR_HUMAN_APPROVAL`, but
+  disposable worktree cleanup encountered an already-deregistered filesystem
+  residue with Windows `WinError 32`.
+
+Owner authorized minimal remediation without architecture, physics, validator
+meaning or authority expansion.
+
+PlataVM remediation was committed/pushed in the existing Issue #99 / Draft PR
+#100 branch. The only validator semantic representation change is canonical
+POSIX repository-relative paths plus self-test regression coverage. New exact
+Draft PR #100 head:
+`840435615d0b3ebf5f1137f575cfd75b66501964`.
+
+Gate 036 PR #75 remediation adds bounded retry/backoff only for the already
+verified adapter-owned disposable filesystem path after Git worktree removal,
+with transient-lock recovery and persistent-lock fail-closed regressions. The
+Gate 036 exact PlataVM source identity is synchronized to the new PR #100 head.
+
+Gate 036 remains DRAFT / not accepted. A new real primary-workstation execution
+and hosted CI are required. No Ready for Review or merge is authorized.
+
+Release authorization remains `NOT_GRANTED`.
+Fabrication authorization remains `NOT_GRANTED`.
+Physical validation remains `PHYSICAL_NOT_EXECUTED`.
+
+---
+
+## 2026-10-11 — Gate 036 failed real cleanup; isolated Windows diagnostics authorized
+
+The real primary-workstation Gate 036 exercise ran Engineering AI PR #75 head
+`b463eb0d7216c3ba9ae0241d1f261c4f731e3584` against the pinned connected
+PlataVM PR #100 head `840435615d0b3ebf5f1137f575cfd75b66501964` and
+BuoyCalc `main@325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+
+PlataVM: two fixed validators PASS and automatic disposable cleanup PASS.
+BuoyCalc: all four fixed profiles / 23 steps PASS and tracked state unchanged.
+Automated BuoyCalc cleanup failed with Windows `WinError 32` after Git worktree
+deregistration, leaving an empty filesystem path and exact-base controlled
+branch. Overall harness: `BLOCKED_OR_FAILED_REAL_CONNECTED_PROJECT_CONTROLLED_USE`,
+exit code 1. All three primary checkouts and the Gate 035 worktree remained
+unchanged; no connected-project remote mutation was attempted.
+
+The owner separately approved recovery, which verified absence of registered
+Git worktree, exact branch SHA, empty directory, no reparse point, and clean
+primary checkout. Only this empty disposable directory and exact service branch
+were removed. Recovery: PASS. Historical Gate 036: still BLOCKED.
+
+The owner then approved narrowly scoped improvements in existing PR #75:
+bounded diagnostics for individual cleanup attempts; exposure in failed
+Gate 036 JSON evidence; and a real Windows directory-handle regression in the
+Windows CI matrix. Root cause of the original holding handle is unknown.
+No solver/physics/validator contract, permission boundary, release/fabrication
+authority, or roadmap sequence is changed. No new real Gate 036 execution is
+approved. New exact PR head and hosted CI must be checked before proposing any
+further remediation or future real run.
+
+Release authorization: `NOT_GRANTED`.
+Fabrication authorization: `NOT_GRANTED`.
+Physical validation: `PHYSICAL_NOT_EXECUTED`.
