@@ -5,6 +5,8 @@ on:
     paths:
       - "scripts/gate036_real_connected_project_controlled_use.py"
       - "tests/test_gate036_real_connected_project_controlled_use.py"
+      - "tests/test_buoycalc_controlled.py"
+      - "src/engineering_ai/tools/worktree.py"
       - "docs/evidence/gate036/**"
       - "STATUS.md"
       - "ROADMAP.md"
@@ -36,6 +38,6 @@ jobs:
         run: python -m unittest tests.test_gate036_real_connected_project_controlled_use
       - name: Contract self-test is synthetic only
         run: python scripts/gate036_real_connected_project_controlled_use.py --contract-self-test
-      - name: Isolated real Win32 held-directory cleanup regression
+      - name: Isolated real Win32 and P0 cleanup regressions
         if: runner.os == 'Windows'
-        run: python -m unittest tests.test_buoycalc_controlled.BuoyCalcControlledLoopTests.test_disposable_cleanup_real_windows_directory_handle
+        run: python -m unittest tests.test_buoycalc_controlled.DisposableWorktreeP0Tests

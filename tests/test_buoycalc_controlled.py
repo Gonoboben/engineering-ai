@@ -1000,11 +1000,11 @@ class Gate015PolicyTests(unittest.TestCase):
 
 @unittest.skipIf(shutil.which("git") is None, "git executable is required")
 class DisposableWorktreeP0Tests(unittest.TestCase):
-    """Existing commits only; every repository/holder is isolated and owned."""
+    """Repositories/holders are isolated; synthetic commits stay in fixtures."""
 
     def setUp(self) -> None:
         from engineering_ai.tools.worktree import ControlledWorktreeAdapter
-        self.fixture = Path(tempfile.mkdtemp(prefix="worktree-p0-"))
+        self.fixture = Path(tempfile.mkdtemp(prefix="worktree-p0-")).resolve(strict=True)
         configured = os.environ.get("P0_TEST_EVIDENCE")
         self.evidence_path = (
             Path(configured).resolve() if configured else
@@ -1030,6 +1030,14 @@ class DisposableWorktreeP0Tests(unittest.TestCase):
         self._command(self.root, "checkout", "--detach", self.base_sha)
         self.assertFalse((self.root / ".git/objects/info/alternates").exists())
         self.assertTrue(all(p.stat().st_nlink == 1 for p in (self.root / ".git/objects").rglob("*") if p.is_file()))
+        # clone may create a local copy of the source's HEAD branch. Remove only
+        # verified copies in this independent, freshly detached test repository.
+        for entry in self._command(
+            self.root, "for-each-ref", "--format=%(refname) %(objectname)", "refs/heads",
+        ).stdout.splitlines():
+            ref, sha = entry.split(" ", 1)
+            self.assertEqual(sha, self.base_sha)
+            self._command(self.root, "update-ref", "-d", ref, self.base_sha)
         self.adapter = ControlledWorktreeAdapter(self.root, self.parent)
         self.holders = []
         self.observations = []
@@ -1176,14 +1184,31 @@ class DisposableWorktreeP0Tests(unittest.TestCase):
         class FT(ctypes.Structure):
             _fields_ = [("lo", w.DWORD), ("hi", w.DWORD)]
         dll = ctypes.WinDLL("kernel32", use_last_error=True)
+        dll.GetProcessId.argtypes = [w.HANDLE]
+        dll.GetProcessId.restype = w.DWORD
+        dll.QueryFullProcessImageNameW.argtypes = [
+            w.HANDLE, w.DWORD, w.LPWSTR, ctypes.POINTER(w.DWORD),
+        ]
+        dll.QueryFullProcessImageNameW.restype = w.BOOL
+        native_pid = dll.GetProcessId(int(holder._handle))
+        if not native_pid:
+            raise ctypes.WinError(ctypes.get_last_error())
         dll.GetProcessTimes.argtypes = [w.HANDLE, *[ctypes.POINTER(FT)] * 4]
         dll.GetProcessTimes.restype = w.BOOL
         values = [FT() for _ in range(4)]
         if not dll.GetProcessTimes(int(holder._handle), *[ctypes.byref(x) for x in values]):
             raise ctypes.WinError(ctypes.get_last_error())
+        exit_filetime = (values[1].hi << 32) | values[1].lo
+        image_path = None
+        if exit_filetime == 0:
+            image = ctypes.create_unicode_buffer(32768)
+            size = w.DWORD(len(image))
+            if not dll.QueryFullProcessImageNameW(int(holder._handle), 0, image, ctypes.byref(size)):
+                raise ctypes.WinError(ctypes.get_last_error())
+            image_path = str(Path(image.value).resolve(strict=True))
         return dict(
-            pid=holder.pid, creation_filetime=(values[0].hi << 32) | values[0].lo,
-            exit_filetime=(values[1].hi << 32) | values[1].lo,
+            pid=native_pid, creation_filetime=(values[0].hi << 32) | values[0].lo,
+            exit_filetime=exit_filetime, image_path=image_path,
         )
 
     def _wait_json(self, path, holder):
@@ -1246,7 +1271,11 @@ finally:
  os.chdir(outside)
  save('RELEASED.json',released=True)
 """
-        argv = [sys.executable, "-B", "-c", script, str(target), str(self.fixture),
+        # A Windows venv executable is a redirector with its own PID. Launch the
+        # base interpreter directly so Popen's native handle owns the resource.
+        interpreter = Path(sys._base_executable).resolve(strict=True)
+        self.assertTrue(interpreter.is_file())
+        argv = [str(interpreter), "-B", "-c", script, str(target), str(self.fixture),
                 str(signal), mode, str(access or 0), str(share or 0)]
         with (signal / "stdout.txt").open("x", encoding="utf-8") as out, (signal / "stderr.txt").open("x", encoding="utf-8") as err:
             holder = subprocess.Popen(
@@ -1255,9 +1284,17 @@ finally:
             )
         self.holders.append(holder)
         identity = None
+        ready = None
         try:
             identity = self._identity(holder)
             ready = self._wait_json(signal / "READY.json", holder)
+            self.observations.append(dict(
+                operation="holder_native_identity", popen_pid=holder.pid,
+                caller_executable=sys.executable, base_executable=str(interpreter),
+                native_identity=identity, ready=ready,
+            ))
+            self.assertEqual(identity["pid"], holder.pid)
+            self.assertTrue(Path(identity["image_path"]).samefile(interpreter))
             self.assertEqual(ready["identity"]["pid"], holder.pid)
             self.assertEqual(ready["identity"]["creation_filetime"], identity["creation_filetime"])
             self.assertEqual(ready["identity"]["ppid"], os.getpid())
@@ -1289,6 +1326,7 @@ finally:
                 self.assertFalse(last["registered"] or last["metadata_exists"] or last["branch_exists"])
             signal.joinpath("PROBE").touch()
             probe = self._wait_json(signal / "PROBE.json", holder)
+            self.assertEqual(probe["identity"], ready["identity"])
             self.assertEqual(probe["resource"], ready["resource"])
             self.observations.append(dict(mode=mode, before=before, ready=ready, probe=probe,
                                           failed_attempt_events=list(self.adapter.cleanup_events)))
@@ -1297,6 +1335,11 @@ finally:
             self.assertEqual(holder.wait(timeout=6), 0)
             released = self._wait_json(signal / "RELEASED.json", holder)
             final_identity = self._identity(holder)
+            self.assertEqual(final_identity["pid"], holder.pid)
+            self.assertTrue(released["released"])
+            self.assertEqual(Path(released["cwd"]), self.fixture)
+            if ready is not None:
+                self.assertEqual(released["identity"], ready["identity"])
             if identity is not None:
                 self.assertEqual(identity["creation_filetime"], final_identity["creation_filetime"])
             self.assertGreater(final_identity["exit_filetime"], 0)
@@ -1374,15 +1417,43 @@ finally:
 
     def test_moved_branch_fails_before_delete(self):
         session = self.session()
-        previous = self._command(self.root, "rev-parse", self.base_sha + "^").stdout.strip()
+        # A depth-one checkout has no readable parent. A synthetic child with
+        # the same tree models ref movement without depending on source history.
+        previous = self._command(
+            self.root, "-c", "user.name=Engineering AI Test",
+            "-c", "user.email=test@example.invalid", "-c", "commit.gpgsign=false",
+            "commit-tree", self.base_sha + "^{tree}", "-p", self.base_sha,
+            "-m", "P0 isolated moved-ref fixture",
+        ).stdout.strip()
+        self.assertNotEqual(previous, self.base_sha)
+        self.observations.append(dict(
+            operation="isolated_moved_ref_commit", synthetic_sha=previous,
+            source_shallow=self._command(
+                self.root, "rev-parse", "--is-shallow-repository",
+            ).stdout.strip(),
+        ))
+        target = Path(session.worktree_root)
+        before = self.adapter._cleanup_state(target, session)
         ref = "refs/heads/" + session.branch
         self._command(self.root, "update-ref", ref, previous, self.base_sha)
         with self.assertRaises(ToolAccessError):
             self.adapter.cleanup_disposable_generated(session)
-        self.assertTrue(Path(session.worktree_root).exists())
+        self.assertTrue(target.exists())
         self.assertFalse(any(x["stage"] == "git_worktree_remove" for x in self.adapter.cleanup_events))
+        after = self.adapter._cleanup_state(target, session)
+        for key in ("worktree_exists", "registered", "metadata_exists", "metadata_path"):
+            self.assertEqual(after[key], before[key])
+        self.assertEqual(after["branch_sha"], previous)
+        self.assertEqual(self._command(target, "diff", "--name-only").stdout, "")
+        self.assertEqual(self._command(target, "diff", "--cached", "--name-only").stdout, "")
+        self.assertEqual(self.adapter.cleanup_events[-1]["stage"], "cleanup_stopped")
         self._command(self.root, "update-ref", ref, self.base_sha, previous)
+        self.assertEqual(self._command(self.root, "rev-parse", ref).stdout.strip(), self.base_sha)
         self.adapter.cleanup_disposable_generated(session)
+        final = self.adapter.cleanup_events[-1]["state"]
+        self.assertFalse(any(final[key] for key in (
+            "worktree_exists", "registered", "metadata_exists", "branch_exists",
+        )))
 
     def test_tracked_modification_fails_closed(self):
         session = self.session()
