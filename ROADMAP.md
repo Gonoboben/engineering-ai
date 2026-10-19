@@ -709,7 +709,7 @@ model-routing authority, release/fabrication authority or physical-validation
 semantics.
 
 ### Gate 036 — v1.0 real connected-project controlled-use acceptance
-Status: `OPEN_REAL_REEXECUTION_REQUIRED_CLEANUP_BLOCKED`
+Status: `OPEN_SOURCE_RECONCILIATION_APPROVED_REAL_NOT_RUN`
 
 Issue: `#74 OPEN`
 
@@ -731,12 +731,22 @@ Exact Gate 036 project sources:
   `840435615d0b3ebf5f1137f575cfd75b66501964`, base main
   `dcba77466d4800c0e7a336a2771684e066f845db`;
 - BuoyCalc
-  `main@325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+  `main@1ea0ddb76f07a41a811390632b64afbf257283eb`.
 
 The Gate 036 CI harness may validate evidence semantics only. Final Gate
 acceptance additionally requires a real primary-workstation execution against
 both exact connected-project revisions. Synthetic/self-test evidence cannot
 close the Gate.
+
+2026-10-19 owner-approved source reconciliation:
+- BuoyCalc `main@325aee5ee3a9f64413e416a1206fc4e296d9723f` is retained as the historical
+  source of the blocked real cleanup attempt, not current validation evidence.
+- New exact source `main@1ea0ddb76f07a41a811390632b64afbf257283eb` includes merged PR #628 and #630;
+  affected validator scripts and engineering regressions require new checks.
+- PR #75 CI at `c5f7394544ea64d2c4a8fa18f0d3070c12a4d75a` passed 13/13 hosted workflows for the
+  old source contract only; no new-source PASS is inferred.
+- New source-identity harness/tests/docs require review and separately authorized
+  commit/push, then real worktree validation only after a separate approval.
 
 Remediation checkpoint:
 - the first Windows real-pilot attempt demonstrated a PlataVM repository-path

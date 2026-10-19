@@ -18,6 +18,21 @@ class Gate036RealConnectedProjectControlledUseTests(unittest.TestCase):
             "840435615d0b3ebf5f1137f575cfd75b66501964",
         )
 
+    def test_buoycalc_expected_head_tracks_owner_approved_main(self) -> None:
+        self.assertEqual(
+            BUOYCALC_EXPECTED_HEAD,
+            "1ea0ddb76f07a41a811390632b64afbf257283eb",
+        )
+
+    def test_old_buoycalc_baseline_is_rejected(self) -> None:
+        payload = _synthetic_pass_payload()
+        payload["buoycalc"]["before"]["head_sha"] = "325aee5ee3a9f64413e416a1206fc4e296d9723f"
+        payload["buoycalc"]["before"]["origin_main_sha"] = "325aee5ee3a9f64413e416a1206fc4e296d9723f"
+        passed, errors = evaluate_gate036_payload(payload)
+        self.assertFalse(passed)
+        self.assertIn("BuoyCalc exact head mismatch", errors)
+        self.assertIn("BuoyCalc origin/main mismatch", errors)
+
     def test_complete_real_evidence_passes(self) -> None:
         payload = _synthetic_pass_payload()
         passed, errors = evaluate_gate036_payload(payload)

@@ -27,8 +27,10 @@ PlataVM:
 BuoyCalc:
 - repository: `Gonoboben/buoycalc-windows`;
 - exact accepted Gate 036 source:
-  `main@325aee5ee3a9f64413e416a1206fc4e296d9723f`;
-- Draft PR #628 is explicitly outside the Gate 036 primary baseline.
+  `main@1ea0ddb76f07a41a811390632b64afbf257283eb`;
+- Approved source includes merged PR #628 and PR #630; their changes require
+  new validation; no historic PASS transfers from `325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+- The old exact SHA remains a separate historical 2026-10-11 evidence source.
 
 ## Existing authority reused unchanged
 
@@ -150,22 +152,31 @@ real no-FILE_SHARE_DELETE directory handle in a separate process and verifies
 fail-closed behavior while held and removability after release. It does not
 establish the process responsible for the historical failure.
 
-The new instrumentation and regression still require hosted CI review. No
-second real Gate 036 execution, approval for release, or merge is authorized.
+At PR #75 head `c5f7394544ea64d2c4a8fa18f0d3070c12a4d75a`, bounded cleanup instrumentation
+and native Windows regressions passed 13/13 hosted workflows on 2026-10-19.
+That CI is deterministic/synthetic with respect to real connected-project use;
+it does not validate the newly approved BuoyCalc source and cannot close Gate 036.
+No second real Gate 036 execution, approval for release, or merge is authorized.
 
 ## Current state
 
-`REAL_PRIMARY_WORKSTATION_REEXECUTION_REQUIRED_AFTER_CLEANUP_DIAGNOSTICS`.
+`SOURCE_RECONCILIATION_APPROVED_REAL_PRIMARY_WORKSTATION_NOT_RUN`.
 
 No real Gate 036 PASS is claimed yet.
 
-The next acceptance action is to run the Gate 036 harness on the primary
-workstation with:
-- PlataVM checkout clean on
+Next, review and separately approve the local-only source-identity patch,
+run new exact-head deterministic CI after an independently approved commit/push,
+and reconcile the protected BuoyCalc local checkout only with separate approval.
+Real primary-workstation Gate 036 execution requires its own approval and:
+- PlataVM clean on
   `agent/pcb-e-aux-hardware-current-v1-9@840435615d0b3ebf5f1137f575cfd75b66501964`;
-- BuoyCalc checkout clean on
-  `main@325aee5ee3a9f64413e416a1206fc4e296d9723f`;
-- explicit human approval for disposable worktree creation.
+- BuoyCalc clean on `main@1ea0ddb76f07a41a811390632b64afbf257283eb` with `HEAD == origin/main`;
+- explicit approval for disposable worktree/branch creation and cleanup.
+
+Historical failed cleanup evidence (2026-10-11) remains pinned to
+`325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+The newly approved source contains merged PR #628/#630; unchanged frozen markers
+are insufficient to claim engineering equivalence or fixed-profile PASS.
 
 PlataVM PR #100 GitHub CI remains separate evidence. Existing cancelled PR #100
 workflow conclusions are not reinterpreted as PASS by Gate 036.

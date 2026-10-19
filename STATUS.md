@@ -85,7 +85,7 @@ Build a local-first, auditable engineering AI control plane that can safely cont
 - Branch: `gate-036-real-connected-project-controlled-use`
 - Base: accepted Gate 035 squash merge
   `d9ab48f50ef9e78c7fd7423cebadf39634c3de66`
-- State: `REAL_WINDOWS_VALIDATION_PASSED_AUTOMATED_CLEANUP_BLOCKED`
+- State: `SOURCE_RECONCILIATION_APPROVED_REAL_EXECUTION_NOT_RUN`
 - Purpose: close the existing v1.0 criterion for successful controlled use on
   both real connected projects without expanding project or release authority.
 
@@ -102,7 +102,19 @@ Gate 036 exact connected-project sources:
 - PlataVM PR #100 remediated Draft head:
   `840435615d0b3ebf5f1137f575cfd75b66501964`;
 - BuoyCalc main:
-  `325aee5ee3a9f64413e416a1206fc4e296d9723f`.
+  `1ea0ddb76f07a41a811390632b64afbf257283eb`.
+
+Gate 036 2026-10-19 source reconciliation (owner approved, not Gate PASS):
+- Historical BuoyCalc source `325aee5ee3a9f64413e416a1206fc4e296d9723f` remains attached to
+  the failed Windows cleanup evidence; it is not promoted to PASS.
+- Approved BuoyCalc source `1ea0ddb76f07a41a811390632b64afbf257283eb` includes merged PR #628
+  and #630. Two intervening commits change engineering regressions and active validator
+  scripts; prior validation cannot be transferred to this source.
+- PR #75 head `c5f7394544ea64d2c4a8fa18f0d3070c12a4d75a` passed 13/13 hosted workflows
+  before this source-identity change; no new-source Gate PASS is claimed.
+- Only a reviewed, separately approved commit/push may synchronize the harness
+  and docs; local protected checkout relocation and real execution require
+  separate approvals. Release/fabrication/physical authority is unchanged.
 
 Gate 036 remediation checkpoint:
 - first Windows real-pilot execution preserved both connected primary checkouts;
@@ -853,15 +865,17 @@ Security constraint for local model services:
 - model agreement never replaces deterministic evidence.
 
 ## Next admissible action
-Next: verify exact-head and Gate 036 Windows CI for the bounded cleanup
-instrumentation and real Win32 directory-handle regression. The 2026-10-11
-real connected-project validation passed but automatic cleanup failed, so
-Gate 036 remains BLOCKED. No real reexecution without a new human approval.
-Synthetic/isolated CI does not satisfy the real-project criterion.
+Next: review the local source-identity synchronization diff for the owner-approved
+BuoyCalc SHA, then separately authorize any commit, push and exact-head CI.
+GitHub CI at previous PR #75 head `c5f7394` passed 13/13 workflows but is
+synthetic regarding real connected-project acceptance. The 2026-10-11 real
+validators passed while BuoyCalc automatic cleanup failed: Gate 036 remains
+BLOCKED/NOT_RUN on the newly approved source. The old result is historical.
 
-Real acceptance then requires primary-workstation execution of
+Only after new-source deterministic validation, protected checkout reconciliation
+and separate human approval may the primary-workstation harness run with
 `scripts/gate036_real_connected_project_controlled_use.py --approve-worktrees`
-against the exact connected-project revisions recorded above.
+against both exact revisions recorded above.
 
 The harness must prove for both projects:
 - exact source identity;
